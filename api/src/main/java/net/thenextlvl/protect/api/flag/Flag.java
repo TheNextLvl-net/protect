@@ -60,7 +60,6 @@ public class Flag<T> {
      * registers a flag
      *
      * @return the flag
-     * @apiNote Needs to be called before the areas are initialized
      */
     public Flag<T> register() {
         Preconditions.checkArgument(!Area.isInitialized(), "Areas are already initialized");

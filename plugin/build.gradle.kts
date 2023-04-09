@@ -6,6 +6,7 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
+group = "net.thenextlvl.protect"
 version = "1.0.0"
 
 repositories {

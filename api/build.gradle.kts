@@ -3,7 +3,13 @@ plugins {
     id("maven-publish")
 }
 
+group = "net.thenextlvl.protect"
 version = "1.0.0"
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 
 repositories {
     mavenCentral()
