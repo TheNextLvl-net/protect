@@ -24,7 +24,6 @@ import core.annotation.MethodsReturnNonnullByDefault;
 import core.api.file.format.GsonFile;
 import core.api.file.helper.FileHelper;
 import lombok.*;
-import net.thenextlvl.protect.Protect;
 import net.thenextlvl.protect.api.adapter.FlagsAdapter;
 import net.thenextlvl.protect.api.adapter.RegionAdapter;
 import net.thenextlvl.protect.api.event.*;
@@ -36,7 +35,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -71,8 +69,6 @@ public sealed class Area implements Abilities, Container permits GlobalArea {
 
     public static void init() {
         Preconditions.checkArgument(!isInitialized(), "Area#init called twice");
-        var caller = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-        Preconditions.checkArgument(caller.equals(Protect.class), "Invalid caller class");
         saves = new GsonFile<>(new File("plugins/Protect", "areas.json"), new ArrayList<>(), new TypeToken<>(){}) {
             @Override
             public GsonBuilder load(GsonBuilder builder) {
@@ -198,7 +194,7 @@ public sealed class Area implements Abilities, Container permits GlobalArea {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public final class Schematic {
-        public static final File DATA_FOLDER = new File(JavaPlugin.getPlugin(Protect.class).getDataFolder(), "schematics");
+        public static final File DATA_FOLDER = new File("plugins/Protect/schematics");
         private final File file = new File(DATA_FOLDER, getName() + ".schem");
 
         public boolean load() throws WorldEditException, IOException {

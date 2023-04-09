@@ -19,7 +19,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.thenextlvl:protect:5.0.5")
     compileOnly("org.projectlombok:lombok:1.18.26")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.9")
     compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
