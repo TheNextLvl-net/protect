@@ -12,6 +12,6 @@ A library that provides simple to use shortcuts to overcomplicated bukkit relate
 <dependency>
   <groupId>net.thenextlvl.protect</groupId>
     <artifactId>api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ````
