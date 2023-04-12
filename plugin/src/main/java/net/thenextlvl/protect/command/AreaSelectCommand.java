@@ -7,7 +7,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import core.api.placeholder.Placeholder;
 import net.thenextlvl.protect.Protect;
-import net.thenextlvl.protect.api.area.Area;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

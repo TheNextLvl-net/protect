@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.api.area;
+package net.thenextlvl.protect.area;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Streams;
@@ -24,11 +24,11 @@ import core.annotation.MethodsReturnNonnullByDefault;
 import core.api.file.format.GsonFile;
 import core.api.file.helper.FileHelper;
 import lombok.*;
-import net.thenextlvl.protect.api.adapter.FlagsAdapter;
-import net.thenextlvl.protect.api.adapter.RegionAdapter;
-import net.thenextlvl.protect.api.event.*;
-import net.thenextlvl.protect.api.flag.Flag;
-import net.thenextlvl.protect.api.flag.Flags;
+import net.thenextlvl.protect.adapter.FlagsAdapter;
+import net.thenextlvl.protect.adapter.RegionAdapter;
+import net.thenextlvl.protect.event.*;
+import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.Flags;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

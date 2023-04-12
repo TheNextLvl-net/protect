@@ -1,8 +1,8 @@
-package net.thenextlvl.protect.api.flag.bound;
+package net.thenextlvl.protect.flag.bound;
 
 import core.api.function.TriPredicate;
-import net.thenextlvl.protect.api.flag.possibility.Possibilities;
-import net.thenextlvl.protect.api.flag.possibility.Possibility;
+import net.thenextlvl.protect.flag.possibility.Possibilities;
+import net.thenextlvl.protect.flag.possibility.Possibility;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

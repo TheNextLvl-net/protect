@@ -1,8 +1,8 @@
-package net.thenextlvl.protect.api.adapter;
+package net.thenextlvl.protect.adapter;
 
 import com.google.gson.*;
-import net.thenextlvl.protect.api.flag.Flag;
-import net.thenextlvl.protect.api.flag.Flags;
+import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.Flags;
 
 import java.lang.reflect.Type;
 

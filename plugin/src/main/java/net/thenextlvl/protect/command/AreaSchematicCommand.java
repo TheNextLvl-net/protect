@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.thenextlvl.protect.Protect;
-import net.thenextlvl.protect.api.area.Area;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

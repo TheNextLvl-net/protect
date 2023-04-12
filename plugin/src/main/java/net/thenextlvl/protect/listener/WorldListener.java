@@ -1,8 +1,8 @@
 package net.thenextlvl.protect.listener;
 
 import net.thenextlvl.protect.Protect;
-import net.thenextlvl.protect.api.area.Area;
-import net.thenextlvl.protect.api.flag.Flag;
+import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

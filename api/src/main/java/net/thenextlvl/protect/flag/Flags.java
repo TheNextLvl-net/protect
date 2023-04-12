@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.api.flag;
+package net.thenextlvl.protect.flag;
 
 import lombok.NoArgsConstructor;
 

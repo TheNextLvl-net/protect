@@ -80,8 +80,8 @@ public class Messages {
         file.setDefault(AREA_CREATED, "%prefix% §fCreated area called §a%area%");
         file.setDefault(AREA_LIST, "%prefix% §7Areas §8(§a%amount%§8): §f%areas%");
         file.setDefault(AREA_LIST_GLOBAL, "%prefix% §7Global §8(§a%amount%§8): §f%areas%");
-        file.setDefault(AREA_EXISTS, "%prefix% §cAn area named §4%area%§c does already exist");
-        file.setDefault(AREA_NOT_FOUND, "%prefix% §cAn area named §4%area%§c does not exist");
+        file.setDefault(AREA_EXISTS, "%prefix% §cAn area called §4%area%§c does already exist");
+        file.setDefault(AREA_NOT_FOUND, "%prefix% §cAn area called §4%area%§c does not exist");
         file.setDefault(AREA_DELETE_SUCCEEDED, "%prefix% §fSuccessfully deleted the area §a%area%");
         file.setDefault(AREA_DELETE_FAILED, "%prefix% §cFailed to deleted the area §4%area%");
         file.setDefault(AREA_INFO_NAME, "%prefix% §7Area§8: §f%area%");

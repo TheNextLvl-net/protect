@@ -1,15 +1,15 @@
-package net.thenextlvl.protect.api.flag;
+package net.thenextlvl.protect.flag;
 
 import com.google.common.base.Preconditions;
 import core.annotation.FieldsAreNonnullByDefault;
 import core.annotation.MethodsReturnNonnullByDefault;
 import lombok.*;
 import lombok.experimental.Accessors;
-import net.thenextlvl.protect.api.area.Area;
-import net.thenextlvl.protect.api.flag.bound.InteractionBound;
-import net.thenextlvl.protect.api.flag.bound.PermissionBound;
-import net.thenextlvl.protect.api.flag.bound.PlayerBound;
-import net.thenextlvl.protect.api.flag.possibility.Possibilities;
+import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.flag.bound.InteractionBound;
+import net.thenextlvl.protect.flag.bound.PermissionBound;
+import net.thenextlvl.protect.flag.bound.PlayerBound;
+import net.thenextlvl.protect.flag.possibility.Possibilities;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;

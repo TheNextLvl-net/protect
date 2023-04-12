@@ -4,7 +4,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import core.api.placeholder.Placeholder;
-import net.thenextlvl.protect.api.area.Area;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

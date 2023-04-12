@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.api.area;
+package net.thenextlvl.protect.area;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

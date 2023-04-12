@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.api.adapter;
+package net.thenextlvl.protect.adapter;
 
 import com.google.gson.*;
 import com.sk89q.worldedit.bukkit.BukkitWorld;

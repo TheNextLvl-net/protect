@@ -1,7 +1,7 @@
-package net.thenextlvl.protect.api.flag.bound;
+package net.thenextlvl.protect.flag.bound;
 
-import net.thenextlvl.protect.api.flag.possibility.Possibilities;
-import net.thenextlvl.protect.api.flag.possibility.Possibility;
+import net.thenextlvl.protect.flag.possibility.Possibilities;
+import net.thenextlvl.protect.flag.possibility.Possibility;
 import org.bukkit.entity.Entity;
 
 import java.util.function.Predicate;

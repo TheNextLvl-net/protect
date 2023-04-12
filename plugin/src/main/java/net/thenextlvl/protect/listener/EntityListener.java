@@ -1,7 +1,7 @@
 package net.thenextlvl.protect.listener;
 
-import net.thenextlvl.protect.api.area.Area;
-import net.thenextlvl.protect.api.flag.Flag;
+import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

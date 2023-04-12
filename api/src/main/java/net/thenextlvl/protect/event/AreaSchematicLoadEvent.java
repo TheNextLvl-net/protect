@@ -1,7 +1,7 @@
-package net.thenextlvl.protect.api.event;
+package net.thenextlvl.protect.event;
 
 import lombok.Getter;
-import net.thenextlvl.protect.api.area.Area;
+import net.thenextlvl.protect.area.Area;
 
 import java.util.ArrayList;
 import java.util.List;

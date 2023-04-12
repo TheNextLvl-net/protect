@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.api.area;
+package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;

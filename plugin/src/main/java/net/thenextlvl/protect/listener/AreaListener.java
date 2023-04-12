@@ -1,8 +1,8 @@
 package net.thenextlvl.protect.listener;
 
-import net.thenextlvl.protect.api.event.AreaEnterEvent;
-import net.thenextlvl.protect.api.event.AreaLeaveEvent;
-import net.thenextlvl.protect.api.flag.Flag;
+import net.thenextlvl.protect.event.AreaEnterEvent;
+import net.thenextlvl.protect.event.AreaLeaveEvent;
+import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

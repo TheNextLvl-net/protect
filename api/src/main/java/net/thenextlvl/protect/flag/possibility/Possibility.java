@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.api.flag.possibility;
+package net.thenextlvl.protect.flag.possibility;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

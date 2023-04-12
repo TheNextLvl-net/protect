@@ -1,8 +1,8 @@
-package net.thenextlvl.protect.api.event;
+package net.thenextlvl.protect.event;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.thenextlvl.protect.api.area.Area;
+import net.thenextlvl.protect.area.Area;
 import org.bukkit.event.Cancellable;
 
 @Getter
