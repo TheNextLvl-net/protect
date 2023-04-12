@@ -21,9 +21,9 @@ class AreaListCommand {
         var player = (Player) context.getSender();
         var global = Area.areas().filter(Area::isGlobalArea).map(Area::getName).toList();
         var user = Area.areas().filter(area -> !area.isGlobalArea()).map(Area::getName).toList();
-        player.sendRichMessage(Messages.AREA_LIST.message(player.locale(), player,
+        player.sendPlainMessage(Messages.AREA_LIST.message(player.locale(), player,
                 Placeholder.of("amount", user.size()), Placeholder.of("areas", String.join(", ", user))));
-        player.sendRichMessage(Messages.AREA_LIST_GLOBAL.message(player.locale(), player,
+        player.sendPlainMessage(Messages.AREA_LIST_GLOBAL.message(player.locale(), player,
                 Placeholder.of("amount", global.size()), Placeholder.of("areas", String.join(", ", global))));
     }
 }

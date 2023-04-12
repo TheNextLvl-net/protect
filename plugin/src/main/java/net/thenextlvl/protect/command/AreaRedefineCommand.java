@@ -31,19 +31,19 @@ class AreaRedefineCommand {
         var area = Area.get(context.<String>get("area"));
         var plugin = JavaPlugin.getPlugin(Protect.class);
         if (area != null && area.isGlobalArea()) {
-            player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
+            player.sendPlainMessage(Messages.INVALID_AREA.message(player.locale(), player));
         } else if (area == null) {
-            player.sendRichMessage(plugin.formatter().format("%prefix% §c/area redefine §8[§6area§8]"));
+            player.sendPlainMessage(plugin.formatter().format("%prefix% §c/area redefine §8[§6area§8]"));
         } else if (area.getSchematic().getFile().isFile()) {
-            player.sendRichMessage(Messages.SCHEMATIC_EXISTS.message(player.locale(), player));
+            player.sendPlainMessage(Messages.SCHEMATIC_EXISTS.message(player.locale(), player));
         } else try {
             var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
             var redefine = area.redefine(worldEdit.getSession(player).getSelection().clone());
             var placeholder = Placeholder.<Player>of("area", area.getName());
             var message = redefine ? Messages.AREA_REDEFINE_SUCCEEDED : Messages.AREA_REDEFINE_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, placeholder));
+            player.sendPlainMessage(message.message(player.locale(), player, placeholder));
         } catch (IncompleteRegionException e) {
-            player.sendRichMessage(Messages.SELECT_REGION.message(player.locale(), player));
+            player.sendPlainMessage(Messages.SELECT_REGION.message(player.locale(), player));
         }
     }
 }

@@ -39,14 +39,14 @@ class AreaTeleportCommand {
             location.setPitch(player.getLocation().getPitch());
             location.setYaw(player.getLocation().getYaw());
             player.teleportAsync(location, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(success -> {
-                if (success) player.sendRichMessage(Messages.AREA_TELEPORT_SUCCEEDED.message(
+                if (success) player.sendPlainMessage(Messages.AREA_TELEPORT_SUCCEEDED.message(
                         player.locale(), player, Placeholder.of("area", area.getName())));
-                else player.sendRichMessage(Messages.AREA_TELEPORT_FAILED.message(player.locale(),
+                else player.sendPlainMessage(Messages.AREA_TELEPORT_FAILED.message(player.locale(),
                         player, Placeholder.of("area", area.getName())));
             });
         } else if (area != null)
-            player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
-        else player.sendRichMessage(plugin.formatter().format(
+            player.sendPlainMessage(Messages.INVALID_AREA.message(player.locale(), player));
+        else player.sendPlainMessage(plugin.formatter().format(
                     "%prefix% §c/area teleport §8[§6area§8]"
             ));
     }

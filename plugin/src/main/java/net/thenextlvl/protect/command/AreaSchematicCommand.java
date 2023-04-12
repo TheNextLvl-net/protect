@@ -68,7 +68,7 @@ class AreaSchematicCommand {
         var plugin = JavaPlugin.getPlugin(Protect.class);
         if (area != null && option != null && option.equals(Option.LOAD)) {
             if (area.isTooBig())
-                player.sendRichMessage(Messages.AREA_WARNING_SIZE.message(player.locale(), player));
+                player.sendPlainMessage(Messages.AREA_WARNING_SIZE.message(player.locale(), player));
             var schematic = Placeholder.<Player>of("schematic", area.getName());
             boolean load = false;
             try {
@@ -77,15 +77,15 @@ class AreaSchematicCommand {
                 e.printStackTrace();
             }
             var message = load ? Messages.SCHEMATIC_LOAD_SUCCEEDED : Messages.SCHEMATIC_LOAD_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, schematic));
+            player.sendPlainMessage(message.message(player.locale(), player, schematic));
         } else if (area != null && option != null && option.equals(Option.DELETE)) {
             var schematic = Placeholder.<Player>of("schematic", area.getName());
             var delete = area.getSchematic().delete();
             var message = delete ? Messages.SCHEMATIC_DELETE_SUCCEEDED : Messages.SCHEMATIC_DELETE_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, schematic));
+            player.sendPlainMessage(message.message(player.locale(), player, schematic));
         } else if (area != null && option != null && option.equals(Option.SAVE)) {
             if (area.isTooBig())
-                player.sendRichMessage(Messages.AREA_WARNING_SIZE.message(player.locale(), player));
+                player.sendPlainMessage(Messages.AREA_WARNING_SIZE.message(player.locale(), player));
             var schematic = Placeholder.<Player>of("schematic", area.getName());
             boolean save = false;
             try {
@@ -94,8 +94,8 @@ class AreaSchematicCommand {
                 e.printStackTrace();
             }
             var message = save ? Messages.SCHEMATIC_SAVE_SUCCEEDED : Messages.SCHEMATIC_SAVE_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, schematic));
-        } else player.sendRichMessage(plugin.formatter().format(
+            player.sendPlainMessage(message.message(player.locale(), player, schematic));
+        } else player.sendPlainMessage(plugin.formatter().format(
                 "%prefix% §c/area schematic §8[§6option§8] [§6area§8]"
         ));
     }
