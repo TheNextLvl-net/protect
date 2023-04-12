@@ -22,7 +22,6 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import core.annotation.FieldsAreNonnullByDefault;
 import core.annotation.MethodsReturnNonnullByDefault;
 import core.api.file.format.GsonFile;
-import core.api.file.helper.FileHelper;
 import lombok.*;
 import net.thenextlvl.protect.adapter.FlagsAdapter;
 import net.thenextlvl.protect.adapter.RegionAdapter;
@@ -220,7 +219,7 @@ public sealed class Area implements Abilities, Container permits GlobalArea {
                 extent.setCopyingEntities(true);
                 extent.setCopyingBiomes(true);
                 Operations.complete(extent);
-                FileHelper.create(getFile());
+                createFile();
                 try (var writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(getFile()))) {
                     writer.write(clipboard);
                     return true;
@@ -237,7 +236,13 @@ public sealed class Area implements Abilities, Container permits GlobalArea {
         }
 
         public boolean delete() {
-            return !getFile().exists() || (new AreaSchematicDeleteEvent(Area.this).callEvent() && FileHelper.delete(file));
+            return !getFile().exists() || (new AreaSchematicDeleteEvent(Area.this).callEvent() && file.delete());
+        }
+
+        private void createFile() throws IOException {
+            var file = getFile().getAbsoluteFile();
+            file.getParentFile().mkdirs();
+            file.createNewFile();
         }
     }
 

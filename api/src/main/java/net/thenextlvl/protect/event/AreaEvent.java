@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,9 +15,8 @@ public abstract class AreaEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
     private final Area area;
 
-    @Nonnull
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return getHandlerList();
     }
 }

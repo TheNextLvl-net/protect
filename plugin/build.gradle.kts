@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.26")
+    compileOnly("net.thenextlvl.core:annotations:1.0.0")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.9")
     compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
 
@@ -25,8 +26,8 @@ dependencies {
     compileOnly("cloud.commandframework:cloud-minecraft-extras:1.8.3")
 
     implementation(project(":api"))
-    implementation("net.thenextlvl.core:core-api:3.1.10")
-    implementation("net.thenextlvl.core:bukkit-core:1.0.0")
+    implementation("net.thenextlvl.core:api:3.1.10")
+    implementation("net.thenextlvl.core:bukkit:1.0.0")
 
     annotationProcessor("org.projectlombok:lombok:1.18.26")
 }

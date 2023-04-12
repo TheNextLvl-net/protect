@@ -8,7 +8,6 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 class AreaDeleteCommand {
 
@@ -23,7 +22,7 @@ class AreaDeleteCommand {
                 .handler(AreaDeleteCommand::execute);
     }
 
-    private static void execute(@NonNull CommandContext<CommandSender> context) {
+    private static void execute(CommandContext<CommandSender> context) {
         var name = context.<String>get("area");
         var area = Area.get(name);
         var player = (Player) context.getSender();
