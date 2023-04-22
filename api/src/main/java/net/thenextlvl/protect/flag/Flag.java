@@ -1,11 +1,9 @@
 package net.thenextlvl.protect.flag;
 
-import com.google.common.base.Preconditions;
 import core.annotation.FieldsAreNonnullByDefault;
 import core.annotation.MethodsReturnNonnullByDefault;
 import lombok.*;
 import lombok.experimental.Accessors;
-import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.bound.InteractionBound;
 import net.thenextlvl.protect.flag.bound.PermissionBound;
 import net.thenextlvl.protect.flag.bound.PlayerBound;
@@ -62,7 +60,6 @@ public class Flag<T> {
      * @return the flag
      */
     public Flag<T> register() {
-        Preconditions.checkArgument(!Area.isInitialized(), "Areas are already initialized");
         flags.put(name(), this);
         return this;
     }
