@@ -28,9 +28,9 @@ class AreaDeleteCommand {
         var player = (Player) context.getSender();
         var placeholder = Placeholder.<Player>of("area", name);
         if (area != null && area.delete()) {
-            player.sendPlainMessage(Messages.AREA_DELETE_SUCCEEDED.message(player.locale(), player, placeholder));
+            player.sendRichMessage(Messages.AREA_DELETE_SUCCEEDED.message(player.locale(), player, placeholder));
         } else if (area != null) {
-            player.sendPlainMessage(Messages.AREA_DELETE_FAILED.message(player.locale(), player, placeholder));
-        } else player.sendPlainMessage(Messages.AREA_NOT_FOUND.message(player.locale(), player, placeholder));
+            player.sendRichMessage(Messages.AREA_DELETE_FAILED.message(player.locale(), player, placeholder));
+        } else player.sendRichMessage(Messages.AREA_NOT_FOUND.message(player.locale(), player, placeholder));
     }
 }

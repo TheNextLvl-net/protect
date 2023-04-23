@@ -29,19 +29,19 @@ class AreaInfoCommand {
             return area.getName() + (area.isGlobalArea() ? " §8(§7Global§8)" : "");
         });
         if (area != null) {
-            player.sendPlainMessage(Messages.AREA_INFO_NAME.message(player.locale(), player, name));
+            player.sendRichMessage(Messages.AREA_INFO_NAME.message(player.locale(), player, name));
             if (!area.isGlobalArea()) {
                 var world = Placeholder.<Player>of("world", area.getWorld().getName());
-                player.sendPlainMessage(Messages.AREA_INFO_WORLD.message(player.locale(), player, world));
+                player.sendRichMessage(Messages.AREA_INFO_WORLD.message(player.locale(), player, world));
             }
             var bounds = Placeholder.<Player>of("bounds", () -> {
                 if (area.isGlobalArea()) return "Infinite §8(§7∞§8)";
                 return area.getRegion().getMinimumPoint().toParserString() + " - " +
                         area.getRegion().getMaximumPoint().toParserString();
             });
-            player.sendPlainMessage(Messages.AREA_INFO_BOUNDS.message(player.locale(), player, bounds));
+            player.sendRichMessage(Messages.AREA_INFO_BOUNDS.message(player.locale(), player, bounds));
             var priority = Placeholder.<Player>of("priority", area.getPriority());
-            player.sendPlainMessage(Messages.AREA_INFO_PRIORITY.message(player.locale(), player, priority));
-        } else player.sendPlainMessage(Messages.AREA_NOT_FOUND.message(player.locale(), player, name));
+            player.sendRichMessage(Messages.AREA_INFO_PRIORITY.message(player.locale(), player, priority));
+        } else player.sendRichMessage(Messages.AREA_NOT_FOUND.message(player.locale(), player, name));
     }
 }

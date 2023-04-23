@@ -32,10 +32,10 @@ class AreaCreateCommand {
             BlockVector3 pos1 = session.getSelection().getMinimumPoint();
             BlockVector3 pos2 = session.getSelection().getMaximumPoint();
             Area.create(name, player.getWorld(), pos1, pos2);
-            player.sendPlainMessage(Messages.AREA_CREATED.message(player.locale(), player, placeholder));
+            player.sendRichMessage(Messages.AREA_CREATED.message(player.locale(), player, placeholder));
         } catch (IncompleteRegionException ignored) {
-            player.sendPlainMessage(Messages.SELECT_REGION.message(player.locale(), player, placeholder));
+            player.sendRichMessage(Messages.SELECT_REGION.message(player.locale(), player, placeholder));
         }
-        else player.sendPlainMessage(Messages.AREA_EXISTS.message(player.locale(), player, placeholder));
+        else player.sendRichMessage(Messages.AREA_EXISTS.message(player.locale(), player, placeholder));
     }
 }

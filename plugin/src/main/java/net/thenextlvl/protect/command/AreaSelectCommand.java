@@ -41,10 +41,10 @@ class AreaSelectCommand {
                     area.getRegion().getMaximumPoint()
             ));
             session.updateServerCUI(worldEdit.wrapPlayer(player));
-            player.sendPlainMessage(Messages.AREA_SELECTED.message(player.locale(), player,
+            player.sendRichMessage(Messages.AREA_SELECTED.message(player.locale(), player,
                     Placeholder.of("area", area.getName())));
-        } else if (area != null) player.sendPlainMessage(Messages.INVALID_AREA.message(player.locale(), player));
-        else player.sendPlainMessage(plugin.formatter().format(
+        } else if (area != null) player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
+        else player.sendRichMessage(plugin.formatter().format(
                     "%prefix% §c/area select §8(§6area§8)"
             ));
     }

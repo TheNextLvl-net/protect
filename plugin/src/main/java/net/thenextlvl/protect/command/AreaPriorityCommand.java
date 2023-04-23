@@ -33,10 +33,10 @@ class AreaPriorityCommand {
         var area = context.contains("area") ? Area.get(context.<String>get("area")) : Area.highestArea(player);
         if (area != null) {
             area.setPriority(context.<Integer>get("priority"));
-            player.sendPlainMessage(Messages.AREA_PRIORITY_CHANGED.message(player.locale(), player,
+            player.sendRichMessage(Messages.AREA_PRIORITY_CHANGED.message(player.locale(), player,
                     Placeholder.of("area", area.getName()),
                     Placeholder.of("priority", area.getPriority())));
-        } else player.sendPlainMessage(plugin.formatter().format(
+        } else player.sendRichMessage(plugin.formatter().format(
                 "%prefix% §c/area priority §8[§6priority§8] (§6area§8)"
         ));
     }

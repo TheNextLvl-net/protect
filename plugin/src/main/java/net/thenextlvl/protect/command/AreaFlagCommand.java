@@ -71,39 +71,39 @@ class AreaFlagCommand {
         var area = context.contains("area") ? Area.get(context.<String>get("area")) : Area.highestArea(player.getLocation());
         if (option != null && option.equals(Option.INFO)) {
             if (flag != null && area != null) {
-                player.sendPlainMessage(Messages.AREA_INFO_NAME.message(player.locale(),
+                player.sendRichMessage(Messages.AREA_INFO_NAME.message(player.locale(),
                         Placeholder.of("area", area.getName() + (area.isGlobalArea() ? " §8(§7Global§8)" : ""))));
-                player.sendPlainMessage(Messages.AREA_INFO_FLAG.message(player.locale(),
+                player.sendRichMessage(Messages.AREA_INFO_FLAG.message(player.locale(),
                         Placeholder.of("flag", flag.name())));
-                if (!area.isDefault(flag)) player.sendPlainMessage(Messages.AREA_INFO_FLAG_DEFAULT.message(
+                if (!area.isDefault(flag)) player.sendRichMessage(Messages.AREA_INFO_FLAG_DEFAULT.message(
                         player.locale(), Placeholder.of("flag", flag.possibilities().name(flag.defaultValue()))));
-                player.sendPlainMessage(Messages.AREA_INFO_FLAG_VALUE.message(player.locale(),
+                player.sendRichMessage(Messages.AREA_INFO_FLAG_VALUE.message(player.locale(),
                         Placeholder.of("flag", flag.possibilities().name(area.getFlag(flag)))));
-            } else player.sendPlainMessage(plugin.formatter().format(
+            } else player.sendRichMessage(plugin.formatter().format(
                     "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8(§6area§8)"
             ));
         } else if (option != null && option.equals(Option.UNSET)) {
             if (flag != null && area != null && area.unsetFlag(flag))
-                player.sendPlainMessage(Messages.AREA_FLAG_UNSET.message(player.locale(), player,
+                player.sendRichMessage(Messages.AREA_FLAG_UNSET.message(player.locale(), player,
                         Placeholder.of("area", area.getName()), Placeholder.of("flag", flag.name())));
             else if (flag != null && area != null)
-                player.sendPlainMessage(Messages.NOTHING_CHANGED.message(player.locale(), player));
-            else player.sendPlainMessage(plugin.formatter().format(
+                player.sendRichMessage(Messages.NOTHING_CHANGED.message(player.locale(), player));
+            else player.sendRichMessage(plugin.formatter().format(
                         "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8(§6area§8)"
                 ));
         } else if (option != null && option.equals(Option.SET)) {
             var value = flag != null && context.contains("value") ? flag.possibilities().get(context.<String>get("value")) : null;
             if (flag != null && value != null && area != null && area.setFlag(flag, value))
-                player.sendPlainMessage(Messages.AREA_FLAG_CHANGED.message(player.locale(), player,
+                player.sendRichMessage(Messages.AREA_FLAG_CHANGED.message(player.locale(), player,
                         Placeholder.of("value", context.<String>get("value")),
                         Placeholder.of("area", area.getName()),
                         Placeholder.of("flag", flag.name())));
             else if (flag != null && value != null && area != null)
-                player.sendPlainMessage(Messages.NOTHING_CHANGED.message(player.locale(), player));
-            else player.sendPlainMessage(plugin.formatter().format(
+                player.sendRichMessage(Messages.NOTHING_CHANGED.message(player.locale(), player));
+            else player.sendRichMessage(plugin.formatter().format(
                         "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8[§6area§8] §8(§6value§8)"
                 ));
-        } else if (option == null) player.sendPlainMessage(plugin.formatter().format(
+        } else if (option == null) player.sendRichMessage(plugin.formatter().format(
                 "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8[§6area§8] §8(§6value§8)"
         ));
     }
