@@ -1,10 +1,9 @@
 package net.thenextlvl.protect.flag.possibility;
 
+import core.annotation.ParametersAreNonnullByDefault;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @Getter
 @RequiredArgsConstructor

@@ -2,11 +2,10 @@ package net.thenextlvl.protect.event;
 
 import core.annotation.FieldsAreNonnullByDefault;
 import core.annotation.MethodsReturnNonnullByDefault;
+import core.annotation.ParametersAreNonnullByDefault;
 import lombok.Getter;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.entity.Player;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @Getter
 @FieldsAreNonnullByDefault

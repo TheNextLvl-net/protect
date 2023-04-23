@@ -6,10 +6,10 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.FieldsAreNonnullByDefault;
 import core.annotation.MethodsReturnNonnullByDefault;
+import core.annotation.ParametersAreNonnullByDefault;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 
 @FieldsAreNonnullByDefault

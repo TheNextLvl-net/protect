@@ -1,4 +1,4 @@
 @ParametersAreNonnullByDefault
 package net.thenextlvl.protect.listener;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import core.annotation.ParametersAreNonnullByDefault;

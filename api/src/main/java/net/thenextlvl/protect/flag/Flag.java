@@ -2,15 +2,15 @@ package net.thenextlvl.protect.flag;
 
 import core.annotation.FieldsAreNonnullByDefault;
 import core.annotation.MethodsReturnNonnullByDefault;
+import core.annotation.ParametersAreNonnullByDefault;
 import lombok.*;
 import lombok.experimental.Accessors;
 import net.thenextlvl.protect.flag.bound.InteractionBound;
 import net.thenextlvl.protect.flag.bound.PermissionBound;
 import net.thenextlvl.protect.flag.bound.PlayerBound;
 import net.thenextlvl.protect.flag.possibility.Possibilities;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.Set;
 

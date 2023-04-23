@@ -1,8 +1,8 @@
 package net.thenextlvl.protect.flag.possibility;
 
+import core.annotation.ParametersAreNonnullByDefault;
 import lombok.NoArgsConstructor;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.Map;
 
