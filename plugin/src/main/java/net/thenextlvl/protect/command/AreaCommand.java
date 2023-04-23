@@ -29,7 +29,7 @@ public class AreaCommand {
         manager.registerAsynchronousCompletions();
         registerExceptionHandlers(manager);
         manager.registerBrigadier();
-        var builder = manager.commandBuilder("area").permission("area.command");
+        var builder = manager.commandBuilder("area").permission("protect.command.area");
         manager.command(AreaCreateCommand.create(builder));
         manager.command(AreaDeleteCommand.create(builder));
         manager.command(AreaFlagCommand.create(builder));
