@@ -110,13 +110,13 @@ class AreaFlagCommand {
     private static void handleInfo(CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
         var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
         if (flag != null && area != null) {
-            sender.sendRichMessage(Messages.AREA_INFO_NAME.message(locale,
+            sender.sendRichMessage(Messages.AREA_INFO_NAME.message(locale, sender,
                     Placeholder.of("area", area.getName() + (area.isGlobalArea() ? " <dark_gray>(<gray>Global<dark_gray>)" : ""))));
-            sender.sendRichMessage(Messages.AREA_INFO_FLAG.message(locale,
+            sender.sendRichMessage(Messages.AREA_INFO_FLAG.message(locale, sender,
                     Placeholder.of("flag", flag.name())));
             if (!area.isDefault(flag)) sender.sendRichMessage(Messages.AREA_INFO_FLAG_DEFAULT.message(
-                    locale, Placeholder.of("flag", flag.possibilities().name(flag.defaultValue()))));
-            sender.sendRichMessage(Messages.AREA_INFO_FLAG_VALUE.message(locale,
+                    locale, sender, Placeholder.of("flag", flag.possibilities().name(flag.defaultValue()))));
+            sender.sendRichMessage(Messages.AREA_INFO_FLAG_VALUE.message(locale, sender,
                     Placeholder.of("flag", flag.possibilities().name(area.getFlag(flag)))));
         } else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
                 "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>(<gold>area<dark_gray>)"
