@@ -30,22 +30,26 @@ class AreaSelectCommand {
 
     private static void execute(CommandContext<CommandSender> context) {
         var player = (Player) context.getSender();
-        var plugin = JavaPlugin.getPlugin(Protect.class);
         var area = context.contains("area") ? Area.get(context.<String>get("area")) : Area.highestArea(player);
-        WorldEditPlugin worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
-        if (area != null && !area.isGlobalArea()) {
-            var session = worldEdit.getSession(player);
-            session.setRegionSelector(area.getRegion().getWorld(), new CuboidRegionSelector(
-                    area.getRegion().getWorld(),
-                    area.getRegion().getMinimumPoint(),
-                    area.getRegion().getMaximumPoint()
+        if (area != null && !area.isGlobalArea())
+            handleSelect(player, area);
+        else if (area != null)
+            player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
+        else player.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                    "%prefix% <red>/area select <dark_gray>(<gold>area<dark_gray>)"
             ));
-            session.updateServerCUI(worldEdit.wrapPlayer(player));
-            player.sendRichMessage(Messages.AREA_SELECTED.message(player.locale(), player,
-                    Placeholder.of("area", area.getName())));
-        } else if (area != null) player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
-        else player.sendRichMessage(plugin.formatter().format(
-                    "%prefix% §c/area select §8(§6area§8)"
-            ));
+    }
+
+    private static void handleSelect(Player player, Area area) {
+        var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
+        var session = worldEdit.getSession(player);
+        session.setRegionSelector(area.getRegion().getWorld(), new CuboidRegionSelector(
+                area.getRegion().getWorld(),
+                area.getRegion().getMinimumPoint(),
+                area.getRegion().getMaximumPoint()
+        ));
+        session.updateServerCUI(worldEdit.wrapPlayer(player));
+        player.sendRichMessage(Messages.AREA_SELECTED.message(player.locale(), player,
+                Placeholder.of("area", area.getName())));
     }
 }

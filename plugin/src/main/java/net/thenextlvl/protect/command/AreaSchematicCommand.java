@@ -8,6 +8,7 @@ import core.api.placeholder.Placeholder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import net.kyori.adventure.audience.Audience;
 import net.thenextlvl.protect.Protect;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
@@ -16,11 +17,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 class AreaSchematicCommand {
@@ -63,41 +64,51 @@ class AreaSchematicCommand {
     }
 
     private static void execute(CommandContext<CommandSender> context) {
-        var player = (Player) context.getSender();
+        var sender = context.getSender();
         var option = Option.parse(context.get("option"));
         var area = Area.get(context.<String>get("area"));
-        var plugin = JavaPlugin.getPlugin(Protect.class);
-        if (area != null && option != null && option.equals(Option.LOAD)) {
-            if (area.isTooBig())
-                player.sendRichMessage(Messages.AREA_WARNING_SIZE.message(player.locale(), player));
-            var schematic = Placeholder.<Player>of("schematic", area.getName());
-            boolean load = false;
-            try {
-                load = area.getSchematic().load();
-            } catch (IOException | WorldEditException e) {
-                e.printStackTrace();
-            }
-            var message = load ? Messages.SCHEMATIC_LOAD_SUCCEEDED : Messages.SCHEMATIC_LOAD_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, schematic));
-        } else if (area != null && option != null && option.equals(Option.DELETE)) {
-            var schematic = Placeholder.<Player>of("schematic", area.getName());
-            var delete = area.getSchematic().delete();
-            var message = delete ? Messages.SCHEMATIC_DELETE_SUCCEEDED : Messages.SCHEMATIC_DELETE_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, schematic));
-        } else if (area != null && option != null && option.equals(Option.SAVE)) {
-            if (area.isTooBig())
-                player.sendRichMessage(Messages.AREA_WARNING_SIZE.message(player.locale(), player));
-            var schematic = Placeholder.<Player>of("schematic", area.getName());
-            boolean save = false;
-            try {
-                save = area.getSchematic().save();
-            } catch (IOException | WorldEditException e) {
-                e.printStackTrace();
-            }
-            var message = save ? Messages.SCHEMATIC_SAVE_SUCCEEDED : Messages.SCHEMATIC_SAVE_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, schematic));
-        } else player.sendRichMessage(plugin.formatter().format(
-                "%prefix% §c/area schematic §8[§6option§8] [§6area§8]"
-        ));
+        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
+        if (area != null && option != null && option.equals(Option.LOAD))
+            handleLoad(sender, area, locale);
+        else if (area != null && option != null && option.equals(Option.DELETE))
+            handleDelete(sender, area, locale);
+        else if (area != null && option != null && option.equals(Option.SAVE))
+            handleSave(sender, area, locale);
+        else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                    "%prefix% <red>/area schematic <dark_gray>[<gold>option<dark_gray>] [<gold>area<dark_gray>]"
+            ));
+    }
+
+    private static void handleSave(CommandSender sender, Area area, Locale locale) {
+        if (area.isTooBig()) sender.sendRichMessage(Messages.AREA_WARNING_SIZE.message(locale, sender));
+        var schematic = Placeholder.<Audience>of("schematic", area.getName());
+        boolean save = false;
+        try {
+            save = area.getSchematic().save();
+        } catch (IOException | WorldEditException e) {
+            e.printStackTrace();
+        }
+        var message = save ? Messages.SCHEMATIC_SAVE_SUCCEEDED : Messages.SCHEMATIC_SAVE_FAILED;
+        sender.sendRichMessage(message.message(locale, sender, schematic));
+    }
+
+    private static void handleDelete(CommandSender sender, Area area, Locale locale) {
+        var schematic = Placeholder.<Audience>of("schematic", area.getName());
+        var delete = area.getSchematic().delete();
+        var message = delete ? Messages.SCHEMATIC_DELETE_SUCCEEDED : Messages.SCHEMATIC_DELETE_FAILED;
+        sender.sendRichMessage(message.message(locale, sender, schematic));
+    }
+
+    private static void handleLoad(CommandSender sender, Area area, Locale locale) {
+        if (area.isTooBig()) sender.sendRichMessage(Messages.AREA_WARNING_SIZE.message(locale, sender));
+        var schematic = Placeholder.<Audience>of("schematic", area.getName());
+        boolean load = false;
+        try {
+            load = area.getSchematic().load();
+        } catch (IOException | WorldEditException e) {
+            e.printStackTrace();
+        }
+        var message = load ? Messages.SCHEMATIC_LOAD_SUCCEEDED : Messages.SCHEMATIC_LOAD_FAILED;
+        sender.sendRichMessage(message.message(locale, sender, schematic));
     }
 }

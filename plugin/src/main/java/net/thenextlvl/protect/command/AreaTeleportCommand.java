@@ -30,24 +30,27 @@ class AreaTeleportCommand {
     private static void execute(CommandContext<CommandSender> context) {
         var player = (Player) context.getSender();
         var area = Area.get(context.<String>get("area"));
-        var plugin = JavaPlugin.getPlugin(Protect.class);
-        if (area != null && !area.isGlobalArea()) {
-            var point = area.getRegion().getMaximumPoint();
-            var location = new Location(area.getWorld(), point.getX() + 0.5, point.getY(), point.getZ() + 0.5);
-            var block = location.getWorld().getHighestBlockAt(location);
-            if (block.getY() < location.getY()) location.setY(block.getY() + 1);
-            location.setPitch(player.getLocation().getPitch());
-            location.setYaw(player.getLocation().getYaw());
-            player.teleportAsync(location, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(success -> {
-                if (success) player.sendRichMessage(Messages.AREA_TELEPORT_SUCCEEDED.message(
-                        player.locale(), player, Placeholder.of("area", area.getName())));
-                else player.sendRichMessage(Messages.AREA_TELEPORT_FAILED.message(player.locale(),
-                        player, Placeholder.of("area", area.getName())));
-            });
-        } else if (area != null)
+        if (area != null && !area.isGlobalArea())
+            handleTeleport(player, area);
+        else if (area != null)
             player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
-        else player.sendRichMessage(plugin.formatter().format(
-                    "%prefix% §c/area teleport §8[§6area§8]"
+        else player.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                    "%prefix% <red>/area teleport <dark_gray>[<gold>area<dark_gray>]"
             ));
+    }
+
+    private static void handleTeleport(Player player, Area area) {
+        var point = area.getRegion().getMaximumPoint();
+        var location = new Location(area.getWorld(), point.getX() + 0.5, point.getY(), point.getZ() + 0.5);
+        var block = location.getWorld().getHighestBlockAt(location);
+        if (block.getY() < location.getY()) location.setY(block.getY() + 1);
+        location.setPitch(player.getLocation().getPitch());
+        location.setYaw(player.getLocation().getYaw());
+        player.teleportAsync(location, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(success -> {
+            if (success) player.sendRichMessage(Messages.AREA_TELEPORT_SUCCEEDED.message(
+                    player.locale(), player, Placeholder.of("area", area.getName())));
+            else player.sendRichMessage(Messages.AREA_TELEPORT_FAILED.message(player.locale(),
+                    player, Placeholder.of("area", area.getName())));
+        });
     }
 }

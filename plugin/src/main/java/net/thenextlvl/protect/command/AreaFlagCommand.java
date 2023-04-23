@@ -12,11 +12,11 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,52 +60,66 @@ class AreaFlagCommand {
                             if (flag == null) return Collections.emptyList();
                             return flag.possibilities().keySet().stream().toList();
                         }).asOptional().build())
-                .senderType(Player.class)
                 .handler(AreaFlagCommand::execute);
     }
 
     private static void execute(CommandContext<CommandSender> context) {
-        var player = (Player) context.getSender();
+        var sender = context.getSender();
         var option = Option.parse(context.get("option"));
         var flag = Flag.valueOf(context.get("flag"));
-        var plugin = JavaPlugin.getPlugin(Protect.class);
-        var area = context.contains("area") ? Area.get(context.<String>get("area")) : Area.highestArea(player.getLocation());
-        if (option != null && option.equals(Option.INFO)) {
-            if (flag != null && area != null) {
-                player.sendRichMessage(Messages.AREA_INFO_NAME.message(player.locale(),
-                        Placeholder.of("area", area.getName() + (area.isGlobalArea() ? " §8(§7Global§8)" : ""))));
-                player.sendRichMessage(Messages.AREA_INFO_FLAG.message(player.locale(),
-                        Placeholder.of("flag", flag.name())));
-                if (!area.isDefault(flag)) player.sendRichMessage(Messages.AREA_INFO_FLAG_DEFAULT.message(
-                        player.locale(), Placeholder.of("flag", flag.possibilities().name(flag.defaultValue()))));
-                player.sendRichMessage(Messages.AREA_INFO_FLAG_VALUE.message(player.locale(),
-                        Placeholder.of("flag", flag.possibilities().name(area.getFlag(flag)))));
-            } else player.sendRichMessage(plugin.formatter().format(
-                    "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8(§6area§8)"
+        var area = context.contains("area") ? Area.get(context.<String>get("area")) :
+                sender instanceof Entity entity ? Area.highestArea(entity) : null;
+        if (option != null && option.equals(Option.INFO))
+            handleInfo(sender, flag, area);
+        else if (option != null && option.equals(Option.UNSET))
+            handleUnset(sender, flag, area);
+        else if (option != null && option.equals(Option.SET))
+            handleSet(context, sender, flag, area);
+        else if (option == null) sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>[<gold>area<dark_gray>] <dark_gray>(<gold>value<dark_gray>)"
+        ));
+    }
+
+    private static void handleSet(CommandContext<CommandSender> context, CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
+        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
+        var value = flag != null && context.contains("value") ? flag.possibilities().get(context.<String>get("value")) : null;
+        if (flag != null && value != null && area != null && area.setFlag(flag, value))
+            sender.sendRichMessage(Messages.AREA_FLAG_CHANGED.message(locale, sender,
+                    Placeholder.of("value", context.<String>get("value")),
+                    Placeholder.of("area", area.getName()),
+                    Placeholder.of("flag", flag.name())));
+        else if (flag != null && value != null && area != null)
+            sender.sendRichMessage(Messages.NOTHING_CHANGED.message(locale, sender));
+        else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                    "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>[<gold>area<dark_gray>] <dark_gray>(<gold>value<dark_gray>)"
             ));
-        } else if (option != null && option.equals(Option.UNSET)) {
-            if (flag != null && area != null && area.unsetFlag(flag))
-                player.sendRichMessage(Messages.AREA_FLAG_UNSET.message(player.locale(), player,
-                        Placeholder.of("area", area.getName()), Placeholder.of("flag", flag.name())));
-            else if (flag != null && area != null)
-                player.sendRichMessage(Messages.NOTHING_CHANGED.message(player.locale(), player));
-            else player.sendRichMessage(plugin.formatter().format(
-                        "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8(§6area§8)"
-                ));
-        } else if (option != null && option.equals(Option.SET)) {
-            var value = flag != null && context.contains("value") ? flag.possibilities().get(context.<String>get("value")) : null;
-            if (flag != null && value != null && area != null && area.setFlag(flag, value))
-                player.sendRichMessage(Messages.AREA_FLAG_CHANGED.message(player.locale(), player,
-                        Placeholder.of("value", context.<String>get("value")),
-                        Placeholder.of("area", area.getName()),
-                        Placeholder.of("flag", flag.name())));
-            else if (flag != null && value != null && area != null)
-                player.sendRichMessage(Messages.NOTHING_CHANGED.message(player.locale(), player));
-            else player.sendRichMessage(plugin.formatter().format(
-                        "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8[§6area§8] §8(§6value§8)"
-                ));
-        } else if (option == null) player.sendRichMessage(plugin.formatter().format(
-                "%prefix% §c/area flag §8[§6option§8] §8[§6flag§8] §8[§6area§8] §8(§6value§8)"
+    }
+
+    private static void handleUnset(CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
+        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
+        if (flag != null && area != null && area.unsetFlag(flag))
+            sender.sendRichMessage(Messages.AREA_FLAG_UNSET.message(locale, sender,
+                    Placeholder.of("area", area.getName()), Placeholder.of("flag", flag.name())));
+        else if (flag != null && area != null)
+            sender.sendRichMessage(Messages.NOTHING_CHANGED.message(locale, sender));
+        else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                    "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>(<gold>area<dark_gray>)"
+            ));
+    }
+
+    private static void handleInfo(CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
+        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
+        if (flag != null && area != null) {
+            sender.sendRichMessage(Messages.AREA_INFO_NAME.message(locale,
+                    Placeholder.of("area", area.getName() + (area.isGlobalArea() ? " <dark_gray>(<gray>Global<dark_gray>)" : ""))));
+            sender.sendRichMessage(Messages.AREA_INFO_FLAG.message(locale,
+                    Placeholder.of("flag", flag.name())));
+            if (!area.isDefault(flag)) sender.sendRichMessage(Messages.AREA_INFO_FLAG_DEFAULT.message(
+                    locale, Placeholder.of("flag", flag.possibilities().name(flag.defaultValue()))));
+            sender.sendRichMessage(Messages.AREA_INFO_FLAG_VALUE.message(locale,
+                    Placeholder.of("flag", flag.possibilities().name(area.getFlag(flag)))));
+        } else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>(<gold>area<dark_gray>)"
         ));
     }
 }

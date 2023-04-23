@@ -4,6 +4,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import core.api.placeholder.Placeholder;
+import net.kyori.adventure.audience.Audience;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
@@ -18,19 +19,19 @@ class AreaDeleteCommand {
                                 !area.isGlobalArea()).map(Area::getName).filter(s ->
                                 s.startsWith(token)).toList())
                         .build())
-                .senderType(Player.class)
                 .handler(AreaDeleteCommand::execute);
     }
 
     private static void execute(CommandContext<CommandSender> context) {
         var name = context.<String>get("area");
         var area = Area.get(name);
-        var player = (Player) context.getSender();
-        var placeholder = Placeholder.<Player>of("area", name);
+        var sender = context.getSender();
+        var placeholder = Placeholder.<Audience>of("area", name);
+        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
         if (area != null && area.delete()) {
-            player.sendRichMessage(Messages.AREA_DELETE_SUCCEEDED.message(player.locale(), player, placeholder));
+            sender.sendRichMessage(Messages.AREA_DELETE_SUCCEEDED.message(locale, sender, placeholder));
         } else if (area != null) {
-            player.sendRichMessage(Messages.AREA_DELETE_FAILED.message(player.locale(), player, placeholder));
-        } else player.sendRichMessage(Messages.AREA_NOT_FOUND.message(player.locale(), player, placeholder));
+            sender.sendRichMessage(Messages.AREA_DELETE_FAILED.message(locale, sender, placeholder));
+        } else sender.sendRichMessage(Messages.AREA_NOT_FOUND.message(locale, sender, placeholder));
     }
 }

@@ -9,6 +9,7 @@ import net.thenextlvl.protect.Protect;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,21 +24,24 @@ class AreaPriorityCommand {
                                 s.startsWith(token)).toList())
                         .asOptional()
                         .build())
-                .senderType(Player.class)
                 .handler(AreaPriorityCommand::execute);
     }
 
     private static void execute(CommandContext<CommandSender> context) {
-        var player = (Player) context.getSender();
-        var plugin = JavaPlugin.getPlugin(Protect.class);
-        var area = context.contains("area") ? Area.get(context.<String>get("area")) : Area.highestArea(player);
-        if (area != null) {
-            area.setPriority(context.<Integer>get("priority"));
-            player.sendRichMessage(Messages.AREA_PRIORITY_CHANGED.message(player.locale(), player,
-                    Placeholder.of("area", area.getName()),
-                    Placeholder.of("priority", area.getPriority())));
-        } else player.sendRichMessage(plugin.formatter().format(
-                "%prefix% §c/area priority §8[§6priority§8] (§6area§8)"
+        var sender = context.getSender();
+        var area = context.contains("area") ? Area.get(context.<String>get("area")) :
+                sender instanceof Entity entity ? Area.highestArea(entity) : null;
+        if (area != null) setPriority(context, sender, area);
+        else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                "%prefix% <red>/area priority <dark_gray>[<gold>priority<dark_gray>] (<gold>area<dark_gray>)"
         ));
+    }
+
+    private static void setPriority(CommandContext<CommandSender> context, CommandSender sender, Area area) {
+        area.setPriority(context.<Integer>get("priority"));
+        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
+        sender.sendRichMessage(Messages.AREA_PRIORITY_CHANGED.message(locale, sender,
+                Placeholder.of("area", area.getName()),
+                Placeholder.of("priority", area.getPriority())));
     }
 }

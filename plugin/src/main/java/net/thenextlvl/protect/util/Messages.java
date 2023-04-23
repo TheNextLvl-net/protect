@@ -5,65 +5,66 @@ import core.api.file.format.MessageFile;
 import core.api.placeholder.MessageKey;
 import core.api.placeholder.Placeholder;
 import core.api.placeholder.SystemMessageKey;
+import net.kyori.adventure.audience.Audience;
 import net.thenextlvl.protect.Protect;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Locale;
 
 @FieldsAreNonnullByDefault
 public class Messages {
+    public static final Locale ENGLISH = Locale.forLanguageTag("en-US");
     private static final Protect plugin = JavaPlugin.getPlugin(Protect.class);
     public static final SystemMessageKey<Void> PREFIX = new SystemMessageKey<>("protect.prefix", Placeholder.Formatter.DEFAULT).register();
 
-    public static final MessageKey<Player> AREA_CREATED = new MessageKey<>("area.created", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_LIST = new MessageKey<>("area.list", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_LIST_GLOBAL = new MessageKey<>("area.list.global", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_CREATED = new MessageKey<>("area.created", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_LIST = new MessageKey<>("area.list", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_LIST_GLOBAL = new MessageKey<>("area.list.global", plugin.formatter()).register();
 
-    public static final MessageKey<Player> AREA_EXISTS = new MessageKey<>("area.exists", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_NOT_FOUND = new MessageKey<>("area.exists.not", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_EXISTS = new MessageKey<>("area.exists", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_NOT_FOUND = new MessageKey<>("area.exists.not", plugin.formatter()).register();
 
-    public static final MessageKey<Player> AREA_INFO_NAME = new MessageKey<>("area.info.name", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_INFO_FLAG = new MessageKey<>("area.info.flag", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_INFO_FLAG_VALUE = new MessageKey<>("area.info.flag.value", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_INFO_FLAG_DEFAULT = new MessageKey<>("area.info.flag.default", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_INFO_WORLD = new MessageKey<>("area.info.world", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_INFO_BOUNDS = new MessageKey<>("area.info.bounds", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_INFO_PRIORITY = new MessageKey<>("area.info.priority", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_INFO_NAME = new MessageKey<>("area.info.name", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_INFO_FLAG = new MessageKey<>("area.info.flag", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_INFO_FLAG_VALUE = new MessageKey<>("area.info.flag.value", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_INFO_FLAG_DEFAULT = new MessageKey<>("area.info.flag.default", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_INFO_WORLD = new MessageKey<>("area.info.world", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_INFO_BOUNDS = new MessageKey<>("area.info.bounds", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_INFO_PRIORITY = new MessageKey<>("area.info.priority", plugin.formatter()).register();
 
-    public static final MessageKey<Player> SCHEMATIC_EXISTS = new MessageKey<>("area.schematic.exists", plugin.formatter()).register();
-    public static final MessageKey<Player> SCHEMATIC_DELETE_SUCCEEDED = new MessageKey<>("area.schematic.delete.success", plugin.formatter()).register();
-    public static final MessageKey<Player> SCHEMATIC_DELETE_FAILED = new MessageKey<>("area.schematic.delete.failed", plugin.formatter()).register();
-    public static final MessageKey<Player> SCHEMATIC_SAVE_SUCCEEDED = new MessageKey<>("area.schematic.save.success", plugin.formatter()).register();
-    public static final MessageKey<Player> SCHEMATIC_SAVE_FAILED = new MessageKey<>("area.schematic.save.failed", plugin.formatter()).register();
-    public static final MessageKey<Player> SCHEMATIC_LOAD_SUCCEEDED = new MessageKey<>("area.schematic.load.success", plugin.formatter()).register();
-    public static final MessageKey<Player> SCHEMATIC_LOAD_FAILED = new MessageKey<>("area.schematic.load.failed", plugin.formatter()).register();
+    public static final MessageKey<Audience> SCHEMATIC_EXISTS = new MessageKey<>("area.schematic.exists", plugin.formatter()).register();
+    public static final MessageKey<Audience> SCHEMATIC_DELETE_SUCCEEDED = new MessageKey<>("area.schematic.delete.success", plugin.formatter()).register();
+    public static final MessageKey<Audience> SCHEMATIC_DELETE_FAILED = new MessageKey<>("area.schematic.delete.failed", plugin.formatter()).register();
+    public static final MessageKey<Audience> SCHEMATIC_SAVE_SUCCEEDED = new MessageKey<>("area.schematic.save.success", plugin.formatter()).register();
+    public static final MessageKey<Audience> SCHEMATIC_SAVE_FAILED = new MessageKey<>("area.schematic.save.failed", plugin.formatter()).register();
+    public static final MessageKey<Audience> SCHEMATIC_LOAD_SUCCEEDED = new MessageKey<>("area.schematic.load.success", plugin.formatter()).register();
+    public static final MessageKey<Audience> SCHEMATIC_LOAD_FAILED = new MessageKey<>("area.schematic.load.failed", plugin.formatter()).register();
 
-    public static final MessageKey<Player> AREA_FLAG_CHANGED = new MessageKey<>("area.flag.changed", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_FLAG_UNSET = new MessageKey<>("area.flag.unset", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_FLAG_CHANGED = new MessageKey<>("area.flag.changed", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_FLAG_UNSET = new MessageKey<>("area.flag.unset", plugin.formatter()).register();
 
-    public static final MessageKey<Player> AREA_PRIORITY_CHANGED = new MessageKey<>("area.priority.changed", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_WARNING_SIZE = new MessageKey<>("area.warning.size", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_SELECTED = new MessageKey<>("area.selected", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_PRIORITY_CHANGED = new MessageKey<>("area.priority.changed", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_WARNING_SIZE = new MessageKey<>("area.warning.size", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_SELECTED = new MessageKey<>("area.selected", plugin.formatter()).register();
 
-    public static final MessageKey<Player> AREA_DELETE_SUCCEEDED = new MessageKey<>("area.delete.success", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_DELETE_FAILED = new MessageKey<>("area.delete.failed", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_DELETE_SUCCEEDED = new MessageKey<>("area.delete.success", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_DELETE_FAILED = new MessageKey<>("area.delete.failed", plugin.formatter()).register();
 
-    public static final MessageKey<Player> AREA_REDEFINE_SUCCEEDED = new MessageKey<>("area.redefine.success", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_REDEFINE_FAILED = new MessageKey<>("area.redefine.fail", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_REDEFINE_SUCCEEDED = new MessageKey<>("area.redefine.success", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_REDEFINE_FAILED = new MessageKey<>("area.redefine.fail", plugin.formatter()).register();
 
-    public static final MessageKey<Player> AREA_TELEPORT_SUCCEEDED = new MessageKey<>("area.teleport.success", plugin.formatter()).register();
-    public static final MessageKey<Player> AREA_TELEPORT_FAILED = new MessageKey<>("area.teleport.fail", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_TELEPORT_SUCCEEDED = new MessageKey<>("area.teleport.success", plugin.formatter()).register();
+    public static final MessageKey<Audience> AREA_TELEPORT_FAILED = new MessageKey<>("area.teleport.fail", plugin.formatter()).register();
 
-    public static final MessageKey<Player> SELECT_REGION = new MessageKey<>("region.select", plugin.formatter()).register();
+    public static final MessageKey<Audience> SELECT_REGION = new MessageKey<>("region.select", plugin.formatter()).register();
 
-    public static final MessageKey<Player> INVALID_AREA = new MessageKey<>("area.invalid", plugin.formatter()).register();
+    public static final MessageKey<Audience> INVALID_AREA = new MessageKey<>("area.invalid", plugin.formatter()).register();
 
-    public static final MessageKey<Player> NO_PERMISSION = new MessageKey<>("command.permission", plugin.formatter()).register();
-    public static final MessageKey<Player> COMMAND_EXCEPTION = new MessageKey<>("command.exception", plugin.formatter()).register();
-    public static final MessageKey<Player> INVALID_SENDER = new MessageKey<>("command.sender", plugin.formatter()).register();
+    public static final MessageKey<Audience> NO_PERMISSION = new MessageKey<>("command.permission", plugin.formatter()).register();
+    public static final MessageKey<Audience> COMMAND_EXCEPTION = new MessageKey<>("command.exception", plugin.formatter()).register();
+    public static final MessageKey<Audience> INVALID_SENDER = new MessageKey<>("command.sender", plugin.formatter()).register();
 
-    public static final MessageKey<Player> NOTHING_CHANGED = new MessageKey<>("nothing.changed", plugin.formatter()).register();
+    public static final MessageKey<Audience> NOTHING_CHANGED = new MessageKey<>("nothing.changed", plugin.formatter()).register();
 
     public static void init() {
         initRoot();
@@ -78,7 +79,7 @@ public class Messages {
     }
 
     private static void initEnglish() {
-        var file = MessageFile.getOrCreate(Locale.forLanguageTag("en-US"));
+        var file = MessageFile.getOrCreate(ENGLISH);
         file.setDefault(AREA_CREATED, "%prefix% <white>Created area called <green>%area%");
         file.setDefault(AREA_LIST, "%prefix% <gray>Areas <dark_gray>(<green>%amount%<dark_gray>): <white>%areas%");
         file.setDefault(AREA_LIST_GLOBAL, "%prefix% <gray>Global <dark_gray>(<green>%amount%<dark_gray>): <white>%areas%");

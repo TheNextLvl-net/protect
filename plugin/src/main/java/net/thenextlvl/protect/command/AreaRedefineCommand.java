@@ -6,6 +6,7 @@ import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import core.api.placeholder.Placeholder;
+import net.kyori.adventure.audience.Audience;
 import net.thenextlvl.protect.Protect;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.util.Messages;
@@ -29,17 +30,17 @@ class AreaRedefineCommand {
     private static void execute(CommandContext<CommandSender> context) {
         var player = (Player) context.getSender();
         var area = Area.get(context.<String>get("area"));
-        var plugin = JavaPlugin.getPlugin(Protect.class);
-        if (area != null && area.isGlobalArea()) {
+        if (area != null && area.isGlobalArea())
             player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
-        } else if (area == null) {
-            player.sendRichMessage(plugin.formatter().format("%prefix% §c/area redefine §8[§6area§8]"));
-        } else if (area.getSchematic().getFile().isFile()) {
+        else if (area == null) player.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+                "%prefix% <red>/area redefine <dark_gray>[<gold>area<dark_gray>]"
+        ));
+        else if (area.getSchematic().getFile().isFile()) {
             player.sendRichMessage(Messages.SCHEMATIC_EXISTS.message(player.locale(), player));
         } else try {
             var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
             var redefine = area.redefine(worldEdit.getSession(player).getSelection().clone());
-            var placeholder = Placeholder.<Player>of("area", area.getName());
+            var placeholder = Placeholder.<Audience>of("area", area.getName());
             var message = redefine ? Messages.AREA_REDEFINE_SUCCEEDED : Messages.AREA_REDEFINE_FAILED;
             player.sendRichMessage(message.message(player.locale(), player, placeholder));
         } catch (IncompleteRegionException e) {

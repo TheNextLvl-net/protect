@@ -6,6 +6,7 @@ import core.api.placeholder.Placeholder;
 import core.bukkit.plugin.CorePlugin;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import net.kyori.adventure.audience.Audience;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.AreaCommand;
 import net.thenextlvl.protect.listener.AreaListener;
@@ -14,14 +15,13 @@ import net.thenextlvl.protect.listener.MoveListener;
 import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.util.Messages;
 import net.thenextlvl.protect.util.Placeholders;
-import org.bukkit.entity.Player;
 
 @Getter
 @FieldsAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class Protect extends CorePlugin {
     @Accessors(fluent = true)
-    private final Placeholder.Formatter<Player> formatter = new Placeholder.Formatter<>();
+    private final Placeholder.Formatter<Audience> formatter = new Placeholder.Formatter<>();
 
     @Override
     public void onLoad() {

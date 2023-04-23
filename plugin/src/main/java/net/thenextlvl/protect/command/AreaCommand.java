@@ -4,7 +4,7 @@ import cloud.commandframework.exceptions.InvalidSyntaxException;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.thenextlvl.protect.Protect;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
@@ -23,14 +23,14 @@ public class AreaCommand {
         new MinecraftExceptionHandler<CommandSender>().withDefaultHandlers()
                 .withHandler(INVALID_SYNTAX, e -> {
                     var syntax = ((InvalidSyntaxException) e).getCorrectSyntax()
-                            .replace("[", "§8(§6").replace("]", "§8)")
-                            .replace("<", "§8[§6").replace(">", "§8]")
-                            .replace("|", " §8|§c ");
-                    return Component.text(Messages.PREFIX.message() + " §c/" + syntax);
+                            .replace("[", "<dark_gray>(<gold>").replace("]", "<dark_gray>)")
+                            .replace("<", "<dark_gray>[<gold>").replace(">", "<dark_gray>]")
+                            .replace("|", " <dark_gray>|<red> ");
+                    return MiniMessage.miniMessage().deserialize(Messages.PREFIX.message() + " <red>/" + syntax);
                 })
                 .withHandler(INVALID_SENDER, (sender, exception) -> {
                     Locale locale = sender instanceof Player player ? player.locale() : Locale.forLanguageTag("en-US");
-                    return Component.text(Messages.INVALID_SENDER.message(locale));
+                    return MiniMessage.miniMessage().deserialize(Messages.INVALID_SENDER.message(locale));
                 })
                 .apply(manager, sender -> sender);
         var builder = manager.commandBuilder("area").permission("area.command");
