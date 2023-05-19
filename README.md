@@ -1,5 +1,4 @@
 # Protect
-A library that provides simple to use shortcuts to overcomplicated bukkit related things
 ````xml
 <repository>
   <id>releases</id>
