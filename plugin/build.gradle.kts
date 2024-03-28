@@ -44,11 +44,6 @@ paper {
     apiVersion = "1.20"
     authors = listOf("NonSwag")
     website = "https://thenextlvl.net"
-    load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
-    libraries = listOf(
-            "cloud.commandframework:cloud-paper:1.8.3",
-            "cloud.commandframework:cloud-minecraft-extras:1.8.3"
-    )
     serverDependencies {
         register("WorldEdit") {
             required = true
@@ -56,4 +51,30 @@ paper {
     }
 }
 
+val versionString: String = project.version as String
+val isRelease: Boolean = !versionString.contains("-pre")
+
+hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
+    publications.register("plugin") {
+        id.set("Protect")
+        version.set(project.version as String)
+        channel.set(if (isRelease) "Release" else "Snapshot")
+        if (extra.has("HANGAR_API_TOKEN"))
+            apiKey.set(extra["HANGAR_API_TOKEN"] as String)
+        else apiKey.set(System.getenv("HANGAR_API_TOKEN"))
+        platforms {
+            register(Platforms.PAPER) {
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                val versions: List<String> = (property("paperVersion") as String)
+                        .split(",")
+                        .map { it.trim() }
+                platformVersions.set(versions)
+                dependencies {
+                    url("WorldEdit", "https://ci.athion.net/job/FastAsyncWorldEdit/") {
+                        required.set(false)
+                    }
+                }
+            }
+        }
+    }
 }
