@@ -4,11 +4,13 @@ plugins {
 }
 
 group = "net.thenextlvl.protect"
-version = "1.0.1"
+version = "2.0.0"
 
 java {
     withSourcesJar()
     withJavadocJar()
+    targetCompatibility = JavaVersion.VERSION_19
+    sourceCompatibility = JavaVersion.VERSION_19
 }
 
 repositories {
@@ -19,29 +21,28 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    compileOnly("net.thenextlvl.core:annotations:1.0.0")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.9")
-    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    compileOnly("net.thenextlvl.core:annotations:2.0.1")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
-    implementation("net.thenextlvl.core:api:3.1.10")
+    implementation("net.thenextlvl.core:files:1.0.4")
 
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-        repositories {
-            maven {
-                url = uri("https://repo.thenextlvl.net/releases")
-                credentials {
-                    username = extra["RELEASES_USER"].toString()
-                    password = extra["RELEASES_PASSWORD"].toString()
-                }
-            }
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
+    }
+    repositories.maven {
+        val branch = if (version.toString().contains("-pre")) "snapshots" else "releases"
+        url = uri("https://repo.thenextlvl.net/$branch")
+        credentials {
+            if (extra.has("RELEASES_USER"))
+                username = extra["RELEASES_USER"].toString()
+            if (extra.has("RELEASES_PASSWORD"))
+                password = extra["RELEASES_PASSWORD"].toString()
         }
     }
 }

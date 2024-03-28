@@ -1,13 +1,19 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import io.papermc.hangarpublishplugin.model.Platforms
 
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
+    id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_19
+    sourceCompatibility = JavaVersion.VERSION_19
 }
 
 group = "net.thenextlvl.protect"
-version = "1.0.0"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
@@ -17,31 +23,37 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    compileOnly("net.thenextlvl.core:annotations:1.0.0")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.9")
-    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    compileOnly("net.thenextlvl.core:annotations:2.0.1")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
-    compileOnly("cloud.commandframework:cloud-paper:1.8.3")
-    compileOnly("cloud.commandframework:cloud-minecraft-extras:1.8.3")
+    implementation("cloud.commandframework:cloud-paper:1.8.3")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.3")
 
     implementation(project(":api"))
-    implementation("net.thenextlvl.core:api:3.1.10")
-    implementation("net.thenextlvl.core:bukkit:1.0.0")
+    implementation("net.thenextlvl.core:files:1.0.4")
+    implementation("net.thenextlvl.core:paper:1.2.6")
 
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
-bukkit {
+paper {
     name = "Protect"
-    main = "net.thenextlvl.protect.Protect"
-    apiVersion = "1.19"
+    main = "net.thenextlvl.protect.ProtectPlugin"
+    apiVersion = "1.20"
     authors = listOf("NonSwag")
-    depend = listOf("WorldEdit")
     website = "https://thenextlvl.net"
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     libraries = listOf(
             "cloud.commandframework:cloud-paper:1.8.3",
             "cloud.commandframework:cloud-minecraft-extras:1.8.3"
     )
+    serverDependencies {
+        register("WorldEdit") {
+            required = true
+        }
+    }
+}
+
 }
