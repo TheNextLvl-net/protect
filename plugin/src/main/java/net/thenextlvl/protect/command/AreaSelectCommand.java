@@ -5,42 +5,50 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
-import core.api.placeholder.Placeholder;
-import net.thenextlvl.protect.Protect;
+import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.util.Messages;
+import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@RequiredArgsConstructor
 class AreaSelectCommand {
+    private final ProtectPlugin plugin;
 
-    static Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
+    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
         return builder
                 .literal("select")
                 .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> Area.areas().filter(area ->
-                                !area.isGlobalArea()).map(Area::getName).filter(s ->
-                                s.startsWith(token)).toList())
+                        .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
+                                .filter(area -> area instanceof RegionizedArea<?>)
+                                .map(Area::getName)
+                                .filter(s -> s.startsWith(token)).toList())
                         .asOptional()
                         .build())
                 .senderType(Player.class)
-                .handler(AreaSelectCommand::execute);
+                .handler(this::execute);
     }
 
-    private static void execute(CommandContext<CommandSender> context) {
+    @SuppressWarnings("PatternValidation")
+    private void execute(CommandContext<CommandSender> context) {
         var player = (Player) context.getSender();
-        var area = context.contains("area") ? Area.get(context.<String>get("area")) : Area.highestArea(player);
-        if (area != null && !area.isGlobalArea())
-            handleSelect(player, area);
+        var name = context.<String>getOrDefault("area", null);
+        if (name != null && !name.matches("^@?[a-zA-Z0-9_-]+$")) {
+            // todo pattern validation
+            return;
+        }
+        var area = name != null ? plugin.areaProvider().getArea(name).orElse(null) : plugin.areaProvider().getArea(player);
+        if (area instanceof RegionizedArea<?> regionizedArea)
+            handleSelect(player, regionizedArea);
         else if (area != null)
-            player.sendRichMessage(Messages.INVALID_AREA.message(player.locale(), player));
-        else player.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
-                    "%prefix% <red>/area select <dark_gray>(<gold>area<dark_gray>)"
-            ));
+            plugin.bundle().sendMessage(player, "area.invalid");
+        else plugin.bundle().sendRawMessage(player, "command.area.select");
     }
 
-    private static void handleSelect(Player player, Area area) {
+    private void handleSelect(Player player, RegionizedArea<?> area) {
         var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
         var session = worldEdit.getSession(player);
         session.setRegionSelector(area.getRegion().getWorld(), new CuboidRegionSelector(
@@ -49,7 +57,6 @@ class AreaSelectCommand {
                 area.getRegion().getMaximumPoint()
         ));
         session.updateServerCUI(worldEdit.wrapPlayer(player));
-        player.sendRichMessage(Messages.AREA_SELECTED.message(player.locale(), player,
-                Placeholder.of("area", area.getName())));
+        plugin.bundle().sendMessage(player, "area.selected", Placeholder.parsed("area", area.getName()));
     }
 }

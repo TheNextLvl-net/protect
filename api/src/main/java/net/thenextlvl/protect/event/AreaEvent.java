@@ -6,17 +6,15 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AreaEvent extends Event {
-    @Getter
-    private static final HandlerList handlerList = new HandlerList();
+    private static final @Getter HandlerList handlerList = new HandlerList();
     private final Area area;
 
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return getHandlerList();
     }
 }

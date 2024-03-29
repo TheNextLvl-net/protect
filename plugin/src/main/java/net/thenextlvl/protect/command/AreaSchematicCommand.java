@@ -4,13 +4,13 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.WorldEditException;
-import core.api.placeholder.Placeholder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.audience.Audience;
-import net.thenextlvl.protect.Protect;
-import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.area.CraftRegionizedArea;
+import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,16 +24,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Supplier;
 
+@RequiredArgsConstructor
 class AreaSchematicCommand {
+    private final ProtectPlugin plugin;
 
     @Getter
     @RequiredArgsConstructor
     public enum Option {
-        LOAD("load", () -> Area.areas().filter(area ->
-                !area.isGlobalArea() && area.getSchematic().getFile().isFile()).map(Area::getName).toList()),
-        DELETE("delete", () -> Area.areas().filter(area ->
-                !area.isGlobalArea() && area.getSchematic().getFile().isFile()).map(Area::getName).toList()),
-        SAVE("save", () -> Area.areas().filter(area -> !area.isGlobalArea()).map(Area::getName).toList());
+        LOAD("load", () -> CraftRegionizedArea.areas().filter(area ->
+                !area.isGlobalArea() && area.getSchematic().getFile().isFile()).map(CraftRegionizedArea::getName).toList()),
+        DELETE("delete", () -> CraftRegionizedArea.areas().filter(area ->
+                !area.isGlobalArea() && area.getSchematic().getFile().isFile()).map(CraftRegionizedArea::getName).toList()),
+        SAVE("save", () -> CraftRegionizedArea.areas().filter(area -> !area.isGlobalArea()).map(CraftRegionizedArea::getName).toList());
 
         private final String name;
         @Accessors(fluent = true)
@@ -46,7 +48,7 @@ class AreaSchematicCommand {
         }
     }
 
-    static Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
+    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
         return builder
                 .literal("schematic")
                 .argument(StringArgument.<CommandSender>builder("option")
@@ -63,10 +65,10 @@ class AreaSchematicCommand {
                 .handler(AreaSchematicCommand::execute);
     }
 
-    private static void execute(CommandContext<CommandSender> context) {
+    private void execute(CommandContext<CommandSender> context) {
         var sender = context.getSender();
         var option = Option.parse(context.get("option"));
-        var area = Area.get(context.<String>get("area"));
+        var area = CraftRegionizedArea.get(context.<String>get("area"));
         var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
         if (area != null && option != null && option.equals(Option.LOAD))
             handleLoad(sender, area, locale);
@@ -74,12 +76,12 @@ class AreaSchematicCommand {
             handleDelete(sender, area, locale);
         else if (area != null && option != null && option.equals(Option.SAVE))
             handleSave(sender, area, locale);
-        else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+        else sender.sendRichMessage(JavaPlugin.getPlugin(ProtectPlugin.class).formatter().format(
                     "%prefix% <red>/area schematic <dark_gray>[<gold>option<dark_gray>] [<gold>area<dark_gray>]"
             ));
     }
 
-    private static void handleSave(CommandSender sender, Area area, Locale locale) {
+    private void handleSave(CommandSender sender, RegionizedArea<?> area, Locale locale) {
         if (area.isTooBig()) sender.sendRichMessage(Messages.AREA_WARNING_SIZE.message(locale, sender));
         var schematic = Placeholder.<Audience>of("schematic", area.getName());
         boolean save = false;
@@ -92,14 +94,14 @@ class AreaSchematicCommand {
         sender.sendRichMessage(message.message(locale, sender, schematic));
     }
 
-    private static void handleDelete(CommandSender sender, Area area, Locale locale) {
+    private void handleDelete(CommandSender sender, RegionizedArea<?> area, Locale locale) {
         var schematic = Placeholder.<Audience>of("schematic", area.getName());
         var delete = area.getSchematic().delete();
         var message = delete ? Messages.SCHEMATIC_DELETE_SUCCEEDED : Messages.SCHEMATIC_DELETE_FAILED;
         sender.sendRichMessage(message.message(locale, sender, schematic));
     }
 
-    private static void handleLoad(CommandSender sender, Area area, Locale locale) {
+    private void handleLoad(CommandSender sender, RegionizedArea<?> area, Locale locale) {
         if (area.isTooBig()) sender.sendRichMessage(Messages.AREA_WARNING_SIZE.message(locale, sender));
         var schematic = Placeholder.<Audience>of("schematic", area.getName());
         boolean load = false;

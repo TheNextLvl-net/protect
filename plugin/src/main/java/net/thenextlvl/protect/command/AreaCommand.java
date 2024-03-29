@@ -1,66 +1,52 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.CommandTree;
-import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.exceptions.InvalidSyntaxException;
+import cloud.commandframework.exceptions.NoPermissionException;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.paper.PaperCommandManager;
-import core.api.placeholder.Placeholder;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.thenextlvl.protect.Protect;
-import net.thenextlvl.protect.util.Messages;
+import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Locale;
 import java.util.function.Function;
 
 import static cloud.commandframework.minecraft.extras.MinecraftExceptionHandler.ExceptionType.*;
 
+@RequiredArgsConstructor
 public class AreaCommand {
+    private final ProtectPlugin plugin;
 
-    private static CommandTree.@Nullable Node<@Nullable CommandArgument<CommandSender, ?>> node;
-
-    public static void register(Protect plugin) throws Exception {
+    public void register() throws Exception {
         var manager = new PaperCommandManager<>(plugin, CommandExecutionCoordinator.simpleCoordinator(), Function.identity(), Function.identity());
         manager.commandSyntaxFormatter(new CustomSyntaxFormatter<>());
         manager.registerAsynchronousCompletions();
         registerExceptionHandlers(manager);
         manager.registerBrigadier();
         var builder = manager.commandBuilder("area").permission("protect.command.area");
-        manager.command(AreaCreateCommand.create(builder));
-        manager.command(AreaDeleteCommand.create(builder));
-        manager.command(AreaFlagCommand.create(builder));
-        manager.command(AreaInfoCommand.create(builder));
-        manager.command(AreaListCommand.create(builder));
-        manager.command(AreaPriorityCommand.create(builder));
-        manager.command(AreaRedefineCommand.create(builder));
-        manager.command(AreaSchematicCommand.create(builder));
-        manager.command(AreaSelectCommand.create(builder));
-        manager.command(AreaTeleportCommand.create(builder));
+        manager.command(new AreaCreateCommand(plugin).create(builder));
+        manager.command(new AreaDeleteCommand(plugin).create(builder));
+        manager.command(new AreaFlagCommand(plugin).create(builder));
+        manager.command(new AreaInfoCommand(plugin).create(builder));
+        manager.command(new AreaListCommand(plugin).create(builder));
+        manager.command(new AreaPriorityCommand(plugin).create(builder));
+        manager.command(new AreaRedefineCommand(plugin).create(builder));
+        manager.command(new AreaSchematicCommand(plugin).create(builder));
+        manager.command(new AreaSelectCommand(plugin).create(builder));
+        manager.command(new AreaTeleportCommand(plugin).create(builder));
     }
 
-    private static void registerExceptionHandlers(PaperCommandManager<CommandSender> manager) {
+    private void registerExceptionHandlers(PaperCommandManager<CommandSender> manager) {
         new MinecraftExceptionHandler<CommandSender>()
-                .withHandler(INVALID_SYNTAX, e -> {
-                    var syntax = ((InvalidSyntaxException) e).getCorrectSyntax();
-                    return MiniMessage.miniMessage().deserialize(Messages.PREFIX.message() + " <red>/" + syntax);
-                })
-                .withHandler(INVALID_SENDER, (sender, exception) -> {
-                    var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
-                    return MiniMessage.miniMessage().deserialize(Messages.INVALID_SENDER.message(locale, sender));
-                })
-                .withHandler(NO_PERMISSION, (sender, exception) -> {
-                    var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
-                    return MiniMessage.miniMessage().deserialize(Messages.NO_PERMISSION.message(locale, sender));
-                })
-                .withHandler(COMMAND_EXECUTION, (sender, exception) -> {
-                    var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
-                    var command = Placeholder.<Audience>of("command", "area");
-                    return MiniMessage.miniMessage().deserialize(Messages.COMMAND_EXCEPTION.message(locale, sender, command));
-                })
+                .withHandler(INVALID_SYNTAX, e -> plugin.bundle().component(Locale.US, "command.syntax",
+                        Placeholder.parsed("syntax", ((InvalidSyntaxException) e).getCorrectSyntax())))
+                .withHandler(INVALID_SENDER, (sender, e) -> plugin.bundle().component(sender, "command.sender"))
+                .withHandler(NO_PERMISSION, (sender, e) -> plugin.bundle().component(sender, "command.permission",
+                        Placeholder.parsed("permission", ((NoPermissionException) e).getMissingPermission())))
+                .withHandler(COMMAND_EXECUTION, (sender, e) -> plugin.bundle().component(sender, "command.exception",
+                        Placeholder.parsed("command", "area")))
                 .withArgumentParsingHandler()
                 .apply(manager, sender -> sender);
     }

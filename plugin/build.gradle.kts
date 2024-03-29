@@ -1,4 +1,5 @@
 import io.papermc.hangarpublishplugin.model.Platforms
+import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
     id("java")
@@ -32,10 +33,17 @@ dependencies {
     implementation("cloud.commandframework:cloud-minecraft-extras:1.8.3")
 
     implementation(project(":api"))
+    implementation("net.thenextlvl.core:i18n:1.0.14")
     implementation("net.thenextlvl.core:files:1.0.4")
     implementation("net.thenextlvl.core:paper:1.2.6")
+    implementation("net.thenextlvl.core:adapters:1.0.8")
 
     annotationProcessor("org.projectlombok:lombok:1.18.30")
+}
+
+tasks.shadowJar {
+    archiveBaseName.set("protect")
+    minimize()
 }
 
 paper {
@@ -46,7 +54,45 @@ paper {
     website = "https://thenextlvl.net"
     serverDependencies {
         register("WorldEdit") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
+        }
+    }
+    permissions {
+        register("protect.command.area") {
+            description = "Allows players to use the area command"
+            children = listOf(
+                    "protect.command.area.create",
+                    "protect.command.area.delete",
+                    "protect.command.area.manage"
+            )
+        }
+        register("protect.command.area.manage") {
+            description = "Allows players to manage protected areas"
+            children = listOf(
+                    "protect.command.area.rename",
+                    "protect.command.area.redefine",
+                    "protect.command.area.flag"
+            )
+        }
+        register("protect.bypass") {
+            description = "Allows players to bypass any restriction"
+            children = listOf(
+                    "protect.bypass.build",
+                    "protect.bypass.break",
+                    "protect.bypass.interact",
+                    "protect.bypass.entity-interact",
+                    "protect.bypass.trample",
+                    "protect.bypass.enter",
+                    "protect.bypass.leave"
+            )
+        }
+        register("protect.admin") {
+            description = "Allows players to bypass all restrictions and access to all commands"
+            children = listOf(
+                    "protect.bypass",
+                    "protect.command.area"
+            )
         }
     }
 }

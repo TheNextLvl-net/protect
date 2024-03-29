@@ -2,26 +2,35 @@ package net.thenextlvl.protect.command;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
-import core.api.placeholder.Placeholder;
+import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.util.Messages;
+import net.thenextlvl.protect.area.GlobalArea;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
+@RequiredArgsConstructor
 class AreaListCommand {
+    private final ProtectPlugin plugin;
 
-    static Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
-        return builder.literal("list").handler(AreaListCommand::execute);
+    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
+        return builder.literal("list").handler(this::execute);
     }
 
-    private static void execute(CommandContext<CommandSender> context) {
+    private void execute(CommandContext<CommandSender> context) {
         var sender = context.getSender();
-        var global = Area.areas().filter(Area::isGlobalArea).map(Area::getName).toList();
-        var user = Area.areas().filter(area -> !area.isGlobalArea()).map(Area::getName).toList();
-        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
-        sender.sendRichMessage(Messages.AREA_LIST.message(locale, sender,
-                Placeholder.of("amount", user.size()), Placeholder.of("areas", String.join(", ", user))));
-        sender.sendRichMessage(Messages.AREA_LIST_GLOBAL.message(locale, sender,
-                Placeholder.of("amount", global.size()), Placeholder.of("areas", String.join(", ", global))));
+        var globalAreas = plugin.areaProvider().getAreas()
+                .filter(area -> area instanceof GlobalArea)
+                .map(Area::getName)
+                .toList();
+        var userAreas = plugin.areaProvider().getAreas()
+                .filter(area -> !(area instanceof GlobalArea))
+                .map(Area::getName).toList();
+        plugin.bundle().sendMessage(sender, "area.list",
+                Placeholder.parsed("amount", String.valueOf(userAreas.size())),
+                Placeholder.parsed("areas", String.join(", ", userAreas)));
+        plugin.bundle().sendMessage(sender, "area.list.global",
+                Placeholder.parsed("amount", String.valueOf(globalAreas.size())),
+                Placeholder.parsed("areas", String.join(", ", globalAreas)));
     }
 }

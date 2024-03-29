@@ -1,6 +1,7 @@
 package net.thenextlvl.protect.listener;
 
-import net.thenextlvl.protect.area.Area;
+import lombok.RequiredArgsConstructor;
+import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaEnterEvent;
 import net.thenextlvl.protect.event.AreaLeaveEvent;
 import org.bukkit.event.EventHandler;
@@ -9,12 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class MoveListener implements Listener {
+@RequiredArgsConstructor
+public class MovementListener implements Listener {
+    private final ProtectPlugin plugin;
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!event.hasChangedBlock() && !(event instanceof PlayerTeleportEvent)) return;
-        Area.areas(event.getTo().getWorld()).forEach(area -> {
+        if (event.hasChangedBlock()) plugin.areaProvider().getAreas(event.getTo()).sorted().forEach(area -> {
             if (!area.contains(event.getFrom()) && area.contains(event.getTo())) {
                 event.setCancelled(!new AreaEnterEvent(event.getPlayer(), area).callEvent());
             } else if (area.contains(event.getFrom()) && !area.contains(event.getTo())) {
@@ -23,7 +25,7 @@ public class MoveListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         onPlayerMove(event);
     }

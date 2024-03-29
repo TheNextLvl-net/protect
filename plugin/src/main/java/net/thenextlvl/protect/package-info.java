@@ -1,9 +1,10 @@
+@TypesAreNotNullByDefault
 @FieldsAreNotNullByDefault
-@ParametersAreNotNullByDefault
 @MethodsReturnNotNullByDefault
-package net.thenextlvl.protect.event;
+@ParametersAreNotNullByDefault
+package net.thenextlvl.protect;
 
 import core.annotation.FieldsAreNotNullByDefault;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
-
+import core.annotation.TypesAreNotNullByDefault;

@@ -3,12 +3,11 @@ package net.thenextlvl.protect.command;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
-import core.api.placeholder.Placeholder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import net.thenextlvl.protect.Protect;
-import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.area.CraftRegionizedArea;
 import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.util.Messages;
 import org.bukkit.command.CommandSender;
@@ -21,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+@RequiredArgsConstructor
 class AreaFlagCommand {
+    private final ProtectPlugin plugin;
 
     @Getter
     @RequiredArgsConstructor
@@ -39,7 +40,7 @@ class AreaFlagCommand {
         }
     }
 
-    static Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
+    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
         return builder.literal("flag")
                 .argument(StringArgument.<CommandSender>builder("option")
                         .withSuggestionsProvider((context, token) ->
@@ -49,7 +50,7 @@ class AreaFlagCommand {
                         .withSuggestionsProvider((context, token) -> new ArrayList<>(Flag.names()))
                         .build())
                 .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> Area.areas().map(Area::getDisplayName)
+                        .withSuggestionsProvider((context, token) -> CraftRegionizedArea.areas().map(CraftRegionizedArea::getDisplayName)
                                 .filter(s -> s.startsWith(token)).toList())
                         .asOptional().build())
                 .argument(StringArgument.<CommandSender>builder("value")
@@ -63,24 +64,24 @@ class AreaFlagCommand {
                 .handler(AreaFlagCommand::execute);
     }
 
-    private static void execute(CommandContext<CommandSender> context) {
+    private void execute(CommandContext<CommandSender> context) {
         var sender = context.getSender();
         var option = Option.parse(context.get("option"));
         var flag = Flag.valueOf(context.get("flag"));
-        var area = context.contains("area") ? Area.get(context.<String>get("area")) :
-                sender instanceof Entity entity ? Area.highestArea(entity) : null;
+        var area = context.contains("area") ? CraftRegionizedArea.get(context.<String>get("area")) :
+                sender instanceof Entity entity ? plugin.protectionService().areaAt(entity) : null;
         if (option != null && option.equals(Option.INFO))
             handleInfo(sender, flag, area);
         else if (option != null && option.equals(Option.UNSET))
             handleUnset(sender, flag, area);
         else if (option != null && option.equals(Option.SET))
             handleSet(context, sender, flag, area);
-        else if (option == null) sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+        else if (option == null) sender.sendRichMessage(JavaPlugin.getPlugin(ProtectPlugin.class).formatter().format(
                 "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>[<gold>area<dark_gray>] <dark_gray>(<gold>value<dark_gray>)"
         ));
     }
 
-    private static void handleSet(CommandContext<CommandSender> context, CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
+    private void handleSet(CommandContext<CommandSender> context, CommandSender sender, @Nullable Flag<Object> flag, @Nullable CraftRegionizedArea area) {
         var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
         var value = flag != null && context.contains("value") ? flag.possibilities().get(context.<String>get("value")) : null;
         if (flag != null && value != null && area != null && area.setFlag(flag, value))
@@ -90,24 +91,24 @@ class AreaFlagCommand {
                     Placeholder.of("flag", flag.name())));
         else if (flag != null && value != null && area != null)
             sender.sendRichMessage(Messages.NOTHING_CHANGED.message(locale, sender));
-        else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+        else sender.sendRichMessage(JavaPlugin.getPlugin(ProtectPlugin.class).formatter().format(
                     "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>[<gold>area<dark_gray>] <dark_gray>(<gold>value<dark_gray>)"
             ));
     }
 
-    private static void handleUnset(CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
+    private void handleUnset(CommandSender sender, @Nullable Flag<Object> flag, @Nullable CraftRegionizedArea area) {
         var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
         if (flag != null && area != null && area.unsetFlag(flag))
             sender.sendRichMessage(Messages.AREA_FLAG_UNSET.message(locale, sender,
                     Placeholder.of("area", area.getName()), Placeholder.of("flag", flag.name())));
         else if (flag != null && area != null)
             sender.sendRichMessage(Messages.NOTHING_CHANGED.message(locale, sender));
-        else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+        else sender.sendRichMessage(JavaPlugin.getPlugin(ProtectPlugin.class).formatter().format(
                     "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>(<gold>area<dark_gray>)"
             ));
     }
 
-    private static void handleInfo(CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
+    private void handleInfo(CommandSender sender, @Nullable Flag<Object> flag, @Nullable CraftRegionizedArea area) {
         var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
         if (flag != null && area != null) {
             sender.sendRichMessage(Messages.AREA_INFO_NAME.message(locale, sender,
@@ -118,7 +119,7 @@ class AreaFlagCommand {
                     locale, sender, Placeholder.of("flag", flag.possibilities().name(flag.defaultValue()))));
             sender.sendRichMessage(Messages.AREA_INFO_FLAG_VALUE.message(locale, sender,
                     Placeholder.of("flag", flag.possibilities().name(area.getFlag(flag)))));
-        } else sender.sendRichMessage(JavaPlugin.getPlugin(Protect.class).formatter().format(
+        } else sender.sendRichMessage(JavaPlugin.getPlugin(ProtectPlugin.class).formatter().format(
                 "%prefix% <red>/area flag <dark_gray>[<gold>option<dark_gray>] <dark_gray>[<gold>flag<dark_gray>] <dark_gray>(<gold>area<dark_gray>)"
         ));
     }

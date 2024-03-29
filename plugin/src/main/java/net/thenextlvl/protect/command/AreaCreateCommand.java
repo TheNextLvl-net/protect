@@ -5,38 +5,42 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.math.BlockVector3;
-import core.api.placeholder.Placeholder;
-import net.kyori.adventure.audience.Audience;
-import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.util.Messages;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@RequiredArgsConstructor
 class AreaCreateCommand {
+    private final ProtectPlugin plugin;
 
-    static Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
+    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
         return builder
                 .literal("create")
                 .argument(StringArgument.of("name"))
                 .senderType(Player.class)
-                .handler(AreaCreateCommand::execute);
+                .handler(this::execute);
     }
 
-    private static void execute(CommandContext<CommandSender> context) {
+    @SuppressWarnings("PatternValidation")
+    private void execute(CommandContext<CommandSender> context) {
         var name = context.<String>get("name");
+        // todo pattern validation
         var player = (Player) context.getSender();
-        var placeholder = Placeholder.<Audience>of("area", name);
-        if (Area.get(name) == null) try {
+        var placeholder = Placeholder.parsed("area", name);
+        if (plugin.areaProvider().getArea(name).isPresent())
+            plugin.bundle().sendMessage(player, "area.exists", placeholder);
+        else try {
             var session = JavaPlugin.getPlugin(WorldEditPlugin.class).getSession(player);
-            BlockVector3 pos1 = session.getSelection().getMinimumPoint();
-            BlockVector3 pos2 = session.getSelection().getMaximumPoint();
-            Area.create(name, player.getWorld(), pos1, pos2);
-            player.sendRichMessage(Messages.AREA_CREATED.message(player.locale(), player, placeholder));
+            if (session.getSelection() instanceof CuboidRegion cuboidRegion) {
+                plugin.areaService().create(name, cuboidRegion);
+            } else throw new IncompleteRegionException();
+            plugin.bundle().sendMessage(player, "area.created", placeholder);
         } catch (IncompleteRegionException ignored) {
-            player.sendRichMessage(Messages.SELECT_REGION.message(player.locale(), player, placeholder));
+            plugin.bundle().sendMessage(player, "region.select", placeholder);
         }
-        else player.sendRichMessage(Messages.AREA_EXISTS.message(player.locale(), player, placeholder));
     }
 }
