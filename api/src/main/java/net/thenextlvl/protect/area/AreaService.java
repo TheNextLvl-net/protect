@@ -37,6 +37,7 @@ public interface AreaService {
      * Deletes the given Area.
      *
      * @param area The Area to delete.
+     * @param <T> The type of the region.
      * @return True if the deletion is successful, false otherwise.
      */
     <T extends Region> boolean delete(RegionizedArea<T> area);

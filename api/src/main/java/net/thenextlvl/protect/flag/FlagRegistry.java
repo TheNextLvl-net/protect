@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * FlagRegistry is an interface that provides methods for managing registered flags.
+ */
 public interface FlagRegistry {
     /**
      * Retrieves the set of flags associated with the given plugin.

@@ -42,6 +42,7 @@ public interface FlagProvider {
      * Checks if the flag has a state defined.
      *
      * @param flag The flag to check the state of.
+     * @param <T> The type of the flag.
      * @return true if a state is defined, true otherwise.
      */
     <T> boolean hasFlag(@NotNull Flag<T> flag);
