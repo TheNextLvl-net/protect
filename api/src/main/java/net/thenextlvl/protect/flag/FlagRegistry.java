@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.flag;
 
+import net.kyori.adventure.key.KeyPattern;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +47,7 @@ public interface FlagRegistry {
      * @return the registered flag
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      */
-    <T> @NotNull Flag<T> register(@NotNull Plugin plugin, @NotNull String name, T defaultValue) throws IllegalStateException;
+    <T> @NotNull Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type, @KeyPattern @NotNull String name, T defaultValue) throws IllegalStateException;
 
     /**
      * Unregisters a flag identified by the given NamespacedKey.
