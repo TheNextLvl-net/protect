@@ -111,16 +111,19 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(BlockExplodeEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(plugin.flags.explosions));
+    public void onBlockExplode(BlockExplodeEvent event) {
+        event.blockList().removeIf(block -> {
+            var area = plugin.areaProvider().getArea(block);
+            return !area.getFlag(plugin.flags.explosions);
+        });
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(EntityExplodeEvent event) {
-        var area = plugin.areaProvider().getArea(event.getLocation());
-        event.blockList().removeIf(block -> !area.getFlag(plugin.flags.explosions));
-        event.setCancelled(!area.getFlag(plugin.flags.explosions));
+    public void onEntityExplode(EntityExplodeEvent event) {
+        event.blockList().removeIf(block -> {
+            var area = plugin.areaProvider().getArea(block);
+            return !area.getFlag(plugin.flags.explosions);
+        });
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
