@@ -40,4 +40,9 @@ public class AreaListener implements Listener {
         if (weather != null) event.getPlayer().setPlayerWeather(weather);
         else if (event.getPrevious().hasFlag(plugin.flags.weather))
             event.getPlayer().resetPlayerWeather();
+        var time = event.getArea().getFlag(plugin.flags.time);
+        if (time != null) event.getPlayer().setPlayerTime(time, false);
+        else if (event.getPrevious().hasFlag(plugin.flags.time))
+            event.getPlayer().resetPlayerTime();
+    }
 }
