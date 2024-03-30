@@ -33,4 +33,11 @@ public class AreaListener implements Listener {
         var message = event.getArea().getFlag(plugin.flags.farewell);
         if (message != null) event.getPlayer().sendRichMessage(message);
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerAreaTransition(PlayerAreaTransitionEvent event) {
+        var weather = event.getArea().getFlag(plugin.flags.weather);
+        if (weather != null) event.getPlayer().setPlayerWeather(weather);
+        else if (event.getPrevious().hasFlag(plugin.flags.weather))
+            event.getPlayer().resetPlayerWeather();
 }
