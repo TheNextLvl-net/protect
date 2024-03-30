@@ -2,6 +2,7 @@ package net.thenextlvl.protect;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import core.file.FileIO;
 import core.file.format.GsonFile;
@@ -98,13 +99,16 @@ public class ProtectPlugin extends JavaPlugin {
 
     public FileIO<Set<Area>> loadAreas(World world) {
         var file = areasFiles().computeIfAbsent(world, w -> new GsonFile<>(
-                IO.of(world.getWorldFolder(), ".areas"), new HashSet<>(), new TypeToken<>() {
+                IO.of(world.getWorldFolder(), "areas.json"), new HashSet<>(), new TypeToken<>() {
         }, new GsonBuilder()
-                .registerTypeHierarchyAdapter(World.class, WorldAdapter.Key.INSTANCE)
-                .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter())
-                .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter(w))
-                .registerTypeHierarchyAdapter(CuboidArea.class, new CuboidAreaAdapter(this))
+                .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
+                .registerTypeHierarchyAdapter(CuboidArea.class, new CuboidAreaAdapter(this, w))
+                .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVector3Adapter())
                 .registerTypeHierarchyAdapter(GlobalArea.class, new GlobalAreaAdapter(w))
+                .registerTypeHierarchyAdapter(World.class, WorldAdapter.Key.INSTANCE)
+                .registerTypeHierarchyAdapter(new TypeToken<Map<Flag<?>, Object>>() {
+                }.getRawType(), new FlagsAdapter(this))
+                .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(this))
                 .registerTypeAdapter(Area.class, new AreaAdapter())
                 .setPrettyPrinting()
                 .create()
@@ -114,32 +118,40 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     public class Flags {
-        public final Flag<@NotNull Boolean> areaEnter = flagRegistry().register(ProtectPlugin.this, "enter", true);
-        public final Flag<@NotNull Boolean> areaLeave = flagRegistry().register(ProtectPlugin.this, "leave", true);
-        public final Flag<@NotNull Boolean> armorStandManipulate = flagRegistry().register(ProtectPlugin.this, "armorStandManipulate", true);
-        public final Flag<@NotNull Boolean> blockBreak = flagRegistry().register(ProtectPlugin.this, "blockBreak", true);
-        public final Flag<@NotNull Boolean> blockPlace = flagRegistry().register(ProtectPlugin.this, "blockPlace", true);
-        public final Flag<@NotNull Boolean> blockSpread = flagRegistry().register(ProtectPlugin.this, "blockSpread", true);
-        public final Flag<@NotNull Boolean> cropTrample = flagRegistry().register(ProtectPlugin.this, "cropTrample", true);
-        public final Flag<@NotNull Boolean> damage = flagRegistry().register(ProtectPlugin.this, "damage", true);
-        public final Flag<@NotNull Boolean> entityAttackEntity = flagRegistry().register(ProtectPlugin.this, "entityAttackEntity", true);
-        public final Flag<@NotNull Boolean> entityAttackPlayer = flagRegistry().register(ProtectPlugin.this, "entityAttackPlayer", true);
-        public final Flag<@NotNull Boolean> entityInteract = flagRegistry().register(ProtectPlugin.this, "entityInteract", true);
-        public final Flag<@NotNull Boolean> entityItemDrop = flagRegistry().register(ProtectPlugin.this, "entityItemDrop", true);
-        public final Flag<@NotNull Boolean> entityItemPickup = flagRegistry().register(ProtectPlugin.this, "entityItemPickup", true);
-        public final Flag<@NotNull Boolean> entityShear = flagRegistry().register(ProtectPlugin.this, "entityShear", true);
-        public final Flag<@NotNull Boolean> entitySpawn = flagRegistry().register(ProtectPlugin.this, "entitySpawn", true);
-        public final Flag<@NotNull Boolean> explosions = flagRegistry().register(ProtectPlugin.this, "explosions", true);
-        public final Flag<@NotNull Boolean> hangingBreak = flagRegistry().register(ProtectPlugin.this, "hangingBreak", true);
-        public final Flag<@NotNull Boolean> hangingPlace = flagRegistry().register(ProtectPlugin.this, "hangingPlace", true);
-        public final Flag<@NotNull Boolean> hunger = flagRegistry().register(ProtectPlugin.this, "hunger", true);
-        public final Flag<@NotNull Boolean> interact = flagRegistry().register(ProtectPlugin.this, "interact", true);
-        public final Flag<@NotNull Boolean> physics = flagRegistry().register(ProtectPlugin.this, "physics", true);
-        public final Flag<@NotNull Boolean> playerAttackEntity = flagRegistry().register(ProtectPlugin.this, "playerAttackEntity", true);
-        public final Flag<@NotNull Boolean> playerAttackPlayer = flagRegistry().register(ProtectPlugin.this, "playerAttackPlayer", true);
-        public final Flag<@NotNull Boolean> redstone = flagRegistry().register(ProtectPlugin.this, "redstone", true);
-        public final Flag<@NotNull Boolean> shoot = flagRegistry().register(ProtectPlugin.this, "shoot", true);
-        public final Flag<@Nullable String> farewell = flagRegistry().register(ProtectPlugin.this, "farewell", null);
-        public final Flag<@Nullable String> greetings = flagRegistry().register(ProtectPlugin.this, "greetings", null);
+        public final Flag<@NotNull Boolean> areaEnter = flagRegistry().register(ProtectPlugin.this, Boolean.class, "enter", true);
+        public final Flag<@NotNull Boolean> areaLeave = flagRegistry().register(ProtectPlugin.this, Boolean.class, "leave", true);
+        public final Flag<@NotNull Boolean> armorStandManipulate = flagRegistry().register(ProtectPlugin.this, Boolean.class, "armor_stand_manipulate", true);
+        public final Flag<@NotNull Boolean> blockBreak = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_break", true);
+        public final Flag<@NotNull Boolean> blockPlace = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_place", true);
+        public final Flag<@NotNull Boolean> blockSpread = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_spread", true);
+        public final Flag<@NotNull Boolean> cropTrample = flagRegistry().register(ProtectPlugin.this, Boolean.class, "crop_trample", true);
+        public final Flag<@NotNull Boolean> damage = flagRegistry().register(ProtectPlugin.this, Boolean.class, "damage", true);
+        public final Flag<@NotNull Boolean> entityAttackEntity = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_attack_entity", true);
+        public final Flag<@NotNull Boolean> entityAttackPlayer = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_attack_player", true);
+        public final Flag<@NotNull Boolean> entityInteract = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_interact", true);
+        public final Flag<@NotNull Boolean> entityItemDrop = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_item_drop", true);
+        public final Flag<@NotNull Boolean> playerItemDrop = flagRegistry().register(ProtectPlugin.this, Boolean.class, "player_item_drop", true);
+        public final Flag<@NotNull Boolean> entityItemPickup = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_item_pickup", true);
+        public final Flag<@NotNull Boolean> entityShear = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_shear", true);
+        public final Flag<@NotNull Boolean> naturalEntitySpawn = flagRegistry().register(ProtectPlugin.this, Boolean.class, "natural_entity_spawn", true);
+        public final Flag<@NotNull Boolean> explosions = flagRegistry().register(ProtectPlugin.this, Boolean.class, "explosions", true);
+        public final Flag<@NotNull Boolean> hangingBreak = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hanging_break", true);
+        public final Flag<@NotNull Boolean> hangingPlace = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hanging_place", true);
+        public final Flag<@NotNull Boolean> hunger = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hunger", true);
+        public final Flag<@NotNull Boolean> interact = flagRegistry().register(ProtectPlugin.this, Boolean.class, "interact", true);
+        public final Flag<@NotNull Boolean> physics = flagRegistry().register(ProtectPlugin.this, Boolean.class, "physics", true);
+        public final Flag<@NotNull Boolean> blockDrying = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_drying", true);
+        public final Flag<@NotNull Boolean> blockMoisturising = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_moisturising", true);
+        public final Flag<@NotNull Boolean> blockGrowth = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_growth", true);
+        public final Flag<@NotNull Boolean> blockAbsorb = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_absorb", true);
+        public final Flag<@NotNull Boolean> blockFading = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_fading", true);
+        public final Flag<@NotNull Boolean> blockBurning = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_burning", true);
+        public final Flag<@NotNull Boolean> blockIgniting = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_igniting", true);
+        public final Flag<@NotNull Boolean> playerAttackEntity = flagRegistry().register(ProtectPlugin.this, Boolean.class, "player_attack_entity", true);
+        public final Flag<@NotNull Boolean> playerAttackPlayer = flagRegistry().register(ProtectPlugin.this, Boolean.class, "player_attack_player", true);
+        public final Flag<@NotNull Boolean> redstone = flagRegistry().register(ProtectPlugin.this, Boolean.class, "redstone", true);
+        public final Flag<@NotNull Boolean> shoot = flagRegistry().register(ProtectPlugin.this, Boolean.class, "shoot", true);
+        public final Flag<@Nullable String> farewell = flagRegistry().register(ProtectPlugin.this, String.class, "farewell", null);
+        public final Flag<@Nullable String> greetings = flagRegistry().register(ProtectPlugin.this, String.class, "greetings", null);
     }
 }
