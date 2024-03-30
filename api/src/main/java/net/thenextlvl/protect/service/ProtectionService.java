@@ -50,6 +50,15 @@ public interface ProtectionService {
     boolean canInteract(Player player, Entity entity);
 
     /**
+     * Determines whether a player can shear an entity.
+     *
+     * @param player the player who wants to shear
+     * @param entity the entity the player intends to shear
+     * @return true if the player can shear the object at the location, false otherwise
+     */
+    boolean canShear(Player player, Entity entity);
+
+    /**
      * Determines whether a player can trample a block at a given location.
      *
      * @param player   the player attempting to trample the block
