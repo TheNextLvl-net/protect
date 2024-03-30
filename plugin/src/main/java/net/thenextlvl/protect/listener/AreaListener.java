@@ -2,8 +2,9 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.event.AreaEnterEvent;
-import net.thenextlvl.protect.event.AreaLeaveEvent;
+import net.thenextlvl.protect.event.PlayerAreaEnterEvent;
+import net.thenextlvl.protect.event.PlayerAreaLeaveEvent;
+import net.thenextlvl.protect.event.PlayerAreaTransitionEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,12 +14,12 @@ public class AreaListener implements Listener {
     private final ProtectPlugin plugin;
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onAreaEnter(AreaEnterEvent event) {
+    public void onPlayerAreaEnter(PlayerAreaEnterEvent event) {
         event.setCancelled(!plugin.protectionService().canEnter(event.getPlayer(), event.getArea()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onAreaLeave(AreaLeaveEvent event) {
+    public void onPlayerAreaLeave(PlayerAreaLeaveEvent event) {
         event.setCancelled(!plugin.protectionService().canLeave(event.getPlayer(), event.getArea()));
     }
 
