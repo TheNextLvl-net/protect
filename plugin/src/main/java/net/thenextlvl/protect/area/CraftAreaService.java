@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaCreateEvent;
 import net.thenextlvl.protect.event.AreaDeleteEvent;
+import net.thenextlvl.protect.event.PlayerAreaLeaveEvent;
+import net.thenextlvl.protect.event.PlayerAreaTransitionEvent;
 import org.bukkit.World;
 
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class CraftAreaService implements AreaService {
 
     @Override
     public CuboidArea create(@NamePattern String name, World world, CuboidRegion region) {
-        var area = new CraftCuboidArea(plugin, name, world, region, 0);
+        var area = new CraftCuboidArea(plugin, name, world, region.clone(), 0);
         plugin.loadAreas(area.getWorld()).getRoot().add(area);
         new AreaCreateEvent(area).callEvent();
         return area;
@@ -33,6 +35,17 @@ public class CraftAreaService implements AreaService {
     @Override
     public <T extends Region> boolean delete(RegionizedArea<T> area) {
         if (!new AreaDeleteEvent(area).callEvent()) return false;
-        return plugin.loadAreas(area.getWorld()).getRoot().remove(area);
+        var remove = plugin.loadAreas(area.getWorld()).getRoot().remove(area);
+        if (remove) handlePostRemove(area);
+        return remove;
+    }
+
+    private void handlePostRemove(Area removed) {
+        removed.getPlayers().forEach(player -> {
+            new PlayerAreaLeaveEvent(player, removed).callEvent();
+            var target = plugin.areaProvider().getArea(player);
+            if (removed.getPriority() < target.getPriority()) return;
+            new PlayerAreaTransitionEvent(player, removed, target).callEvent();
+        });
     }
 }

@@ -1,9 +1,9 @@
 package net.thenextlvl.protect.area;
 
-import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
@@ -44,9 +44,11 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean redefine(T region) {
-        if (!new AreaRedefineEvent(this, region).callEvent()) return false;
-        this.region = region;
+        var clone = (T) region.clone();
+        if (!new AreaRedefineEvent<>(this, clone).callEvent()) return false;
+        this.region = clone;
         return true;
     }
 
@@ -88,7 +90,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean deleteSchematic() {
-        return !getSchematic().exists() || (new AreaSchematicDeleteEvent(this).callEvent() && getSchematic().delete());
+        return getSchematic().exists() && (new AreaSchematicDeleteEvent(this).callEvent() && getSchematic().delete());
     }
 
     @Override
@@ -97,7 +99,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
         var file = getSchematic().getAbsoluteFile();
         file.getParentFile().mkdirs();
         file.createNewFile();
-        try (var editSession = WorldEdit.getInstance().newEditSession(getRegion().getWorld());
+        try (var editSession = WorldEdit.getInstance().newEditSession(new BukkitWorld(getWorld()));
              var writer = BuiltInClipboardFormat.FAST.getWriter(new FileOutputStream(getSchematic()))) {
             var clipboard = new BlockArrayClipboard(getRegion());
             var extent = new ForwardExtentCopy(editSession, getRegion(), clipboard, getRegion().getMinimumPoint());
@@ -110,12 +112,13 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean loadSchematic() throws IOException, WorldEditException {
-        Preconditions.checkNotNull(getRegion().getWorld(), "world");
+        if (!getSchematic().isFile()) return false;
         var event = new AreaSchematicLoadEvent(CraftRegionizedArea.this);
         if (!event.callEvent()) return false;
-        try (EditSession editSession = WorldEdit.getInstance().newEditSession(getRegion().getWorld())) {
+        var world = new BukkitWorld(getWorld());
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             var clipboard = BuiltInClipboardFormat.FAST.getReader(new FileInputStream(getSchematic())).read();
-            getRegion().getWorld().getEntities(getRegion()).forEach(com.sk89q.worldedit.entity.Entity::remove);
+            world.getEntities(getRegion()).forEach(com.sk89q.worldedit.entity.Entity::remove);
             var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
                     copyBiomes(true).copyEntities(true).ignoreAirBlocks(false).build();
             Operations.complete(operation);

@@ -47,9 +47,9 @@ class AreaRedefineCommand {
         else if (regionizedArea.getSchematic().isFile())
             plugin.bundle().sendMessage(player, "area.schematic.exists");
         else try {
-                boolean redefine = false;
+                var redefine = false;
                 var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
-                var region = worldEdit.getSession(player).getSelection().clone();
+                var region = worldEdit.getSession(player).getSelection();
                 if (region instanceof CuboidRegion cuboidRegion && regionizedArea instanceof CuboidArea cuboidArea) {
                     redefine = cuboidArea.redefine(cuboidRegion);
                 }
