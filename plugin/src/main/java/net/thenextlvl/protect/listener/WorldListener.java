@@ -49,7 +49,7 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(BlockPhysicsEvent event) {
+    public void onBlockPhysics(BlockPhysicsEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.physics));
     }
@@ -89,27 +89,27 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(BlockRedstoneEvent event) {
+    public void onBlockRedstone(BlockRedstoneEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         if (!area.getFlag(plugin.flags.redstone)) event.setNewCurrent(0);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(PlayerBucketFillEvent event) {
+    public void onPlayerBucketFill(PlayerBucketFillEvent event) {
         event.setCancelled(!plugin.protectionService().canBreak(
                 event.getPlayer(), event.getBlock().getLocation()
         ));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(PlayerBucketEmptyEvent event) {
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         event.setCancelled(!plugin.protectionService().canBuild(
                 event.getPlayer(), event.getBlock().getLocation()
         ));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(BlockSpreadEvent event) {
+    public void onBlockSpread(BlockSpreadEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.blockSpread));
     }
