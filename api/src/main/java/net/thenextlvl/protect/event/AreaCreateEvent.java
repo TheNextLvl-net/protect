@@ -4,9 +4,11 @@ import net.thenextlvl.protect.area.Area;
 
 /**
  * The AreaCreateEvent class represents an event that is fired when a new Area is created.
+ *
+ * @param <T> The type of the area of this event
  */
-public class AreaCreateEvent extends AreaEvent {
-    public AreaCreateEvent(Area area) {
+public class AreaCreateEvent<T extends Area> extends AreaEvent<T> {
+    public AreaCreateEvent(T area) {
         super(area);
     }
 }

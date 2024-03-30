@@ -6,6 +6,9 @@ import net.thenextlvl.protect.area.Area;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
+/**
+ * This event is triggered when a player leaves an area.
+ */
 @Getter
 @Setter
 public class PlayerAreaLeaveEvent extends PlayerAreaEvent implements Cancellable {

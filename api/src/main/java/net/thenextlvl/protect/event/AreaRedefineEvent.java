@@ -6,6 +6,12 @@ import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.event.Cancellable;
 
+/**
+ * This event is fired when the region associated with an area is about to be redefined.
+ * Cancelling this event results in the region not being redefined.
+ *
+ * @param <T> The type of region associated with the area of this event
+ */
 @Getter
 @Setter
 public class AreaRedefineEvent<T extends Region> extends AreaEvent implements Cancellable {

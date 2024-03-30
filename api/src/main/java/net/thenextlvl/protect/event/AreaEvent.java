@@ -7,6 +7,11 @@ import net.thenextlvl.protect.area.Area;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * This class represents an abstract base class for events related to areas.
+ *
+ * @param <T> The type of the area of this event
+ */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AreaEvent extends Event {

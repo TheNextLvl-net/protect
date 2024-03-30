@@ -5,6 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+/**
+ * The FlagProvider interface represents an object that can store and retrieve flags and their associated states.
+ */
 public interface FlagProvider {
     /**
      * Sets the state of a flag.
