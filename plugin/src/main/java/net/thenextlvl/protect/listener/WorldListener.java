@@ -54,6 +54,11 @@ public class WorldListener implements Listener {
         event.setCancelled(!area.getFlag(plugin.flags.physics));
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockFade(BlockFadeEvent event) {
+        var area = plugin.areaProvider().getArea(event.getBlock());
+        event.setCancelled(!area.getFlag(plugin.flags.blockFading));
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
