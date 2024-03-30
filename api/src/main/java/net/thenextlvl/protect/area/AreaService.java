@@ -28,10 +28,11 @@ public interface AreaService {
      * Creates a CuboidArea object with the given name and region.
      *
      * @param name   The name of the CuboidArea.
+     * @param world The world in which the CuboidArea is located
      * @param region The region of the CuboidArea.
      * @return The created CuboidArea object.
      */
-    CuboidArea create(@NamePattern String name, CuboidRegion region);
+    CuboidArea create(@NamePattern String name, World world, CuboidRegion region);
 
     /**
      * Deletes the given Area.
