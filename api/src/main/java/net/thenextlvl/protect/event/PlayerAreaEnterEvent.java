@@ -11,7 +11,7 @@ import org.bukkit.event.Cancellable;
  */
 @Getter
 @Setter
-public class PlayerAreaEnterEvent extends PlayerAreaEvent implements Cancellable {
+public class PlayerAreaEnterEvent extends PlayerAreaEvent<Area> implements Cancellable {
     private boolean cancelled;
 
     public PlayerAreaEnterEvent(Player player, Area area) {

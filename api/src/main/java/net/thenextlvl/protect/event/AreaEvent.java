@@ -14,9 +14,9 @@ import org.bukkit.event.HandlerList;
  */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class AreaEvent extends Event {
+public abstract class AreaEvent<T extends Area> extends Event {
     private static final @Getter HandlerList handlerList = new HandlerList();
-    private final Area area;
+    private final T area;
 
     @Override
     public HandlerList getHandlers() {

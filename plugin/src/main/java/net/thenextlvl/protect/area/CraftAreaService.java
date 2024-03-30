@@ -28,13 +28,13 @@ public class CraftAreaService implements AreaService {
     public CuboidArea create(@NamePattern String name, World world, CuboidRegion region) {
         var area = new CraftCuboidArea(plugin, name, world, region.clone(), 0);
         plugin.loadAreas(area.getWorld()).getRoot().add(area);
-        new AreaCreateEvent(area).callEvent();
+        new AreaCreateEvent<>(area).callEvent();
         return area;
     }
 
     @Override
     public <T extends Region> boolean delete(RegionizedArea<T> area) {
-        if (!new AreaDeleteEvent(area).callEvent()) return false;
+        if (!new AreaDeleteEvent<>(area).callEvent()) return false;
         var remove = plugin.loadAreas(area.getWorld()).getRoot().remove(area);
         if (remove) handlePostRemove(area);
         return remove;

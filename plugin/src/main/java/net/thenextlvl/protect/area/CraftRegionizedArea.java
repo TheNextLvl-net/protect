@@ -90,7 +90,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean deleteSchematic() {
-        return getSchematic().exists() && (new AreaSchematicDeleteEvent(this).callEvent() && getSchematic().delete());
+        return getSchematic().exists() && (new AreaSchematicDeleteEvent<>(this).callEvent() && getSchematic().delete());
     }
 
     @Override
@@ -113,7 +113,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public boolean loadSchematic() throws IOException, WorldEditException {
         if (!getSchematic().isFile()) return false;
-        var event = new AreaSchematicLoadEvent(CraftRegionizedArea.this);
+        var event = new AreaSchematicLoadEvent<>(CraftRegionizedArea.this);
         if (!event.callEvent()) return false;
         var world = new BukkitWorld(getWorld());
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {

@@ -1,8 +1,9 @@
 package net.thenextlvl.protect.event;
 
+import com.sk89q.worldedit.regions.Region;
 import lombok.Getter;
 import lombok.Setter;
-import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.event.Cancellable;
 
 /**
@@ -13,10 +14,10 @@ import org.bukkit.event.Cancellable;
  */
 @Getter
 @Setter
-public class AreaSchematicDeleteEvent extends AreaEvent implements Cancellable {
+public class AreaSchematicDeleteEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> implements Cancellable {
     private boolean cancelled;
 
-    public AreaSchematicDeleteEvent(Area area) {
+    public AreaSchematicDeleteEvent(RegionizedArea<T> area) {
         super(area);
     }
 }

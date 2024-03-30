@@ -1,7 +1,8 @@
 package net.thenextlvl.protect.event;
 
+import com.sk89q.worldedit.regions.Region;
 import lombok.Getter;
-import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.area.RegionizedArea;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.function.Consumer;
  * @param <T> The type of region associated with the area.
  */
 @Getter
-public class AreaSchematicLoadEvent extends AreaEvent {
-    private final List<Consumer<Area>> successListeners = new ArrayList<>();
+public class AreaSchematicLoadEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> {
+    private final List<Consumer<RegionizedArea<T>>> successListeners = new ArrayList<>();
 
-    public AreaSchematicLoadEvent(Area area) {
+    public AreaSchematicLoadEvent(RegionizedArea<T> area) {
         super(area);
     }
 }

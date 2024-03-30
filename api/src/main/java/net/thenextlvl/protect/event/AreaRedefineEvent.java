@@ -14,9 +14,9 @@ import org.bukkit.event.Cancellable;
  */
 @Getter
 @Setter
-public class AreaRedefineEvent<T extends Region> extends AreaEvent implements Cancellable {
-    private final T region;
+public class AreaRedefineEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> implements Cancellable {
     private boolean cancelled;
+    private final T region;
 
     public AreaRedefineEvent(RegionizedArea<T> area, T region) {
         super(area);

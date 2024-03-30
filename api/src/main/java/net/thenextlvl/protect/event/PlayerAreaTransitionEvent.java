@@ -12,7 +12,7 @@ import org.bukkit.event.Cancellable;
  */
 @Getter
 @Setter
-public class PlayerAreaTransitionEvent extends PlayerAreaEvent implements Cancellable {
+public class PlayerAreaTransitionEvent extends PlayerAreaEvent<Area> implements Cancellable {
     private final Area previous;
     private boolean cancelled;
 
