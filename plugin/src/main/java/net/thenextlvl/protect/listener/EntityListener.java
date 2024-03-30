@@ -55,8 +55,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
-        var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.entityShear));
+        event.setCancelled(!plugin.protectionService().canShear(event.getPlayer(), event.getEntity()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
