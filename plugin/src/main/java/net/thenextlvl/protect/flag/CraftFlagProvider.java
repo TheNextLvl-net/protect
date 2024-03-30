@@ -5,13 +5,13 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Getter
 @Setter
 public class CraftFlagProvider implements FlagProvider {
-    private Map<Flag<?>, @Nullable Object> flags = new HashMap<>();
+    private Map<Flag<?>, @Nullable Object> flags = new LinkedHashMap<>();
 
     @Override
     public <T> void setFlag(@NotNull Flag<T> flag, T state) {
