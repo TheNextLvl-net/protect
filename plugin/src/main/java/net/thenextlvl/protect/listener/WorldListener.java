@@ -54,8 +54,8 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(BlockFromToEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
+    public void onBlockFromTo(BlockFromToEvent event) {
+        var area = plugin.areaProvider().getArea(event.getToBlock());
         event.setCancelled(!area.getFlag(plugin.flags.physics));
     }
 
