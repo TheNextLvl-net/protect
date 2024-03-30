@@ -27,8 +27,9 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
+        if (!event.getEntity().getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)) return;
         var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.entitySpawn));
+        event.setCancelled(!area.getFlag(plugin.flags.naturalEntitySpawn));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
