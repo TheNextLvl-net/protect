@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 /**
  * The ProtectionService interface provides methods to determine whether a player
- * has permission to perform certain actions in certain locations or areas.
+ * is permitted to perform certain actions in certain locations or areas.
  */
 @ParametersAreNotNullByDefault
 public interface ProtectionService {
