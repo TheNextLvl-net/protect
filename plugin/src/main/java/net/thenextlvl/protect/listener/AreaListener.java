@@ -24,13 +24,13 @@ public class AreaListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void greetings(AreaEnterEvent event) {
+    public void greetings(PlayerAreaEnterEvent event) {
         var message = event.getArea().getFlag(plugin.flags.greetings);
         if (message != null) event.getPlayer().sendRichMessage(message);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void farewell(AreaLeaveEvent event) {
+    public void farewell(PlayerAreaLeaveEvent event) {
         var message = event.getArea().getFlag(plugin.flags.farewell);
         if (message != null) event.getPlayer().sendRichMessage(message);
     }
