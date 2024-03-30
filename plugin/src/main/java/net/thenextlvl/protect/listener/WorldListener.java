@@ -30,6 +30,7 @@ public class WorldListener implements Listener {
         ));
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         var block = event.getClickedBlock();
@@ -38,7 +39,10 @@ public class WorldListener implements Listener {
             event.setCancelled(!plugin.protectionService().canTrample(
                     event.getPlayer(), block.getLocation()
             ));
-        else event.setCancelled(!plugin.protectionService().canInteract(
+        else if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        else if (event.getPlayer().isSneaking() && event.hasItem() && event.getMaterial().isBlock()) return;
+        else if (!block.getType().isInteractable()) return;
+        event.setCancelled(!plugin.protectionService().canInteract(
                 event.getPlayer(), block.getLocation()
         ));
     }
