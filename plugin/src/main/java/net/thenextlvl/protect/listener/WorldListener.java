@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 
 @RequiredArgsConstructor
 public class WorldListener implements Listener {
@@ -98,6 +99,14 @@ public class WorldListener implements Listener {
         event.getBlocks().removeIf(block -> {
             var area = plugin.areaProvider().getArea(block.getBlock());
             return !area.getFlag(plugin.flags.blockAbsorb);
+        });
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onStructureGrow(StructureGrowEvent event) {
+        event.getBlocks().removeIf(block -> {
+            var area = plugin.areaProvider().getArea(block.getBlock());
+            return !area.getFlag(plugin.flags.blockGrowth);
         });
     }
 
