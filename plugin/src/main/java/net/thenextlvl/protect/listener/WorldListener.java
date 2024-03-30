@@ -60,9 +60,9 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onWorldEvent(BlockGrowEvent event) {
+    public void onBlockGrow(BlockGrowEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(plugin.flags.physics));
+        event.setCancelled(!area.getFlag(plugin.flags.blockGrowth));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
