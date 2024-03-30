@@ -8,10 +8,10 @@ import org.bukkit.event.Cancellable;
 
 @Getter
 @Setter
-public class AreaEnterEvent extends PlayerAreaEvent implements Cancellable {
+public class PlayerAreaLeaveEvent extends PlayerAreaEvent implements Cancellable {
     private boolean cancelled;
 
-    public AreaEnterEvent(Player player, Area area) {
+    public PlayerAreaLeaveEvent(Player player, Area area) {
         super(player, area);
     }
 }
