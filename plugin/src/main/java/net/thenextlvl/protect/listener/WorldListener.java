@@ -94,6 +94,14 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onSpongeAbsorb(SpongeAbsorbEvent event) {
+        event.getBlocks().removeIf(block -> {
+            var area = plugin.areaProvider().getArea(block.getBlock());
+            return !area.getFlag(plugin.flags.blockAbsorb);
+        });
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onWorldEvent(BlockExplodeEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.explosions));
