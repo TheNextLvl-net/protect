@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
@@ -20,6 +19,7 @@ import net.thenextlvl.protect.event.AreaRedefineEvent;
 import net.thenextlvl.protect.event.AreaSchematicDeleteEvent;
 import net.thenextlvl.protect.event.AreaSchematicLoadEvent;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -29,7 +29,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @MethodsReturnNotNullByDefault
@@ -38,15 +37,14 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     private final File schematic;
     private T region;
 
-    protected CraftRegionizedArea(ProtectPlugin plugin, @NamePattern String name, T region, int priority) throws IllegalArgumentException {
-        super(name, ((BukkitWorld) Objects.requireNonNull(region.getWorld(), "world")).getWorld(), priority);
+    protected CraftRegionizedArea(ProtectPlugin plugin, @NamePattern String name, World world, T region, int priority) throws IllegalArgumentException {
+        super(name, world, priority);
         this.schematic = new File(plugin.schematicFolder(), name + ".schem");
         this.region = region;
     }
 
     @Override
     public boolean redefine(T region) {
-        Preconditions.checkState(region.getWorld() instanceof BukkitWorld, "world");
         if (!new AreaRedefineEvent(this, region).callEvent()) return false;
         this.region = region;
         return true;

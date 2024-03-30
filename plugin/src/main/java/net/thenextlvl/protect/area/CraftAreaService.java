@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area;
 
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
@@ -20,12 +19,12 @@ public class CraftAreaService implements AreaService {
 
     @Override
     public CuboidArea create(@NamePattern String name, World world, BlockVector3 pos1, BlockVector3 pos2) {
-        return create(name, new CuboidRegion(new BukkitWorld(world), pos1, pos2));
+        return create(name, world, new CuboidRegion(pos1, pos2));
     }
 
     @Override
-    public CuboidArea create(@NamePattern String name, CuboidRegion region) {
-        var area = new CraftCuboidArea(plugin, name, region, 0);
+    public CuboidArea create(@NamePattern String name, World world, CuboidRegion region) {
+        var area = new CraftCuboidArea(plugin, name, world, region, 0);
         plugin.loadAreas(area.getWorld()).getRoot().add(area);
         new AreaCreateEvent(area).callEvent();
         return area;
