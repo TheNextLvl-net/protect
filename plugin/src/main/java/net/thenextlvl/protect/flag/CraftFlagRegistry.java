@@ -18,6 +18,11 @@ public class CraftFlagRegistry implements FlagRegistry {
     private final Map<NamespacedKey, Flag<?>> registry = new HashMap<>();
 
     @Override
+    public @NotNull Set<Flag<?>> getFlags() {
+        return new HashSet<>(registry.values());
+    }
+
+    @Override
     public @NotNull Set<Flag<?>> getFlags(@NotNull Plugin plugin) {
         return registry.values().stream()
                 .filter(flag -> flag.key().getKey().equals(plugin.getName().toLowerCase(Locale.ROOT)))
@@ -31,10 +36,10 @@ public class CraftFlagRegistry implements FlagRegistry {
     }
 
     @Override
-    public @NotNull <T> Flag<T> register(@NotNull Plugin plugin, @NotNull String name, T defaultValue) throws IllegalStateException {
+    public @NotNull <T> Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type, @NotNull String name, T defaultValue) throws IllegalStateException {
         var key = new NamespacedKey(plugin, name);
         Preconditions.checkState(!registry.containsKey(key), "already registered flag: " + key);
-        var flag = new CraftFlag<>(key, defaultValue);
+        var flag = new CraftFlag<>(key, type, defaultValue);
         registry.put(key, flag);
         return flag;
     }
