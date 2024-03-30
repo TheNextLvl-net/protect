@@ -28,4 +28,9 @@ public class CraftFlagProvider implements FlagProvider {
     public <T> boolean hasFlag(@NotNull Flag<T> flag) {
         return getFlags().containsKey(flag);
     }
+
+    @Override
+    public <T> boolean removeFlag(@NotNull Flag<T> flag) {
+        return getFlags().remove(flag) != null;
+    }
 }
