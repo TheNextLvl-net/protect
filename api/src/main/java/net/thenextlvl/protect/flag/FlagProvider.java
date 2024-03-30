@@ -46,4 +46,13 @@ public interface FlagProvider {
      * @return true if a state is defined, true otherwise.
      */
     <T> boolean hasFlag(@NotNull Flag<T> flag);
+
+    /**
+     * Removes a flag from the FlagProvider.
+     *
+     * @param flag The flag to remove.
+     * @param <T>  The type of the flag value.
+     * @return true if the flag was successfully removed, false otherwise.
+     */
+    <T> boolean removeFlag(@NotNull Flag<T> flag);
 }
