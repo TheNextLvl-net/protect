@@ -3,6 +3,7 @@ package net.thenextlvl.protect.listener;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.Material;
+import org.bukkit.block.data.type.Farmland;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -51,6 +52,15 @@ public class WorldListener implements Listener {
     public void onWorldEvent(BlockPhysicsEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.physics));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onMoistureChange(MoistureChangeEvent event) {
+        if (!(event.getBlock().getBlockData() instanceof Farmland current)) return;
+        if (!(event.getNewState().getBlockData() instanceof Farmland future)) return;
+        var area = plugin.areaProvider().getArea(event.getBlock());
+        event.setCancelled(!area.getFlag(current.getMoisture() > future.getMoisture()
+                ? plugin.flags.blockDrying : plugin.flags.blockMoisturising));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
