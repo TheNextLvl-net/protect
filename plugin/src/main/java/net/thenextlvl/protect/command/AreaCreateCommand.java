@@ -36,7 +36,7 @@ class AreaCreateCommand {
         else try {
             var session = JavaPlugin.getPlugin(WorldEditPlugin.class).getSession(player);
             if (session.getSelection() instanceof CuboidRegion cuboidRegion) {
-                plugin.areaService().create(name, cuboidRegion);
+                plugin.areaService().create(name, player.getWorld(), cuboidRegion);
             } else throw new IncompleteRegionException();
             plugin.bundle().sendMessage(player, "area.created", placeholder);
         } catch (IncompleteRegionException ignored) {

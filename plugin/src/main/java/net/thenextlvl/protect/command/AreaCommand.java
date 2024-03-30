@@ -38,6 +38,7 @@ public class AreaCommand {
         manager.command(new AreaTeleportCommand(plugin).create(builder));
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     private void registerExceptionHandlers(PaperCommandManager<CommandSender> manager) {
         new MinecraftExceptionHandler<CommandSender>()
                 .withHandler(INVALID_SYNTAX, e -> plugin.bundle().component(Locale.US, "command.syntax",
@@ -45,8 +46,11 @@ public class AreaCommand {
                 .withHandler(INVALID_SENDER, (sender, e) -> plugin.bundle().component(sender, "command.sender"))
                 .withHandler(NO_PERMISSION, (sender, e) -> plugin.bundle().component(sender, "command.permission",
                         Placeholder.parsed("permission", ((NoPermissionException) e).getMissingPermission())))
-                .withHandler(COMMAND_EXECUTION, (sender, e) -> plugin.bundle().component(sender, "command.exception",
-                        Placeholder.parsed("command", "area")))
+                .withHandler(COMMAND_EXECUTION, (sender, e) -> {
+                    e.printStackTrace();
+                    return plugin.bundle().component(sender, "command.exception",
+                            Placeholder.parsed("command", "area"));
+                })
                 .withArgumentParsingHandler()
                 .apply(manager, sender -> sender);
     }

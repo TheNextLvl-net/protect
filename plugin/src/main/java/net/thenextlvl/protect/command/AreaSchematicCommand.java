@@ -6,23 +6,18 @@ import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.WorldEditException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
-import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.area.CraftRegionizedArea;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
-import net.thenextlvl.protect.util.Messages;
+import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 class AreaSchematicCommand {
@@ -31,15 +26,11 @@ class AreaSchematicCommand {
     @Getter
     @RequiredArgsConstructor
     public enum Option {
-        LOAD("load", () -> CraftRegionizedArea.areas().filter(area ->
-                !area.isGlobalArea() && area.getSchematic().getFile().isFile()).map(CraftRegionizedArea::getName).toList()),
-        DELETE("delete", () -> CraftRegionizedArea.areas().filter(area ->
-                !area.isGlobalArea() && area.getSchematic().getFile().isFile()).map(CraftRegionizedArea::getName).toList()),
-        SAVE("save", () -> CraftRegionizedArea.areas().filter(area -> !area.isGlobalArea()).map(CraftRegionizedArea::getName).toList());
+        LOAD("load"),
+        DELETE("delete"),
+        SAVE("save");
 
         private final String name;
-        @Accessors(fluent = true)
-        private final Supplier<List<String>> possibilities;
 
         @Nullable
         public static Option parse(String name) {
@@ -57,60 +48,70 @@ class AreaSchematicCommand {
                         .build())
                 .argument(StringArgument.<CommandSender>builder("area")
                         .withSuggestionsProvider((context, token) -> {
-                            Option option = Option.parse(context.get("option"));
-                            return option != null ? option.possibilities().get() : Collections.emptyList();
+                            var option = Option.parse(context.get("option"));
+                            if (option == null) return Collections.emptyList();
+                            return switch (option) {
+                                case LOAD, DELETE -> plugin.areaProvider().getAreas()
+                                        .filter(area -> area instanceof SchematicHolder holder
+                                                && holder.getSchematic().isFile())
+                                        .map(Area::getName)
+                                        .toList();
+                                case SAVE -> plugin.areaProvider().getAreas()
+                                        .filter(area -> area instanceof SchematicHolder)
+                                        .map(Area::getName)
+                                        .toList();
+                            };
                         })
                         .build())
                 .senderType(Player.class)
-                .handler(AreaSchematicCommand::execute);
+                .handler(this::execute);
     }
 
+    @SuppressWarnings("PatternValidation")
     private void execute(CommandContext<CommandSender> context) {
         var sender = context.getSender();
         var option = Option.parse(context.get("option"));
-        var area = CraftRegionizedArea.get(context.<String>get("area"));
-        var locale = sender instanceof Player player ? player.locale() : Messages.ENGLISH;
-        if (area != null && option != null && option.equals(Option.LOAD))
-            handleLoad(sender, area, locale);
-        else if (area != null && option != null && option.equals(Option.DELETE))
-            handleDelete(sender, area, locale);
-        else if (area != null && option != null && option.equals(Option.SAVE))
-            handleSave(sender, area, locale);
-        else sender.sendRichMessage(JavaPlugin.getPlugin(ProtectPlugin.class).formatter().format(
-                    "%prefix% <red>/area schematic <dark_gray>[<gold>option<dark_gray>] [<gold>area<dark_gray>]"
-            ));
+        var name = context.<String>get("area");
+        // todo pattern validation
+        var area = plugin.areaProvider().getArea(name).orElse(null);
+        if (!(area instanceof RegionizedArea<?> regionizedArea) || option == null) {
+            plugin.bundle().sendMessage(sender, "command.area.schematic");
+        } else switch (option) {
+            case LOAD -> handleLoad(sender, regionizedArea);
+            case DELETE -> handleDelete(sender, regionizedArea);
+            case SAVE -> handleSave(sender, regionizedArea);
+        }
     }
 
-    private void handleSave(CommandSender sender, RegionizedArea<?> area, Locale locale) {
-        if (area.isTooBig()) sender.sendRichMessage(Messages.AREA_WARNING_SIZE.message(locale, sender));
-        var schematic = Placeholder.<Audience>of("schematic", area.getName());
-        boolean save = false;
+    @SuppressWarnings("CallToPrintStackTrace")
+    private void handleSave(CommandSender sender, RegionizedArea<?> area) {
+        if (area.isTooBig()) plugin.bundle().sendMessage(sender, "area.warning.size");
         try {
-            save = area.getSchematic().save();
+            area.saveSchematic();
+            plugin.bundle().sendMessage(sender, "area.schematic.save.success",
+                    Placeholder.parsed("schematic", area.getName()));
+        } catch (IOException | WorldEditException e) {
+            plugin.bundle().sendMessage(sender, "area.schematic.save.failed",
+                    Placeholder.parsed("schematic", area.getName()));
+            e.printStackTrace();
+        }
+    }
+
+    private void handleDelete(CommandSender sender, RegionizedArea<?> area) {
+        var message = area.deleteSchematic() ? "area.schematic.delete.success" : "area.schematic.delete.failed";
+        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getName()));
+    }
+
+    @SuppressWarnings("CallToPrintStackTrace")
+    private void handleLoad(CommandSender sender, RegionizedArea<?> area) {
+        if (area.isTooBig()) plugin.bundle().sendMessage(sender, "area.warning.size");
+        var load = false;
+        try {
+            load = area.loadSchematic();
         } catch (IOException | WorldEditException e) {
             e.printStackTrace();
         }
-        var message = save ? Messages.SCHEMATIC_SAVE_SUCCEEDED : Messages.SCHEMATIC_SAVE_FAILED;
-        sender.sendRichMessage(message.message(locale, sender, schematic));
-    }
-
-    private void handleDelete(CommandSender sender, RegionizedArea<?> area, Locale locale) {
-        var schematic = Placeholder.<Audience>of("schematic", area.getName());
-        var delete = area.getSchematic().delete();
-        var message = delete ? Messages.SCHEMATIC_DELETE_SUCCEEDED : Messages.SCHEMATIC_DELETE_FAILED;
-        sender.sendRichMessage(message.message(locale, sender, schematic));
-    }
-
-    private void handleLoad(CommandSender sender, RegionizedArea<?> area, Locale locale) {
-        if (area.isTooBig()) sender.sendRichMessage(Messages.AREA_WARNING_SIZE.message(locale, sender));
-        var schematic = Placeholder.<Audience>of("schematic", area.getName());
-        boolean load = false;
-        try {
-            load = area.getSchematic().load();
-        } catch (IOException | WorldEditException e) {
-            e.printStackTrace();
-        }
-        var message = load ? Messages.SCHEMATIC_LOAD_SUCCEEDED : Messages.SCHEMATIC_LOAD_FAILED;
-        sender.sendRichMessage(message.message(locale, sender, schematic));
+        var message = load ? "area.schematic.load.success" : "area.schematic.load.failed";
+        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getName()));
     }
 }

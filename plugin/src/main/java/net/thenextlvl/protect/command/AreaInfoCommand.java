@@ -29,9 +29,9 @@ class AreaInfoCommand {
     @SuppressWarnings("PatternValidation")
     private void execute(CommandContext<CommandSender> context) {
         var sender = context.getSender();
-        var name = context.<String>get("area");
+        var name = context.contains("area") ? context.<String>get("area") : null;
         // todo pattern validation
-        var area = context.contains("area") ? plugin.areaProvider().getArea(name).orElse(null) :
+        var area = name != null ? plugin.areaProvider().getArea(name).orElse(null) :
                 sender instanceof Entity entity ? plugin.areaProvider().getArea(entity) : null;
         if (area != null) sendInfo(sender, area);
         else plugin.bundle().sendMessage(sender, "command.area.info");

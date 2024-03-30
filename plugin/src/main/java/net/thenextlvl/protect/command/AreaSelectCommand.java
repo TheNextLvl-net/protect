@@ -41,10 +41,8 @@ class AreaSelectCommand {
             return;
         }
         var area = name != null ? plugin.areaProvider().getArea(name).orElse(null) : plugin.areaProvider().getArea(player);
-        if (area instanceof RegionizedArea<?> regionizedArea)
-            handleSelect(player, regionizedArea);
-        else if (area != null)
-            plugin.bundle().sendMessage(player, "area.invalid");
+        if (area instanceof RegionizedArea<?> regionizedArea) handleSelect(player, regionizedArea);
+        else if (area != null) plugin.bundle().sendMessage(player, "area.invalid");
         else plugin.bundle().sendRawMessage(player, "command.area.select");
     }
 

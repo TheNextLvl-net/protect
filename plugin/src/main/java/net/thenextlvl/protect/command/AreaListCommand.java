@@ -26,7 +26,7 @@ class AreaListCommand {
         var userAreas = plugin.areaProvider().getAreas()
                 .filter(area -> !(area instanceof GlobalArea))
                 .map(Area::getName).toList();
-        plugin.bundle().sendMessage(sender, "area.list",
+        if (!userAreas.isEmpty()) plugin.bundle().sendMessage(sender, "area.list",
                 Placeholder.parsed("amount", String.valueOf(userAreas.size())),
                 Placeholder.parsed("areas", String.join(", ", userAreas)));
         plugin.bundle().sendMessage(sender, "area.list.global",

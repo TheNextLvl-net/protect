@@ -5,12 +5,14 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.area.CuboidArea;
 import net.thenextlvl.protect.area.RegionizedArea;
-import net.thenextlvl.protect.util.Messages;
+import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,7 +26,7 @@ class AreaRedefineCommand {
                 .literal("redefine")
                 .argument(StringArgument.<CommandSender>builder("area")
                         .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
-                                .filter(area -> area instanceof RegionizedArea<?>)
+                                .filter(area -> area instanceof SchematicHolder)
                                 .map(Area::getName)
                                 .filter(s -> s.startsWith(token))
                                 .toList())
@@ -38,22 +40,23 @@ class AreaRedefineCommand {
         var player = (Player) context.getSender();
         var name = context.<String>get("area");
         // todo match name pattern
-        var area = plugin.areaProvider().getArea(name);
-        if (area != null && area.isGlobalArea())
+        var area = plugin.areaProvider().getArea(name).orElse(null);
+        if (area == null) plugin.bundle().sendMessage(player, "command.area.redefine");
+        else if (!(area instanceof RegionizedArea<?> regionizedArea))
             plugin.bundle().sendMessage(player, "area.invalid");
-        else if (area == null) player.sendRichMessage(JavaPlugin.getPlugin(ProtectPlugin.class).formatter().format(
-                "%prefix% <red>/area redefine <dark_gray>[<gold>area<dark_gray>]"
-        ));
-        else if (area.getSchematic().getFile().isFile()) {
-            player.sendRichMessage(Messages.SCHEMATIC_EXISTS.message(player.locale(), player));
-        } else try {
-            var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
-            var redefine = area.redefine(worldEdit.getSession(player).getSelection().clone());
-            var placeholder = Placeholder.<Audience>of("area", area.getName());
-            var message = redefine ? Messages.AREA_REDEFINE_SUCCEEDED : Messages.AREA_REDEFINE_FAILED;
-            player.sendRichMessage(message.message(player.locale(), player, placeholder));
-        } catch (IncompleteRegionException e) {
-            player.sendRichMessage(Messages.SELECT_REGION.message(player.locale(), player));
-        }
+        else if (regionizedArea.getSchematic().isFile())
+            plugin.bundle().sendMessage(player, "area.schematic.exists");
+        else try {
+                boolean redefine = false;
+                var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
+                var region = worldEdit.getSession(player).getSelection().clone();
+                if (region instanceof CuboidRegion cuboidRegion && regionizedArea instanceof CuboidArea cuboidArea) {
+                    redefine = cuboidArea.redefine(cuboidRegion);
+                }
+                plugin.bundle().sendMessage(player, redefine ? "area.redefine.success" : "area.redefine.fail",
+                        Placeholder.parsed("area", area.getName()));
+            } catch (IncompleteRegionException e) {
+                plugin.bundle().sendMessage(player, "region.select");
+            }
     }
 }
