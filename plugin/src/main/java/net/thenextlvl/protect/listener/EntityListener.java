@@ -10,6 +10,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 
@@ -80,6 +81,12 @@ public class EntityListener implements Listener {
     public void onDrop(EntityDropItemEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.entityItemDrop));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onDrop(PlayerDropItemEvent event) {
+        var area = plugin.areaProvider().getArea(event.getPlayer());
+        event.setCancelled(!area.getFlag(plugin.flags.playerItemDrop));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
