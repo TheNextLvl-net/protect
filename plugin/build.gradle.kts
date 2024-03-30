@@ -20,17 +20,18 @@ repositories {
     mavenCentral()
     maven("https://repo.thenextlvl.net/releases")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://maven.enginehub.org/repo/")
 }
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
     implementation("cloud.commandframework:cloud-paper:1.8.3")
     implementation("cloud.commandframework:cloud-minecraft-extras:1.8.3")
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.43"))
 
     implementation(project(":api"))
     implementation("net.thenextlvl.core:i18n:1.0.14")
@@ -53,7 +54,7 @@ paper {
     authors = listOf("NonSwag")
     website = "https://thenextlvl.net"
     serverDependencies {
-        register("WorldEdit") {
+        register("FastAsyncWorldEdit") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
         }
