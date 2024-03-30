@@ -54,6 +54,19 @@ public class WorldListener implements Listener {
         event.setCancelled(!area.getFlag(plugin.flags.physics));
     }
 
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockBurn(BlockBurnEvent event) {
+        var area = plugin.areaProvider().getArea(event.getBlock());
+        event.setCancelled(!area.getFlag(plugin.flags.blockBurning));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        var area = plugin.areaProvider().getArea(event.getBlock());
+        event.setCancelled(!area.getFlag(plugin.flags.blockIgniting));
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onMoistureChange(MoistureChangeEvent event) {
         if (!(event.getBlock().getBlockData() instanceof Farmland current)) return;
