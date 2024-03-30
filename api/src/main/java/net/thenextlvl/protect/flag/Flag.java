@@ -17,6 +17,13 @@ public interface Flag<T> {
     @NotNull NamespacedKey key();
 
     /**
+     * Retrieves the type of the flag value.
+     *
+     * @return the type of the flag value
+     */
+    @NotNull Class<? extends T> type();
+
+    /**
      * Retrieves the default value for a flag.
      *
      * @return The default value for the flag.
