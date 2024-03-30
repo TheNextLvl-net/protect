@@ -38,6 +38,12 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     @Override
+    public boolean canShear(Player player, Entity entity) {
+        return plugin.areaProvider().getArea(entity).getFlag(plugin.flags.entityShear)
+                || player.hasPermission("protect.bypass.entity-shear");
+    }
+
+    @Override
     public boolean canTrample(Player player, Location location) {
         return plugin.areaProvider().getArea(location).getFlag(plugin.flags.cropTrample)
                 || player.hasPermission("protect.bypass.trample");
