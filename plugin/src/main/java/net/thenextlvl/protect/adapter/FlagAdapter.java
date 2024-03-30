@@ -1,18 +1,25 @@
 package net.thenextlvl.protect.adapter;
 
 import com.google.gson.*;
-import net.thenextlvl.protect.area.Area;
+import lombok.RequiredArgsConstructor;
+import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.flag.Flag;
+import org.bukkit.NamespacedKey;
 
 import java.lang.reflect.Type;
 
-public class FlagAdapter implements JsonSerializer<Area>, JsonDeserializer<Area> {
+@RequiredArgsConstructor
+public class FlagAdapter implements JsonSerializer<Flag<?>>, JsonDeserializer<Flag<?>> {
+    private final ProtectPlugin plugin;
+
     @Override
-    public Area deserialize(JsonElement element, Type type, JsonDeserializationContext context) {
-        return null;
+    public JsonElement serialize(Flag<?> flag, Type type, JsonSerializationContext context) {
+        return new JsonPrimitive(flag.key().asString());
     }
 
     @Override
-    public JsonElement serialize(Area area, Type type, JsonSerializationContext context) {
-        return null;
+    public Flag<?> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+        var key = NamespacedKey.fromString(element.getAsString());
+        return key != null ? plugin.flagRegistry().getFlag(key).orElse(null) : null;
     }
 }
