@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.thenextlvl.protect"
-version = "2.0.0"
+version = "2.0.1"
 
 java {
     withSourcesJar()
@@ -17,16 +17,17 @@ repositories {
     mavenCentral()
     maven("https://repo.thenextlvl.net/releases")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://maven.enginehub.org/repo/")
 }
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
     implementation("net.thenextlvl.core:files:1.0.4")
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.43"))
 
     annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
