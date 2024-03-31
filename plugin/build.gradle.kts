@@ -13,8 +13,8 @@ java {
     sourceCompatibility = JavaVersion.VERSION_19
 }
 
-group = "net.thenextlvl.protect"
-version = "2.0.0"
+group = project(":api").group
+version = project(":api").version
 
 repositories {
     mavenCentral()
