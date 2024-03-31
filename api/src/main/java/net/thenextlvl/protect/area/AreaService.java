@@ -5,11 +5,13 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import org.bukkit.World;
 
 /**
  * The AreaService interface is used to create or delete instances of {@link Area}.
  */
+@TypesAreNotNullByDefault
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public interface AreaService {

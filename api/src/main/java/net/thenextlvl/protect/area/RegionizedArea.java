@@ -3,6 +3,7 @@ package net.thenextlvl.protect.area;
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.schematic.SchematicHolder;
 
 /**
@@ -11,6 +12,7 @@ import net.thenextlvl.protect.schematic.SchematicHolder;
  *
  * @param <T> The type of region associated with this area.
  */
+@TypesAreNotNullByDefault
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {

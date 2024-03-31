@@ -13,6 +13,7 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaRedefineEvent;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Getter
+@TypesAreNotNullByDefault
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {

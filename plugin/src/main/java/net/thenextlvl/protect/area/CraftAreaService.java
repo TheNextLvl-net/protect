@@ -5,6 +5,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaCreateEvent;
@@ -14,6 +15,7 @@ import net.thenextlvl.protect.event.PlayerAreaTransitionEvent;
 import org.bukkit.World;
 
 @RequiredArgsConstructor
+@TypesAreNotNullByDefault
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public class CraftAreaService implements AreaService {
