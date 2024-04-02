@@ -5,7 +5,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 
 import java.lang.reflect.Type;
 
-public class BlockVector3Adapter implements JsonSerializer<BlockVector3>, JsonDeserializer<BlockVector3> {
+public class BlockVectorAdapter implements JsonSerializer<BlockVector3>, JsonDeserializer<BlockVector3> {
 
     @Override
     public BlockVector3 deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
