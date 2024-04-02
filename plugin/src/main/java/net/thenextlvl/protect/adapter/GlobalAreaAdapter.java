@@ -1,32 +1,37 @@
 package net.thenextlvl.protect.adapter;
 
-import com.google.gson.*;
-import lombok.RequiredArgsConstructor;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import lombok.Getter;
+import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.CraftGlobalArea;
-import net.thenextlvl.protect.area.GlobalArea;
+import net.thenextlvl.protect.io.AreaAdapter;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 
-@RequiredArgsConstructor
-public class GlobalAreaAdapter implements JsonSerializer<GlobalArea>, JsonDeserializer<GlobalArea> {
-    private final World world;
+@Getter
+public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
+    private final NamespacedKey namespacedKey;
 
-    @Override
-    public JsonElement serialize(GlobalArea area, Type type, JsonSerializationContext context) {
-        var object = new JsonObject();
-        object.addProperty("type", "global");
-        object.addProperty("priority", area.getPriority());
-        object.add("flags", context.serialize(area.getFlags()));
-        return object;
+    public GlobalAreaAdapter(ProtectPlugin plugin) {
+        this.namespacedKey = new NamespacedKey(plugin, "global");
     }
 
     @Override
-    public GlobalArea deserialize(JsonElement element, Type type, JsonDeserializationContext context) {
-        var object = element.getAsJsonObject();
+    public CraftGlobalArea deserialize(JsonObject object, World world, JsonDeserializationContext context) {
         var area = CraftGlobalArea.of(world, object.get("priority").getAsInt());
         area.setFlags(context.deserialize(object.get("flags"), Map.class));
         return area;
+    }
+
+    @Override
+    public JsonObject serialize(CraftGlobalArea area, JsonSerializationContext context) {
+        var object = new JsonObject();
+        object.addProperty("priority", area.getPriority());
+        object.add("flags", context.serialize(area.getFlags()));
+        return object;
     }
 }

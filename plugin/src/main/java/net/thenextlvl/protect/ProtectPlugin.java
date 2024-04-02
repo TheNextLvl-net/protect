@@ -8,7 +8,7 @@ import core.file.FileIO;
 import core.file.format.GsonFile;
 import core.i18n.file.ComponentBundle;
 import core.io.IO;
-import core.paper.adapters.world.WorldAdapter;
+import core.paper.adapters.key.KeyAdapter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -28,6 +28,7 @@ import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -65,10 +66,14 @@ public class ProtectPlugin extends JavaPlugin {
                         .resolver(Placeholder.component("prefix", bundle.component(Locale.US, "prefix")))
                         .build())
                 .build());
-        Bukkit.getServicesManager().register(ProtectionService.class, protectionService, this, ServicePriority.Highest);
-        Bukkit.getServicesManager().register(FlagRegistry.class, flagRegistry, this, ServicePriority.Highest);
-        Bukkit.getServicesManager().register(AreaProvider.class, areaProvider, this, ServicePriority.Highest);
-        Bukkit.getServicesManager().register(AreaService.class, areaService, this, ServicePriority.Highest);
+
+        Bukkit.getServicesManager().register(ProtectionService.class, protectionService(), this, ServicePriority.Highest);
+        Bukkit.getServicesManager().register(FlagRegistry.class, flagRegistry(), this, ServicePriority.Highest);
+        Bukkit.getServicesManager().register(AreaProvider.class, areaProvider(), this, ServicePriority.Highest);
+        Bukkit.getServicesManager().register(AreaService.class, areaService(), this, ServicePriority.Highest);
+
+        areaService().registerAdapter(CraftGlobalArea.class, new GlobalAreaAdapter(this));
+        areaService().registerAdapter(CraftCuboidArea.class, new CuboidAreaAdapter(this));
     }
 
     @Override
@@ -99,21 +104,18 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     public FileIO<Set<Area>> loadAreas(World world) {
-        var file = areasFiles().computeIfAbsent(world, w -> new GsonFile<>(
-                IO.of(world.getWorldFolder(), "areas.json"), new HashSet<>(), new TypeToken<>() {
-        }, new GsonBuilder()
+        var builder = new GsonBuilder()
                 .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
-                .registerTypeHierarchyAdapter(CuboidArea.class, new CuboidAreaAdapter(this, w))
-                .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVector3Adapter())
-                .registerTypeHierarchyAdapter(GlobalArea.class, new GlobalAreaAdapter(w))
-                .registerTypeHierarchyAdapter(World.class, WorldAdapter.Key.INSTANCE)
+                .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
+                .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.Bukkit.INSTANCE)
+                .registerTypeHierarchyAdapter(Area.class, new AreaTypeAdapter(this, world))
+                .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(this))
                 .registerTypeHierarchyAdapter(new TypeToken<Map<Flag<?>, Object>>() {
                 }.getRawType(), new FlagsAdapter(this))
-                .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(this))
-                .registerTypeAdapter(Area.class, new AreaAdapter())
-                .setPrettyPrinting()
-                .create()
-        ));
+                .setPrettyPrinting();
+        var file = areasFiles().computeIfAbsent(world, w -> new GsonFile<>(
+                IO.of(world.getWorldFolder(), "areas.json"), new HashSet<>(), new TypeToken<>() {
+        }, builder.create()));
         if (file.getRoot().add(areaProvider().getArea(world))) file.save();
         return file;
     }
