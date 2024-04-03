@@ -32,7 +32,9 @@ public interface Container {
      * @param block the block to check
      * @return true if the block is contained within the container, false otherwise
      */
-    boolean contains(Block block);
+    default boolean contains(Block block) {
+        return contains(block.getLocation());
+    }
 
     /**
      * Determines if the given entity is contained within the container.
@@ -40,7 +42,9 @@ public interface Container {
      * @param entity the entity to check
      * @return true if the entity is contained within the container, false otherwise
      */
-    boolean contains(Entity entity);
+    default boolean contains(Entity entity) {
+        return contains(entity.getLocation());
+    }
 
     /**
      * Retrieves a list of entities that are contained within this container.

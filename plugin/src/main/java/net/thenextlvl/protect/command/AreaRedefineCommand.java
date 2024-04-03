@@ -51,7 +51,7 @@ class AreaRedefineCommand {
                 var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
                 var region = worldEdit.getSession(player).getSelection();
                 if (region instanceof CuboidRegion cuboidRegion && regionizedArea instanceof CuboidArea cuboidArea) {
-                    redefine = cuboidArea.redefine(cuboidRegion);
+                    redefine = cuboidArea.setRegion(cuboidRegion);
                 }
                 plugin.bundle().sendMessage(player, redefine ? "area.redefine.success" : "area.redefine.fail",
                         Placeholder.parsed("area", area.getName()));

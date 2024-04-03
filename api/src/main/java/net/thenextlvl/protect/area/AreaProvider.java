@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -33,7 +34,9 @@ public interface AreaProvider {
      * @param world the world to retrieve areas from
      * @return a stream of areas in the given world
      */
-    Stream<Area> getAreas(World world);
+    default Stream<Area> getAreas(World world) {
+        return getAreas().filter(area -> area.getWorld().equals(world));
+    }
 
     /**
      * Retrieves a stream of areas at the given location.
@@ -41,7 +44,9 @@ public interface AreaProvider {
      * @param location the location to retrieve areas from
      * @return a stream of areas at the given location
      */
-    Stream<Area> getAreas(Location location);
+    default Stream<Area> getAreas(Location location) {
+        return getAreas(location.getWorld()).filter(area -> area.contains(location));
+    }
 
     /**
      * Retrieves a stream of areas that contain the given block.
@@ -49,7 +54,9 @@ public interface AreaProvider {
      * @param block the block to check for containment
      * @return a stream of areas containing the given block
      */
-    Stream<Area> getAreas(Block block);
+    default Stream<Area> getAreas(Block block) {
+        return getAreas(block.getLocation());
+    }
 
     /**
      * Retrieves a stream of areas that contain the given entity.
@@ -57,7 +64,9 @@ public interface AreaProvider {
      * @param entity the entity to check for containment
      * @return a stream of areas containing the given entity
      */
-    Stream<Area> getAreas(Entity entity);
+    default Stream<Area> getAreas(Entity entity) {
+        return getAreas(entity.getLocation());
+    }
 
     /**
      * Retrieves the global area of the given world.
@@ -73,7 +82,11 @@ public interface AreaProvider {
      * @param location the location to retrieve the area from
      * @return the area at the given location
      */
-    Area getArea(Location location);
+    default Area getArea(Location location) {
+        return getAreas(location)
+                .max(Comparator.comparingInt(Area::getPriority))
+                .orElseGet(() -> getArea(location.getWorld()));
+    }
 
     /**
      * Retrieves the area with the highest priority that contains the given block.
@@ -81,7 +94,9 @@ public interface AreaProvider {
      * @param block the block to retrieve the area from
      * @return the area that contains the given block
      */
-    Area getArea(Block block);
+    default Area getArea(Block block) {
+        return getArea(block.getLocation());
+    }
 
     /**
      * Retrieves the area with the highest priority that contains the given entity.
@@ -89,7 +104,9 @@ public interface AreaProvider {
      * @param entity the entity to check for containment
      * @return the area that contains the given entity
      */
-    Area getArea(Entity entity);
+    default Area getArea(Entity entity) {
+        return getArea(entity.getLocation());
+    }
 
     /**
      * Retrieves an optional Area with the given name.
@@ -97,5 +114,7 @@ public interface AreaProvider {
      * @param name the name of the Area to retrieve
      * @return an Optional containing the Area if found, or an empty Optional otherwise
      */
-    Optional<Area> getArea(@NamePattern String name);
+    default Optional<Area> getArea(@NamePattern String name) {
+        return getAreas().filter(area -> area.getName().equals(name)).findAny();
+    }
 }

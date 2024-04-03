@@ -3,6 +3,7 @@ package net.thenextlvl.protect.area;
 import core.annotation.MethodsReturnNotNullByDefault;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The Area interface represents an area inside a world.
@@ -45,4 +46,18 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
      * @return the world associated with this Area
      */
     World getWorld();
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Compares this Area object with the specified Area object for order.
+     * The comparison is based on the priority of the areas.
+     *
+     * @param area the Area object to be compared
+     * @return a negative or positive integer or zero
+     */
+    @Override
+    default int compareTo(@NotNull Area area) {
+        return Integer.compare(getPriority(), area.getPriority());
+    }
 }
