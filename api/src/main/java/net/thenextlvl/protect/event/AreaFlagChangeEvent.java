@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
-public class AreaFlagChangeEvent<T> extends AreaEvent<Area> implements Cancellable {
+public class AreaFlagChangeEvent<T> extends AreaEvent<@NotNull Area> implements Cancellable {
     private final @NotNull Flag<T> flag;
     private boolean cancelled;
     private T newState;

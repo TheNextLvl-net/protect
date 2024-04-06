@@ -1,6 +1,10 @@
 package net.thenextlvl.protect.event;
 
 import com.sk89q.worldedit.regions.Region;
+import core.annotation.FieldsAreNotNullByDefault;
+import core.annotation.MethodsReturnNotNullByDefault;
+import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import net.thenextlvl.protect.area.RegionizedArea;
 
@@ -15,6 +19,10 @@ import java.util.function.Consumer;
  * @param <T> The type of region associated with the area.
  */
 @Getter
+@TypesAreNotNullByDefault
+@FieldsAreNotNullByDefault
+@MethodsReturnNotNullByDefault
+@ParametersAreNotNullByDefault
 public class AreaSchematicLoadEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> {
     private final List<Consumer<RegionizedArea<T>>> successListeners = new ArrayList<>();
 

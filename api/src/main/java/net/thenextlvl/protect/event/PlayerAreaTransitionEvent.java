@@ -1,5 +1,9 @@
 package net.thenextlvl.protect.event;
 
+import core.annotation.FieldsAreNotNullByDefault;
+import core.annotation.MethodsReturnNotNullByDefault;
+import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
@@ -12,6 +16,10 @@ import org.bukkit.event.Cancellable;
  */
 @Getter
 @Setter
+@TypesAreNotNullByDefault
+@FieldsAreNotNullByDefault
+@MethodsReturnNotNullByDefault
+@ParametersAreNotNullByDefault
 public class PlayerAreaTransitionEvent extends PlayerAreaEvent<Area> implements Cancellable {
     private final Area previous;
     private boolean cancelled;

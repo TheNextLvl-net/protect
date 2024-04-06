@@ -1,6 +1,10 @@
 package net.thenextlvl.protect.event;
 
 import com.sk89q.worldedit.regions.Region;
+import core.annotation.FieldsAreNotNullByDefault;
+import core.annotation.MethodsReturnNotNullByDefault;
+import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
@@ -14,6 +18,10 @@ import org.bukkit.event.Cancellable;
  */
 @Getter
 @Setter
+@TypesAreNotNullByDefault
+@FieldsAreNotNullByDefault
+@MethodsReturnNotNullByDefault
+@ParametersAreNotNullByDefault
 public class AreaRedefineEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> implements Cancellable {
     private boolean cancelled;
     private final T region;

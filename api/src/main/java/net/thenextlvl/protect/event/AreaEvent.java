@@ -1,5 +1,9 @@
 package net.thenextlvl.protect.event;
 
+import core.annotation.FieldsAreNotNullByDefault;
+import core.annotation.MethodsReturnNotNullByDefault;
+import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,10 @@ import org.bukkit.event.HandlerList;
  * @param <T> The type of the area of this event
  */
 @Getter
+@TypesAreNotNullByDefault
+@FieldsAreNotNullByDefault
+@MethodsReturnNotNullByDefault
+@ParametersAreNotNullByDefault
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AreaEvent<T extends Area> extends Event {
     private static final @Getter HandlerList handlerList = new HandlerList();
