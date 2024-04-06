@@ -104,7 +104,9 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     public FileIO<Set<Area>> loadAreas(World world) {
-        var builder = new GsonBuilder()
+        var file = areasFiles().computeIfAbsent(world, w -> new GsonFile<>(
+                IO.of(world.getWorldFolder(), "areas.json"), new HashSet<>(), new TypeToken<>() {
+        }, new GsonBuilder()
                 .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
                 .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
                 .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.Bukkit.INSTANCE)
@@ -112,10 +114,7 @@ public class ProtectPlugin extends JavaPlugin {
                 .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(this))
                 .registerTypeHierarchyAdapter(new TypeToken<Map<Flag<?>, Object>>() {
                 }.getRawType(), new FlagsAdapter(this))
-                .setPrettyPrinting();
-        var file = areasFiles().computeIfAbsent(world, w -> new GsonFile<>(
-                IO.of(world.getWorldFolder(), "areas.json"), new HashSet<>(), new TypeToken<>() {
-        }, builder.create()));
+                .setPrettyPrinting().create()));
         if (file.getRoot().add(areaProvider().getArea(world))) file.save();
         return file;
     }
