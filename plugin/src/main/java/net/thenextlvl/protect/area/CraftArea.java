@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
@@ -21,5 +22,10 @@ public abstract class CraftArea implements Area {
         this.name = name;
         this.world = world;
         this.priority = priority;
+    }
+
+    @Override
+    public int compareTo(@NotNull Area area) {
+        return Integer.compare(getPriority(), area.getPriority());
     }
 }

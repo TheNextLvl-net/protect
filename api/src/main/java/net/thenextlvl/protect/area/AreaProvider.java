@@ -8,7 +8,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -34,9 +33,7 @@ public interface AreaProvider {
      * @param world the world to retrieve areas from
      * @return a stream of areas in the given world
      */
-    default Stream<Area> getAreas(World world) {
-        return getAreas().filter(area -> area.getWorld().equals(world));
-    }
+    Stream<Area> getAreas(World world);
 
     /**
      * Retrieves a stream of areas at the given location.
@@ -44,9 +41,7 @@ public interface AreaProvider {
      * @param location the location to retrieve areas from
      * @return a stream of areas at the given location
      */
-    default Stream<Area> getAreas(Location location) {
-        return getAreas(location.getWorld()).filter(area -> area.contains(location));
-    }
+    Stream<Area> getAreas(Location location);
 
     /**
      * Retrieves a stream of areas that contain the given block.
@@ -82,11 +77,7 @@ public interface AreaProvider {
      * @param location the location to retrieve the area from
      * @return the area at the given location
      */
-    default Area getArea(Location location) {
-        return getAreas(location)
-                .max(Comparator.comparingInt(Area::getPriority))
-                .orElseGet(() -> getArea(location.getWorld()));
-    }
+    Area getArea(Location location);
 
     /**
      * Retrieves the area with the highest priority that contains the given block.
@@ -114,7 +105,5 @@ public interface AreaProvider {
      * @param name the name of the Area to retrieve
      * @return an Optional containing the Area if found, or an empty Optional otherwise
      */
-    default Optional<Area> getArea(@NamePattern String name) {
-        return getAreas().filter(area -> area.getName().equals(name)).findAny();
-    }
+    Optional<Area> getArea(@NamePattern String name);
 }
