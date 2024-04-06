@@ -41,7 +41,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     public @Nullable UUID owner;
     private T region;
 
-    protected CraftRegionizedArea(File schematicFolder, @NamePattern String name, World world, T region, int priority) throws IllegalArgumentException {
+    protected CraftRegionizedArea(File schematicFolder, @NamePattern String name, World world, T region, int priority) {
         super(name, world, priority);
         this.schematic = new File(schematicFolder, name + ".schem");
         this.region = region;
