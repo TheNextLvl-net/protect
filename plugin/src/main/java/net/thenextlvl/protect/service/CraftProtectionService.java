@@ -4,6 +4,7 @@ import core.annotation.ParametersAreNotNullByDefault;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -62,6 +63,8 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     private boolean canPerformAction(Player player, Area area, Flag<Boolean> flag, String permission) {
-        return player.hasPermission(permission) && player.getGameMode().equals(GameMode.CREATIVE) || area.getFlag(flag);
+        return (player.hasPermission(permission) && player.getGameMode().equals(GameMode.CREATIVE))
+                || (area instanceof RegionizedArea<?> regionized && player.getUniqueId().equals(regionized.getOwner()))
+                || area.getFlag(flag);
     }
 }
