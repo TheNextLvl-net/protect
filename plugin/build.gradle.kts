@@ -3,12 +3,14 @@ import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
     id("java")
+    id("maven-publish")
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
 }
 
 java {
+    withSourcesJar()
     targetCompatibility = JavaVersion.VERSION_19
     sourceCompatibility = JavaVersion.VERSION_19
 }
@@ -122,6 +124,22 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
                     }
                 }
             }
+        }
+    }
+}
+
+publishing {
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
+    }
+    repositories.maven {
+        val branch = if (version.toString().contains("-pre")) "snapshots" else "releases"
+        url = uri("https://repo.thenextlvl.net/$branch")
+        credentials {
+            if (extra.has("RELEASES_USER"))
+                username = extra["RELEASES_USER"].toString()
+            if (extra.has("RELEASES_PASSWORD"))
+                password = extra["RELEASES_PASSWORD"].toString()
         }
     }
 }
