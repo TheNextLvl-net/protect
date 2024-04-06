@@ -1,12 +1,12 @@
 package net.thenextlvl.protect.event;
 
-import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -20,12 +20,11 @@ import java.util.UUID;
 @Setter
 @TypesAreNotNullByDefault
 @ParametersAreNotNullByDefault
-@MethodsReturnNotNullByDefault
 public class AreaOwnerChangeEvent<T extends RegionizedArea<?>> extends AreaEvent<T> implements Cancellable {
+    private @Nullable UUID newOwner;
     private boolean cancelled;
-    private UUID newOwner;
 
-    public AreaOwnerChangeEvent(T area, UUID newOwner) {
+    public AreaOwnerChangeEvent(T area, @Nullable UUID newOwner) {
         super(area);
         this.newOwner = newOwner;
     }
