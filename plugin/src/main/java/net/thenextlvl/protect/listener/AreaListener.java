@@ -23,19 +23,19 @@ public class AreaListener implements Listener {
         event.setCancelled(!plugin.protectionService().canLeave(event.getPlayer(), event.getArea()));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void greetings(PlayerAreaEnterEvent event) {
         var message = event.getArea().getFlag(plugin.flags.greetings);
         if (message != null) event.getPlayer().sendRichMessage(message);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void farewell(PlayerAreaLeaveEvent event) {
         var message = event.getArea().getFlag(plugin.flags.farewell);
         if (message != null) event.getPlayer().sendRichMessage(message);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerAreaTransition(PlayerAreaTransitionEvent event) {
         var weather = event.getArea().getFlag(plugin.flags.weather);
         if (weather != null) event.getPlayer().setPlayerWeather(weather);
