@@ -22,7 +22,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -67,7 +66,6 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
         if (event.callEvent()) internalSetOwner(event.getNewOwner());
     }
 
-    @ApiStatus.Internal
     public void internalSetOwner(@Nullable UUID owner) {
         this.owner = owner;
     }
