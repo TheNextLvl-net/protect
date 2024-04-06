@@ -2,6 +2,7 @@ package net.thenextlvl.protect.area;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thenextlvl.protect.event.AreaFlagChangeEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,12 @@ public abstract class CraftArea implements Area {
         this.name = name;
         this.world = world;
         this.priority = priority;
+    }
+
+    @Override
+    public <T> void setFlag(@NotNull Flag<T> flag, T state) {
+        var event = new AreaFlagChangeEvent<>(this, flag, state);
+        if (event.callEvent()) Area.super.setFlag(flag, event.getNewState());
     }
 
     @Override
