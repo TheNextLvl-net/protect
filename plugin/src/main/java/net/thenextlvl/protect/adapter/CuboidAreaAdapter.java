@@ -28,7 +28,7 @@ public class CuboidAreaAdapter implements AreaAdapter<CraftCuboidArea> {
         var name = object.get("name").getAsString();
         var priority = object.get("priority").getAsInt();
         var region = context.<CuboidRegion>deserialize(object.get("region"), CuboidRegion.class);
-        var area = new CraftCuboidArea(plugin, name, world, region, priority);
+        var area = new CraftCuboidArea(plugin.schematicFolder(), name, world, region, priority);
         area.setFlags(context.deserialize(object.get("flags"), Map.class));
         return area;
     }

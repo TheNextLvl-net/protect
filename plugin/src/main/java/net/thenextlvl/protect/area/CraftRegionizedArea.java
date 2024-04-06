@@ -14,7 +14,6 @@ import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
-import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.event.AreaRedefineEvent;
 import net.thenextlvl.protect.event.AreaSchematicDeleteEvent;
@@ -37,15 +36,13 @@ import java.util.UUID;
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
-    private final ProtectPlugin plugin;
     private final File schematic;
     private @Nullable UUID owner;
     private T region;
 
-    protected CraftRegionizedArea(ProtectPlugin plugin, @NamePattern String name, World world, T region, int priority) throws IllegalArgumentException {
+    protected CraftRegionizedArea(File schematicFolder, @NamePattern String name, World world, T region, int priority) throws IllegalArgumentException {
         super(name, world, priority);
-        this.schematic = new File(plugin.schematicFolder(), name + ".schem");
-        this.plugin = plugin;
+        this.schematic = new File(schematicFolder, name + ".schem");
         this.region = region;
     }
 
