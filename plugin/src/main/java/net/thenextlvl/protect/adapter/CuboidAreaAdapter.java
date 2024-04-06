@@ -12,6 +12,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 
 import java.util.Map;
+import java.util.UUID;
 
 public class CuboidAreaAdapter implements AreaAdapter<CraftCuboidArea> {
     private final @Getter NamespacedKey namespacedKey;
@@ -27,9 +28,11 @@ public class CuboidAreaAdapter implements AreaAdapter<CraftCuboidArea> {
     public CraftCuboidArea deserialize(JsonObject object, World world, JsonDeserializationContext context) {
         var name = object.get("name").getAsString();
         var priority = object.get("priority").getAsInt();
+        var owner = object.has("owner") ? context.<UUID>deserialize(object.get("owner"), UUID.class) : null;
         var region = context.<CuboidRegion>deserialize(object.get("region"), CuboidRegion.class);
         var area = new CraftCuboidArea(plugin.schematicFolder(), name, world, region, priority);
         area.setFlags(context.deserialize(object.get("flags"), Map.class));
+        area.internalSetOwner(owner);
         return area;
     }
 
@@ -38,6 +41,7 @@ public class CuboidAreaAdapter implements AreaAdapter<CraftCuboidArea> {
         var object = new JsonObject();
         object.addProperty("name", area.getName());
         object.addProperty("priority", area.getPriority());
+        if (area.getOwner() != null) object.add("owner", context.serialize(area.getOwner()));
         object.add("region", context.serialize(area.getRegion()));
         object.add("flags", context.serialize(area.getFlags()));
         return object;

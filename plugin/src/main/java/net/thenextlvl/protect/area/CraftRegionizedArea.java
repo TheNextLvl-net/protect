@@ -22,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -37,7 +38,7 @@ import java.util.UUID;
 @ParametersAreNotNullByDefault
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File schematic;
-    private @Nullable UUID owner;
+    public @Nullable UUID owner;
     private T region;
 
     protected CraftRegionizedArea(File schematicFolder, @NamePattern String name, World world, T region, int priority) throws IllegalArgumentException {
@@ -63,7 +64,12 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public void setOwner(@Nullable UUID owner) {
         var event = new AreaOwnerChangeEvent<>(this, owner);
-        if (event.callEvent()) this.owner = event.getNewOwner();
+        if (event.callEvent()) internalSetOwner(event.getNewOwner());
+    }
+
+    @ApiStatus.Internal
+    public void internalSetOwner(@Nullable UUID owner) {
+        this.owner = owner;
     }
 
     @Override
