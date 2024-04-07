@@ -45,10 +45,10 @@ import java.util.*;
 public class ProtectPlugin extends JavaPlugin {
     private final File schematicFolder = new File(getDataFolder(), "schematics");
 
-    private final ProtectionService protectionService = new CraftProtectionService(this);
-    private final FlagRegistry flagRegistry = new CraftFlagRegistry();
-    private final AreaProvider areaProvider = new CraftAreaProvider(this);
-    private final AreaService areaService = new CraftAreaService(this);
+    private final CraftProtectionService protectionService = new CraftProtectionService(this);
+    private final CraftFlagRegistry flagRegistry = new CraftFlagRegistry();
+    private final CraftAreaProvider areaProvider = new CraftAreaProvider(this);
+    private final CraftAreaService areaService = new CraftAreaService(this);
 
     private final Map<World, FileIO<Set<Area>>> areasFiles = new HashMap<>();
     public final @Getter(AccessLevel.NONE) Flags flags = new Flags();
