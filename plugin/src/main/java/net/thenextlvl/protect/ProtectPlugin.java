@@ -1,21 +1,14 @@
 package net.thenextlvl.protect;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import core.file.FileIO;
-import core.file.format.GsonFile;
 import core.i18n.file.ComponentBundle;
-import core.io.IO;
-import core.paper.adapters.key.KeyAdapter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.thenextlvl.protect.adapter.*;
+import net.thenextlvl.protect.adapter.CuboidAreaAdapter;
+import net.thenextlvl.protect.adapter.GlobalAreaAdapter;
 import net.thenextlvl.protect.area.*;
 import net.thenextlvl.protect.command.AreaCommand;
 import net.thenextlvl.protect.flag.CraftFlagRegistry;
@@ -28,9 +21,7 @@ import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.WeatherType;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.Locale;
 
 @Getter
 @Accessors(fluent = true)
@@ -50,7 +41,6 @@ public class ProtectPlugin extends JavaPlugin {
     private final CraftAreaProvider areaProvider = new CraftAreaProvider(this);
     private final CraftAreaService areaService = new CraftAreaService(this);
 
-    private final Map<World, FileIO<Set<Area>>> areasFiles = new HashMap<>();
     public final @Getter(AccessLevel.NONE) Flags flags = new Flags();
 
     private final ComponentBundle bundle = new ComponentBundle(new File(getDataFolder(), "translations"),
@@ -100,23 +90,7 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        areasFiles().forEach((world, file) -> file.save());
-    }
-
-    public FileIO<Set<Area>> loadAreas(World world) {
-        var file = areasFiles().computeIfAbsent(world, w -> new GsonFile<>(
-                IO.of(world.getWorldFolder(), "areas.json"), new HashSet<>(), new TypeToken<>() {
-        }, new GsonBuilder()
-                .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
-                .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
-                .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.Bukkit.INSTANCE)
-                .registerTypeHierarchyAdapter(Area.class, new AreaTypeAdapter(this, world))
-                .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(this))
-                .registerTypeHierarchyAdapter(new TypeToken<Map<Flag<?>, Object>>() {
-                }.getRawType(), new FlagsAdapter(this))
-                .setPrettyPrinting().create()));
-        if (file.getRoot().add(areaProvider().getArea(world))) file.save();
-        return file;
+        areaProvider().saveAreas();
     }
 
     public class Flags {
