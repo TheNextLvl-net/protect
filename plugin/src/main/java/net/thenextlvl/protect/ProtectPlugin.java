@@ -78,7 +78,7 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getAsyncScheduler().runNow(this, scheduledTask -> Bukkit.getWorlds().forEach(this::loadAreas));
+        Bukkit.getGlobalRegionScheduler().execute(this, areaProvider::loadAreas);
         registerCommands();
         registerEvents();
     }
