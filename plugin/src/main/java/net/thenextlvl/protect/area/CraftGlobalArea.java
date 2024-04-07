@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 @FieldsAreNotNullByDefault
+@ToString(callSuper = true)
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
+@EqualsAndHashCode(callSuper = true)
 public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private static final Map<World, CraftGlobalArea> globalAreas = new HashMap<>();
 

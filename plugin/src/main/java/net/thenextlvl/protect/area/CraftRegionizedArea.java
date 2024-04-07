@@ -13,7 +13,9 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import net.thenextlvl.protect.event.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.event.AreaRedefineEvent;
 import net.thenextlvl.protect.event.AreaSchematicDeleteEvent;
@@ -33,8 +35,10 @@ import java.util.UUID;
 
 @Getter
 @TypesAreNotNullByDefault
+@ToString(callSuper = true)
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
+@EqualsAndHashCode(callSuper = true)
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File schematic;
     public @Nullable UUID owner;
