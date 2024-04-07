@@ -3,30 +3,32 @@ package net.thenextlvl.protect.area;
 import core.annotation.FieldsAreNotNullByDefault;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
+@Getter
 @FieldsAreNotNullByDefault
 @ToString(callSuper = true)
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 @EqualsAndHashCode(callSuper = true)
 public class CraftGlobalArea extends CraftArea implements GlobalArea {
-    private static final Map<World, CraftGlobalArea> globalAreas = new HashMap<>();
+    private final File dataFolder;
+    private final File file;
 
     @SuppressWarnings("PatternValidation")
-    private CraftGlobalArea(World world, int priority) {
+    public CraftGlobalArea(World world, int priority) {
         super("@" + world.getName(), world, priority);
-    }
-
-    private CraftGlobalArea(World world) {
-        this(world, -1);
+        this.dataFolder = new File(world.getWorldFolder(), "areas");
+        this.file = new File(getDataFolder(), getName() + ".json");
     }
 
     @Override

@@ -4,6 +4,8 @@ import core.annotation.MethodsReturnNotNullByDefault;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.World;
 
+import java.io.File;
+
 /**
  * The Area interface represents an area inside a world.
  */
@@ -45,4 +47,18 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
      * @return the world associated with this Area
      */
     World getWorld();
+
+    /**
+     * Retrieves the data folder associated with this object.
+     *
+     * @return the data folder associated with this object
+     */
+    File getDataFolder();
+
+    /**
+     * Retrieves the File associated with this object.
+     *
+     * @return the File associated with this object
+     */
+    File getFile();
 }

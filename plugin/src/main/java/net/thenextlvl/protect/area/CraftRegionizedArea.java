@@ -40,6 +40,8 @@ import java.util.UUID;
 @ParametersAreNotNullByDefault
 @EqualsAndHashCode(callSuper = true)
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
+    private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
+    private final File file = new File(getDataFolder(), getName() + ".json");
     private final File schematic;
     public @Nullable UUID owner;
     private T region;
