@@ -28,6 +28,7 @@ public class MovementListener implements Listener {
                         event.setCancelled(!new PlayerAreaLeaveEvent(event.getPlayer(), area).callEvent());
                     }
                 });
+        if (event.isCancelled()) return;
         var from = plugin.areaProvider().getArea(event.getFrom());
         var to = plugin.areaProvider().getArea(event.getTo());
         if (from.equals(to)) return;
