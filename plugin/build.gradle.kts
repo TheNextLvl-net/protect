@@ -21,6 +21,7 @@ version = project(":api").version
 repositories {
     mavenCentral()
     maven("https://repo.thenextlvl.net/releases")
+    maven("https://repo.thenextlvl.net/snapshots")
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
@@ -37,7 +38,7 @@ dependencies {
 
     implementation(project(":api"))
     implementation("net.thenextlvl.core:i18n:1.0.14")
-    implementation("net.thenextlvl.core:files:1.0.4")
+    implementation("net.thenextlvl.core:files:1.0.5-pre1")
     implementation("net.thenextlvl.core:paper:1.2.6")
     implementation("net.thenextlvl.core:adapters:1.0.8")
 
