@@ -45,12 +45,4 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     public boolean contains(Location location) {
         return getWorld().equals(location.getWorld());
     }
-
-    public static CraftGlobalArea of(World world, int priority) {
-        return globalAreas.computeIfAbsent(world, w -> new CraftGlobalArea(w, priority));
-    }
-
-    public static CraftGlobalArea of(World world) {
-        return globalAreas.computeIfAbsent(world, CraftGlobalArea::new);
-    }
 }

@@ -1,17 +1,29 @@
 package net.thenextlvl.protect.area;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import core.file.FileIO;
+import core.file.format.GsonFile;
+import core.io.IO;
+import core.paper.adapters.key.KeyAdapter;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.adapter.*;
+import net.thenextlvl.protect.flag.Flag;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Optional;
+import java.io.File;
+import java.util.*;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -19,18 +31,20 @@ import java.util.stream.Stream;
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public class CraftAreaProvider implements AreaProvider {
+    private final Map<World, Set<FileIO<Area>>> areas = new HashMap<>();
     private final ProtectPlugin plugin;
 
     @Override
     public Stream<Area> getAreas() {
-        return plugin.areasFiles().values().stream()
-                .map(FileIO::getRoot)
-                .flatMap(Collection::stream);
+        return areas.values().stream()
+                .flatMap(Collection::stream)
+                .map(FileIO::getRoot);
     }
 
     @Override
     public Stream<Area> getAreas(World world) {
-        return getAreas().filter(area -> area.getWorld().equals(world));
+        return areas.getOrDefault(world, Collections.emptySet()).stream()
+                .map(FileIO::getRoot);
     }
 
     @Override
@@ -52,6 +66,65 @@ public class CraftAreaProvider implements AreaProvider {
 
     @Override
     public GlobalArea getArea(World world) {
-        return CraftGlobalArea.of(world);
+        return getAreas(world)
+                .filter(area -> area instanceof GlobalArea)
+                .map(area -> (GlobalArea) area)
+                .findAny().orElseThrow();
+    }
+
+    @ApiStatus.Internal
+    public void loadAreas() {
+        Bukkit.getWorlds().forEach(world -> {
+            loadAreas(world);
+            if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
+            loadArea(new CraftGlobalArea(world, -1));
+        });
+    }
+
+    @ApiStatus.Internal
+    public void loadAreas(World world) {
+        var areaFolder = new File(world.getWorldFolder(), "areas");
+        var files = areaFolder.listFiles((file, name) -> name.endsWith(".json"));
+        if (files != null) for (var file : files) loadArea(world, file);
+    }
+
+    @ApiStatus.Internal
+    public void loadArea(Area area) {
+        var file = loadFile(area.getWorld(), area, IO.of(area.getFile()));
+        areas.computeIfAbsent(area.getWorld(), k -> new HashSet<>()).add(file);
+    }
+
+    @ApiStatus.Internal
+    public void loadArea(World world, File file) {
+        areas.computeIfAbsent(world, k -> new HashSet<>())
+                .add(loadFile(world, null, IO.of(file)));
+    }
+
+    @ApiStatus.Internal
+    public FileIO<Area> loadFile(World world, @Nullable Area area, IO file) {
+        var gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
+                .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
+                .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.Bukkit.INSTANCE)
+                .registerTypeHierarchyAdapter(Area.class, new AreaTypeAdapter(plugin, world))
+                .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(plugin))
+                .registerTypeHierarchyAdapter(new TypeToken<Map<Flag<?>, Object>>() {
+                }.getRawType(), new FlagsAdapter(plugin))
+                .setPrettyPrinting().create();
+        return area != null ? new GsonFile<>(file, area, gson) : new GsonFile<>(file, Area.class, gson);
+    }
+
+    @ApiStatus.Internal
+    public void saveAreas() {
+        areas.values().stream()
+                .flatMap(Set::stream)
+                .forEach(FileIO::save);
+    }
+
+    @ApiStatus.Internal
+    public boolean deleteArea(Area area) {
+        var areas = this.areas.get(area.getWorld());
+        if (areas != null) areas.removeIf(file -> file.getRoot().equals(area));
+        return area.getFile().delete();
     }
 }

@@ -22,7 +22,7 @@ public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
 
     @Override
     public CraftGlobalArea deserialize(JsonObject object, World world, JsonDeserializationContext context) {
-        var area = CraftGlobalArea.of(world, object.get("priority").getAsInt());
+        var area = new CraftGlobalArea(world, object.get("priority").getAsInt());
         area.setFlags(context.deserialize(object.get("flags"), Map.class));
         return area;
     }
