@@ -11,6 +11,8 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 class AreaInfoCommand {
     private final ProtectPlugin plugin;
@@ -44,6 +46,13 @@ class AreaInfoCommand {
                 Placeholder.parsed("world", area.getWorld().getName()));
         plugin.bundle().sendMessage(sender, "area.info.priority",
                 Placeholder.parsed("priority", String.valueOf(area.getPriority())));
+        plugin.bundle().sendMessage(sender, "area.info.type",
+                Placeholder.parsed("type", plugin.areaService().getAdapter(area.getClass())
+                        .getNamespacedKey().asString()));
+        plugin.bundle().sendMessage(sender, "area.info.flags",
+                Placeholder.parsed("flags", area.getFlags().entrySet().stream()
+                        .map(entry -> entry.getKey().key().asString() + "=" + entry.getValue())
+                        .collect(Collectors.joining(", "))));
         if (!(area instanceof RegionizedArea<?> regionizedArea)) return;
         plugin.bundle().sendMessage(sender, "area.info.bounds",
                 Placeholder.parsed("bounds", regionizedArea.getRegion().getMinimumPoint().toParserString()
