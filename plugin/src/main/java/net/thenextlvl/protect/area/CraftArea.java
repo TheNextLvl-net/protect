@@ -1,10 +1,7 @@
 package net.thenextlvl.protect.area;
 
 import core.annotation.MethodsReturnNotNullByDefault;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaFlagChangeEvent;
 import net.thenextlvl.protect.event.AreaFlagUnsetEvent;
@@ -26,7 +23,7 @@ import java.util.Map;
 @EqualsAndHashCode
 @MethodsReturnNotNullByDefault
 public abstract class CraftArea implements Area {
-    private final ProtectPlugin plugin = JavaPlugin.getPlugin(ProtectPlugin.class);
+    private final @Getter(AccessLevel.NONE) ProtectPlugin plugin = JavaPlugin.getPlugin(ProtectPlugin.class);
     private Map<Flag<?>, @Nullable Object> flags = new LinkedHashMap<>();
     private final @NamePattern String name;
     private final World world;
