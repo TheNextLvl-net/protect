@@ -51,13 +51,13 @@ public class AreaListener implements Listener {
     public void onAreaFlagChange(AreaFlagChangeEvent<?> event) {
         if (event.getFlag().equals(plugin.flags.weather)) {
             var weather = (WeatherType) event.getNewState();
-            event.getArea().getPlayers().forEach(player -> {
+            event.getArea().getHighestPlayers().forEach(player -> {
                 if (weather != null) player.setPlayerWeather(weather);
                 else player.resetPlayerWeather();
             });
         } else if (event.getFlag().equals(plugin.flags.time)) {
             var time = (Long) event.getNewState();
-            event.getArea().getPlayers().forEach(player -> {
+            event.getArea().getHighestPlayers().forEach(player -> {
                 if (time != null) player.setPlayerTime(time, false);
                 else player.resetPlayerTime();
             });
@@ -66,9 +66,9 @@ public class AreaListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAreaFlagUnset(AreaFlagUnsetEvent<?> event) {
-        if (event.getFlag().equals(plugin.flags.weather))
-            event.getArea().getPlayers().forEach(Player::resetPlayerWeather);
-        else if (event.getFlag().equals(plugin.flags.time))
-            event.getArea().getPlayers().forEach(Player::resetPlayerTime);
+        if (event.getFlag().equals(plugin.flags.weather)) {
+            event.getArea().getHighestPlayers().forEach(Player::resetPlayerWeather);
+        } else if (event.getFlag().equals(plugin.flags.time))
+            event.getArea().getHighestPlayers().forEach(Player::resetPlayerTime);
     }
 }

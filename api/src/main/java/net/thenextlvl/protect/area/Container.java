@@ -50,6 +50,7 @@ public interface Container {
      * Retrieves a list of entities that are contained within this container.
      *
      * @return a list of entities
+     * @see Container#getHighestEntities()
      */
     List<Entity> getEntities();
 
@@ -57,6 +58,27 @@ public interface Container {
      * Retrieves a list of players that are contained within this container.
      *
      * @return a list of players
+     * @see Container#getHighestPlayers()
      */
     List<Player> getPlayers();
+
+    /**
+     * Retrieves a list of entities that are contained within this container.
+     * This method returns only those entities who's highest-area is equal to this one.
+     *
+     * @return a List of Entity objects that are contained within this container
+     * @see Area#getPriority()
+     * @see Container#getEntities()
+     */
+    List<Entity> getHighestEntities();
+
+    /**
+     * Retrieves a list of players that are contained within this container.
+     * This method returns only those players who's highest-area is equal to this one.
+     *
+     * @return a List of Player objects that are contained within this container
+     * @see Area#getPriority()
+     * @see Container#getPlayers()
+     */
+    List<Player> getHighestPlayers();
 }
