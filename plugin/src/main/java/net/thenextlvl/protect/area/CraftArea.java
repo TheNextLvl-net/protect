@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area;
 
-import core.annotation.MethodsReturnNotNullByDefault;
 import lombok.*;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaFlagChangeEvent;
@@ -21,7 +20,6 @@ import java.util.Map;
 @Setter
 @ToString
 @EqualsAndHashCode
-@MethodsReturnNotNullByDefault
 public abstract class CraftArea implements Area {
     private final @Getter(AccessLevel.NONE) ProtectPlugin plugin = JavaPlugin.getPlugin(ProtectPlugin.class);
     private Map<Flag<?>, @Nullable Object> flags = new LinkedHashMap<>();
@@ -48,14 +46,14 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public List<Entity> getHighestEntities() {
+    public @NotNull List<Entity> getHighestEntities() {
         return getEntities().stream()
                 .filter(player -> plugin.areaProvider().getArea(player).equals(this))
                 .toList();
     }
 
     @Override
-    public List<Player> getHighestPlayers() {
+    public @NotNull List<Player> getHighestPlayers() {
         return getPlayers().stream()
                 .filter(player -> plugin.areaProvider().getArea(player).equals(this))
                 .toList();
