@@ -2,11 +2,9 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.event.AreaFlagChangeEvent;
-import net.thenextlvl.protect.event.PlayerAreaEnterEvent;
-import net.thenextlvl.protect.event.PlayerAreaLeaveEvent;
-import net.thenextlvl.protect.event.PlayerAreaTransitionEvent;
+import net.thenextlvl.protect.event.*;
 import org.bukkit.WeatherType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -64,5 +62,13 @@ public class AreaListener implements Listener {
                 else player.resetPlayerTime();
             });
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onAreaFlagUnset(AreaFlagUnsetEvent<?> event) {
+        if (event.getFlag().equals(plugin.flags.weather))
+            event.getArea().getPlayers().forEach(Player::resetPlayerWeather);
+        else if (event.getFlag().equals(plugin.flags.time))
+            event.getArea().getPlayers().forEach(Player::resetPlayerTime);
     }
 }
