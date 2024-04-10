@@ -3,9 +3,7 @@ package net.thenextlvl.protect.area;
 import core.annotation.FieldsAreNotNullByDefault;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -13,13 +11,12 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @FieldsAreNotNullByDefault
-@ToString(callSuper = true)
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
-@EqualsAndHashCode(callSuper = true)
 public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File dataFolder;
     private final File file;
@@ -44,5 +41,24 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     @Override
     public boolean contains(Location location) {
         return getWorld().equals(location.getWorld());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        CraftGlobalArea area = (CraftGlobalArea) o;
+        return Objects.equals(getWorld(), area.getWorld());
+    }
+
+    @Override
+    public int hashCode() {
+        return getWorld().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "CraftGlobalArea{world=" + getWorld() + "}";
     }
 }
