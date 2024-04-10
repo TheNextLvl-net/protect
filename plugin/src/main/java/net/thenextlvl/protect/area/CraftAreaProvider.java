@@ -69,16 +69,8 @@ public class CraftAreaProvider implements AreaProvider {
         return getAreas(world)
                 .filter(area -> area instanceof GlobalArea)
                 .map(area -> (GlobalArea) area)
-                .findAny().orElseThrow();
-    }
-
-    @ApiStatus.Internal
-    public void loadAreas() {
-        Bukkit.getWorlds().forEach(world -> {
-            loadAreas(world);
-            if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
-            loadArea(new CraftGlobalArea(world, -1));
-        });
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("No area found for world " + world.getName()));
     }
 
     @ApiStatus.Internal
