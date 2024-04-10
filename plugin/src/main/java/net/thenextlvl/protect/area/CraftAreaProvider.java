@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.adapter.*;
 import net.thenextlvl.protect.flag.Flag;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -84,14 +83,21 @@ public class CraftAreaProvider implements AreaProvider {
 
     @ApiStatus.Internal
     public void loadArea(Area area) {
-        var file = loadFile(area.getWorld(), area, IO.of(area.getFile()));
-        areas.computeIfAbsent(area.getWorld(), k -> new HashSet<>()).add(file);
+        addAreaFile(area.getWorld(), loadFile(area.getWorld(), area, IO.of(area.getFile())).saveIfAbsent());
     }
 
     @ApiStatus.Internal
     public void loadArea(World world, File file) {
-        areas.computeIfAbsent(world, k -> new HashSet<>())
-                .add(loadFile(world, null, IO.of(file)));
+        addAreaFile(world, loadFile(world, null, IO.of(file)));
+    }
+
+    private void addAreaFile(World world, FileIO<Area> file) {
+        var areas = this.areas.computeIfAbsent(world, k -> new HashSet<>());
+        areas.stream().filter(io -> io.getRoot().equals(file.getRoot())).findAny()
+                .ifPresentOrElse(io -> plugin.getSLF4JLogger().warn(
+                        "Ignoring duplicate area {}: {}",
+                        file.getRoot().getName(), file.getIO()
+                ), () -> areas.add(file));
     }
 
     @ApiStatus.Internal
