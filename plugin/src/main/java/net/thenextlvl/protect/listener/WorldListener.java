@@ -157,4 +157,10 @@ public class WorldListener implements Listener {
         var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.blockSpread));
     }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLeavesDecay(LeavesDecayEvent event) {
+        var area = plugin.areaProvider().getArea(event.getBlock());
+        event.setCancelled(!area.getFlag(plugin.flags.leavesDecay));
+    }
 }

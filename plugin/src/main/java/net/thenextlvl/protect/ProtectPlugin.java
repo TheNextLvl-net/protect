@@ -99,6 +99,7 @@ public class ProtectPlugin extends JavaPlugin {
         public final Flag<@NotNull Boolean> blockBreak = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_break", true);
         public final Flag<@NotNull Boolean> blockPlace = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_place", true);
         public final Flag<@NotNull Boolean> blockSpread = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_spread", true);
+        public final Flag<@NotNull Boolean> leavesDecay = flagRegistry().register(ProtectPlugin.this, Boolean.class, "leaves_decay", true);
         public final Flag<@NotNull Boolean> cropTrample = flagRegistry().register(ProtectPlugin.this, Boolean.class, "crop_trample", true);
         public final Flag<@NotNull Boolean> damage = flagRegistry().register(ProtectPlugin.this, Boolean.class, "damage", true);
         public final Flag<@NotNull Boolean> entityAttackEntity = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_attack_entity", true);
