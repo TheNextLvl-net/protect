@@ -86,6 +86,8 @@ public class CraftAreaProvider implements AreaProvider {
         var areaFolder = new File(world.getWorldFolder(), "areas");
         var files = areaFolder.listFiles((file, name) -> name.endsWith(".json"));
         if (files != null) for (var file : files) loadArea(world, file);
+        if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
+        loadArea(new CraftGlobalArea(world, -1));
     }
 
     @ApiStatus.Internal
