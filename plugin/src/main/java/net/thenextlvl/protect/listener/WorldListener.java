@@ -13,10 +13,16 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 @RequiredArgsConstructor
 public class WorldListener implements Listener {
     private final ProtectPlugin plugin;
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onWorldLoad(WorldLoadEvent event) {
+        plugin.areaProvider().loadAreas(event.getWorld());
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {

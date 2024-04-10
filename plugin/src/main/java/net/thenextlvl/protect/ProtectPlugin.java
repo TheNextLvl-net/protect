@@ -68,7 +68,6 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getGlobalRegionScheduler().execute(this, areaProvider::loadAreas);
         registerCommands();
         registerEvents();
     }
