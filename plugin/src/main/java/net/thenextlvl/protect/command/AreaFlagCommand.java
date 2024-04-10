@@ -139,7 +139,7 @@ class AreaFlagCommand {
         } else if (flag.type().isEnum()) {
             var state = Arrays.stream(flag.type().getEnumConstants())
                     .filter(o -> String.valueOf(o).equalsIgnoreCase(value))
-                    .findAny().orElseThrow();
+                    .findAny().orElseThrow(() -> new IllegalStateException("No enum constant " + value));
             if (!Objects.equals(area.getFlag(flag), state)) area.setFlag(flag, state);
         } else return false;
         return true;
