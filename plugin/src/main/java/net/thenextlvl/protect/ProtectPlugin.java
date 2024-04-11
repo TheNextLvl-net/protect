@@ -87,11 +87,6 @@ public class ProtectPlugin extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onDisable() {
-        areaProvider().saveAreas();
-    }
-
     public class Flags {
         public final Flag<@NotNull Boolean> areaEnter = flagRegistry().register(ProtectPlugin.this, Boolean.class, "enter", true);
         public final Flag<@NotNull Boolean> areaLeave = flagRegistry().register(ProtectPlugin.this, Boolean.class, "leave", true);

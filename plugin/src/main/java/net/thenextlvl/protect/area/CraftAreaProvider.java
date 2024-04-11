@@ -115,10 +115,13 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public void saveAreas() {
-        areas.values().stream()
-                .flatMap(Set::stream)
-                .forEach(FileIO::save);
+    public void saveAreas(World world) {
+        areas.get(world).forEach(FileIO::save);
+    }
+
+    @ApiStatus.Internal
+    public void unloadAreas(World world) {
+        areas.remove(world);
     }
 
     @ApiStatus.Internal

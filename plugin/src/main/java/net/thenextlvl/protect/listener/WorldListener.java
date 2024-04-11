@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 
 @RequiredArgsConstructor
 public class WorldListener implements Listener {
@@ -22,6 +23,12 @@ public class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onWorldLoad(WorldLoadEvent event) {
         plugin.areaProvider().loadAreas(event.getWorld());
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onWorldUnload(WorldUnloadEvent event) {
+        plugin.areaProvider().saveAreas(event.getWorld());
+        plugin.areaProvider().unloadAreas(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
