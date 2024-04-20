@@ -68,36 +68,38 @@ paper {
         register("protect.command.area") {
             description = "Allows players to use the area command"
             children = listOf(
-                    "protect.command.area.create",
-                    "protect.command.area.delete",
-                    "protect.command.area.manage"
+                "protect.command.area.create",
+                "protect.command.area.delete",
+                "protect.command.area.manage"
             )
         }
         register("protect.command.area.manage") {
             description = "Allows players to manage protected areas"
             children = listOf(
-                    "protect.command.area.rename",
-                    "protect.command.area.redefine",
-                    "protect.command.area.flag"
+                "protect.command.area.schematic",
+                "protect.command.area.priority",
+                "protect.command.area.rename",
+                "protect.command.area.redefine",
+                "protect.command.area.flag"
             )
         }
         register("protect.bypass") {
             description = "Allows players to bypass any restriction"
             children = listOf(
-                    "protect.bypass.build",
-                    "protect.bypass.break",
-                    "protect.bypass.interact",
-                    "protect.bypass.entity-interact",
-                    "protect.bypass.trample",
-                    "protect.bypass.enter",
-                    "protect.bypass.leave"
+                "protect.bypass.build",
+                "protect.bypass.break",
+                "protect.bypass.interact",
+                "protect.bypass.entity-interact",
+                "protect.bypass.trample",
+                "protect.bypass.enter",
+                "protect.bypass.leave"
             )
         }
         register("protect.admin") {
             description = "Allows players to bypass all restrictions and access to all commands"
             children = listOf(
-                    "protect.bypass",
-                    "protect.command.area"
+                "protect.bypass",
+                "protect.command.area"
             )
         }
     }
@@ -118,8 +120,8 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
             register(Platforms.PAPER) {
                 jar.set(tasks.shadowJar.flatMap { it.archiveFile })
                 val versions: List<String> = (property("paperVersion") as String)
-                        .split(",")
-                        .map { it.trim() }
+                    .split(",")
+                    .map { it.trim() }
                 platformVersions.set(versions)
                 dependencies {
                     url("WorldEdit", "https://ci.athion.net/job/FastAsyncWorldEdit/") {
