@@ -4,6 +4,7 @@ import lombok.*;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaFlagChangeEvent;
 import net.thenextlvl.protect.event.AreaFlagUnsetEvent;
+import net.thenextlvl.protect.event.AreaPriorityChangeEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -42,9 +43,10 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public <T> void setFlag(@NotNull Flag<T> flag, T state) {
+    public <T> boolean setFlag(@NotNull Flag<T> flag, T state) {
         var event = new AreaFlagChangeEvent<>(this, flag, state);
-        if (event.callEvent()) Area.super.setFlag(flag, event.getNewState());
+        if (!event.callEvent()) return false;
+        return Area.super.setFlag(flag, event.getNewState());
     }
 
     @Override

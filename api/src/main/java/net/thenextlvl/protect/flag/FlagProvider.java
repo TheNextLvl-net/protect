@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The FlagProvider interface represents an object that can store and retrieve flags and their associated states.
@@ -15,7 +16,8 @@ public interface FlagProvider {
      *
      * @return a map of flags and their associated state
      */
-    @NotNull Map<Flag<?>, @Nullable Object> getFlags();
+    @NotNull
+    Map<Flag<?>, @Nullable Object> getFlags();
 
     /**
      * Sets the map of all flags and their associated state.
@@ -30,9 +32,10 @@ public interface FlagProvider {
      * @param flag  The flag to set the state of.
      * @param state The state to be set for the flag.
      * @param <T>   The type of the flag state.
+     * @return whether the flag was changed.
      */
-    default <T> void setFlag(@NotNull Flag<T> flag, T state) {
-        getFlags().put(flag, state);
+    default <T> boolean setFlag(@NotNull Flag<T> flag, T state) {
+        return !Objects.equals(getFlags().put(flag, state), state);
     }
 
     /**
