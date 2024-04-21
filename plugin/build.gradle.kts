@@ -65,25 +65,19 @@ paper {
         }
     }
     permissions {
-        register("protect.command.area") {
-            description = "Allows players to use the area command"
+        // admin perm-pack
+        register("protect.admin") {
+            description = "Allows players to manage all areas and bypass all restrictions"
             children = listOf(
                 "protect.command.area.create",
                 "protect.command.area.delete",
-                "protect.command.area.manage"
+                "protect.command.area.manage",
+                "protect.admin.bypass"
             )
         }
-        register("protect.command.area.manage") {
-            description = "Allows players to manage protected areas"
-            children = listOf(
-                "protect.command.area.schematic",
-                "protect.command.area.priority",
-                "protect.command.area.rename",
-                "protect.command.area.redefine",
-                "protect.command.area.flag"
-            )
-        }
-        register("protect.bypass") {
+
+        // restriction bypass perm-pack
+        register("protect.admin.bypass") {
             description = "Allows players to bypass any restriction"
             children = listOf(
                 "protect.bypass.build",
@@ -95,11 +89,45 @@ paper {
                 "protect.bypass.leave"
             )
         }
-        register("protect.admin") {
-            description = "Allows players to bypass all restrictions and access to all commands"
+
+        // area management perm-pack
+        register("protect.command.area.manage") {
+            description = "Allows players to manage existing areas"
             children = listOf(
-                "protect.bypass",
+                "protect.command.area.flag",
+                "protect.command.area.priority",
+                "protect.command.area.redefine",
+                // "protect.command.area.rename",
+                "protect.command.area.schematic",
                 "protect.command.area"
+            )
+        }
+
+        // non-destructive area perm-pack
+        register("protect.command.area") {
+            description = "Allows players to interact with areas in a non destructive manner"
+            children = listOf(
+                "protect.command.area.flag.info",
+                "protect.command.area.info",
+                "protect.command.area.list"
+            )
+        }
+
+        // flags perm-pack
+        register("protect.command.area.flag") {
+            children = listOf(
+                "protect.command.area.flag.info",
+                "protect.command.area.flag.set",
+                "protect.command.area.flag.unset"
+            )
+        }
+
+        // schematics perm-pack
+        register("protect.command.area.schematic") {
+            children = listOf(
+                "protect.command.area.schematic.delete",
+                "protect.command.area.schematic.load",
+                "protect.command.area.schematic.save"
             )
         }
     }
