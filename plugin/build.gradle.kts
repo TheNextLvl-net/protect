@@ -33,8 +33,8 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
-    implementation("cloud.commandframework:cloud-paper:1.8.3")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.3")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.2")
+    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.2")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.43"))
 
     implementation(project(":api"))

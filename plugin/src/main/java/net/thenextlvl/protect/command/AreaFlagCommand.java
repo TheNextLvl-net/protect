@@ -1,11 +1,6 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.context.CommandContext;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -13,157 +8,236 @@ import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.bukkit.parser.NamespacedKeyParser;
+import org.incendo.cloud.component.DefaultValue;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-class AreaFlagCommand {
-    private final ProtectPlugin plugin;
+abstract class AreaFlagCommand {
+    protected final ProtectPlugin plugin;
+    protected final Command.Builder<CommandSender> builder;
 
-    @Getter
-    @RequiredArgsConstructor
-    public enum Option {
-        INFO("info", false), UNSET("unset", false), SET("set", true);
+    protected final Command.Builder<CommandSender> flagCommand() {
+        return builder.literal("flag")
+                .commandDescription(Description.description("query, change or reset flags"));
+    }
 
-        private final String name;
-        @Accessors(fluent = true)
-        private final boolean requiresValues;
+    abstract Command.Builder<CommandSender> create();
 
-        @Nullable
-        public static Option parse(String name) {
-            for (Option option : values()) if (option.getName().equalsIgnoreCase(name)) return option;
-            return null;
+    static class Info extends AreaFlagCommand {
+        public Info(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+            super(plugin, builder);
+        }
+
+        @Override
+        Command.Builder<CommandSender> create() {
+            return flagCommand().literal("info")
+                    .permission("protect.command.area.flag.info")
+                    .commandDescription(Description.description("Query an area's flag"))
+                    .required("flag",
+                            NamespacedKeyParser.namespacedKeyParser(),
+                            SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
+                                    .map(flag -> flag.key().asString())
+                                    .map(Suggestion::simple)
+                                    .toList()))
+                    .optional("area",
+                            StringParser.greedyStringParser(),
+                            DefaultValue.dynamic(context -> {
+                                if (!(context.sender() instanceof Player player)) return "";
+                                return plugin.areaProvider().getArea(player).getName();
+                            }),
+                            SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
+                                    .map(Area::getName)
+                                    .map(Suggestion::simple)
+                                    .toList()))
+                    .handler(this::execute);
+        }
+
+        @Override
+        protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
+            var sender = context.sender();
+            plugin.bundle().sendMessage(sender, "area.info.name", Placeholder.parsed("area", area.getName()));
+            plugin.bundle().sendMessage(sender, "area.info.flag", Placeholder.parsed("flag", flag.key().asString()));
+            if (area.hasFlag(flag)) plugin.bundle().sendMessage(sender, "area.info.flag.default",
+                    Placeholder.parsed("flag", String.valueOf(flag.defaultValue())));
+            plugin.bundle().sendMessage(sender, "area.info.flag.value",
+                    Placeholder.parsed("flag", String.valueOf(area.getFlag(flag))));
+        }
+
+        @Override
+        protected String usage() {
+            return "area flag info [flag] (area)";
         }
     }
 
-    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
-        return builder.literal("flag")
-                .argument(StringArgument.<CommandSender>builder("option")
-                        .withSuggestionsProvider((context, token) ->
-                                Arrays.stream(Option.values()).map(Option::getName).toList())
-                        .build())
-                .argument(StringArgument.<CommandSender>builder("flag")
-                        .withSuggestionsProvider((context, token) -> plugin.flagRegistry().getFlags().stream()
-                                .map(flag -> flag.key().asString())
-                                .toList())
-                        .build())
-                .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
-                                .map(Area::getName)
-                                .filter(s -> s.startsWith(token))
-                                .toList())
-                        .asOptional().build())
-                .argument(StringArgument.<CommandSender>builder("value")
-                        .withSuggestionsProvider((context, token) -> {
-                            var option = Option.parse(context.get("option"));
-                            if (option == null || !option.requiresValues()) return Collections.emptyList();
-                            var key = NamespacedKey.fromString(context.get("flag"));
-                            if (key == null) return Collections.emptyList();
-                            var flag = plugin.flagRegistry().getFlag(key).orElse(null);
-                            if (flag == null) return Collections.emptyList();
-                            if (flag.type().equals(Boolean.class)) return List.of("true", "false");
-                            else if (flag.type().equals(Integer.class))
-                                return IntStream.rangeClosed(0, 100).mapToObj(Integer::toString).toList();
-                            else if (flag.type().equals(Double.class))
-                                return IntStream.rangeClosed(0, 100).mapToObj(Double::toString).toList();
-                            else if (flag.type().equals(Float.class))
-                                return IntStream.rangeClosed(0, 100).mapToObj(Float::toString).toList();
-                            else if (flag.type().equals(Long.class))
-                                return IntStream.rangeClosed(0, 100).mapToObj(Long::toString).toList();
-                            else if (flag.type().isEnum())
-                                return Arrays.stream(flag.type().getEnumConstants()).map(String::valueOf).toList();
-                            return Collections.emptyList();
-                        }).greedy().asOptional().build())
-                .handler(this::execute);
+    static class Set extends AreaFlagCommand {
+        public Set(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+            super(plugin, builder);
+        }
+
+        @Override
+        Command.Builder<CommandSender> create() {
+            return flagCommand().literal("set")
+                    .permission("protect.command.area.flag.set")
+                    .commandDescription(Description.description("Change an area's flag"))
+                    .required("flag",
+                            NamespacedKeyParser.namespacedKeyParser(),
+                            SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
+                                    .map(flag -> flag.key().asString())
+                                    .map(Suggestion::simple)
+                                    .toList()))
+                    .required("value",
+                            StringParser.greedyStringParser(),
+                            SuggestionProvider.blocking((context, input) -> {
+                                var key = context.<NamespacedKey>get("flag");
+                                var flag = plugin.flagRegistry().getFlag(key).orElse(null);
+                                if (flag == null) return List.of();
+                                if (flag.type().equals(Boolean.class)) return Stream.of("true", "false")
+                                        .map(Suggestion::simple).toList();
+                                else if (flag.type().equals(Integer.class))
+                                    return IntStream.rangeClosed(0, 100).mapToObj(Integer::toString)
+                                            .map(Suggestion::simple).toList();
+                                else if (flag.type().equals(Double.class))
+                                    return IntStream.rangeClosed(0, 100).mapToObj(Double::toString)
+                                            .map(Suggestion::simple).toList();
+                                else if (flag.type().equals(Float.class))
+                                    return IntStream.rangeClosed(0, 100).mapToObj(Float::toString)
+                                            .map(Suggestion::simple).toList();
+                                else if (flag.type().equals(Long.class))
+                                    return IntStream.rangeClosed(0, 100).mapToObj(Long::toString)
+                                            .map(Suggestion::simple).toList();
+                                else if (flag.type().isEnum())
+                                    return Arrays.stream(flag.type().getEnumConstants()).map(String::valueOf)
+                                            .map(Suggestion::simple).toList();
+                                return List.of();
+                            }))
+                    .optional("area",
+                            StringParser.greedyStringParser(),
+                            DefaultValue.dynamic(context -> {
+                                if (!(context.sender() instanceof Player player)) return "";
+                                return plugin.areaProvider().getArea(player).getName();
+                            }),
+                            SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
+                                    .map(Area::getName)
+                                    .map(Suggestion::simple)
+                                    .toList()))
+                    .handler(this::execute);
+        }
+
+        @Override
+        protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
+            var value = context.<String>get("value");
+            try {
+                if (setFlagValue(flag, area, value)) plugin.bundle().sendMessage(context.sender(), "area.flag.changed",
+                        Placeholder.parsed("value", value),
+                        Placeholder.parsed("area", area.getName()),
+                        Placeholder.parsed("flag", flag.key().asString()));
+                else plugin.bundle().sendMessage(context.sender(), "nothing.changed");
+            } catch (Exception e) {
+                plugin.bundle().sendMessage(context.sender(), "area.flag.value",
+                        Placeholder.parsed("flag", flag.key().asString()),
+                        Placeholder.parsed("value", value));
+            }
+        }
+
+        @Override
+        protected String usage() {
+            return "area flag set [flag] [value] (area)";
+        }
+
+        private boolean setFlagValue(@NotNull Flag<Object> flag, @NotNull Area area, @NotNull String value) {
+            if (flag.type().equals(Boolean.class)) {
+                return area.setFlag(flag, Boolean.parseBoolean(value));
+            } else if (flag.type().equals(Integer.class)) {
+                return area.setFlag(flag, Integer.parseInt(value));
+            } else if (flag.type().equals(Double.class)) {
+                return area.setFlag(flag, Double.parseDouble(value));
+            } else if (flag.type().equals(Float.class)) {
+                return area.setFlag(flag, Float.parseFloat(value));
+            } else if (flag.type().equals(Long.class)) {
+                return area.setFlag(flag, Long.parseLong(value));
+            } else if (flag.type().equals(String.class)) {
+                return area.setFlag(flag, value);
+            } else if (flag.type().isEnum()) {
+                var state = Arrays.stream(flag.type().getEnumConstants())
+                        .filter(o -> String.valueOf(o).equalsIgnoreCase(value))
+                        .findAny().orElseThrow(() -> new IllegalStateException("No enum constant " + value));
+                return area.setFlag(flag, state);
+            } else {
+                plugin.getComponentLogger().error("Unknown flag type: {}", flag.type().getName());
+                return false;
+            }
+        }
     }
 
-    @SuppressWarnings("PatternValidation")
-    private void execute(CommandContext<CommandSender> context) {
-        var sender = context.getSender();
-        var option = Option.parse(context.get("option"));
-        var key = NamespacedKey.fromString(context.get("flag"));
-        var flag = key != null ? plugin.flagRegistry().getFlag(key).orElse(null) : null;
+    static class Unset extends AreaFlagCommand {
+        public Unset(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+            super(plugin, builder);
+        }
+
+        @Override
+        Command.Builder<CommandSender> create() {
+            return flagCommand().literal("unset")
+                    .permission("protect.command.area.flag.unset")
+                    .commandDescription(Description.description("Reset an area's flag"))
+                    .required("flag",
+                            NamespacedKeyParser.namespacedKeyParser(),
+                            SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
+                                    .map(flag -> flag.key().asString())
+                                    .map(Suggestion::simple)
+                                    .toList()))
+                    .optional("area",
+                            StringParser.greedyStringParser(),
+                            DefaultValue.dynamic(context -> {
+                                if (!(context.sender() instanceof Player player)) return "";
+                                return plugin.areaProvider().getArea(player).getName();
+                            }),
+                            SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
+                                    .map(Area::getName)
+                                    .map(Suggestion::simple)
+                                    .toList()))
+                    .handler(this::execute);
+        }
+
+        @Override
+        protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
+            if (area.removeFlag(flag)) plugin.bundle().sendMessage(context.sender(), "area.flag.unset",
+                    Placeholder.parsed("area", area.getName()),
+                    Placeholder.parsed("flag", flag.key().asString()));
+            else plugin.bundle().sendMessage(context.sender(), "nothing.changed");
+        }
+
+        @Override
+        protected String usage() {
+            return "area flag unset [flag] (area)";
+        }
+    }
+
+    protected final void execute(CommandContext<CommandSender> context) {
+        var sender = context.sender();
+        var key = context.<NamespacedKey>get("flag");
+        var flag = plugin.flagRegistry().getFlag(key).orElse(null);
         var name = context.contains("area") ? context.<String>get("area") : null;
-        // todo pattern validation
         var area = name != null ? plugin.areaProvider().getArea(name).orElse(null) :
                 sender instanceof Entity entity ? plugin.areaProvider().getArea(entity) : null;
-        if (option == null) plugin.bundle().sendMessage(sender, "command.area.flag");
-        else switch (option) {
-            case SET -> handleSet(context, sender, flag, area);
-            case UNSET -> handleUnset(sender, flag, area);
-            case INFO -> handleInfo(sender, flag, area);
-        }
+        if (flag != null && area != null) execute(context, flag, area);
+        else throw new InvalidSyntaxException(usage(), sender, List.of());
     }
 
-    private void handleSet(CommandContext<CommandSender> context, CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
-        var value = context.contains("value") ? context.<String>get("value") : null;
-        if (flag == null || area == null || value == null) plugin.bundle().sendMessage(sender, "command.area.flag");
-        else try {
-            if (setFlagValue(flag, area, value)) plugin.bundle().sendMessage(sender, "area.flag.changed",
-                    Placeholder.parsed("value", value),
-                    Placeholder.parsed("area", area.getName()),
-                    Placeholder.parsed("flag", flag.key().asString()));
-            else plugin.bundle().sendMessage(sender, "nothing.changed");
-        } catch (Exception e) {
-            plugin.bundle().sendMessage(sender, "command.area.flag");
-        }
-    }
+    protected abstract void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area);
 
-    private boolean setFlagValue(@NotNull Flag<Object> flag, @NotNull Area area, @NotNull String value) {
-        if (flag.type().equals(Boolean.class)) {
-            var state = Boolean.parseBoolean(value);
-            if (!Objects.equals(area.getFlag(flag), state)) area.setFlag(flag, state);
-            else return false;
-        } else if (flag.type().equals(Integer.class)) {
-            var state = Integer.parseInt(value);
-            if (!Objects.equals(area.getFlag(flag), state)) area.setFlag(flag, state);
-            else return false;
-        } else if (flag.type().equals(Double.class)) {
-            var state = Double.parseDouble(value);
-            if (!Objects.equals(area.getFlag(flag), state)) area.setFlag(flag, state);
-            else return false;
-        } else if (flag.type().equals(Float.class)) {
-            var state = Float.parseFloat(value);
-            if (!Objects.equals(area.getFlag(flag), state)) area.setFlag(flag, state);
-            else return false;
-        } else if (flag.type().equals(Long.class)) {
-            var state = Long.parseLong(value);
-            if (!Objects.equals(state, area.getFlag(flag))) area.setFlag(flag, state);
-            else return false;
-        } else if (flag.type().equals(String.class)) {
-            if (!Objects.equals(area.getFlag(flag), value)) area.setFlag(flag, value);
-            else return false;
-        } else if (flag.type().isEnum()) {
-            var state = Arrays.stream(flag.type().getEnumConstants())
-                    .filter(o -> String.valueOf(o).equalsIgnoreCase(value))
-                    .findAny().orElseThrow(() -> new IllegalStateException("No enum constant " + value));
-            if (!Objects.equals(area.getFlag(flag), state)) area.setFlag(flag, state);
-        } else return false;
-        return true;
-    }
-
-    private void handleUnset(CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
-        if (flag != null && area != null && area.removeFlag(flag))
-            plugin.bundle().sendMessage(sender, "area.flag.unset",
-                    Placeholder.parsed("area", area.getName()),
-                    Placeholder.parsed("flag", flag.key().asString()));
-        else if (flag != null && area != null) plugin.bundle().sendMessage(sender, "nothing.changed");
-        else plugin.bundle().sendMessage(sender, "command.area.flag");
-    }
-
-    private void handleInfo(CommandSender sender, @Nullable Flag<Object> flag, @Nullable Area area) {
-        if (flag == null || area == null) {
-            plugin.bundle().sendMessage(sender, "command.area.flag");
-            return;
-        }
-        plugin.bundle().sendMessage(sender, "area.info.name", Placeholder.parsed("area", area.getName()));
-        plugin.bundle().sendMessage(sender, "area.info.flag", Placeholder.parsed("flag", flag.key().asString()));
-        if (area.hasFlag(flag)) plugin.bundle().sendMessage(sender, "area.info.flag.default",
-                Placeholder.parsed("flag", String.valueOf(flag.defaultValue())));
-        plugin.bundle().sendMessage(sender, "area.info.flag.value",
-                Placeholder.parsed("flag", String.valueOf(area.getFlag(flag))));
-    }
+    protected abstract String usage();
 }

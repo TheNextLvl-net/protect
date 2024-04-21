@@ -1,8 +1,5 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -16,42 +13,52 @@ import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 class AreaRedefineCommand {
     private final ProtectPlugin plugin;
+    private final Command.Builder<CommandSender> builder;
 
-    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
-        return builder
-                .literal("redefine")
-                .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
+    Command.Builder<Player> create() {
+        return builder.literal("redefine")
+                .permission("protect.command.area.redefine")
+                .required("area",
+                        StringParser.greedyStringParser(),
+                        SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                 .filter(area -> area instanceof SchematicHolder)
                                 .map(Area::getName)
-                                .filter(s -> s.startsWith(token))
-                                .toList())
-                        .build())
+                                .map(Suggestion::simple)
+                                .toList()))
                 .senderType(Player.class)
                 .handler(this::execute);
     }
 
-    @SuppressWarnings("PatternValidation")
-    private void execute(CommandContext<CommandSender> context) {
-        var player = (Player) context.getSender();
-        var name = context.<String>get("area");
-        // todo match name pattern
-        var area = plugin.areaProvider().getArea(name).orElse(null);
-        if (area == null) plugin.bundle().sendMessage(player, "command.area.redefine");
-        else if (!(area instanceof RegionizedArea<?> regionizedArea))
-            plugin.bundle().sendMessage(player, "area.invalid");
+    private void execute(CommandContext<Player> context) {
+        var player = context.sender();
+        var area = plugin.areaProvider().getArea(context.<String>get("area")).orElseThrow(() ->
+                new InvalidSyntaxException("area redefine [area]", player, List.of()));
+        if (!(area instanceof RegionizedArea<?> regionizedArea))
+            plugin.bundle().sendMessage(player, "area.invalid.redefine");
         else if (regionizedArea.getSchematic().isFile())
-            plugin.bundle().sendMessage(player, "area.schematic.exists");
+            plugin.bundle().sendMessage(player, "area.schematic.delete.redefine");
         else try {
                 var redefine = false;
                 var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
                 var region = worldEdit.getSession(player).getSelection();
                 if (region instanceof CuboidRegion cuboidRegion && regionizedArea instanceof CuboidArea cuboidArea) {
                     redefine = cuboidArea.setRegion(cuboidRegion);
+                } else {
+                    plugin.bundle().sendMessage(player, "region.unsupported",
+                            Placeholder.parsed("type", region.getClass().getSimpleName()));
+                    return;
                 }
                 plugin.bundle().sendMessage(player, redefine ? "area.redefine.success" : "area.redefine.fail",
                         Placeholder.parsed("area", area.getName()));

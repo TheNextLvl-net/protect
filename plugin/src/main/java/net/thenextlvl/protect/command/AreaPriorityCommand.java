@@ -1,49 +1,50 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.context.CommandContext;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.component.DefaultValue;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.parser.standard.IntegerParser;
+import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 class AreaPriorityCommand {
     private final ProtectPlugin plugin;
+    private final Command.Builder<CommandSender> builder;
 
-    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
-        return builder
-                .literal("priority")
-                .argument(IntegerArgument.of("priority"))
-                .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
+    Command.Builder<CommandSender> create() {
+        return builder.literal("priority")
+                .permission("protect.command.area.priority")
+                .required("priority", IntegerParser.integerParser())
+                .optional("area", StringParser.greedyStringParser(),
+                        DefaultValue.dynamic(context -> {
+                            if (!(context.sender() instanceof Player player)) return "";
+                            return plugin.areaProvider().getArea(player).getName();
+                        }),
+                        SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                 .map(Area::getName)
-                                .filter(s -> s.startsWith(token))
-                                .toList())
-                        .asOptional()
-                        .build())
+                                .map(Suggestion::simple)
+                                .toList()))
                 .handler(this::execute);
     }
 
-    @SuppressWarnings("PatternValidation")
     private void execute(CommandContext<CommandSender> context) {
-        var sender = context.getSender();
-        var name = context.<String>get("area");
-        // todo pattern validation
-        var area = context.contains("area") ? plugin.areaProvider().getArea(name).orElse(null) :
-                sender instanceof Entity entity ? plugin.areaProvider().getArea(entity) : null;
-        if (area != null) setPriority(context, sender, area);
-        else plugin.bundle().sendMessage(sender, "command.area.priority");
-    }
-
-    private void setPriority(CommandContext<CommandSender> context, CommandSender sender, Area area) {
-        area.setPriority(context.<Integer>get("priority"));
-        plugin.bundle().sendMessage(sender, "area.priority.changed",
+        var area = plugin.areaProvider().getArea(context.<String>get("area")).orElseThrow(() ->
+                new InvalidSyntaxException("area priority [priority] [area]", context.sender(), List.of()));
+        var priority = context.<Integer>get("priority");
+        if (area.setPriority(priority)) plugin.bundle().sendMessage(context.sender(), "area.priority.changed",
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("priority", String.valueOf(area.getPriority())));
+        else plugin.bundle().sendMessage(context.sender(), "nothing.changed");
     }
 }

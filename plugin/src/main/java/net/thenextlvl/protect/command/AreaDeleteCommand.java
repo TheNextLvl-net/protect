@@ -1,42 +1,48 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.context.CommandContext;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.command.CommandSender;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 class AreaDeleteCommand {
     private final ProtectPlugin plugin;
+    private final Command.Builder<CommandSender> builder;
 
-    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
+    Command.Builder<CommandSender> create() {
         return builder.literal("delete")
-                .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
+                .permission("protect.command.area.delete")
+                .required("area",
+                        StringParser.greedyStringParser(),
+                        SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                 .filter(area -> area instanceof RegionizedArea<?>)
                                 .map(Area::getName)
-                                .filter(s -> s.startsWith(token))
-                                .toList())
-                        .build())
+                                .map(Suggestion::simple)
+                                .toList()))
                 .handler(this::execute);
     }
 
-    @SuppressWarnings("PatternValidation")
     private void execute(CommandContext<CommandSender> context) {
-        var name = context.<String>get("area");
-        // todo pattern validation
-        var area = plugin.areaProvider().getArea(name).orElse(null);
-        var sender = context.getSender();
-        var placeholder = Placeholder.parsed("area", name);
-        if (area instanceof RegionizedArea<?> regionizedArea && plugin.areaService().delete(regionizedArea)) {
-            plugin.bundle().sendMessage(sender, "area.delete.success", placeholder);
-        } else if (area != null) {
-            plugin.bundle().sendMessage(sender, "area.delete.failed", placeholder);
-        } else plugin.bundle().sendMessage(sender, "area.exists.not", placeholder);
+        var area = plugin.areaProvider().getArea(context.<String>get("area")).orElseThrow(() ->
+                new InvalidSyntaxException("area delete [area]", context.sender(), List.of()));
+        var placeholder = Placeholder.parsed("area", area.getName());
+        if (!(area instanceof RegionizedArea<?> regionizedArea))
+            plugin.bundle().sendMessage(context.sender(), "area.delete.invalid", placeholder);
+        else if (regionizedArea.getSchematic().isFile())
+            plugin.bundle().sendMessage(context.sender(), "area.schematic.delete");
+        else if (plugin.areaService().delete(regionizedArea))
+            plugin.bundle().sendMessage(context.sender(), "area.delete.success", placeholder);
+        else plugin.bundle().sendMessage(context.sender(), "area.delete.failed", placeholder);
     }
 }

@@ -1,34 +1,39 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.arguments.StandardCommandSyntaxFormatter;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.syntax.StandardCommandSyntaxFormatter;
 
 public class CustomSyntaxFormatter<C> extends StandardCommandSyntaxFormatter<C> {
+    public CustomSyntaxFormatter(CommandManager<C> manager) {
+        super(manager);
+    }
+
     @Override
     protected StandardCommandSyntaxFormatter.FormattingInstance createInstance() {
         return new StandardCommandSyntaxFormatter.FormattingInstance() {
             @Override
-            public String getOptionalPrefix() {
-                return "<dark_gray>(<gold>";
+            public String optionalPrefix() {
+                return "(";
             }
 
             @Override
-            public String getOptionalSuffix() {
-                return "<dark_gray>)";
+            public String optionalSuffix() {
+                return ")";
             }
 
             @Override
-            public String getRequiredPrefix() {
-                return "<dark_gray>[<gold>";
+            public String requiredPrefix() {
+                return "[";
             }
 
             @Override
-            public String getRequiredSuffix() {
-                return "<dark_gray>]";
+            public String requiredSuffix() {
+                return "]";
             }
 
             @Override
             public void appendPipe() {
-                appendName(" <dark_gray>|<red> ");
+                appendName(" | ");
             }
         };
     }

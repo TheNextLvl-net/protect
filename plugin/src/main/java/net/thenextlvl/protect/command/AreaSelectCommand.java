@@ -1,8 +1,6 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.context.CommandContext;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import lombok.RequiredArgsConstructor;
@@ -13,46 +11,50 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.component.DefaultValue;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 class AreaSelectCommand {
     private final ProtectPlugin plugin;
+    private final Command.Builder<CommandSender> builder;
 
-    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
-        return builder
-                .literal("select")
-                .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
+    Command.Builder<Player> create() {
+        return builder.literal("select")
+                .permission("worldedit.selection.pos")
+                .senderType(Player.class)
+                .optional("area", StringParser.greedyStringParser(),
+                        DefaultValue.dynamic(context -> plugin.areaProvider().getArea(context.sender()).getName()),
+                        SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                 .filter(area -> area instanceof RegionizedArea<?>)
                                 .map(Area::getName)
-                                .filter(s -> s.startsWith(token)).toList())
-                        .asOptional()
-                        .build())
-                .senderType(Player.class)
+                                .map(Suggestion::simple)
+                                .toList()))
                 .handler(this::execute);
     }
 
-    @SuppressWarnings("PatternValidation")
-    private void execute(CommandContext<CommandSender> context) {
-        var player = (Player) context.getSender();
-        var name = context.<String>getOrDefault("area", null);
-        if (name != null && !name.matches("^@?[a-zA-Z0-9_-]+$")) {
-            // todo pattern validation
+    private void execute(CommandContext<Player> context) {
+        var area = plugin.areaProvider().getArea(context.<String>get("area")).orElseThrow(() ->
+                new InvalidSyntaxException("area select [area]", context, List.of()));
+        var player = context.sender();
+        if (!(area instanceof RegionizedArea<?> regionizedArea)) {
+            plugin.bundle().sendMessage(player, "area.invalid.select");
             return;
         }
-        var area = name != null ? plugin.areaProvider().getArea(name).orElse(null) : plugin.areaProvider().getArea(player);
-        if (area instanceof RegionizedArea<?> regionizedArea) handleSelect(player, regionizedArea);
-        else if (area != null) plugin.bundle().sendMessage(player, "area.invalid");
-        else plugin.bundle().sendRawMessage(player, "command.area.select");
-    }
-
-    private void handleSelect(Player player, RegionizedArea<?> area) {
         var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
         var session = worldEdit.getSession(player);
-        session.setRegionSelector(area.getRegion().getWorld(), new CuboidRegionSelector(
-                area.getRegion().getWorld(),
-                area.getRegion().getMinimumPoint(),
-                area.getRegion().getMaximumPoint()
+        var world = new BukkitWorld(area.getWorld());
+        session.setRegionSelector(world, new CuboidRegionSelector(
+                world,
+                regionizedArea.getRegion().getMinimumPoint(),
+                regionizedArea.getRegion().getMaximumPoint()
         ));
         session.updateServerCUI(worldEdit.wrapPlayer(player));
         plugin.bundle().sendMessage(player, "area.selected", Placeholder.parsed("area", area.getName()));

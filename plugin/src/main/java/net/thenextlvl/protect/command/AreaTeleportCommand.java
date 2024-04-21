@@ -1,8 +1,5 @@
 package net.thenextlvl.protect.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.context.CommandContext;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
@@ -12,38 +9,44 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 class AreaTeleportCommand {
     private final ProtectPlugin plugin;
+    private final Command.Builder<CommandSender> builder;
 
-    Command.Builder<CommandSender> create(Command.Builder<CommandSender> builder) {
-        return builder
-                .literal("teleport", "tp")
-                .argument(StringArgument.<CommandSender>builder("area")
-                        .withSuggestionsProvider((context, token) -> plugin.areaProvider().getAreas()
+    Command.Builder<Player> create() {
+        return builder.literal("teleport", "tp")
+                .permission("protect.command.area.teleport")
+                .commandDescription(Description.description("teleport yourself to an area"))
+                .required("area", StringParser.greedyStringParser(),
+                        SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                 .filter(area -> area instanceof RegionizedArea<?>)
                                 .map(Area::getName)
-                                .filter(s -> s.startsWith(token))
-                                .toList())
-                        .build())
+                                .map(Suggestion::simple)
+                                .toList()))
                 .senderType(Player.class)
                 .handler(this::execute);
     }
 
-    @SuppressWarnings("PatternValidation")
-    private void execute(CommandContext<CommandSender> context) {
-        var player = (Player) context.getSender();
-        var name = context.<String>get("area");
-        // todo pattern validation
-        var area = plugin.areaProvider().getArea(name).orElse(null);
-        if (area instanceof RegionizedArea<?> regionizedArea) handleTeleport(player, regionizedArea);
-        else if (area != null) plugin.bundle().sendMessage(player, "area.invalid");
-        else plugin.bundle().sendMessage(player, "command.area.teleport");
-    }
-
-    private void handleTeleport(Player player, RegionizedArea<?> area) {
-        var point = area.getRegion().getMaximumPoint();
+    private void execute(CommandContext<Player> context) {
+        var player = context.sender();
+        var area = plugin.areaProvider().getArea(context.<String>get("area")).orElseThrow(() ->
+                new InvalidSyntaxException("area teleport [area]", player, List.of()));
+        if (!(area instanceof RegionizedArea<?> regionizedArea)) {
+            plugin.bundle().sendMessage(player, "area.invalid.teleport");
+            return;
+        }
+        var point = regionizedArea.getRegion().getMaximumPoint();
         var location = new Location(area.getWorld(), point.getX() + 0.5, point.getY(), point.getZ() + 0.5);
         var block = location.getWorld().getHighestBlockAt(location);
         if (block.getY() < location.getY()) location.setY(block.getY() + 1);
