@@ -105,5 +105,5 @@ public interface AreaProvider {
      * @param name the name of the Area to retrieve
      * @return an Optional containing the Area if found, or an empty Optional otherwise
      */
-    Optional<Area> getArea(@NamePattern String name);
+    Optional<Area> getArea(String name);
 }

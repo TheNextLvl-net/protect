@@ -30,12 +30,12 @@ public class CraftAreaService implements AreaService {
     private final ProtectPlugin plugin;
 
     @Override
-    public CuboidArea create(@NamePattern String name, World world, BlockVector3 pos1, BlockVector3 pos2) {
+    public CuboidArea create(@NamePattern.Regionized String name, World world, BlockVector3 pos1, BlockVector3 pos2) {
         return create(name, world, new CuboidRegion(pos1, pos2));
     }
 
     @Override
-    public CuboidArea create(@NamePattern String name, World world, CuboidRegion region) {
+    public CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region) {
         var area = new CraftCuboidArea(plugin.schematicFolder(), name, world, region.clone(), 0);
         plugin.areaProvider().loadArea(area);
         new AreaCreateEvent<>(area).callEvent();

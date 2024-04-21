@@ -21,11 +21,16 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File dataFolder;
     private final File file;
 
-    @SuppressWarnings("PatternValidation")
     public CraftGlobalArea(World world, int priority) {
         super("@" + world.getName(), world, priority);
         this.dataFolder = new File(world.getWorldFolder(), "areas");
         this.file = new File(getDataFolder(), getName() + ".json");
+    }
+
+    @Override
+    @NamePattern.Global
+    public String getName() {
+        return super.getName();
     }
 
     @Override

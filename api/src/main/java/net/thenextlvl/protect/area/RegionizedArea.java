@@ -20,6 +20,10 @@ import java.util.UUID;
 @ParametersAreNotNullByDefault
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
 
+    @Override
+    @NamePattern.Regionized
+    String getName();
+
     /**
      * Retrieves the region associated with this area.
      *

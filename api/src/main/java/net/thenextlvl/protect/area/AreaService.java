@@ -28,7 +28,7 @@ public interface AreaService {
      * @param pos2  The second corner of the CuboidArea.
      * @return The created CuboidArea object.
      */
-    CuboidArea create(@NamePattern String name, World world, BlockVector3 pos1, BlockVector3 pos2);
+    CuboidArea create(@NamePattern.Regionized String name, World world, BlockVector3 pos1, BlockVector3 pos2);
 
     /**
      * Creates a CuboidArea object with the given name and region.
@@ -38,7 +38,7 @@ public interface AreaService {
      * @param region The region of the CuboidArea.
      * @return The created CuboidArea object.
      */
-    CuboidArea create(@NamePattern String name, World world, CuboidRegion region);
+    CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region);
 
     /**
      * Deletes the given Area.

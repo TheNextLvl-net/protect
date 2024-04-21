@@ -9,4 +9,8 @@ import core.annotation.ParametersAreNotNullByDefault;
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public interface GlobalArea extends Area {
+
+    @Override
+    @NamePattern.Global
+    String getName();
 }

@@ -23,11 +23,11 @@ import java.util.Map;
 public abstract class CraftArea implements Area {
     private final @Getter(AccessLevel.NONE) ProtectPlugin plugin = JavaPlugin.getPlugin(ProtectPlugin.class);
     private Map<Flag<?>, @Nullable Object> flags = new LinkedHashMap<>();
-    private final @NamePattern String name;
+    private final String name;
     private final World world;
     private int priority;
 
-    protected CraftArea(@NamePattern String name, World world, int priority) {
+    protected CraftArea(String name, World world, int priority) {
         this.name = name;
         this.world = world;
         this.priority = priority;

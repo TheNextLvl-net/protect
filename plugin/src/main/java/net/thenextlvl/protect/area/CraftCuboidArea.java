@@ -12,7 +12,7 @@ import java.io.File;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implements CuboidArea {
-    public CraftCuboidArea(File schematicFolder, @NamePattern String name, World world, CuboidRegion region, int priority) {
+    public CraftCuboidArea(File schematicFolder, @NamePattern.Regionized String name, World world, CuboidRegion region, int priority) {
         super(schematicFolder, name, world, region, priority);
     }
 }
