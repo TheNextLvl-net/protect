@@ -28,8 +28,6 @@ public class AreaCommand extends PaperCommandManager<CommandSender> {
                 .handler(NoPermissionException.class, (formatter, exception) -> plugin.bundle().component(
                         exception.context().sender(), "command.permission", Placeholder.parsed("permission",
                                 exception.exception().missingPermission().permissionString())))
-                .defaultArgumentParsingHandler()
-                .defaultCommandExecutionHandler()
                 .registerTo(this);
         commandSyntaxFormatter(new CustomSyntaxFormatter<>(this));
         registerAsynchronousCompletions();
