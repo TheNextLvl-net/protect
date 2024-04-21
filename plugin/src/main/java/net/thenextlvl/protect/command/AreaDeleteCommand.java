@@ -8,6 +8,7 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
 import org.incendo.cloud.exception.InvalidSyntaxException;
 import org.incendo.cloud.parser.standard.StringParser;
 import org.incendo.cloud.suggestion.Suggestion;
@@ -23,6 +24,7 @@ class AreaDeleteCommand {
     Command.Builder<CommandSender> create() {
         return builder.literal("delete")
                 .permission("protect.command.area.delete")
+                .commandDescription(Description.description("delete existing areas"))
                 .required("area",
                         StringParser.greedyStringParser(),
                         SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()

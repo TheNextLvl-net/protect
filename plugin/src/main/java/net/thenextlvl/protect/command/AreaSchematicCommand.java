@@ -51,6 +51,7 @@ abstract class AreaSchematicCommand {
         Command.Builder<CommandSender> create() {
             return schematicCommand().literal("delete")
                     .permission("protect.command.area.schematic.delete")
+                    .commandDescription(Description.description("delete an area's schematic"))
                     .required("area", StringParser.greedyStringParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                     .filter(area -> area instanceof SchematicHolder holder
@@ -82,6 +83,7 @@ abstract class AreaSchematicCommand {
         Command.Builder<CommandSender> create() {
             return schematicCommand().literal("load")
                     .permission("protect.command.area.schematic.load")
+                    .commandDescription(Description.description("load in an area's schematic"))
                     .required("area", StringParser.greedyStringParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                     .filter(area -> area instanceof SchematicHolder holder
@@ -120,6 +122,7 @@ abstract class AreaSchematicCommand {
         Command.Builder<CommandSender> create() {
             return schematicCommand().literal("save")
                     .permission("protect.command.area.schematic.save")
+                    .commandDescription(Description.description("save an area's schematic"))
                     .required("area", StringParser.greedyStringParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                     .filter(area -> area instanceof SchematicHolder)

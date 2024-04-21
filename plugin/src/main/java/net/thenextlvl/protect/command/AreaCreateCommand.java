@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
 import org.incendo.cloud.parser.standard.StringParser;
 
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ class AreaCreateCommand {
     Command.Builder<Player> create() {
         return builder.literal("create")
                 .permission("protect.command.area.create")
+                .commandDescription(Description.description("create new areas"))
                 .required("name", StringParser.greedyStringParser())
                 .senderType(Player.class)
                 .handler(this::execute);

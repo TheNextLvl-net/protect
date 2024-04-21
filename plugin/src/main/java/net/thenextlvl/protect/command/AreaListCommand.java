@@ -18,7 +18,7 @@ class AreaListCommand {
     Command.Builder<CommandSender> create() {
         return builder.literal("list")
                 .permission("protect.command.area.list")
-                .commandDescription(Description.description("List all areas"))
+                .commandDescription(Description.description("list all areas"))
                 .handler(this::execute);
     }
 

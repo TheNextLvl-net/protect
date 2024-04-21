@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.component.DefaultValue;
 import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
 import org.incendo.cloud.exception.InvalidSyntaxException;
 import org.incendo.cloud.parser.standard.StringParser;
 import org.incendo.cloud.suggestion.Suggestion;
@@ -29,6 +30,7 @@ class AreaSelectCommand {
     Command.Builder<Player> create() {
         return builder.literal("select")
                 .permission("worldedit.selection.pos")
+                .commandDescription(Description.description("(worldedit) select the region of an existing area"))
                 .senderType(Player.class)
                 .optional("area", StringParser.greedyStringParser(),
                         DefaultValue.dynamic(context -> plugin.areaProvider().getArea(context.sender()).getName()),

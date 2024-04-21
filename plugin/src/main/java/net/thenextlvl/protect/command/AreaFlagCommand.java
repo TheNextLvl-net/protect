@@ -46,7 +46,7 @@ abstract class AreaFlagCommand {
         Command.Builder<CommandSender> create() {
             return flagCommand().literal("info")
                     .permission("protect.command.area.flag.info")
-                    .commandDescription(Description.description("Query an area's flag"))
+                    .commandDescription(Description.description("query information about area flags"))
                     .required("flag",
                             NamespacedKeyParser.namespacedKeyParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
@@ -92,7 +92,7 @@ abstract class AreaFlagCommand {
         Command.Builder<CommandSender> create() {
             return flagCommand().literal("set")
                     .permission("protect.command.area.flag.set")
-                    .commandDescription(Description.description("Change an area's flag"))
+                    .commandDescription(Description.description("change specified flags of areas"))
                     .required("flag",
                             NamespacedKeyParser.namespacedKeyParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
@@ -192,7 +192,7 @@ abstract class AreaFlagCommand {
         Command.Builder<CommandSender> create() {
             return flagCommand().literal("unset")
                     .permission("protect.command.area.flag.unset")
-                    .commandDescription(Description.description("Reset an area's flag"))
+                    .commandDescription(Description.description("reset specified flags of areas"))
                     .required("flag",
                             NamespacedKeyParser.namespacedKeyParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()

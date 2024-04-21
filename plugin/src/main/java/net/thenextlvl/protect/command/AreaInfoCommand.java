@@ -27,7 +27,7 @@ class AreaInfoCommand {
     Command.Builder<CommandSender> create() {
         return builder.literal("info")
                 .permission("protect.command.area.info")
-                .commandDescription(Description.description("Query information about an area"))
+                .commandDescription(Description.description("query information about specific areas"))
                 .optional("area",
                         StringParser.greedyStringParser(),
                         DefaultValue.dynamic(context -> {

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
 import org.incendo.cloud.exception.InvalidSyntaxException;
 import org.incendo.cloud.parser.standard.StringParser;
 import org.incendo.cloud.suggestion.Suggestion;
@@ -30,6 +31,7 @@ class AreaRedefineCommand {
     Command.Builder<Player> create() {
         return builder.literal("redefine")
                 .permission("protect.command.area.redefine")
+                .commandDescription(Description.description("redefine the region of areas"))
                 .required("area",
                         StringParser.greedyStringParser(),
                         SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()

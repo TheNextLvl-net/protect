@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.component.DefaultValue;
 import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
 import org.incendo.cloud.exception.InvalidSyntaxException;
 import org.incendo.cloud.parser.standard.IntegerParser;
 import org.incendo.cloud.parser.standard.StringParser;
@@ -25,6 +26,7 @@ class AreaPriorityCommand {
     Command.Builder<CommandSender> create() {
         return builder.literal("priority")
                 .permission("protect.command.area.priority")
+                .commandDescription(Description.description("change the priority of areas"))
                 .required("priority", IntegerParser.integerParser())
                 .optional("area", StringParser.greedyStringParser(),
                         DefaultValue.dynamic(context -> {
