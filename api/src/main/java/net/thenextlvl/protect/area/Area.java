@@ -38,8 +38,9 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
      * Note: This method does not validate the uniqueness of the priority value within the same container.
      *
      * @param priority the priority value to set
+     * @return whether the priority was changed
      */
-    void setPriority(int priority);
+    boolean setPriority(int priority);
 
     /**
      * Retrieves the world associated with this Area.

@@ -33,6 +33,14 @@ public abstract class CraftArea implements Area {
         this.priority = priority;
     }
 
+    public boolean setPriority(int priority) {
+        if (this.priority == priority) return false;
+        var event = new AreaPriorityChangeEvent(this, priority);
+        if (!event.callEvent()) return false;
+        this.priority = priority;
+        return true;
+    }
+
     @Override
     public <T> void setFlag(@NotNull Flag<T> flag, T state) {
         var event = new AreaFlagChangeEvent<>(this, flag, state);
