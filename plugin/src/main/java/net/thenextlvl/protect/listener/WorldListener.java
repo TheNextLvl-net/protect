@@ -170,4 +170,10 @@ public class WorldListener implements Listener {
         var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.leavesDecay));
     }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
+        var area = plugin.areaProvider().getArea(event.getBlock());
+        event.setCancelled(!area.getFlag(plugin.flags.rainFillCauldron));
+    }
 }
