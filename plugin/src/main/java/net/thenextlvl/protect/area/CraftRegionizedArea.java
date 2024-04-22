@@ -54,6 +54,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     @NamePattern.Regionized
+    @SuppressWarnings("PatternValidation")
     public String getName() {
         return super.getName();
     }
