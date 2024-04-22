@@ -2,6 +2,7 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.util.BlockUtil;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.Farmland;
 import org.bukkit.entity.Player;
@@ -46,20 +47,24 @@ public class WorldListener implements Listener {
         ));
     }
 
-    @SuppressWarnings("deprecation")
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onCropTrample(PlayerInteractEvent event) {
+        if (!event.getAction().equals(Action.PHYSICAL)) return;
+        if (event.getClickedBlock() == null) return;
+        if (!event.getClickedBlock().getType().equals(Material.FARMLAND)) return;
+        event.setCancelled(!plugin.protectionService().canTrample(
+                event.getPlayer(), event.getClickedBlock().getLocation()
+        ));
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        var block = event.getClickedBlock();
-        if (block == null) return;
-        if (block.getType().equals(Material.FARMLAND) && event.getAction().equals(Action.PHYSICAL))
-            event.setCancelled(!plugin.protectionService().canTrample(
-                    event.getPlayer(), block.getLocation()
-            ));
-        else if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-        else if (event.getPlayer().isSneaking() && event.hasItem() && event.getMaterial().isBlock()) return;
-        else if (!block.getType().isInteractable()) return;
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if (event.getClickedBlock() == null) return;
+        if (event.getPlayer().isSneaking() && event.hasItem() && event.getMaterial().isBlock()) return;
+        if (!BlockUtil.isInteractable(event.getClickedBlock().getType(), event.getMaterial())) return;
         event.setCancelled(!plugin.protectionService().canInteract(
-                event.getPlayer(), block.getLocation()
+                event.getPlayer(), event.getClickedBlock().getLocation()
         ));
     }
 
@@ -190,11 +195,13 @@ public class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(switch (event.getReason()) {
+        var flag = switch (event.getReason()) {
             case EXTINGUISH -> plugin.flags.cauldronExtinguishEntity;
             case EVAPORATE -> plugin.flags.cauldronEvaporation;
             case NATURAL_FILL -> plugin.flags.naturalCauldronFill;
-            default -> plugin.flags.cauldronLevelChangeUnknown;
-        }));
+            case UNKNOWN -> plugin.flags.cauldronLevelChangeUnknown;
+            default -> null;
+        };
+        if (flag != null) event.setCancelled(!area.getFlag(flag));
     }
 }
