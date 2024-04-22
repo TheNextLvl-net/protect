@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.Farmland;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -147,14 +148,14 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        event.setCancelled(!plugin.protectionService().canBreak(
+        event.setCancelled(!plugin.protectionService().canFillBucket(
                 event.getPlayer(), event.getBlock().getLocation()
         ));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        event.setCancelled(!plugin.protectionService().canBuild(
+        event.setCancelled(!plugin.protectionService().canEmptyBucket(
                 event.getPlayer(), event.getBlock().getLocation()
         ));
     }
@@ -172,8 +173,28 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerChangeCauldronLevel(CauldronLevelChangeEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        event.setCancelled(!switch (event.getReason()) {
+            case ARMOR_WASH -> plugin.protectionService().canWashArmor(player, event.getBlock().getLocation());
+            case BANNER_WASH -> plugin.protectionService().canWashBanner(player, event.getBlock().getLocation());
+            case BOTTLE_EMPTY -> plugin.protectionService().canEmptyBottle(player, event.getBlock().getLocation());
+            case BOTTLE_FILL -> plugin.protectionService().canFillBottle(player, event.getBlock().getLocation());
+            case BUCKET_EMPTY -> plugin.protectionService().canEmptyBucket(player, event.getBlock().getLocation());
+            case BUCKET_FILL -> plugin.protectionService().canFillBucket(player, event.getBlock().getLocation());
+            case SHULKER_WASH -> plugin.protectionService().canWashShulker(player, event.getBlock().getLocation());
+            default -> true;
+        });
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(plugin.flags.rainFillCauldron));
+        event.setCancelled(!area.getFlag(switch (event.getReason()) {
+            case EXTINGUISH -> plugin.flags.cauldronExtinguishEntity;
+            case EVAPORATE -> plugin.flags.cauldronEvaporation;
+            case NATURAL_FILL -> plugin.flags.naturalCauldronFill;
+            default -> plugin.flags.cauldronLevelChangeUnknown;
+        }));
     }
 }

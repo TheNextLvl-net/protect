@@ -32,6 +32,69 @@ public interface ProtectionService {
     boolean canBreak(Player player, Location location);
 
     /**
+     * Determines whether a player can empty a bucket at a given location.
+     *
+     * @param player   the player who wants to empty a bucket
+     * @param location the location where the player intends to empty the bucket
+     * @return true if the player can empty the bucket at the location, false otherwise
+     */
+    boolean canEmptyBucket(Player player, Location location);
+
+    /**
+     * Determines whether a player can fill a bucket at a given location.
+     *
+     * @param player   the player who wants to fill a bucket
+     * @param location the location where the player intends to fill the bucket
+     * @return true if the player can fill the bucket at the location, false otherwise
+     */
+    boolean canFillBucket(Player player, Location location);
+
+    /**
+     * Determines whether a player can empty a bottle at a given location.
+     *
+     * @param player   the player who wants to empty a bottle
+     * @param location the location where the player intends to empty the bottle
+     * @return true if the player can empty the bottle at the location, false otherwise
+     */
+    boolean canEmptyBottle(Player player, Location location);
+
+    /**
+     * Determines whether a player can fill a bottle at a given location.
+     *
+     * @param player   the player who wants to fill a bottle
+     * @param location the location where the player intends to fill the bottle
+     * @return true if the player can fill the bottle at the location, false otherwise
+     */
+    boolean canFillBottle(Player player, Location location);
+
+    /**
+     * Determines whether a player can wash a banner at a given location.
+     *
+     * @param player   the player who wants to wash a banner
+     * @param location the location where the player intends to wash the banner
+     * @return true if the player can wash the banner at the location, false otherwise
+     */
+    boolean canWashBanner(Player player, Location location);
+
+    /**
+     * Determines whether a player can wash a shulker at a given location.
+     *
+     * @param player   the player who wants to wash a shulker
+     * @param location the location where the player intends to wash the shulker
+     * @return true if the player can wash the shulker at the location, false otherwise
+     */
+    boolean canWashShulker(Player player, Location location);
+
+    /**
+     * Determines whether a player can wash an armor at a given location.
+     *
+     * @param player   the player who wants to wash an armor
+     * @param location the location where the player intends to wash the armor
+     * @return true if the player can wash the armor at the location, false otherwise
+     */
+    boolean canWashArmor(Player player, Location location);
+
+    /**
      * Determines whether a player can interact with an object at a given location.
      *
      * @param player   the player who wants to interact

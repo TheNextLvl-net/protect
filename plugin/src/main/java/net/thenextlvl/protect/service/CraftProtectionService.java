@@ -29,6 +29,48 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     @Override
+    public boolean canEmptyBucket(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.emptyBucket, "protect.bypass.empty-bucket");
+    }
+
+    @Override
+    public boolean canFillBucket(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.fillBucket, "protect.bypass.fill-bucket");
+    }
+
+    @Override
+    public boolean canEmptyBottle(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.emptyBottle, "protect.bypass.empty-bottle");
+    }
+
+    @Override
+    public boolean canFillBottle(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.fillBottle, "protect.bypass.fill-bottle");
+    }
+
+    @Override
+    public boolean canWashBanner(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.bannerWashing, "protect.bypass.wash-banner");
+    }
+
+    @Override
+    public boolean canWashShulker(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.shulkerWashing, "protect.bypass.wash-shulker");
+    }
+
+    @Override
+    public boolean canWashArmor(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.armorWashing, "protect.bypass.wash-armor");
+    }
+
+    @Override
     public boolean canInteract(Player player, Location location) {
         return canPerformAction(player, plugin.areaProvider().getArea(location),
                 plugin.flags.interact, "protect.bypass.interact");

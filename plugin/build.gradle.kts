@@ -86,7 +86,14 @@ paper {
                 "protect.bypass.entity-interact",
                 "protect.bypass.trample",
                 "protect.bypass.enter",
-                "protect.bypass.leave"
+                "protect.bypass.leave",
+                "protect.bypass.empty-bucket",
+                "protect.bypass.fill-bucket",
+                "protect.bypass.empty-bottle",
+                "protect.bypass.fill-bottle",
+                "protect.bypass.wash-banner",
+                "protect.bypass.wash-shulker",
+                "protect.bypass.wash-armor"
             )
         }
 
