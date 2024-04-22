@@ -72,6 +72,14 @@ public class ProtectPlugin extends JavaPlugin {
         registerEvents();
     }
 
+    @Override
+    public void onDisable() {
+        Bukkit.getWorlds().forEach(world -> {
+            areaProvider().saveAreas(world);
+            areaProvider().unloadAreas(world);
+        });
+    }
+
     private void registerEvents() {
         Bukkit.getPluginManager().registerEvents(new AreaListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EntityListener(this), this);
