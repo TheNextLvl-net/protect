@@ -72,12 +72,12 @@ paper {
                 "protect.command.area.create",
                 "protect.command.area.delete",
                 "protect.command.area.manage",
-                "protect.admin.bypass"
+                "protect.bypass.admin"
             )
         }
 
         // restriction bypass perm-pack
-        register("protect.admin.bypass") {
+        register("protect.bypass.admin") {
             description = "Allows players to bypass any restriction"
             children = listOf(
                 "protect.bypass.build",
@@ -101,12 +101,12 @@ paper {
         register("protect.command.area.manage") {
             description = "Allows players to manage existing areas"
             children = listOf(
+                "protect.command.area",
                 "protect.command.area.flag",
                 "protect.command.area.priority",
                 "protect.command.area.redefine",
                 // "protect.command.area.rename",
-                "protect.command.area.schematic",
-                "protect.command.area"
+                "protect.command.area.schematic"
             )
         }
 
