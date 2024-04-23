@@ -112,7 +112,7 @@ paper {
 
         // non-destructive area perm-pack
         register("protect.command.area") {
-            description = "Allows players to interact with areas in a non destructive manner"
+            description = "Allows players to interact with areas in a non-destructive manner"
             children = listOf(
                 "protect.command.area.flag.info",
                 "protect.command.area.info",
@@ -122,6 +122,7 @@ paper {
 
         // flags perm-pack
         register("protect.command.area.flag") {
+            description = "Allows players to manage area flags"
             children = listOf(
                 "protect.command.area.flag.info",
                 "protect.command.area.flag.set",
@@ -131,6 +132,7 @@ paper {
 
         // schematics perm-pack
         register("protect.command.area.schematic") {
+            description = "Allows players to manage area schematics"
             children = listOf(
                 "protect.command.area.schematic.delete",
                 "protect.command.area.schematic.load",
