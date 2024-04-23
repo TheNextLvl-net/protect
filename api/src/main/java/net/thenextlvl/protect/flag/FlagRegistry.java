@@ -55,14 +55,15 @@ public interface FlagRegistry {
      * Unregisters a flag identified by the given NamespacedKey.
      *
      * @param flag the NamespacedKey of the flag to unregister
-     * @throws IllegalStateException if no flag with the same key was registered
+     * @return true if the flag was unregistered, false otherwise
      */
-    void unregister(@NotNull NamespacedKey flag) throws IllegalStateException;
+    boolean unregister(@NotNull NamespacedKey flag);
 
     /**
      * Unregisters all flags associated with the specified plugin.
      *
      * @param plugin the plugin for which to unregister flags
+     * @return true if any flag was unregistered, false otherwise
      */
-    void unregisterAll(@NotNull Plugin plugin);
+    boolean unregisterAll(@NotNull Plugin plugin);
 }
