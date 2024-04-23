@@ -18,7 +18,8 @@ public interface FlagRegistry {
      *
      * @return a Set of flags associated with the FlagRegistry
      */
-    @NotNull Set<Flag<?>> getFlags();
+    @NotNull
+    Set<Flag<?>> getFlags();
 
     /**
      * Retrieves the set of flags associated with the given plugin.
@@ -26,7 +27,8 @@ public interface FlagRegistry {
      * @param plugin the plugin for which to retrieve the flags
      * @return a set of flags associated with the plugin
      */
-    @NotNull Set<Flag<?>> getFlags(@NotNull Plugin plugin);
+    @NotNull
+    Set<Flag<?>> getFlags(@NotNull Plugin plugin);
 
     /**
      * Retrieves the flag associated with the given NamespacedKey.
