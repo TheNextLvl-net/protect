@@ -12,6 +12,7 @@ A lightweight modern alternative to WorldGuard optimized for API usage
 | /area create [name]                  | create new areas                                  | protect.command.area.create           |
 | /area delete [area]                  | delete existing areas                             | protect.command.area.delete           |
 | /area flag info [flag] (area)        | query information about area flags                | protect.command.area.flag.info        |
+| /area flag list                      | list all existing area flags                      | protect.command.area.flag.list        |
 | /area flag set [flag] [value] (area) | change specified flags of areas                   | protect.command.area.flag.set         |
 | /area flag unset [flag] (area)       | reset specified flags of areas                    | protect.command.area.flag.unset       |
 | /area info (area)                    | query information about specific areas            | protect.command.area.info             |
@@ -65,12 +66,14 @@ instead of dealing with a multitude of individual permissions.
 ### protect.command.area
 
     protect.command.area.flag.info
+    protect.command.area.flag.list
     protect.command.area.info
     protect.command.area.list
 
 ### protect.command.area.flag
 
     protect.command.area.flag.info
+    protect.command.area.flag.list
     protect.command.area.flag.set
     protect.command.area.flag.unset
 

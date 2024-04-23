@@ -41,6 +41,7 @@ public class AreaCommand extends PaperCommandManager<CommandSender> {
         command(new AreaCreateCommand(plugin, area).create());
         command(new AreaDeleteCommand(plugin, area).create());
         command(new AreaFlagCommand.Info(plugin, area).create());
+        command(new AreaFlagCommand.List(plugin, area).create());
         command(new AreaFlagCommand.Set(plugin, area).create());
         command(new AreaFlagCommand.Unset(plugin, area).create());
         command(new AreaInfoCommand(plugin, area).create());

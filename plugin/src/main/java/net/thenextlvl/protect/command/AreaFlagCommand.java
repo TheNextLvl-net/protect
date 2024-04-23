@@ -1,14 +1,20 @@
 package net.thenextlvl.protect.command;
 
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.parser.NamespacedKeyParser;
 import org.incendo.cloud.component.DefaultValue;
@@ -21,7 +27,7 @@ import org.incendo.cloud.suggestion.SuggestionProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -83,6 +89,53 @@ abstract class AreaFlagCommand {
         }
     }
 
+    static class List extends AreaFlagCommand {
+        public List(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+            super(plugin, builder);
+        }
+
+        @Override
+        Command.Builder<CommandSender> create() {
+            return flagCommand().literal("list")
+                    .permission("protect.command.area.flag.list")
+                    .commandDescription(Description.description("list all existing area flags"))
+                    .optional("plugin", StringParser.greedyStringParser(),
+                            SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getRegistry()
+                                    .keySet().stream()
+                                    .map(Plugin::getName)
+                                    .map(Suggestion::simple)
+                                    .toList()))
+                    .handler(this::execute);
+        }
+
+        @Override
+        protected void execute(CommandContext<CommandSender> context) {
+            context.<String>optional("plugin")
+                    .map(name -> Bukkit.getPluginManager().getPlugin(name))
+                    .ifPresentOrElse(plugin -> sendFlags(plugin, context.sender()), () ->
+                            this.plugin.flagRegistry().getRegistry().keySet()
+                                    .forEach(plugin -> sendFlags(plugin, context.sender())));
+        }
+
+        private void sendFlags(Plugin plugin, CommandSender sender) {
+            var flags = this.plugin.flagRegistry().getFlags(plugin);
+            var components = flags.stream()
+                    .map(flag -> Component.text(flag.key().getKey())
+                            .hoverEvent(HoverEvent.showText(this.plugin.bundle().component(sender, "area.flag.list.hover")))
+                            .clickEvent(ClickEvent.suggestCommand("/area flag set " + flag.key().asString() + " ")))
+                    .collect(Collectors.toSet());
+            this.plugin.bundle().sendMessage(sender, "area.flag.list",
+                    Placeholder.parsed("plugin", plugin.getName()),
+                    Placeholder.parsed("amount", String.valueOf(flags.size())),
+                    Placeholder.component("flags", Component.join(JoinConfiguration.commas(true), components)));
+        }
+
+        @Override
+        protected String usage() {
+            return "area flag list";
+        }
+    }
+
     static class Set extends AreaFlagCommand {
         public Set(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
             super(plugin, builder);
@@ -104,7 +157,7 @@ abstract class AreaFlagCommand {
                             SuggestionProvider.blocking((context, input) -> {
                                 var key = context.<NamespacedKey>get("flag");
                                 var flag = plugin.flagRegistry().getFlag(key).orElse(null);
-                                if (flag == null) return List.of();
+                                if (flag == null) return java.util.List.of();
                                 if (flag.type().equals(Boolean.class)) return Stream.of("true", "false")
                                         .map(Suggestion::simple).toList();
                                 else if (flag.type().equals(Integer.class))
@@ -122,7 +175,7 @@ abstract class AreaFlagCommand {
                                 else if (flag.type().isEnum())
                                     return Arrays.stream(flag.type().getEnumConstants()).map(String::valueOf)
                                             .map(Suggestion::simple).toList();
-                                return List.of();
+                                return java.util.List.of();
                             }))
                     .optional("area",
                             StringParser.greedyStringParser(),
@@ -226,7 +279,7 @@ abstract class AreaFlagCommand {
         }
     }
 
-    protected final void execute(CommandContext<CommandSender> context) {
+    protected void execute(CommandContext<CommandSender> context) {
         var sender = context.sender();
         var key = context.<NamespacedKey>get("flag");
         var flag = plugin.flagRegistry().getFlag(key).orElse(null);
@@ -234,10 +287,11 @@ abstract class AreaFlagCommand {
         var area = name != null ? plugin.areaProvider().getArea(name).orElse(null) :
                 sender instanceof Entity entity ? plugin.areaProvider().getArea(entity) : null;
         if (flag != null && area != null) execute(context, flag, area);
-        else throw new InvalidSyntaxException(usage(), sender, List.of());
+        else throw new InvalidSyntaxException(usage(), sender, java.util.List.of());
     }
 
-    protected abstract void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area);
+    protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
+    }
 
     protected abstract String usage();
 }
