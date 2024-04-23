@@ -61,7 +61,7 @@ instead of dealing with a multitude of individual permissions.
     protect.bypass.fill-bottle
     protect.bypass.wash-banner
     protect.bypass.wash-shulker
-    protect.bypass.wash-armo
+    protect.bypass.wash-armor
 
 ### protect.command.area
 
