@@ -2,6 +2,9 @@
 
 A lightweight modern alternative to WorldGuard optimized for API usage
 
+* [Commands](#commands)
+* [Permission Packs](#permission-packs)
+
 ## Commands
 
 | Command                              | Description                                       | Permission                            |
