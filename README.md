@@ -3,6 +3,7 @@
 A lightweight modern alternative to WorldGuard optimized for API usage
 
 * [Commands](#commands)
+* [Area flags](#area-flags)
 * [Permission Packs](#permission-packs)
 
 ## Commands
@@ -24,6 +25,60 @@ A lightweight modern alternative to WorldGuard optimized for API usage
 | /area schematic save [area]          | save an area's schematic                          | protect.command.area.schematic.save   |
 | /area select (area)                  | (worldedit) select the region of an existing area | worldedit.selection.pos               |
 | /area teleport [area]                | teleport yourself to an area                      | protect.command.area.teleport         |
+
+## Area flags
+
+| Flag                                  | Description                                                                  | Values           |
+|---------------------------------------|------------------------------------------------------------------------------|------------------|
+| protect:enter                         | enable/disable entering areas                                                | true / false     |
+| protect:leave                         | enable/disable leaving areas                                                 | true / false     |
+| protect:armor_stand_manipulate        | enable/disable armor stand manipulation                                      | true / false     |
+| protect:armor_washing                 | enable/disable armor washing                                                 | true / false     |
+| protect:banner_washing                | enable/disable banner washing                                                | true / false     |
+| protect:block_absorb                  | enable/disable block absorption                                              | true / false     |
+| protect:block_break                   | enable/disable block breaking                                                | true / false     |
+| protect:block_burning                 | enable/disable block burning                                                 | true / false     |
+| protect:block_drying                  | enable/disable block drying                                                  | true / false     |
+| protect:block_fading                  | enable/disable block fading                                                  | true / false     |
+| protect:block_growth                  | enable/disable block growth                                                  | true / false     |
+| protect:block_igniting                | enable/disable block ignition                                                | true / false     |
+| protect:block_moisturising            | enable/disable block moisturising                                            | true / false     |
+| protect:block_place                   | enable/disable block placing                                                 | true / false     |
+| protect:block_spread                  | enable/disable block spread                                                  | true / false     |
+| protect:cauldron_evaporation          | enable/disable cauldron evaporation                                          | true / false     |
+| protect:cauldron_extinguish_entity    | enable/disable entity extinguishing by cauldron                              | true / false     |
+| protect:cauldron_level_change_unknown | enable/disable unknown changes to cauldrons                                  | true / false     |
+| protect:crop_trample                  | enable/disable crop trampling                                                | true / false     |
+| protect:damage                        | enable/disable damage                                                        | true / false     |
+| protect:empty_bottle                  | enable/disable emptying bottles                                              | true / false     |
+| protect:empty_bucket                  | enable/disable emptying buckets                                              | true / false     |
+| protect:entity_attack_entity          | enable/disable entity attacking entities                                     | true / false     |
+| protect:entity_attack_player          | enable/disable entity attacking players                                      | true / false     |
+| protect:entity_interact               | enable/disable entity interaction                                            | true / false     |
+| protect:entity_item_drop              | enable/disable entity drop items                                             | true / false     |
+| protect:entity_item_pickup            | enable/disable entity pickup items                                           | true / false     |
+| protect:entity_shear                  | enable/disable shearing entities                                             | true / false     |
+| protect:explosions                    | enable/disable explosions                                                    | true / false     |
+| protect:fill_bottle                   | enable/disable filling bottles                                               | true / false     |
+| protect:fill_bucket                   | enable/disable filling buckets                                               | true / false     |
+| protect:hanging_break                 | enable/disable breaking hanging entities<br/>(paintings, item frames)        | true / false     |
+| protect:hanging_place                 | enable/disable placing hanging entities<br/>(paintings, item frames)         | true / false     |
+| protect:hunger                        | enable/disable hunger                                                        | true / false     |
+| protect:interact                      | enable/disable block interaction                                             | true / false     |
+| protect:leaves_decay                  | enable/disable leaves decaying                                               | true / false     |
+| protect:natural_cauldron_fill         | enable/disable cauldron filling by natural causes<br/>(drip stone, downfall) | true / false     |
+| protect:natural_entity_spawn          | enable/disable natural entity spawning                                       | true / false     |
+| protect:physics                       | enable/disable physics                                                       | true / false     |
+| protect:player_attack_entity          | enable/disable player attack entities                                        | true / false     |
+| protect:player_attack_player          | enable/disable player attack players                                         | true / false     |
+| protect:player_item_drop              | enable/disable player drop items                                             | true / false     |
+| protect:redstone                      | enable/disable redstone                                                      | true / false     |
+| protect:shoot                         | enable/disable shooting projectile                                           | true / false     |
+| protect:shulker_washing               | enable/disable shulker washing                                               | true / false     |
+| protect:time                          | change the time inside of an area                                            | long             |
+| protect:farewell                      | message that is send to players when leaving an area                         | string           |
+| protect:greetings                     | message that is send to players when entering an area                        | string           |
+| protect:weather                       | change the weather inside of an area                                         | DOWNFALL / CLEAR |
 
 ## Permission Packs
 
