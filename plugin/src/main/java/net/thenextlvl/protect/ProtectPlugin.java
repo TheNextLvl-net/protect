@@ -35,7 +35,7 @@ import java.util.Locale;
 @Getter
 @Accessors(fluent = true)
 public class ProtectPlugin extends JavaPlugin {
-    private final Metrics metrics = new Metrics(this, 21711);
+    private final Metrics metrics = new Metrics(this, 21712);
     private final File schematicFolder = new File(getDataFolder(), "schematics");
 
     private final CraftProtectionService protectionService = new CraftProtectionService(this);
