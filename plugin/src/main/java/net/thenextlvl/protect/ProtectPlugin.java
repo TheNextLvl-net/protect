@@ -20,6 +20,7 @@ import net.thenextlvl.protect.listener.MovementListener;
 import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
@@ -34,6 +35,7 @@ import java.util.Locale;
 @Getter
 @Accessors(fluent = true)
 public class ProtectPlugin extends JavaPlugin {
+    private final Metrics metrics = new Metrics(this, 21711);
     private final File schematicFolder = new File(getDataFolder(), "schematics");
 
     private final CraftProtectionService protectionService = new CraftProtectionService(this);
@@ -78,6 +80,7 @@ public class ProtectPlugin extends JavaPlugin {
             areaProvider().saveAreas(world);
             areaProvider().unloadAreas(world);
         });
+        metrics.shutdown();
     }
 
     private void registerEvents() {
