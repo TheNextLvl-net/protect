@@ -6,6 +6,8 @@ A lightweight modern alternative to WorldGuard optimized for API usage
 * [Area flags](#area-flags)
 * [Permission Packs](#permission-packs)
 
+BStats can be found [here](https://bstats.org/plugin/bukkit/THeNextLvl%2520Protect/21711)
+
 ## Commands
 
 | Command                              | Description                                       | Permission                            |
