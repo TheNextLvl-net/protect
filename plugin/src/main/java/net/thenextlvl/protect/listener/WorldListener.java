@@ -22,12 +22,12 @@ import org.bukkit.event.world.WorldUnloadEvent;
 public class WorldListener implements Listener {
     private final ProtectPlugin plugin;
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldLoad(WorldLoadEvent event) {
         plugin.areaProvider().loadAreas(event.getWorld());
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onWorldUnload(WorldUnloadEvent event) {
         plugin.areaProvider().saveAreas(event.getWorld());
         plugin.areaProvider().unloadAreas(event.getWorld());
