@@ -57,7 +57,7 @@ abstract class AreaFlagCommand {
                             NamespacedKeyParser.namespacedKeyParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
                                     .map(flag -> flag.key().asString())
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .optional("area",
                             StringParser.greedyStringParser(),
@@ -67,7 +67,7 @@ abstract class AreaFlagCommand {
                             }),
                             SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                     .map(Area::getName)
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .handler(this::execute);
         }
@@ -103,7 +103,7 @@ abstract class AreaFlagCommand {
                             SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getRegistry()
                                     .keySet().stream()
                                     .map(Plugin::getName)
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .handler(this::execute);
         }
@@ -150,7 +150,7 @@ abstract class AreaFlagCommand {
                             NamespacedKeyParser.namespacedKeyParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
                                     .map(flag -> flag.key().asString())
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .required("value",
                             StringParser.greedyStringParser(),
@@ -159,22 +159,22 @@ abstract class AreaFlagCommand {
                                 var flag = plugin.flagRegistry().getFlag(key).orElse(null);
                                 if (flag == null) return java.util.List.of();
                                 if (flag.type().equals(Boolean.class)) return Stream.of("true", "false")
-                                        .map(Suggestion::simple).toList();
+                                        .map(Suggestion::suggestion).toList();
                                 else if (flag.type().equals(Integer.class))
                                     return IntStream.rangeClosed(0, 100).mapToObj(Integer::toString)
-                                            .map(Suggestion::simple).toList();
+                                            .map(Suggestion::suggestion).toList();
                                 else if (flag.type().equals(Double.class))
                                     return IntStream.rangeClosed(0, 100).mapToObj(Double::toString)
-                                            .map(Suggestion::simple).toList();
+                                            .map(Suggestion::suggestion).toList();
                                 else if (flag.type().equals(Float.class))
                                     return IntStream.rangeClosed(0, 100).mapToObj(Float::toString)
-                                            .map(Suggestion::simple).toList();
+                                            .map(Suggestion::suggestion).toList();
                                 else if (flag.type().equals(Long.class))
                                     return IntStream.rangeClosed(0, 100).mapToObj(Long::toString)
-                                            .map(Suggestion::simple).toList();
+                                            .map(Suggestion::suggestion).toList();
                                 else if (flag.type().isEnum())
                                     return Arrays.stream(flag.type().getEnumConstants()).map(String::valueOf)
-                                            .map(Suggestion::simple).toList();
+                                            .map(Suggestion::suggestion).toList();
                                 return java.util.List.of();
                             }))
                     .optional("area",
@@ -185,7 +185,7 @@ abstract class AreaFlagCommand {
                             }),
                             SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                     .map(Area::getName)
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .handler(this::execute);
         }
@@ -250,7 +250,7 @@ abstract class AreaFlagCommand {
                             NamespacedKeyParser.namespacedKeyParser(),
                             SuggestionProvider.blocking((context, input) -> plugin.flagRegistry().getFlags().stream()
                                     .map(flag -> flag.key().asString())
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .optional("area",
                             StringParser.greedyStringParser(),
@@ -260,7 +260,7 @@ abstract class AreaFlagCommand {
                             }),
                             SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                     .map(Area::getName)
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .handler(this::execute);
         }

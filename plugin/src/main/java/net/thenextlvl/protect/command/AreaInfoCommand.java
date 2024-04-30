@@ -36,7 +36,7 @@ class AreaInfoCommand {
                         }),
                         SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                 .map(Area::getName)
-                                .map(Suggestion::simple)
+                                .map(Suggestion::suggestion)
                                 .toList()))
                 .handler(this::execute);
     }

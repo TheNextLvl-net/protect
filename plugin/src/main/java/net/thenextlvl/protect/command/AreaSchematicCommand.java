@@ -57,7 +57,7 @@ abstract class AreaSchematicCommand {
                                     .filter(area -> area instanceof SchematicHolder holder
                                                     && holder.getSchematic().isFile())
                                     .map(Area::getName)
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .handler(this::execute);
         }
@@ -89,7 +89,7 @@ abstract class AreaSchematicCommand {
                                     .filter(area -> area instanceof SchematicHolder holder
                                                     && holder.getSchematic().isFile())
                                     .map(Area::getName)
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .handler(this::execute);
         }
@@ -127,7 +127,7 @@ abstract class AreaSchematicCommand {
                             SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                     .filter(area -> area instanceof SchematicHolder)
                                     .map(Area::getName)
-                                    .map(Suggestion::simple)
+                                    .map(Suggestion::suggestion)
                                     .toList()))
                     .handler(this::execute);
         }

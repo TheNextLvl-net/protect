@@ -32,7 +32,7 @@ class AreaTeleportCommand {
                         SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
                                 .filter(area -> area instanceof RegionizedArea<?>)
                                 .map(Area::getName)
-                                .map(Suggestion::simple)
+                                .map(Suggestion::suggestion)
                                 .toList()))
                 .senderType(Player.class)
                 .handler(this::execute);
