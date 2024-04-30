@@ -9,8 +9,8 @@ version = "2.0.7"
 java {
     withSourcesJar()
     withJavadocJar()
-    targetCompatibility = JavaVersion.VERSION_19
-    sourceCompatibility = JavaVersion.VERSION_19
+    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
