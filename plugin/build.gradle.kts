@@ -164,8 +164,8 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
                     .map { it.trim() }
                 platformVersions.set(versions)
                 dependencies {
-                    url("WorldEdit", "https://ci.athion.net/job/FastAsyncWorldEdit/") {
-                        required.set(false)
+                    url("FastAsyncWorldEdit", "https://hangar.papermc.io/IntellectualSites/FastAsyncWorldEdit") {
+                        required.set(true)
                     }
                 }
             }
