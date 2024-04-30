@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.thenextlvl.protect"
-version = "2.0.8"
+version = "2.1.0-pre1"
 
 java {
     withSourcesJar()
