@@ -5,6 +5,7 @@ A lightweight modern alternative to WorldGuard optimized for API usage
 * [Commands](#commands)
 * [Area flags](#area-flags)
 * [Permission Packs](#permission-packs)
+* [API](#api)
 
 BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Protect/21712)
 
@@ -148,3 +149,6 @@ instead of dealing with a multitude of individual permissions.
     protect.command.area.schematic.load
     protect.command.area.schematic.save
 
+## API
+
+https://repo.thenextlvl.net/#/releases/net/thenextlvl/protect/api
