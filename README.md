@@ -88,16 +88,9 @@ BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Prote
 Permission packs streamline server management by providing bundled options
 instead of dealing with a multitude of individual permissions.
 
-| Permission                                                     | Description                                                       |
-|----------------------------------------------------------------|-------------------------------------------------------------------|
-| [protect.admin](#protectadmin)                                 | Allows players to manage all areas and bypass all restrictions    |
-| [protect.bypass.admin](#protectbypassadmin)                    | Allows players to bypass any restriction                          |
-| [protect.command.area](#protectcommandarea)                    | Allows players to interact with areas in a non-destructive manner |
-| [protect.command.area.flag](#protectcommandareaflag)           | Allows players to manage area flags                               |
-| [protect.command.area.manage](#protectcommandareamanage)       | Allows players to manage existing areas                           |
-| [protect.command.area.schematic](#protectcommandareaschematic) | Allows players to manage area schematics                          |
-
 ### protect.admin
+
+Allows players to manage all areas and bypass all restrictions
 
     protect.command.area.create
     protect.command.area.delete
@@ -105,6 +98,8 @@ instead of dealing with a multitude of individual permissions.
     protect.bypass.admin
 
 ### protect.bypass.admin
+
+Allows players to bypass any restriction
 
     protect.bypass.build
     protect.bypass.break
@@ -123,12 +118,16 @@ instead of dealing with a multitude of individual permissions.
 
 ### protect.command.area
 
+Allows players to interact with areas in a non-destructive manner
+
     protect.command.area.flag.info
     protect.command.area.flag.list
     protect.command.area.info
     protect.command.area.list
 
 ### protect.command.area.flag
+
+Allows players to manage area flags
 
     protect.command.area.flag.info
     protect.command.area.flag.list
@@ -137,6 +136,8 @@ instead of dealing with a multitude of individual permissions.
 
 ### protect.command.area.manage
 
+Allows players to manage existing areas
+
     protect.command.area
     protect.command.area.flag
     protect.command.area.priority
@@ -144,6 +145,8 @@ instead of dealing with a multitude of individual permissions.
     protect.command.area.schematic
 
 ### protect.command.area.schematic
+
+Allows players to manage area schematics
 
     protect.command.area.schematic.delete
     protect.command.area.schematic.load
