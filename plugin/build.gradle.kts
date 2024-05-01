@@ -57,6 +57,7 @@ tasks.shadowJar {
 paper {
     name = "Protect"
     main = "net.thenextlvl.protect.ProtectPlugin"
+    description = "Protect certain areas or entire worlds"
     apiVersion = "1.20"
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     authors = listOf("NonSwag")
