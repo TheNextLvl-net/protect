@@ -153,20 +153,16 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
         id.set("Protect")
         version.set(project.version as String)
         channel.set(if (isRelease) "Release" else "Snapshot")
-        if (extra.has("HANGAR_API_TOKEN"))
-            apiKey.set(extra["HANGAR_API_TOKEN"] as String)
-        else apiKey.set(System.getenv("HANGAR_API_TOKEN"))
-        platforms {
-            register(Platforms.PAPER) {
-                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
-                val versions: List<String> = (property("paperVersion") as String)
-                    .split(",")
-                    .map { it.trim() }
-                platformVersions.set(versions)
-                dependencies {
-                    url("FastAsyncWorldEdit", "https://hangar.papermc.io/IntellectualSites/FastAsyncWorldEdit") {
-                        required.set(true)
-                    }
+        apiKey.set(System.getenv("HANGAR_API_TOKEN"))
+        platforms.register(Platforms.PAPER) {
+            jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+            val versions: List<String> = (property("paperVersion") as String)
+                .split(",")
+                .map { it.trim() }
+            platformVersions.set(versions)
+            dependencies {
+                url("FastAsyncWorldEdit", "https://hangar.papermc.io/IntellectualSites/FastAsyncWorldEdit") {
+                    required.set(true)
                 }
             }
         }
@@ -181,10 +177,8 @@ publishing {
         val branch = if (version.toString().contains("-pre")) "snapshots" else "releases"
         url = uri("https://repo.thenextlvl.net/$branch")
         credentials {
-            if (extra.has("RELEASES_USER"))
-                username = extra["RELEASES_USER"].toString()
-            if (extra.has("RELEASES_PASSWORD"))
-                password = extra["RELEASES_PASSWORD"].toString()
+            username = System.getenv("RELEASES_USER")
+            password = System.getenv("RELEASES_PASSWORD")
         }
     }
 }
