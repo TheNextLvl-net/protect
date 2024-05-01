@@ -151,7 +151,7 @@ val isRelease: Boolean = !versionString.contains("-pre")
 hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
     publications.register("plugin") {
         id.set("Protect")
-        version.set(project.version as String)
+        version.set(versionString)
         channel.set(if (isRelease) "Release" else "Snapshot")
         apiKey.set(System.getenv("HANGAR_API_TOKEN"))
         platforms.register(Platforms.PAPER) {
