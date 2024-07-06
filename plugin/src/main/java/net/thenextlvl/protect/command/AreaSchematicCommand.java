@@ -1,6 +1,7 @@
 package net.thenextlvl.protect.command;
 
 import com.sk89q.worldedit.WorldEditException;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
@@ -20,35 +21,36 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
+@SuppressWarnings("UnstableApiUsage")
 abstract class AreaSchematicCommand {
     protected final ProtectPlugin plugin;
-    protected final Command.Builder<CommandSender> builder;
+    protected final Command.Builder<CommandSourceStack> builder;
 
-    abstract Command.Builder<CommandSender> create();
+    abstract Command.Builder<CommandSourceStack> create();
 
     protected abstract void execute(CommandSender sender, RegionizedArea<?> area);
 
     protected abstract String usage();
 
-    protected final Command.Builder<CommandSender> schematicCommand() {
+    protected final Command.Builder<CommandSourceStack> schematicCommand() {
         return builder.literal("schematic")
                 .commandDescription(Description.description("save, load or delete schematics"));
     }
 
-    protected final void execute(CommandContext<CommandSender> context) {
+    protected final void execute(CommandContext<CommandSourceStack> context) {
         var area = plugin.areaProvider().getArea(context.<String>get("area")).orElse(null);
         if (!(area instanceof RegionizedArea<?> regionizedArea))
             throw new InvalidSyntaxException(usage(), context.sender(), List.of());
-        execute(context.sender(), regionizedArea);
+        execute(context.sender().getSender(), regionizedArea);
     }
 
     static class Delete extends AreaSchematicCommand {
-        public Delete(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+        public Delete(ProtectPlugin plugin, Command.Builder<CommandSourceStack> builder) {
             super(plugin, builder);
         }
 
         @Override
-        Command.Builder<CommandSender> create() {
+        Command.Builder<CommandSourceStack> create() {
             return schematicCommand().literal("delete")
                     .permission("protect.command.area.schematic.delete")
                     .commandDescription(Description.description("delete an area's schematic"))
@@ -75,12 +77,12 @@ abstract class AreaSchematicCommand {
     }
 
     static class Load extends AreaSchematicCommand {
-        public Load(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+        public Load(ProtectPlugin plugin, Command.Builder<CommandSourceStack> builder) {
             super(plugin, builder);
         }
 
         @Override
-        Command.Builder<CommandSender> create() {
+        Command.Builder<CommandSourceStack> create() {
             return schematicCommand().literal("load")
                     .permission("protect.command.area.schematic.load")
                     .commandDescription(Description.description("load in an area's schematic"))
@@ -114,12 +116,12 @@ abstract class AreaSchematicCommand {
     }
 
     static class Save extends AreaSchematicCommand {
-        public Save(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+        public Save(ProtectPlugin plugin, Command.Builder<CommandSourceStack> builder) {
             super(plugin, builder);
         }
 
         @Override
-        Command.Builder<CommandSender> create() {
+        Command.Builder<CommandSourceStack> create() {
             return schematicCommand().literal("save")
                     .permission("protect.command.area.schematic.save")
                     .commandDescription(Description.description("save an area's schematic"))

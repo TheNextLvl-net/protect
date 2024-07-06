@@ -48,17 +48,14 @@ public class ProtectPlugin extends JavaPlugin {
     private final ComponentBundle bundle = new ComponentBundle(new File(getDataFolder(), "translations"),
             audience -> audience instanceof Player player ? player.locale() : Locale.US)
             .register("protect", Locale.US)
-            .register("protect_german", Locale.GERMANY);
+            .register("protect_german", Locale.GERMANY)
+            .miniMessage(bundle -> MiniMessage.builder().tags(TagResolver.resolver(
+                    TagResolver.standard(),
+                    Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
+            )).build());
 
     @Override
     public void onLoad() {
-        bundle().miniMessage(MiniMessage.builder()
-                .tags(TagResolver.builder()
-                        .resolvers(TagResolver.standard())
-                        .resolver(Placeholder.component("prefix", bundle.component(Locale.US, "prefix")))
-                        .build())
-                .build());
-
         Bukkit.getServicesManager().register(ProtectionService.class, protectionService(), this, ServicePriority.Highest);
         Bukkit.getServicesManager().register(FlagRegistry.class, flagRegistry(), this, ServicePriority.Highest);
         Bukkit.getServicesManager().register(AreaProvider.class, areaProvider(), this, ServicePriority.Highest);

@@ -28,30 +28,29 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.32")
+    compileOnly("org.projectlombok:lombok:1.18.34")
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
-    implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.5")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.43"))
+    implementation("org.incendo:cloud-paper:2.0.0-beta.9")
+    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.9")
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
 
     implementation(project(":api"))
-    implementation("net.thenextlvl.core:i18n:1.0.15")
-    implementation("net.thenextlvl.core:files:1.0.5-pre2")
-    implementation("net.thenextlvl.core:paper:1.3.0-pre1")
+    implementation("net.thenextlvl.core:i18n:1.0.18")
+    implementation("net.thenextlvl.core:files:1.0.5")
+    implementation("net.thenextlvl.core:paper:1.3.5")
     implementation("net.thenextlvl.core:adapters:1.0.9")
 
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
 }
 
 tasks.shadowJar {
     relocate("org.bstats", "net.thenextlvl.protect.bstats")
     archiveBaseName.set("protect")
-    minimize()
 }
 
 paper {

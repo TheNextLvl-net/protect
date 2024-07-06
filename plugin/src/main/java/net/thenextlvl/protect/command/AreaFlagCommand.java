@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.command;
 
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -32,24 +33,25 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
+@SuppressWarnings("UnstableApiUsage")
 abstract class AreaFlagCommand {
     protected final ProtectPlugin plugin;
-    protected final Command.Builder<CommandSender> builder;
+    protected final Command.Builder<CommandSourceStack> builder;
 
-    protected final Command.Builder<CommandSender> flagCommand() {
+    protected final Command.Builder<CommandSourceStack> flagCommand() {
         return builder.literal("flag")
                 .commandDescription(Description.description("query, change or reset flags"));
     }
 
-    abstract Command.Builder<CommandSender> create();
+    abstract Command.Builder<CommandSourceStack> create();
 
     static class Info extends AreaFlagCommand {
-        public Info(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+        public Info(ProtectPlugin plugin, Command.Builder<CommandSourceStack> builder) {
             super(plugin, builder);
         }
 
         @Override
-        Command.Builder<CommandSender> create() {
+        Command.Builder<CommandSourceStack> create() {
             return flagCommand().literal("info")
                     .permission("protect.command.area.flag.info")
                     .commandDescription(Description.description("query information about area flags"))
@@ -73,8 +75,8 @@ abstract class AreaFlagCommand {
         }
 
         @Override
-        protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
-            var sender = context.sender();
+        protected void execute(CommandContext<CommandSourceStack> context, Flag<Object> flag, Area area) {
+            var sender = context.sender().getSender();
             plugin.bundle().sendMessage(sender, "area.info.name", Placeholder.parsed("area", area.getName()));
             plugin.bundle().sendMessage(sender, "area.info.flag", Placeholder.parsed("flag", flag.key().asString()));
             if (area.hasFlag(flag)) plugin.bundle().sendMessage(sender, "area.info.flag.default",
@@ -90,12 +92,12 @@ abstract class AreaFlagCommand {
     }
 
     static class List extends AreaFlagCommand {
-        public List(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+        public List(ProtectPlugin plugin, Command.Builder<CommandSourceStack> builder) {
             super(plugin, builder);
         }
 
         @Override
-        Command.Builder<CommandSender> create() {
+        Command.Builder<CommandSourceStack> create() {
             return flagCommand().literal("list")
                     .permission("protect.command.area.flag.list")
                     .commandDescription(Description.description("list all existing area flags"))
@@ -109,12 +111,12 @@ abstract class AreaFlagCommand {
         }
 
         @Override
-        protected void execute(CommandContext<CommandSender> context) {
+        protected void execute(CommandContext<CommandSourceStack> context) {
             context.<String>optional("plugin")
                     .map(name -> Bukkit.getPluginManager().getPlugin(name))
-                    .ifPresentOrElse(plugin -> sendFlags(plugin, context.sender()), () ->
+                    .ifPresentOrElse(plugin -> sendFlags(plugin, context.sender().getSender()), () ->
                             this.plugin.flagRegistry().getRegistry().keySet()
-                                    .forEach(plugin -> sendFlags(plugin, context.sender())));
+                                    .forEach(plugin -> sendFlags(plugin, context.sender().getSender())));
         }
 
         private void sendFlags(Plugin plugin, CommandSender sender) {
@@ -137,12 +139,12 @@ abstract class AreaFlagCommand {
     }
 
     static class Set extends AreaFlagCommand {
-        public Set(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+        public Set(ProtectPlugin plugin, Command.Builder<CommandSourceStack> builder) {
             super(plugin, builder);
         }
 
         @Override
-        Command.Builder<CommandSender> create() {
+        Command.Builder<CommandSourceStack> create() {
             return flagCommand().literal("set")
                     .permission("protect.command.area.flag.set")
                     .commandDescription(Description.description("change specified flags of areas"))
@@ -191,16 +193,17 @@ abstract class AreaFlagCommand {
         }
 
         @Override
-        protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
+        protected void execute(CommandContext<CommandSourceStack> context, Flag<Object> flag, Area area) {
             var value = context.<String>get("value");
+            var sender = context.sender().getSender();
             try {
-                if (setFlagValue(flag, area, value)) plugin.bundle().sendMessage(context.sender(), "area.flag.changed",
+                if (setFlagValue(flag, area, value)) plugin.bundle().sendMessage(sender, "area.flag.changed",
                         Placeholder.parsed("value", value),
                         Placeholder.parsed("area", area.getName()),
                         Placeholder.parsed("flag", flag.key().asString()));
-                else plugin.bundle().sendMessage(context.sender(), "nothing.changed");
+                else plugin.bundle().sendMessage(sender, "nothing.changed");
             } catch (Exception e) {
-                plugin.bundle().sendMessage(context.sender(), "area.flag.value",
+                plugin.bundle().sendMessage(sender, "area.flag.value",
                         Placeholder.parsed("flag", flag.key().asString()),
                         Placeholder.parsed("value", value));
             }
@@ -237,12 +240,12 @@ abstract class AreaFlagCommand {
     }
 
     static class Unset extends AreaFlagCommand {
-        public Unset(ProtectPlugin plugin, Command.Builder<CommandSender> builder) {
+        public Unset(ProtectPlugin plugin, Command.Builder<CommandSourceStack> builder) {
             super(plugin, builder);
         }
 
         @Override
-        Command.Builder<CommandSender> create() {
+        Command.Builder<CommandSourceStack> create() {
             return flagCommand().literal("unset")
                     .permission("protect.command.area.flag.unset")
                     .commandDescription(Description.description("reset specified flags of areas"))
@@ -266,11 +269,11 @@ abstract class AreaFlagCommand {
         }
 
         @Override
-        protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
-            if (area.removeFlag(flag)) plugin.bundle().sendMessage(context.sender(), "area.flag.unset",
+        protected void execute(CommandContext<CommandSourceStack> context, Flag<Object> flag, Area area) {
+            if (area.removeFlag(flag)) plugin.bundle().sendMessage(context.sender().getSender(), "area.flag.unset",
                     Placeholder.parsed("area", area.getName()),
                     Placeholder.parsed("flag", flag.key().asString()));
-            else plugin.bundle().sendMessage(context.sender(), "nothing.changed");
+            else plugin.bundle().sendMessage(context.sender().getSender(), "nothing.changed");
         }
 
         @Override
@@ -279,7 +282,7 @@ abstract class AreaFlagCommand {
         }
     }
 
-    protected void execute(CommandContext<CommandSender> context) {
+    protected void execute(CommandContext<CommandSourceStack> context) {
         var sender = context.sender();
         var key = context.<NamespacedKey>get("flag");
         var flag = plugin.flagRegistry().getFlag(key).orElse(null);
@@ -290,7 +293,7 @@ abstract class AreaFlagCommand {
         else throw new InvalidSyntaxException(usage(), sender, java.util.List.of());
     }
 
-    protected void execute(CommandContext<CommandSender> context, Flag<Object> flag, Area area) {
+    protected void execute(CommandContext<CommandSourceStack> context, Flag<Object> flag, Area area) {
     }
 
     protected abstract String usage();

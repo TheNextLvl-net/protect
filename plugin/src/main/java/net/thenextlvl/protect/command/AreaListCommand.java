@@ -1,29 +1,30 @@
 package net.thenextlvl.protect.command;
 
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.GlobalArea;
-import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
 
 @RequiredArgsConstructor
+@SuppressWarnings("UnstableApiUsage")
 class AreaListCommand {
     private final ProtectPlugin plugin;
-    private final Command.Builder<CommandSender> builder;
+    private final Command.Builder<CommandSourceStack> builder;
 
-    Command.Builder<CommandSender> create() {
+    Command.Builder<CommandSourceStack> create() {
         return builder.literal("list")
                 .permission("protect.command.area.list")
                 .commandDescription(Description.description("list all areas"))
                 .handler(this::execute);
     }
 
-    private void execute(CommandContext<CommandSender> context) {
-        var sender = context.sender();
+    private void execute(CommandContext<CommandSourceStack> context) {
+        var sender = context.sender().getSender();
         var globalAreas = plugin.areaProvider().getAreas()
                 .filter(area -> area instanceof GlobalArea)
                 .map(Area::getName)
