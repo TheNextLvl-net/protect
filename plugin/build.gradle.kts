@@ -177,8 +177,8 @@ publishing {
         val branch = if (version.toString().contains("-pre")) "snapshots" else "releases"
         url = uri("https://repo.thenextlvl.net/$branch")
         credentials {
-            username = System.getenv("RELEASES_USER")
-            password = System.getenv("RELEASES_TOKEN")
+            username = System.getenv("REPOSITORY_USER")
+            password = System.getenv("REPOSITORY_TOKEN")
         }
     }
 }
