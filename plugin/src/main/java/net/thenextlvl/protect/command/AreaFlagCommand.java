@@ -155,7 +155,7 @@ abstract class AreaFlagCommand {
                                     .map(Suggestion::suggestion)
                                     .toList()))
                     .required("value",
-                            StringParser.greedyStringParser(),
+                            StringParser.stringParser(), // temp fix // todo: allow greedy strings
                             SuggestionProvider.blocking((context, input) -> {
                                 var key = context.<NamespacedKey>get("flag");
                                 var flag = plugin.flagRegistry().getFlag(key).orElse(null);
