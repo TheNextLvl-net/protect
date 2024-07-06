@@ -178,7 +178,7 @@ publishing {
         url = uri("https://repo.thenextlvl.net/$branch")
         credentials {
             username = System.getenv("RELEASES_USER")
-            password = System.getenv("RELEASES_PASSWORD")
+            password = System.getenv("RELEASES_TOKEN")
         }
     }
 }
