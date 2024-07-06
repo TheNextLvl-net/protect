@@ -32,7 +32,7 @@ class AreaInfoCommand {
                 .optional("area",
                         StringParser.greedyStringParser(),
                         DefaultValue.dynamic(context -> {
-                            if (!(context.sender() instanceof Player player)) return "";
+                            if (!(context.sender().getSender() instanceof Player player)) return "";
                             return plugin.areaProvider().getArea(player).getName();
                         }),
                         SuggestionProvider.blocking((context, input) -> plugin.areaProvider().getAreas()
