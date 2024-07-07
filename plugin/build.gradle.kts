@@ -148,6 +148,10 @@ paper {
 val versionString: String = project.version as String
 val isRelease: Boolean = !versionString.contains("-pre")
 
+val versions: List<String> = (property("gameVersions") as String)
+    .split(",")
+    .map { it.trim() }
+
 hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
     publications.register("plugin") {
         id.set("Protect")
@@ -156,9 +160,6 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
         apiKey.set(System.getenv("HANGAR_API_TOKEN"))
         platforms.register(Platforms.PAPER) {
             jar.set(tasks.shadowJar.flatMap { it.archiveFile })
-            val versions: List<String> = (property("paperVersion") as String)
-                .split(",")
-                .map { it.trim() }
             platformVersions.set(versions)
             dependencies {
                 url("FastAsyncWorldEdit", "https://hangar.papermc.io/IntellectualSites/FastAsyncWorldEdit") {
