@@ -8,6 +8,7 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.7"
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 java {
@@ -167,6 +168,18 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
                 }
             }
         }
+    }
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("YNoH2pBx")
+    versionType = if (isRelease) "release" else "beta"
+    uploadFile.set(tasks.shadowJar)
+    gameVersions.set(versions)
+    loaders.add("paper")
+    dependencies {
+        required.project("fastasyncworldedit")
     }
 }
 
