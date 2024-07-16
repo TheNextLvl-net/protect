@@ -41,7 +41,7 @@ dependencies {
     implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
 
     implementation(project(":api"))
-    implementation("net.thenextlvl.core:i18n:1.0.18")
+    implementation("net.thenextlvl.core:i18n:1.0.19")
     implementation("net.thenextlvl.core:files:1.0.5")
     implementation("net.thenextlvl.core:paper:1.3.5")
     implementation("net.thenextlvl.core:adapters:1.0.9")
