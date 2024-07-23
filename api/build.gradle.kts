@@ -29,7 +29,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
 
     implementation("net.thenextlvl.core:files:1.0.5")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.47"))
 
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 }
