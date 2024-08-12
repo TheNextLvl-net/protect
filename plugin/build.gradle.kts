@@ -33,7 +33,7 @@ dependencies {
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
