@@ -53,7 +53,8 @@ public class EntityListener implements Listener {
         var area = plugin.areaProvider().getArea(event.getDamager());
         var flag = event.getDamager() instanceof Player && event.getEntity() instanceof Player
                 ? plugin.flags.playerAttackPlayer : event.getDamager() instanceof Player
-                ? plugin.flags.playerAttackEntity : event.getEntity() instanceof Player
+                ? plugin.flags.playerAttackEntity : !(event.getDamager() instanceof Player)
+                                                    && event.getEntity() instanceof Player
                 ? plugin.flags.entityAttackPlayer : plugin.flags.entityAttackEntity;
         event.setCancelled(!area.getFlag(flag));
     }
