@@ -38,7 +38,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-minecraft-extras:2.0.0-SNAPSHOT")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.49"))
 
     implementation(project(":api"))
     implementation("net.thenextlvl.core:i18n:1.0.19")
