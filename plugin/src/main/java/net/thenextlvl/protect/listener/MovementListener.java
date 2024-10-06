@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 public class MovementListener implements Listener {
     private final ProtectPlugin plugin;
 
+    @SuppressWarnings("IsCancelled")
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!event.hasChangedBlock()) return;

@@ -105,7 +105,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
         file.getParentFile().mkdirs();
         file.createNewFile();
         try (var editSession = WorldEdit.getInstance().newEditSession(new BukkitWorld(getWorld()));
-             var writer = BuiltInClipboardFormat.FAST.getWriter(new FileOutputStream(getSchematic()))) {
+             var writer = BuiltInClipboardFormat.FAST_V3.getWriter(new FileOutputStream(getSchematic()))) {
             var clipboard = new BlockArrayClipboard(getRegion());
             var extent = new ForwardExtentCopy(editSession, getRegion(), clipboard, getRegion().getMinimumPoint());
             extent.setCopyingEntities(true);
@@ -122,7 +122,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
         if (!event.callEvent()) return false;
         var world = new BukkitWorld(getWorld());
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
-            var clipboard = BuiltInClipboardFormat.FAST.getReader(new FileInputStream(getSchematic())).read();
+            var clipboard = BuiltInClipboardFormat.FAST_V3.getReader(new FileInputStream(getSchematic())).read();
             world.getEntities(getRegion()).forEach(com.sk89q.worldedit.entity.Entity::remove);
             var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
                     copyBiomes(true).copyEntities(true).ignoreAirBlocks(false).build();

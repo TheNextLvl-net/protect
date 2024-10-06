@@ -29,6 +29,7 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
 
     @Override
     @NamePattern.Global
+    @SuppressWarnings("PatternValidation")
     public String getName() {
         return super.getName();
     }

@@ -22,7 +22,6 @@ import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
 import net.thenextlvl.protect.version.PluginVersionChecker;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -59,14 +58,8 @@ public class ProtectPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         versionChecker().checkVersion();
-
-        Bukkit.getServicesManager().register(ProtectionService.class, protectionService(), this, ServicePriority.Highest);
-        Bukkit.getServicesManager().register(FlagRegistry.class, flagRegistry(), this, ServicePriority.Highest);
-        Bukkit.getServicesManager().register(AreaProvider.class, areaProvider(), this, ServicePriority.Highest);
-        Bukkit.getServicesManager().register(AreaService.class, areaService(), this, ServicePriority.Highest);
-
-        areaService().registerAdapter(CraftGlobalArea.class, new GlobalAreaAdapter(this));
-        areaService().registerAdapter(CraftCuboidArea.class, new CuboidAreaAdapter(this));
+        registerServices();
+        registerAdapter();
     }
 
     @Override
@@ -77,26 +70,34 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Bukkit.getWorlds().forEach(world -> {
+        getServer().getWorlds().forEach(world -> {
             areaProvider().saveAreas(world);
             areaProvider().unloadAreas(world);
         });
-        metrics.shutdown();
+        metrics().shutdown();
+    }
+
+    private void registerServices() {
+        getServer().getServicesManager().register(ProtectionService.class, protectionService(), this, ServicePriority.Highest);
+        getServer().getServicesManager().register(FlagRegistry.class, flagRegistry(), this, ServicePriority.Highest);
+        getServer().getServicesManager().register(AreaProvider.class, areaProvider(), this, ServicePriority.Highest);
+        getServer().getServicesManager().register(AreaService.class, areaService(), this, ServicePriority.Highest);
+    }
+
+    private void registerAdapter() {
+        areaService().registerAdapter(CraftGlobalArea.class, new GlobalAreaAdapter(this));
+        areaService().registerAdapter(CraftCuboidArea.class, new CuboidAreaAdapter(this));
     }
 
     private void registerEvents() {
-        Bukkit.getPluginManager().registerEvents(new AreaListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new EntityListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new MovementListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new WorldListener(this), this);
+        getServer().getPluginManager().registerEvents(new AreaListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(this), this);
+        getServer().getPluginManager().registerEvents(new MovementListener(this), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(this), this);
     }
 
     private void registerCommands() {
-        try {
-            new AreaCommand(this).register();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        new AreaCommand(this).register();
     }
 
     public class Flags {
