@@ -35,8 +35,6 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-SNAPSHOT")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.49"))
 
     implementation(project(":api"))
@@ -68,17 +66,6 @@ paper {
         }
     }
     permissions {
-        // admin perm-pack
-        register("protect.admin") {
-            description = "Allows players to manage all areas and bypass all restrictions"
-            children = listOf(
-                "protect.command.area.create",
-                "protect.command.area.delete",
-                "protect.command.area.manage",
-                "protect.bypass.admin"
-            )
-        }
-
         // restriction bypass perm-pack
         register("protect.bypass.admin") {
             description = "Allows players to bypass any restriction"
@@ -102,7 +89,7 @@ paper {
         }
 
         // area management perm-pack
-        register("protect.command.area.manage") {
+        register("protect.commands.area.manage") {
             description = "Allows players to manage existing areas"
             children = listOf(
                 "protect.command.area",
@@ -115,7 +102,7 @@ paper {
         }
 
         // non-destructive area perm-pack
-        register("protect.command.area") {
+        register("protect.commands.area") {
             description = "Allows players to interact with areas in a non-destructive manner"
             children = listOf(
                 "protect.command.area.flag.info",
@@ -125,17 +112,17 @@ paper {
         }
 
         // flags perm-pack
-        register("protect.command.area.flag") {
+        register("protect.commands.area.flag") {
             description = "Allows players to manage area flags"
             children = listOf(
                 "protect.command.area.flag.info",
                 "protect.command.area.flag.set",
-                "protect.command.area.flag.unset"
+                "protect.command.area.flag.reset"
             )
         }
 
         // schematics perm-pack
-        register("protect.command.area.schematic") {
+        register("protect.commands.area.schematic") {
             description = "Allows players to manage area schematics"
             children = listOf(
                 "protect.command.area.schematic.delete",
@@ -143,6 +130,7 @@ paper {
                 "protect.command.area.schematic.save"
             )
         }
+        register("protect.command.area")
     }
 }
 

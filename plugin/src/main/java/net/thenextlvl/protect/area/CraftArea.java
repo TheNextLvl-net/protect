@@ -3,7 +3,7 @@ package net.thenextlvl.protect.area;
 import lombok.*;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.AreaFlagChangeEvent;
-import net.thenextlvl.protect.event.AreaFlagUnsetEvent;
+import net.thenextlvl.protect.event.AreaFlagResetEvent;
 import net.thenextlvl.protect.event.AreaPriorityChangeEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
@@ -51,7 +51,7 @@ public abstract class CraftArea implements Area {
 
     @Override
     public <T> boolean removeFlag(@NotNull Flag<T> flag) {
-        var event = new AreaFlagUnsetEvent<>(this, flag);
+        var event = new AreaFlagResetEvent<>(this, flag);
         return event.callEvent() && Area.super.removeFlag(flag);
     }
 

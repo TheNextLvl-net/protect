@@ -1,63 +1,67 @@
 package net.thenextlvl.protect.command;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.NamePattern;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.exception.InvalidCommandSenderException;
-import org.incendo.cloud.parser.standard.StringParser;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @SuppressWarnings("UnstableApiUsage")
 class AreaCreateCommand {
     private final ProtectPlugin plugin;
-    private final Command.Builder<CommandSourceStack> builder;
 
-    Command.Builder<CommandSourceStack> create() {
-        return builder.literal("create")
-                .permission("protect.command.area.create")
-                .commandDescription(Description.description("create new areas"))
-                .required("name", StringParser.greedyStringParser())
-                .handler(this::execute);
+    LiteralArgumentBuilder<CommandSourceStack> create() {
+        return Commands.literal("create")
+                .requires(stack -> stack.getSender() instanceof Player player
+                                   && player.hasPermission("protect.command.area.create"))
+                .then(Commands.argument("name", StringArgumentType.string())
+                        .executes(this::execute));
     }
 
     @SuppressWarnings("PatternValidation")
-    private void execute(CommandContext<CommandSourceStack> context) {
-        if (!(context.sender().getSender() instanceof Player player))
-            throw new InvalidCommandSenderException(context.sender(), Player.class, List.of(), context.command());
-        var name = context.<String>get("name");
+    private int execute(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+        var name = context.getArgument("name", String.class);
+
         if (!name.matches(NamePattern.Regionized.PATTERN)) {
             plugin.bundle().sendMessage(player, "area.name.pattern",
                     Placeholder.parsed("pattern", NamePattern.Regionized.PATTERN));
-            return;
+            return 0;
         }
-        var placeholder = Placeholder.parsed("area", name);
-        if (plugin.areaProvider().getArea(name).isPresent())
-            plugin.bundle().sendMessage(player, "area.exists", placeholder);
-        else try {
-            var session = JavaPlugin.getPlugin(WorldEditPlugin.class).getSession(player);
+
+        if (plugin.areaProvider().getArea(name).isPresent()) {
+            plugin.bundle().sendMessage(player, "area.exists", Placeholder.parsed("area", name));
+            return 0;
+        }
+
+        try {
+            var session = WorldEditPlugin.getInstance().getSession(player);
             var selection = session.getSelection();
+
             if (selection instanceof CuboidRegion cuboidRegion) {
                 plugin.areaService().create(name, player.getWorld(), cuboidRegion);
             } else {
                 plugin.bundle().sendMessage(player, "region.unsupported",
                         Placeholder.parsed("type", selection.getClass().getSimpleName()));
-                return;
+                return 0;
             }
-            plugin.bundle().sendMessage(player, "area.created", placeholder);
+
+            plugin.bundle().sendMessage(player, "area.created", Placeholder.parsed("area", name));
+            return Command.SINGLE_SUCCESS;
+
         } catch (IncompleteRegionException ignored) {
-            plugin.bundle().sendMessage(player, "region.select", placeholder);
+            plugin.bundle().sendMessage(player, "region.select", Placeholder.parsed("area", name));
+            return 0;
         }
     }
 }

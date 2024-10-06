@@ -1,30 +1,29 @@
 package net.thenextlvl.protect.command;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.GlobalArea;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.description.Description;
 
 @RequiredArgsConstructor
 @SuppressWarnings("UnstableApiUsage")
 class AreaListCommand {
     private final ProtectPlugin plugin;
-    private final Command.Builder<CommandSourceStack> builder;
 
-    Command.Builder<CommandSourceStack> create() {
-        return builder.literal("list")
-                .permission("protect.command.area.list")
-                .commandDescription(Description.description("list all areas"))
-                .handler(this::execute);
+    LiteralArgumentBuilder<CommandSourceStack> create() {
+        return Commands.literal("list")
+                .requires(stack -> stack.getSender().hasPermission("protect.command.area.list"))
+                .executes(this::list);
     }
 
-    private void execute(CommandContext<CommandSourceStack> context) {
-        var sender = context.sender().getSender();
+    private int list(CommandContext<CommandSourceStack> context) {
+        var sender = context.getSource().getSender();
         var globalAreas = plugin.areaProvider().getAreas()
                 .filter(area -> area instanceof GlobalArea)
                 .map(Area::getName)
@@ -38,5 +37,6 @@ class AreaListCommand {
         plugin.bundle().sendMessage(sender, "area.list.global",
                 Placeholder.parsed("amount", String.valueOf(globalAreas.size())),
                 Placeholder.parsed("areas", String.join(", ", globalAreas)));
+        return Command.SINGLE_SUCCESS;
     }
 }
