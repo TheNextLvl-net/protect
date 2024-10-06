@@ -113,6 +113,15 @@ public interface ProtectionService {
     boolean canInteract(Player player, Entity entity);
 
     /**
+     * Determines whether a player can physically interact with an object at a given location.
+     *
+     * @param player   the player who wants to interact
+     * @param location the location of the object the player intends to interact with
+     * @return true if the player can physically interact with the object at the location, false otherwise
+     */
+    boolean canInteractPhysical(Player player, Location location);
+
+    /**
      * Determines whether a player can shear an entity.
      *
      * @param player the player who wants to shear
