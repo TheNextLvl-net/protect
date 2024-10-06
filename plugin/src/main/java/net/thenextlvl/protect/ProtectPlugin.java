@@ -20,6 +20,7 @@ import net.thenextlvl.protect.listener.MovementListener;
 import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
+import net.thenextlvl.protect.version.PluginVersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
@@ -37,6 +38,7 @@ import java.util.Locale;
 public class ProtectPlugin extends JavaPlugin {
     private final Metrics metrics = new Metrics(this, 21712);
     private final File schematicFolder = new File(getDataFolder(), "schematics");
+    private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
     private final CraftProtectionService protectionService = new CraftProtectionService(this);
     private final CraftFlagRegistry flagRegistry = new CraftFlagRegistry();
@@ -56,6 +58,8 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        versionChecker().checkVersion();
+
         Bukkit.getServicesManager().register(ProtectionService.class, protectionService(), this, ServicePriority.Highest);
         Bukkit.getServicesManager().register(FlagRegistry.class, flagRegistry(), this, ServicePriority.Highest);
         Bukkit.getServicesManager().register(AreaProvider.class, areaProvider(), this, ServicePriority.Highest);
