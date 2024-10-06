@@ -15,10 +15,9 @@ java {
 
 repositories {
     mavenCentral()
-    maven("https://repo.thenextlvl.net/releases")
-    maven("https://repo.thenextlvl.net/snapshots")
+    maven("https://maven.enginehub.org/repo/")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://repo.thenextlvl.net/releases")
 }
 
 dependencies {
@@ -29,7 +28,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
 
     implementation("net.thenextlvl.core:files:1.0.5")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.49"))
 
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 }
