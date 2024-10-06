@@ -22,10 +22,9 @@ version = project(":api").version
 
 repositories {
     mavenCentral()
-    maven("https://repo.thenextlvl.net/releases")
-    maven("https://repo.thenextlvl.net/snapshots")
+    maven("https://maven.enginehub.org/repo/")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://repo.thenextlvl.net/releases")
 }
 
 dependencies {
@@ -38,7 +37,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-minecraft-extras:2.0.0-SNAPSHOT")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.49"))
 
     implementation(project(":api"))
     implementation("net.thenextlvl.core:i18n:1.0.19")
