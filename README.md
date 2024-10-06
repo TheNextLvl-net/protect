@@ -18,7 +18,7 @@ BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Prote
 | /area flag info [flag] (area)        | query information about area flags                | protect.command.area.flag.info        |
 | /area flag list                      | list all existing area flags                      | protect.command.area.flag.list        |
 | /area flag set [flag] [value] (area) | change specified flags of areas                   | protect.command.area.flag.set         |
-| /area flag unset [flag] (area)       | reset specified flags of areas                    | protect.command.area.flag.unset       |
+| /area flag reset [flag] (area)       | reset specified flags of areas                    | protect.command.area.flag.reset       |
 | /area info (area)                    | query information about specific areas            | protect.command.area.info             |
 | /area list                           | list all areas                                    | protect.command.area.list             |
 | /area priority [priority] (area)     | change the priority of areas                      | protect.command.area.priority         |
@@ -133,7 +133,7 @@ Allows players to manage area flags
     protect.command.area.flag.info
     protect.command.area.flag.list
     protect.command.area.flag.set
-    protect.command.area.flag.unset
+    protect.command.area.flag.reset
 
 ### protect.command.area.manage
 
