@@ -104,6 +104,7 @@ Allows players to bypass any restriction
     protect.bypass.build
     protect.bypass.break
     protect.bypass.interact
+    protect.bypass.physical-interact
     protect.bypass.entity-interact
     protect.bypass.trample
     protect.bypass.enter

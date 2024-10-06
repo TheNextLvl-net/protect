@@ -51,10 +51,10 @@ public class WorldListener implements Listener {
     public void onCropTrample(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.PHYSICAL)) return;
         if (event.getClickedBlock() == null) return;
-        if (!event.getClickedBlock().getType().equals(Material.FARMLAND)) return;
-        event.setCancelled(!plugin.protectionService().canTrample(
-                event.getPlayer(), event.getClickedBlock().getLocation()
-        ));
+        var location = event.getClickedBlock().getLocation();
+        event.setCancelled(event.getClickedBlock().getType().equals(Material.FARMLAND)
+                ? !plugin.protectionService().canTrample(event.getPlayer(), location)
+                : !plugin.protectionService().canInteractPhysical(event.getPlayer(), location));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

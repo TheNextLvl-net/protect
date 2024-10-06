@@ -83,6 +83,12 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     @Override
+    public boolean canInteractPhysical(Player player, Location location) {
+        return canPerformAction(player, plugin.areaProvider().getArea(location),
+                plugin.flags.physicalInteract, "protect.bypass.physical-interact");
+    }
+
+    @Override
     public boolean canShear(Player player, Entity entity) {
         return canPerformAction(player, plugin.areaProvider().getArea(entity),
                 plugin.flags.entityShear, "protect.bypass.entity-shear");

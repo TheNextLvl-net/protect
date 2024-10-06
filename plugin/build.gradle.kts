@@ -87,6 +87,7 @@ paper {
                 "protect.bypass.break",
                 "protect.bypass.interact",
                 "protect.bypass.entity-interact",
+                "protect.bypass.physical-interact",
                 "protect.bypass.trample",
                 "protect.bypass.enter",
                 "protect.bypass.leave",
