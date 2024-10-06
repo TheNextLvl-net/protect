@@ -18,6 +18,6 @@ public class BlockVectorAdapter implements JsonSerializer<BlockVector3>, JsonDes
 
     @Override
     public JsonElement serialize(BlockVector3 vector, Type type, JsonSerializationContext context) {
-        return new JsonPrimitive(vector.getX() + ", " + vector.getY() + ", " + vector.getZ());
+        return new JsonPrimitive(vector.x() + ", " + vector.y() + ", " + vector.z());
     }
 }
