@@ -65,7 +65,7 @@ public class AreaListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onAreaFlagUnset(AreaFlagUnsetEvent<?> event) {
+    public void onAreaFlagReset(AreaFlagResetEvent<?> event) {
         if (event.getFlag().equals(plugin.flags.weather)) {
             event.getArea().getHighestPlayers().forEach(Player::resetPlayerWeather);
         } else if (event.getFlag().equals(plugin.flags.time))
