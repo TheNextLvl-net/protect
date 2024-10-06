@@ -49,7 +49,7 @@ class AreaTeleportCommand {
             return;
         }
         var point = regionizedArea.getRegion().getMaximumPoint();
-        var location = new Location(area.getWorld(), point.getX() + 0.5, point.getY(), point.getZ() + 0.5);
+        var location = new Location(area.getWorld(), point.x() + 0.5, point.y(), point.z() + 0.5);
         var block = location.getWorld().getHighestBlockAt(location);
         if (block.getY() < location.getY()) location.setY(block.getY() + 1);
         location.setPitch(player.getLocation().getPitch());
