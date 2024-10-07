@@ -16,7 +16,7 @@ public class FlagArgumentType extends WrappedArgumentType<NamespacedKey, Flag<?>
 
     public FlagArgumentType(ProtectPlugin plugin, Predicate<? super Flag<?>> filter) {
         super(ArgumentTypes.namespacedKey(), (reader, type) -> plugin.flagRegistry().getFlag(type)
-                        .orElseThrow(() -> new IllegalArgumentException("Unknown flag: " + type)),
+                        .filter(filter).orElseThrow(() -> new IllegalArgumentException("Unknown flag: " + type)),
                 (context, builder) -> {
                     plugin.flagRegistry().getFlags().stream()
                             .filter(filter)

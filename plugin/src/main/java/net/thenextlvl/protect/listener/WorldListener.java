@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class WorldListener implements Listener {
     private final ProtectPlugin plugin;
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onWorldLoad(WorldLoadEvent event) {
+    public void onWorldInit(WorldInitEvent event) {
         plugin.areaProvider().loadAreas(event.getWorld());
     }
 

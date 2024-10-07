@@ -16,9 +16,11 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
+import net.thenextlvl.protect.command.argument.EnumArgumentType;
 import net.thenextlvl.protect.command.argument.FlagArgumentType;
 import net.thenextlvl.protect.command.argument.FlagProviderArgumentType;
 import net.thenextlvl.protect.flag.Flag;
+import org.bukkit.WeatherType;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
@@ -76,7 +78,8 @@ class AreaFlagCommand {
             Float.class, FloatArgumentType::floatArg,
             Integer.class, IntegerArgumentType::integer,
             Long.class, LongArgumentType::longArg,
-            String.class, StringArgumentType::string
+            String.class, StringArgumentType::string,
+            WeatherType.class, () -> new EnumArgumentType<>(WeatherType.class)
     );
 
     private ArgumentBuilder<CommandSourceStack, ?> set() {

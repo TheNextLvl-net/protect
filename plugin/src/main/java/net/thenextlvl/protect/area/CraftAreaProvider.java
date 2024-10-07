@@ -94,7 +94,7 @@ public class CraftAreaProvider implements AreaProvider {
     private void addAreaFile(World world, FileIO<Area> file) {
         var areas = this.areas.computeIfAbsent(world, k -> new HashSet<>());
         areas.stream().filter(io -> io.getRoot().equals(file.getRoot())).findAny()
-                .ifPresentOrElse(io -> plugin.getSLF4JLogger().warn(
+                .ifPresentOrElse(io -> plugin.getComponentLogger().warn(
                         "Ignoring duplicate area {}: {}",
                         file.getRoot().getName(), file.getIO()
                 ), () -> areas.add(file));

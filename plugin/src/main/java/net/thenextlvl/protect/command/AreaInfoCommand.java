@@ -23,12 +23,19 @@ class AreaInfoCommand {
         return Commands.literal("info")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.info"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
-                        .executes(this::info));
+                        .executes(context -> {
+                            var area = context.getArgument("area", Area.class);
+                            return info(context, area);
+                        }))
+                .executes(context -> {
+                    var location = context.getSource().getLocation();
+                    var area = plugin.areaProvider().getArea(location);
+                    return info(context, area);
+                });
     }
 
-    private int info(CommandContext<CommandSourceStack> context) {
+    private int info(CommandContext<CommandSourceStack> context, Area area) {
         var sender = context.getSource().getSender();
-        var area = context.getArgument("area", Area.class);
 
         plugin.bundle().sendMessage(sender, "area.info.name",
                 Placeholder.parsed("area", area.getName()));
