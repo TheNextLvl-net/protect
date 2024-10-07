@@ -25,7 +25,6 @@ public class FlagsAdapter implements JsonSerializer<Map<Flag<?>, Object>>, JsonD
     public Map<Flag<?>, Object> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         var object = element.getAsJsonObject();
         var flags = new LinkedHashMap<Flag<?>, Object>();
-        plugin.flagRegistry().getFlags().forEach(flag -> flags.put(flag, flag.defaultValue()));
         object.entrySet().forEach(entry -> {
             var key = NamespacedKey.fromString(entry.getKey());
             var flag = key != null ? plugin.flagRegistry().getFlag(key).orElse(null) : null;
