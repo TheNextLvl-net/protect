@@ -30,7 +30,7 @@ class AreaPriorityCommand {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", Area.class);
         var priority = context.getArgument("priority", int.class);
-        var message = area.setPriority(priority) ? "area.priority.changed" : "nothing.changed";
+        var message = area.setPriority(priority) ? "area.priority.set" : "nothing.changed";
         plugin.bundle().sendMessage(sender, message,
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("priority", String.valueOf(area.getPriority())));

@@ -150,7 +150,7 @@ class AreaFlagCommand {
 
     private <T> int set(CommandContext<CommandSourceStack> context, Flag<T> flag, Area area) {
         var value = context.getArgument("value", flag.type());
-        var message = area.setFlag(flag, value) ? "area.flag.changed" : "nothing.changed";
+        var message = area.setFlag(flag, value) ? "area.flag.set" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("flag", flag.key().asString()),
