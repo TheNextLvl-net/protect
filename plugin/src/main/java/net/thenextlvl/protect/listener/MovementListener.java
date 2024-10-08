@@ -5,12 +5,16 @@ import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.event.PlayerAreaEnterEvent;
 import net.thenextlvl.protect.event.PlayerAreaLeaveEvent;
 import net.thenextlvl.protect.event.PlayerAreaTransitionEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -39,5 +43,24 @@ public class MovementListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         onPlayerMove(event);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onVehicleEnter(VehicleEnterEvent event) {
+        if (!(event.getEntered() instanceof Player player)) return;
+        var movement = new PlayerMoveEvent(player, player.getLocation(), event.getVehicle().getLocation());
+        onPlayerMove(movement);
+        event.setCancelled(movement.isCancelled());
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onVehicleEnter(VehicleMoveEvent event) {
+        List.copyOf(event.getVehicle().getPassengers()).stream()
+                .filter(entity -> entity instanceof Player)
+                .forEach(entity -> {
+                    var movement = new PlayerMoveEvent((Player) entity, event.getFrom(), event.getTo());
+                    onPlayerMove(movement);
+                    if (movement.isCancelled()) event.getVehicle().removePassenger(entity);
+                });
     }
 }
