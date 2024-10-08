@@ -59,7 +59,6 @@ paper {
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     authors = listOf("NonSwag")
     website = "https://thenextlvl.net"
-    foliaSupported = true
     serverDependencies {
         register("FastAsyncWorldEdit") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
