@@ -60,7 +60,7 @@ class AreaCreateCommand {
             return Command.SINGLE_SUCCESS;
 
         } catch (IncompleteRegionException ignored) {
-            plugin.bundle().sendMessage(player, "region.select", Placeholder.parsed("area", name));
+            plugin.bundle().sendMessage(player, "region.select");
             return 0;
         }
     }
