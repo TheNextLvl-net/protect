@@ -34,7 +34,7 @@ class AreaRedefineCommand {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         if (area.getSchematic().exists()) {
-            plugin.bundle().sendMessage(player, "area.schematic.delete.redefine");
+            plugin.bundle().sendMessage(player, "area.schematic.delete");
             return 0;
         }
         try {
