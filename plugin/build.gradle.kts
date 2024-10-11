@@ -84,7 +84,8 @@ paper {
                 "protect.bypass.fill-bottle",
                 "protect.bypass.wash-banner",
                 "protect.bypass.wash-shulker",
-                "protect.bypass.wash-armor"
+                "protect.bypass.wash-armor",
+                "protect.bypass.worldedit"
             )
         }
 
