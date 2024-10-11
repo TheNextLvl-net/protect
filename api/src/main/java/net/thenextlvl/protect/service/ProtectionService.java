@@ -14,6 +14,15 @@ import org.bukkit.entity.Player;
 public interface ProtectionService {
 
     /**
+     * Determines whether a player can use worldedit in a specific area.
+     *
+     * @param player the player attempting to use worldedit
+     * @param area   the area where the player intends to use worldedit
+     * @return true if the player can use worldedit in the area, false otherwise
+     */
+    boolean canEdit(Player player, Area area);
+
+    /**
      * Determines whether a player can build at a given location.
      *
      * @param player   the player who wants to build
