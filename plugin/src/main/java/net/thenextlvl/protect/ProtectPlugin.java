@@ -1,5 +1,6 @@
 package net.thenextlvl.protect;
 
+import com.fastasyncworldedit.core.util.WEManager;
 import core.i18n.file.ComponentBundle;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import net.thenextlvl.protect.listener.AreaListener;
 import net.thenextlvl.protect.listener.EntityListener;
 import net.thenextlvl.protect.listener.MovementListener;
 import net.thenextlvl.protect.listener.WorldListener;
+import net.thenextlvl.protect.mask.ProtectMaskManager;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
 import net.thenextlvl.protect.version.PluginVersionChecker;
@@ -90,6 +92,7 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     private void registerEvents() {
+        WEManager.weManager().addManager(new ProtectMaskManager(this));
         getServer().getPluginManager().registerEvents(new AreaListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityListener(this), this);
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
