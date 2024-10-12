@@ -20,8 +20,8 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        var area = plugin.areaProvider().getArea(event.getEntity());
+        if (!(event.getEntity() instanceof Player player)) return;
+        var area = plugin.areaProvider().getArea(player);
         if (event.getCause().equals(EntityDamageEvent.DamageCause.KILL)) return;
         event.setCancelled(!area.getFlag(plugin.flags.damage));
     }
@@ -57,6 +57,7 @@ public class EntityListener implements Listener {
                                                     && event.getEntity() instanceof Player
                 ? plugin.flags.entityAttackPlayer : plugin.flags.entityAttackEntity;
         event.setCancelled(!area.getFlag(flag));
+        plugin.failed(event.getDamager(), event, area, "area.failed.attack");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
