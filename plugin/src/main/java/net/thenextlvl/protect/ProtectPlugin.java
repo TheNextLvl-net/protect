@@ -59,6 +59,7 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        WEManager.weManager().addManager(new ProtectMaskManager(this));
         versionChecker().checkVersion();
         registerServices();
         registerAdapter();
@@ -92,7 +93,6 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     private void registerEvents() {
-        WEManager.weManager().addManager(new ProtectMaskManager(this));
         getServer().getPluginManager().registerEvents(new AreaListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityListener(this), this);
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
