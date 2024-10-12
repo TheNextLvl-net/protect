@@ -6,12 +6,16 @@ import com.mojang.brigadier.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.CylinderRegion;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.CuboidArea;
+import net.thenextlvl.protect.area.CylinderArea;
+import net.thenextlvl.protect.area.EllipsoidArea;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.bukkit.entity.Player;
@@ -41,12 +45,18 @@ class AreaRedefineCommand {
             var redefine = false;
             var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
             var region = worldEdit.getSession(player).getSelection();
-            if (region instanceof CuboidRegion cuboidRegion && area instanceof CuboidArea cuboid) {
-                redefine = cuboid.setRegion(cuboidRegion);
-            } else {
-                plugin.bundle().sendMessage(player, "region.unsupported",
-                        Placeholder.parsed("type", region.getClass().getSimpleName()));
-                return 0;
+            switch (region) {
+                case CuboidRegion cuboidRegion when area instanceof CuboidArea cuboid ->
+                        redefine = cuboid.setRegion(cuboidRegion);
+                case CylinderRegion cylinderRegion when area instanceof CylinderArea cylinder ->
+                        redefine = cylinder.setRegion(cylinderRegion);
+                case EllipsoidRegion ellipsoidRegion when area instanceof EllipsoidArea ellipsoid ->
+                        redefine = ellipsoid.setRegion(ellipsoidRegion);
+                default -> {
+                    plugin.bundle().sendMessage(player, "region.unsupported",
+                            Placeholder.parsed("type", region.getClass().getSimpleName()));
+                    return 0;
+                }
             }
             var message = redefine ? "area.redefine.success" : "area.redefine.fail";
             plugin.bundle().sendMessage(player, message, Placeholder.parsed("area", area.getName()));

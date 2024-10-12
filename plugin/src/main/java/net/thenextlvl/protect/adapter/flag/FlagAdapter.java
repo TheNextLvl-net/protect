@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.adapter;
+package net.thenextlvl.protect.adapter.flag;
 
 import com.google.gson.*;
 import lombok.RequiredArgsConstructor;

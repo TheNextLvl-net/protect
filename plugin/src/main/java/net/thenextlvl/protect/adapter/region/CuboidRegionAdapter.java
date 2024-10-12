@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.adapter;
+package net.thenextlvl.protect.adapter.region;
 
 import com.google.gson.*;
 import com.sk89q.worldedit.math.BlockVector3;

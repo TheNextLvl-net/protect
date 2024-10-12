@@ -7,6 +7,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.CylinderRegion;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
@@ -48,12 +50,15 @@ class AreaCreateCommand {
             var session = WorldEditPlugin.getInstance().getSession(player);
             var selection = session.getSelection();
 
-            if (selection instanceof CuboidRegion cuboidRegion) {
-                plugin.areaService().create(name, player.getWorld(), cuboidRegion);
-            } else {
-                plugin.bundle().sendMessage(player, "region.unsupported",
-                        Placeholder.parsed("type", selection.getClass().getSimpleName()));
-                return 0;
+            switch (selection) {
+                case CuboidRegion cuboid -> plugin.areaService().create(name, player.getWorld(), cuboid);
+                case CylinderRegion cylinder -> plugin.areaService().create(name, player.getWorld(), cylinder);
+                case EllipsoidRegion ellipsoid -> plugin.areaService().create(name, player.getWorld(), ellipsoid);
+                default -> {
+                    plugin.bundle().sendMessage(player, "region.unsupported",
+                            Placeholder.parsed("type", selection.getClass().getSimpleName()));
+                    return 0;
+                }
             }
 
             plugin.bundle().sendMessage(player, "area.created", Placeholder.parsed("area", name));
