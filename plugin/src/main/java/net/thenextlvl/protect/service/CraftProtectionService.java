@@ -17,6 +17,11 @@ public class CraftProtectionService implements ProtectionService {
     private final ProtectPlugin plugin;
 
     @Override
+    public boolean canEdit(Player player, Area area) {
+        return canPerformAction(player, area, plugin.flags.worldedit, "protect.bypass.worldedit");
+    }
+
+    @Override
     public boolean canBuild(Player player, Location location) {
         return canPerformAction(player, plugin.areaProvider().getArea(location),
                 plugin.flags.blockPlace, "protect.bypass.build");
