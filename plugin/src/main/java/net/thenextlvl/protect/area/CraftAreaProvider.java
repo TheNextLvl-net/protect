@@ -3,7 +3,11 @@ package net.thenextlvl.protect.area;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector2;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.CylinderRegion;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
@@ -13,7 +17,15 @@ import core.io.IO;
 import core.paper.adapters.key.KeyAdapter;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.adapter.*;
+import net.thenextlvl.protect.adapter.area.AreaTypeAdapter;
+import net.thenextlvl.protect.adapter.flag.FlagAdapter;
+import net.thenextlvl.protect.adapter.flag.FlagsAdapter;
+import net.thenextlvl.protect.adapter.region.CuboidRegionAdapter;
+import net.thenextlvl.protect.adapter.region.CylinderRegionAdapter;
+import net.thenextlvl.protect.adapter.region.EllipsoidRegionAdapter;
+import net.thenextlvl.protect.adapter.vector.BlockVectorAdapter;
+import net.thenextlvl.protect.adapter.vector.Vector2Adapter;
+import net.thenextlvl.protect.adapter.vector.Vector3Adapter;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -104,7 +116,11 @@ public class CraftAreaProvider implements AreaProvider {
     public FileIO<Area> loadFile(World world, @Nullable Area area, IO file) {
         var gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
+                .registerTypeHierarchyAdapter(CylinderRegion.class, new CylinderRegionAdapter())
+                .registerTypeHierarchyAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
                 .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
+                .registerTypeHierarchyAdapter(Vector2.class, new Vector2Adapter())
+                .registerTypeHierarchyAdapter(Vector3.class, new Vector3Adapter())
                 .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.Bukkit.INSTANCE)
                 .registerTypeHierarchyAdapter(Area.class, new AreaTypeAdapter(plugin, world))
                 .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(plugin))
