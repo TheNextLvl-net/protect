@@ -8,8 +8,10 @@ import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.thenextlvl.protect.adapter.CuboidAreaAdapter;
-import net.thenextlvl.protect.adapter.GlobalAreaAdapter;
+import net.thenextlvl.protect.adapter.area.CuboidAreaAdapter;
+import net.thenextlvl.protect.adapter.area.CylinderAreaAdapter;
+import net.thenextlvl.protect.adapter.area.EllipsoidAreaAdapter;
+import net.thenextlvl.protect.adapter.area.GlobalAreaAdapter;
 import net.thenextlvl.protect.area.*;
 import net.thenextlvl.protect.command.AreaCommand;
 import net.thenextlvl.protect.flag.CraftFlagRegistry;
@@ -90,6 +92,8 @@ public class ProtectPlugin extends JavaPlugin {
     private void registerAdapter() {
         areaService().registerAdapter(CraftGlobalArea.class, new GlobalAreaAdapter(this));
         areaService().registerAdapter(CraftCuboidArea.class, new CuboidAreaAdapter(this));
+        areaService().registerAdapter(CraftCylinderArea.class, new CylinderAreaAdapter(this));
+        areaService().registerAdapter(CraftEllipsoidArea.class, new EllipsoidAreaAdapter(this));
     }
 
     private void registerEvents() {
