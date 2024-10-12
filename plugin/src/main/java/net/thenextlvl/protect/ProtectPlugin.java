@@ -176,7 +176,6 @@ public class ProtectPlugin extends JavaPlugin {
         public final Flag<@NotNull Boolean> redstone = flagRegistry().register(ProtectPlugin.this, Boolean.class, "redstone", true);
         public final Flag<@NotNull Boolean> shoot = flagRegistry().register(ProtectPlugin.this, Boolean.class, "shoot", true);
         public final Flag<@NotNull Boolean> shulkerWashing = flagRegistry().register(ProtectPlugin.this, Boolean.class, "shulker_washing", true);
-        public final Flag<@NotNull Boolean> worldedit = flagRegistry().register(ProtectPlugin.this, Boolean.class, "worldedit", true);
         public final Flag<@Nullable Long> time = flagRegistry().register(ProtectPlugin.this, Long.class, "time", null);
         public final Flag<@Nullable String> farewell = flagRegistry().register(ProtectPlugin.this, String.class, "farewell", null);
         public final Flag<@Nullable String> greetings = flagRegistry().register(ProtectPlugin.this, String.class, "greetings", null);
