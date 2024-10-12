@@ -1,10 +1,13 @@
 package net.thenextlvl.protect;
 
 import com.fastasyncworldedit.core.util.WEManager;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import core.i18n.file.ComponentBundle;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -28,6 +31,7 @@ import net.thenextlvl.protect.version.PluginVersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Accessors(fluent = true)
@@ -56,6 +61,7 @@ public class ProtectPlugin extends JavaPlugin {
             .register("protect_german", Locale.GERMANY)
             .miniMessage(bundle -> MiniMessage.builder().tags(TagResolver.resolver(
                     TagResolver.standard(),
+                    Placeholder.component("failed_prefix", bundle.component(Locale.US, "prefix.failed")),
                     Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
             )).build());
 
@@ -107,6 +113,21 @@ public class ProtectPlugin extends JavaPlugin {
         new AreaCommand(this).register();
     }
 
+    private final Cache<Audience, String> cooldown = CacheBuilder.newBuilder()
+            .expireAfterAccess(5, TimeUnit.SECONDS)
+            .build();
+
+    public void failed(@Nullable Audience audience, Area area, String message) {
+        if (audience == null || !area.getFlag(flags.notifyFailedInteractions)) return;
+        if (message.equals(cooldown.getIfPresent(audience))) return;
+        bundle().sendMessage(audience, message, Placeholder.parsed("area", area.getName()));
+        cooldown.put(audience, message);
+    }
+
+    public void failed(@Nullable Audience audience, Cancellable cancellable, Area area, String message) {
+        if (cancellable.isCancelled()) failed(audience, area, message);
+    }
+
     public class Flags {
         public final Flag<@NotNull Boolean> areaEnter = flagRegistry().register(ProtectPlugin.this, Boolean.class, "enter", true);
         public final Flag<@NotNull Boolean> areaLeave = flagRegistry().register(ProtectPlugin.this, Boolean.class, "leave", true);
@@ -146,6 +167,7 @@ public class ProtectPlugin extends JavaPlugin {
         public final Flag<@NotNull Boolean> leavesDecay = flagRegistry().register(ProtectPlugin.this, Boolean.class, "leaves_decay", true);
         public final Flag<@NotNull Boolean> naturalCauldronFill = flagRegistry().register(ProtectPlugin.this, Boolean.class, "natural_cauldron_fill", true);
         public final Flag<@NotNull Boolean> naturalEntitySpawn = flagRegistry().register(ProtectPlugin.this, Boolean.class, "natural_entity_spawn", true);
+        public final Flag<@NotNull Boolean> notifyFailedInteractions = flagRegistry().register(ProtectPlugin.this, Boolean.class, "notify_failed_interactions", false);
         public final Flag<@NotNull Boolean> physicalInteract = flagRegistry().register(ProtectPlugin.this, Boolean.class, "physical_interact", true);
         public final Flag<@NotNull Boolean> physics = flagRegistry().register(ProtectPlugin.this, Boolean.class, "physics", true);
         public final Flag<@NotNull Boolean> playerAttackEntity = flagRegistry().register(ProtectPlugin.this, Boolean.class, "player_attack_entity", true);
@@ -154,7 +176,6 @@ public class ProtectPlugin extends JavaPlugin {
         public final Flag<@NotNull Boolean> redstone = flagRegistry().register(ProtectPlugin.this, Boolean.class, "redstone", true);
         public final Flag<@NotNull Boolean> shoot = flagRegistry().register(ProtectPlugin.this, Boolean.class, "shoot", true);
         public final Flag<@NotNull Boolean> shulkerWashing = flagRegistry().register(ProtectPlugin.this, Boolean.class, "shulker_washing", true);
-        public final Flag<@NotNull Boolean> worldedit = flagRegistry().register(ProtectPlugin.this, Boolean.class, "worldedit", true);
         public final Flag<@Nullable Long> time = flagRegistry().register(ProtectPlugin.this, Long.class, "time", null);
         public final Flag<@Nullable String> farewell = flagRegistry().register(ProtectPlugin.this, String.class, "farewell", null);
         public final Flag<@Nullable String> greetings = flagRegistry().register(ProtectPlugin.this, String.class, "greetings", null);

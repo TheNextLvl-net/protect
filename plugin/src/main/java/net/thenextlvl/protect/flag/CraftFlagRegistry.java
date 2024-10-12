@@ -1,6 +1,7 @@
 package net.thenextlvl.protect.flag;
 
 import lombok.Getter;
+import net.kyori.adventure.key.KeyPattern;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ public class CraftFlagRegistry implements FlagRegistry {
     }
 
     @Override
-    public @NotNull <T> Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type, @NotNull String name, T defaultValue) throws IllegalStateException {
+    public @NotNull <T> Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type, @KeyPattern.Value @NotNull String name, T defaultValue) throws IllegalStateException {
         var key = new NamespacedKey(plugin, name);
         var flag = new CraftFlag<>(key, type, defaultValue);
         if (registry.computeIfAbsent(plugin, p -> new HashSet<>()).add(flag)) return flag;
