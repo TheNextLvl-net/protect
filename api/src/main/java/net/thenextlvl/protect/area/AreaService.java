@@ -2,6 +2,8 @@ package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.CylinderRegion;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
@@ -39,6 +41,26 @@ public interface AreaService {
      * @return The created CuboidArea object.
      */
     CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region);
+
+    /**
+     * Creates a CylinderArea object with the given name and region.
+     *
+     * @param name   The name of the CylinderArea.
+     * @param world  The world in which the CylinderArea is located.
+     * @param region The region of the CylinderArea.
+     * @return The created CylinderArea object.
+     */
+    CylinderArea create(@NamePattern.Regionized String name, World world, CylinderRegion region);
+
+    /**
+     * Creates an EllipsoidArea object with the given name and region.
+     *
+     * @param name   The name of the EllipsoidArea.
+     * @param world  The world in which the EllipsoidArea is located.
+     * @param region The region of the EllipsoidArea.
+     * @return The created EllipsoidArea object.
+     */
+    EllipsoidArea create(@NamePattern.Regionized String name, World world, EllipsoidRegion region);
 
     /**
      * Deletes the given Area.
