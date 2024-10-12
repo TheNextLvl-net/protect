@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
  */
 @ParametersAreNotNullByDefault
 public interface ProtectionService {
-
     /**
      * Determines whether a player can use worldedit in a specific area.
      *
@@ -23,6 +22,15 @@ public interface ProtectionService {
     boolean canEdit(Player player, Area area);
 
     /**
+     * Determines whether a player can build in a given area.
+     *
+     * @param player the player who wants to build
+     * @param area   the area where the player intends to build
+     * @return true if the player can build in this area, false otherwise
+     */
+    boolean canBuild(Player player, Area area);
+
+    /**
      * Determines whether a player can build at a given location.
      *
      * @param player   the player who wants to build
@@ -30,6 +38,15 @@ public interface ProtectionService {
      * @return true if the player can build at the location, false otherwise
      */
     boolean canBuild(Player player, Location location);
+
+    /**
+     * Determines whether a player can break a block in a given area.
+     *
+     * @param player the player who wants to break the block
+     * @param area   the area of the block the player intends to break
+     * @return true if the player can break the block in this area, false otherwise
+     */
+    boolean canBreak(Player player, Area area);
 
     /**
      * Determines whether a player can break a block at a given location.
