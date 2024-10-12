@@ -29,8 +29,8 @@ public class ProtectMaskManager extends BukkitMaskManager {
     }
 
     @Override
-    public @Nullable FaweMask getMask(Player player, MaskType type, boolean isWhitelist) {
-        return getMask(player, type, isWhitelist, true);
+    public @Nullable FaweMask getMask(Player player, MaskType type, boolean whitelist) {
+        return getMask(player, type, whitelist, true);
     }
 
     @Override
@@ -46,11 +46,8 @@ public class ProtectMaskManager extends BukkitMaskManager {
 
         var regions = new ArrayList<Region>();
         for (var area : areas) {
-            if (area instanceof GlobalArea) {
-                regions.add(getRegion(player.getWorld()));
-            } else if (area instanceof RegionizedArea<?> regionized) {
-                regions.add(regionized.getRegion());
-            }
+            if (area instanceof RegionizedArea<?> regionized) regions.add(regionized.getRegion());
+            else if (area instanceof GlobalArea) regions.add(getRegion(player.getWorld()));
         }
 
         return new FaweMask(new RegionIntersection(player.getWorld(), regions)) {
