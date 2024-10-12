@@ -152,16 +152,14 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        event.setCancelled(!plugin.protectionService().canFillBucket(
-                event.getPlayer(), event.getBlock().getLocation()
-        ));
+        event.setCancelled(!plugin.protectionService().canFillBucket(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        event.setCancelled(!plugin.protectionService().canEmptyBucket(
-                event.getPlayer(), event.getBlock().getLocation()
-        ));
+        event.setCancelled(!plugin.protectionService().canEmptyBucket(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -189,6 +187,7 @@ public class WorldListener implements Listener {
             case SHULKER_WASH -> plugin.protectionService().canWashShulker(player, event.getBlock().getLocation());
             default -> true;
         });
+        plugin.failed(player, event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
