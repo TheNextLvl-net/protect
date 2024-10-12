@@ -1,6 +1,8 @@
 package net.thenextlvl.protect;
 
 import com.fastasyncworldedit.core.util.WEManager;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import core.i18n.file.ComponentBundle;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Accessors(fluent = true)
@@ -58,6 +61,7 @@ public class ProtectPlugin extends JavaPlugin {
             .register("protect_german", Locale.GERMANY)
             .miniMessage(bundle -> MiniMessage.builder().tags(TagResolver.resolver(
                     TagResolver.standard(),
+                    Placeholder.component("failed_prefix", bundle.component(Locale.US, "prefix.failed")),
                     Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
             )).build());
 
@@ -109,12 +113,18 @@ public class ProtectPlugin extends JavaPlugin {
         new AreaCommand(this).register();
     }
 
-    public void failed(Audience audience, Area area, String message) {
-        if (!area.getFlag(flags.notifyFailedInteractions)) return;
+    private final Cache<Audience, String> cooldown = CacheBuilder.newBuilder()
+            .expireAfterAccess(5, TimeUnit.SECONDS)
+            .build();
+
+    public void failed(@Nullable Audience audience, Area area, String message) {
+        if (audience == null || !area.getFlag(flags.notifyFailedInteractions)) return;
+        if (message.equals(cooldown.getIfPresent(audience))) return;
         bundle().sendMessage(audience, message, Placeholder.parsed("area", area.getName()));
+        cooldown.put(audience, message);
     }
 
-    public void failed(Audience audience, Cancellable cancellable, Area area, String message) {
+    public void failed(@Nullable Audience audience, Cancellable cancellable, Area area, String message) {
         if (cancellable.isCancelled()) failed(audience, area, message);
     }
 
