@@ -3,6 +3,8 @@ package net.thenextlvl.protect.area;
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.CylinderRegion;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
@@ -36,7 +38,20 @@ public class CraftAreaService implements AreaService {
 
     @Override
     public CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region) {
-        var area = new CraftCuboidArea(plugin.schematicFolder(), name, world, region.clone(), 0);
+        return create(new CraftCuboidArea(plugin.schematicFolder(), name, world, region.clone(), 0));
+    }
+
+    @Override
+    public CylinderArea create(@NamePattern.Regionized String name, World world, CylinderRegion region) {
+        return create(new CraftCylinderArea(plugin.schematicFolder(), name, world, region.clone(), 0));
+    }
+
+    @Override
+    public EllipsoidArea create(@NamePattern.Regionized String name, World world, EllipsoidRegion region) {
+        return create(new CraftEllipsoidArea(plugin.schematicFolder(), name, world, region.clone(), 0));
+    }
+
+    private <A extends Area> A create(A area) {
         plugin.areaProvider().loadArea(area);
         new AreaCreateEvent<>(area).callEvent();
         return area;
