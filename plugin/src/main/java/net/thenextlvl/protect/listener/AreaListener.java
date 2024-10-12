@@ -15,12 +15,16 @@ public class AreaListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerAreaEnter(PlayerAreaEnterEvent event) {
-        event.setCancelled(!plugin.protectionService().canEnter(event.getPlayer(), event.getArea()));
+        if (plugin.protectionService().canEnter(event.getPlayer(), event.getArea())) return;
+        plugin.failed(event.getPlayer(), event.getArea(), "area.failed.enter");
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerAreaLeave(PlayerAreaLeaveEvent event) {
-        event.setCancelled(!plugin.protectionService().canLeave(event.getPlayer(), event.getArea()));
+        if (plugin.protectionService().canLeave(event.getPlayer(), event.getArea())) return;
+        plugin.failed(event.getPlayer(), event.getArea(), "area.failed.leave");
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
