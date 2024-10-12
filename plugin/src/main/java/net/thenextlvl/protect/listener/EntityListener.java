@@ -63,35 +63,41 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEntityEvent event) {
         event.setCancelled(!plugin.protectionService().canInteract(event.getPlayer(), event.getRightClicked()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getRightClicked()), "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
         event.setCancelled(!plugin.protectionService().canShear(event.getPlayer(), event.getEntity()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getEntity()), "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.hangingBreak));
+        plugin.failed(event.getRemover(), event, area, "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.hangingPlace));
+        plugin.failed(event.getPlayer(), event, area, "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
         var area = plugin.areaProvider().getArea(event.getRightClicked());
         event.setCancelled(!area.getFlag(plugin.flags.armorStandManipulate));
+        plugin.failed(event.getPlayer(), event, area, "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDrop(EntityDropItemEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.entityItemDrop));
+        plugin.failed(event.getEntity(), event, area, "area.failed.drop");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -110,5 +116,6 @@ public class EntityListener implements Listener {
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.shoot));
+        plugin.failed(event.getEntity(), event, area, "area.failed.shoot");
     }
 }

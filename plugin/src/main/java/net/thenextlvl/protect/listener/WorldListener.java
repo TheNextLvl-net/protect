@@ -35,16 +35,14 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        event.setCancelled(!plugin.protectionService().canBreak(
-                event.getPlayer(), event.getBlock().getLocation()
-        ));
+        event.setCancelled(!plugin.protectionService().canBreak(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        event.setCancelled(!plugin.protectionService().canBuild(
-                event.getPlayer(), event.getBlock().getLocation()
-        ));
+        event.setCancelled(!plugin.protectionService().canBuild(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -55,6 +53,8 @@ public class WorldListener implements Listener {
         event.setCancelled(event.getClickedBlock().getType().equals(Material.FARMLAND)
                 ? !plugin.protectionService().canTrample(event.getPlayer(), location)
                 : !plugin.protectionService().canInteractPhysical(event.getPlayer(), location));
+        if (!event.getClickedBlock().getType().equals(Material.FARMLAND)) return;
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(location), "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -63,9 +63,8 @@ public class WorldListener implements Listener {
         if (event.getClickedBlock() == null) return;
         if (event.getPlayer().isSneaking() && event.hasItem() && event.getMaterial().isBlock()) return;
         if (!BlockUtil.isInteractable(event.getClickedBlock().getType(), event.getMaterial())) return;
-        event.setCancelled(!plugin.protectionService().canInteract(
-                event.getPlayer(), event.getClickedBlock().getLocation()
-        ));
+        event.setCancelled(!plugin.protectionService().canInteract(event.getPlayer(), event.getClickedBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getClickedBlock()), "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
