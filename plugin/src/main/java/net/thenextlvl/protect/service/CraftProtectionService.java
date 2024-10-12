@@ -18,19 +18,27 @@ public class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canEdit(Player player, Area area) {
-        return canPerformAction(player, area, plugin.flags.worldedit, "protect.bypass.worldedit");
+        return canBuild(player, area) && canBreak(player, area);
+    }
+
+    @Override
+    public boolean canBuild(Player player, Area area) {
+        return canPerformAction(player, area, plugin.flags.blockPlace, "protect.bypass.build");
     }
 
     @Override
     public boolean canBuild(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.blockPlace, "protect.bypass.build");
+        return canBuild(player, plugin.areaProvider().getArea(location));
+    }
+
+    @Override
+    public boolean canBreak(Player player, Area area) {
+        return canPerformAction(player, area, plugin.flags.blockBreak, "protect.bypass.break");
     }
 
     @Override
     public boolean canBreak(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.blockBreak, "protect.bypass.break");
+        return canBreak(player, plugin.areaProvider().getArea(location));
     }
 
     @Override
@@ -117,7 +125,7 @@ public class CraftProtectionService implements ProtectionService {
 
     private boolean canPerformAction(Player player, Area area, Flag<Boolean> flag, String permission) {
         return (player.hasPermission(permission) && player.getGameMode().equals(GameMode.CREATIVE))
-                || (area instanceof RegionizedArea<?> regionized && player.getUniqueId().equals(regionized.getOwner()))
-                || area.getFlag(flag);
+               || (area instanceof RegionizedArea<?> regionized && player.getUniqueId().equals(regionized.getOwner()))
+               || area.getFlag(flag);
     }
 }
