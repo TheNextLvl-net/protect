@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.adapter;
+package net.thenextlvl.protect.adapter.area;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
