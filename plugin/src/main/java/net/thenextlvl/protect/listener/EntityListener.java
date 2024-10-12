@@ -50,7 +50,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        var area = plugin.areaProvider().getArea(event.getDamager());
+        var area = plugin.areaProvider().getArea(event.getEntity());
         var flag = event.getDamager() instanceof Player && event.getEntity() instanceof Player
                 ? plugin.flags.playerAttackPlayer : event.getDamager() instanceof Player
                 ? plugin.flags.playerAttackEntity : !(event.getDamager() instanceof Player)
