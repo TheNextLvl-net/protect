@@ -66,9 +66,4 @@ public class ProtectMaskManager extends BukkitMaskManager {
                 .filter(area -> whitelist == plugin.protectionService().canEdit(player, area))
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public boolean isExclusive() {
-        return true;
-    }
 }
