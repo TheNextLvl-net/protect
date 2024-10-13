@@ -3,6 +3,9 @@ package net.thenextlvl.protect.io;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import core.annotation.MethodsReturnNotNullByDefault;
+import core.annotation.ParametersAreNotNullByDefault;
+import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -14,6 +17,9 @@ import org.bukkit.World;
  *
  * @param <T> The type of the object that implements the Area interface.
  */
+@TypesAreNotNullByDefault
+@MethodsReturnNotNullByDefault
+@ParametersAreNotNullByDefault
 public interface AreaAdapter<T extends Area> {
     /**
      * Retrieves the key associated with the adapter. The key is used for serialization and deserialization
