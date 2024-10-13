@@ -64,7 +64,6 @@ public class ProtectMaskManager extends BukkitMaskManager {
     public List<Area> getAreas(org.bukkit.entity.Player player, boolean whitelist) {
         return plugin.areaProvider().getAreas(player.getWorld())
                 .filter(area -> whitelist == plugin.protectionService().canEdit(player, area))
-                .sorted(Comparator.comparingInt(Area::getPriority))
                 .collect(Collectors.toList());
     }
 
