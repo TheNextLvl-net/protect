@@ -9,6 +9,8 @@ import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.RegionSelector;
+import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
@@ -57,6 +59,15 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @SuppressWarnings("PatternValidation")
     public String getName() {
         return super.getName();
+    }
+
+    @Override
+    public RegionSelector getRegionSelector() {
+        return new CuboidRegionSelector(
+                getRegion().getWorld(),
+                getRegion().getMinimumPoint(),
+                getRegion().getMaximumPoint()
+        );
     }
 
     @Override

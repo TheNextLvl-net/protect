@@ -1,6 +1,7 @@
 package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.RegionSelector;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
@@ -19,10 +20,16 @@ import java.util.UUID;
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
-
     @Override
     @NamePattern.Regionized
     String getName();
+
+    /**
+     * Retrieves the RegionSelector associated with this RegionizedArea.
+     *
+     * @return The RegionSelector associated with this RegionizedArea.
+     */
+    RegionSelector getRegionSelector();
 
     /**
      * Retrieves the region associated with this area.
