@@ -9,6 +9,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
+import com.sk89q.worldedit.regions.RegionIntersection;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +52,10 @@ class AreaCreateCommand {
             var selection = session.getSelection();
 
             switch (selection) {
-                case CuboidRegion cuboid -> plugin.areaService().create(name, player.getWorld(), cuboid);
-                case CylinderRegion cylinder -> plugin.areaService().create(name, player.getWorld(), cylinder);
-                case EllipsoidRegion ellipsoid -> plugin.areaService().create(name, player.getWorld(), ellipsoid);
+                case CuboidRegion region -> plugin.areaService().create(name, player.getWorld(), region);
+                case CylinderRegion region -> plugin.areaService().create(name, player.getWorld(), region);
+                case EllipsoidRegion region -> plugin.areaService().create(name, player.getWorld(), region);
+                case RegionIntersection region -> plugin.areaService().create(name, player.getWorld(), region);
                 default -> {
                     plugin.bundle().sendMessage(player, "region.unsupported",
                             Placeholder.parsed("type", selection.getClass().getSimpleName()));
