@@ -1,10 +1,7 @@
 package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.CylinderRegion;
-import com.sk89q.worldedit.regions.EllipsoidRegion;
-import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.*;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
@@ -61,6 +58,16 @@ public interface AreaService {
      * @return The created EllipsoidArea object.
      */
     EllipsoidArea create(@NamePattern.Regionized String name, World world, EllipsoidRegion region);
+
+    /**
+     * Creates an IntersectionArea object with the given name, world, and region.
+     *
+     * @param name   The name of the IntersectionArea.
+     * @param world  The world in which the IntersectionArea is located.
+     * @param region The region of the IntersectionArea.
+     * @return The created IntersectionArea object.
+     */
+    IntersectionArea create(@NamePattern.Regionized String name, World world, RegionIntersection region);
 
     /**
      * Deletes the given Area.
