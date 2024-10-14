@@ -2,7 +2,11 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.event.*;
+import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
+import net.thenextlvl.protect.area.event.flag.AreaFlagResetEvent;
+import net.thenextlvl.protect.area.event.player.PlayerAreaEnterEvent;
+import net.thenextlvl.protect.area.event.player.PlayerAreaLeaveEvent;
+import net.thenextlvl.protect.area.event.player.PlayerAreaTransitionEvent;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

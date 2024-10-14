@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.event;
+package net.thenextlvl.protect.area.event.player;
 
 import core.annotation.FieldsAreNotNullByDefault;
 import core.annotation.MethodsReturnNotNullByDefault;

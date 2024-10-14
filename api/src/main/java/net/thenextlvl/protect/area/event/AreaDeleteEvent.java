@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.event;
+package net.thenextlvl.protect.area.event;
 
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.ParametersAreNotNullByDefault;

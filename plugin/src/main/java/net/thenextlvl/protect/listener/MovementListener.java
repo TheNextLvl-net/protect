@@ -2,9 +2,9 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.event.PlayerAreaEnterEvent;
-import net.thenextlvl.protect.event.PlayerAreaLeaveEvent;
-import net.thenextlvl.protect.event.PlayerAreaTransitionEvent;
+import net.thenextlvl.protect.area.event.player.PlayerAreaEnterEvent;
+import net.thenextlvl.protect.area.event.player.PlayerAreaLeaveEvent;
+import net.thenextlvl.protect.area.event.player.PlayerAreaTransitionEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

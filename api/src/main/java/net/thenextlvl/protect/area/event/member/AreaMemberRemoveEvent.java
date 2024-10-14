@@ -1,18 +1,18 @@
-package net.thenextlvl.protect.event;
+package net.thenextlvl.protect.area.event.member;
 
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
+import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 /**
- * An event that represents a change in the owner of an area.
- * Cancelling this event results in the owner not being changed.
+ * An event that represents a change in the members of an area.
+ * Cancelling this event results in the member not being removed.
  *
  * @param <T> The type of the area associated with this event
  */
@@ -20,12 +20,12 @@ import java.util.UUID;
 @Setter
 @TypesAreNotNullByDefault
 @ParametersAreNotNullByDefault
-public class AreaOwnerChangeEvent<T extends RegionizedArea<?>> extends AreaEvent<T> implements Cancellable {
-    private @Nullable UUID newOwner;
+public class AreaMemberRemoveEvent<T extends RegionizedArea<?>> extends AreaEvent<T> implements Cancellable {
+    private UUID member;
     private boolean cancelled;
 
-    public AreaOwnerChangeEvent(T area, @Nullable UUID newOwner) {
+    public AreaMemberRemoveEvent(T area, UUID member) {
         super(area);
-        this.newOwner = newOwner;
+        this.member = member;
     }
 }
