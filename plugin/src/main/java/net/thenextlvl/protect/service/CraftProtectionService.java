@@ -125,7 +125,8 @@ public class CraftProtectionService implements ProtectionService {
 
     private boolean canPerformAction(Player player, Area area, Flag<Boolean> flag, String permission) {
         return (player.hasPermission(permission) && player.getGameMode().equals(GameMode.CREATIVE))
-               || (area instanceof RegionizedArea<?> regionized && player.getUniqueId().equals(regionized.getOwner()))
+               || (area instanceof RegionizedArea<?> regionized && (player.getUniqueId().equals(regionized.getOwner())
+                                                                    || regionized.isMember(player.getUniqueId())))
                || area.getFlag(flag);
     }
 }
