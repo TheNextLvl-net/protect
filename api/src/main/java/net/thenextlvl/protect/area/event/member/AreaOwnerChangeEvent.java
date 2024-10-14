@@ -22,11 +22,11 @@ import java.util.UUID;
 @TypesAreNotNullByDefault
 @ParametersAreNotNullByDefault
 public class AreaOwnerChangeEvent<T extends RegionizedArea<?>> extends AreaEvent<T> implements Cancellable {
-    private @Nullable UUID newOwner;
+    private @Nullable UUID owner;
     private boolean cancelled;
 
-    public AreaOwnerChangeEvent(T area, @Nullable UUID newOwner) {
+    public AreaOwnerChangeEvent(T area, @Nullable UUID owner) {
         super(area);
-        this.newOwner = newOwner;
+        this.owner = owner;
     }
 }
