@@ -55,8 +55,7 @@ public class ProtectMaskManager extends BukkitMaskManager {
         return new FaweMask(new RegionIntersection(player.getWorld(), regions)) {
             @Override
             public boolean isValid(Player player, MaskType type) {
-                for (var area : areas) if (!plugin.protectionService().canEdit(bukkit, area)) return false;
-                return true;
+                return areas.stream().allMatch(area -> plugin.protectionService().canEdit(bukkit, area));
             }
         };
     }
