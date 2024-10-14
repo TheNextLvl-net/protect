@@ -5,7 +5,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public record CraftFlag<T>(@NotNull NamespacedKey key, @NotNull Class<? extends T> type, T defaultValue) implements Flag<T> {
+public record CraftFlag<T>(
+        @NotNull NamespacedKey key,
+        @NotNull Class<? extends T> type,
+        T defaultValue
+) implements Flag<T> {
 
     @Override
     public int compareTo(@NotNull Flag<?> flag) {
