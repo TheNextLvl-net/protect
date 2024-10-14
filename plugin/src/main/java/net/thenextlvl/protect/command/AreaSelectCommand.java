@@ -3,7 +3,7 @@ package net.thenextlvl.protect.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -31,9 +31,8 @@ class AreaSelectCommand {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         var session = WorldEditPlugin.getInstance().getSession(player);
-        var world = new BukkitWorld(area.getWorld());
-        session.setRegionSelector(world, area.getRegionSelector());
-        session.updateServerCUI(WorldEditPlugin.getInstance().wrapPlayer(player));
+        session.setRegionSelector(BukkitAdapter.adapt(area.getWorld()), area.getRegionSelector());
+        session.updateServerCUI(BukkitAdapter.adapt(player));
         plugin.bundle().sendMessage(player, "area.selected", Placeholder.parsed("area", area.getName()));
         return Command.SINGLE_SUCCESS;
     }
