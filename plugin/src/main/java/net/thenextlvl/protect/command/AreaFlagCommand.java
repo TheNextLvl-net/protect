@@ -5,8 +5,11 @@ import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.FinePositionResolver;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -20,6 +23,7 @@ import net.thenextlvl.protect.command.argument.EnumArgumentType;
 import net.thenextlvl.protect.command.argument.FlagArgumentType;
 import net.thenextlvl.protect.command.argument.FlagProviderArgumentType;
 import net.thenextlvl.protect.flag.Flag;
+import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.plugin.Plugin;
 
@@ -31,6 +35,21 @@ import java.util.stream.Collectors;
 @SuppressWarnings("UnstableApiUsage")
 class AreaFlagCommand {
     private final ProtectPlugin plugin;
+
+    private final Map<Class<?>, Converter> argumentTypes = Map.of(
+            Boolean.class, new Converter(BoolArgumentType::bool),
+            Double.class, new Converter(DoubleArgumentType::doubleArg),
+            Float.class, new Converter(FloatArgumentType::floatArg),
+            Integer.class, new Converter(IntegerArgumentType::integer),
+            Long.class, new Converter(LongArgumentType::longArg),
+            String.class, new Converter(StringArgumentType::string),
+            Location.class, new Converter(ArgumentTypes::finePosition, (type, context) -> {
+                var resolver = context.getArgument("value", FinePositionResolver.class);
+                var area = context.getArgument("area", Area.class);
+                return resolver.resolve(context.getSource()).toLocation(area.getWorld());
+            }),
+            WeatherType.class, new Converter(() -> new EnumArgumentType<>(WeatherType.class))
+    );
 
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("flag")
@@ -72,33 +91,23 @@ class AreaFlagCommand {
                 });
     }
 
-    private final Map<Class<?>, Supplier<ArgumentType<?>>> argumentTypes = Map.of(
-            Boolean.class, BoolArgumentType::bool,
-            Double.class, DoubleArgumentType::doubleArg,
-            Float.class, FloatArgumentType::floatArg,
-            Integer.class, IntegerArgumentType::integer,
-            Long.class, LongArgumentType::longArg,
-            String.class, StringArgumentType::string,
-            WeatherType.class, () -> new EnumArgumentType<>(WeatherType.class)
-    );
-
     private ArgumentBuilder<CommandSourceStack, ?> set() {
         var command = Commands.literal("set")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag.set"));
         plugin.flagRegistry().getRegistry().values().forEach(flags -> flags.forEach(flag -> {
-            var supplier = argumentTypes.get(flag.type());
-            if (supplier == null) {
+            var converter = argumentTypes.get(flag.type());
+            if (converter == null) {
                 plugin.getComponentLogger().error("No argument type for flag type: {}", flag.type().getName());
             } else command.then(Commands.literal(flag.key().asString())
-                    .then(Commands.argument("value", supplier.get())
+                    .then(Commands.argument("value", converter.type().get())
                             .then(Commands.argument("area", new AreaArgumentType(plugin))
                                     .executes(context -> {
                                         var area = context.getArgument("area", Area.class);
-                                        return set(context, flag, area);
+                                        return set(context, converter.resolver(), flag, area);
                                     }))
                             .executes(context -> {
                                 var location = context.getSource().getLocation();
-                                return set(context, flag, plugin.areaProvider().getArea(location));
+                                return set(context, converter.resolver(), flag, plugin.areaProvider().getArea(location));
                             })));
         }));
         return command;
@@ -148,8 +157,9 @@ class AreaFlagCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private <T> int set(CommandContext<CommandSourceStack> context, Flag<T> flag, Area area) {
-        var value = context.getArgument("value", flag.type());
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private int set(CommandContext<CommandSourceStack> context, Resolver<?> resolver, Flag flag, Area area) throws CommandSyntaxException {
+        var value = resolver.resolve(flag.type(), context);
         var message = area.setFlag(flag, value) ? "area.flag.set" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Placeholder.parsed("area", area.getName()),
@@ -165,5 +175,19 @@ class AreaFlagCommand {
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("flag", flag.key().asString()));
         return Command.SINGLE_SUCCESS;
+    }
+
+    private record Converter(
+            Supplier<ArgumentType<?>> type,
+            Resolver<?> resolver
+    ) {
+        public Converter(Supplier<ArgumentType<?>> supplier) {
+            this(supplier, (type, context) -> context.getArgument("value", type));
+        }
+    }
+
+    @FunctionalInterface
+    public interface Resolver<T> {
+        T resolve(Class<T> type, CommandContext<CommandSourceStack> context) throws CommandSyntaxException;
     }
 }
