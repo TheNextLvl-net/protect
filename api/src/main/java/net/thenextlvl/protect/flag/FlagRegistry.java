@@ -42,14 +42,75 @@ public interface FlagRegistry {
     /**
      * Registers a new flag with the specified plugin, name, and default value.
      *
+     * @param <T>          the type of the flag value
      * @param plugin       the plugin registering the flag
      * @param name         the name of the flag
      * @param defaultValue the default value of the flag
+     * @return the registered flag
+     * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
+     * @see #register(Plugin, Class, String, Object)
+     */
+    @SuppressWarnings("unchecked")
+    default <T> @NotNull Flag<@NotNull T> register(@NotNull Plugin plugin, @KeyPattern @NotNull String name,
+                                                   @NotNull T defaultValue
+    ) throws IllegalStateException {
+        return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue);
+    }
+
+    /**
+     * Registers a new flag with the specified plugin, type, name, and default value.
+     *
      * @param <T>          the type of the flag value
+     * @param plugin       the plugin registering the flag
+     * @param type         the class type of the flag value
+     * @param name         the name of the flag
+     * @param defaultValue the default value of the flag
      * @return the registered flag
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      */
-    <T> @NotNull Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type, @KeyPattern @NotNull String name, T defaultValue) throws IllegalStateException;
+    <T> @NotNull Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type,
+                                  @KeyPattern @NotNull String name, T defaultValue
+    ) throws IllegalStateException;
+
+    /**
+     * Registers a new protection flag with the specified plugin, name, default value, and protected value.
+     *
+     * @param <T>            the type of the flag value
+     * @param plugin         the plugin registering the flag
+     * @param name           the name of the flag
+     * @param defaultValue   the default value of the flag
+     * @param protectedValue the protected value of the flag, which is typically opposite to the default value
+     * @return the registered protection flag
+     * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
+     * @see #register(Plugin, Class, String, Object, Object)
+     */
+    @SuppressWarnings("unchecked")
+    default <T> @NotNull ProtectionFlag<@NotNull T> register(@NotNull Plugin plugin, @KeyPattern @NotNull String name,
+                                                             @NotNull T defaultValue, @NotNull T protectedValue
+    ) throws IllegalStateException {
+        return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue, protectedValue);
+    }
+
+    /**
+     * Registers a new protection flag with the specified plugin, name, default value, and protected value.
+     * <p>
+     * protectedValue defines (generally the opposite of defaultValue) what the flag value is to protect against it,
+     * for example, taking the flag 'explosions', protectedValue would be false and defaultValue true
+     * <p>
+     * {@code var explosions = register(plugin, Boolean.class, "explosions", true, false);}
+     *
+     * @param <T>            the type of the flag value
+     * @param plugin         the plugin registering the flag
+     * @param type           the class type of the flag value
+     * @param name           the name of the flag
+     * @param defaultValue   the default value of the flag
+     * @param protectedValue the protected value of the flag, which is typically opposite to the default value
+     * @return the registered protection flag
+     * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
+     */
+    <T> @NotNull ProtectionFlag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type,
+                                            @KeyPattern @NotNull String name, T defaultValue, T protectedValue
+    ) throws IllegalStateException;
 
     /**
      * Unregisters a flag identified by the given NamespacedKey.

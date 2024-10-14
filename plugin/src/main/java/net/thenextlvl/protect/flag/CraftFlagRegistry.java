@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Getter
@@ -36,10 +37,19 @@ public class CraftFlagRegistry implements FlagRegistry {
 
     @Override
     public @NotNull <T> Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type, @KeyPattern.Value @NotNull String name, T defaultValue) throws IllegalStateException {
+        return register(plugin, name, key -> new CraftFlag<>(key, type, defaultValue));
+    }
+
+    @Override
+    public @NotNull <T> ProtectionFlag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type, @KeyPattern.Value @NotNull String name, T defaultValue, T protectedValue) throws IllegalStateException {
+        return register(plugin, name, key -> new CraftProtectionFlag<>(key, type, defaultValue, protectedValue));
+    }
+
+    private <T extends Flag<?>> T register(@NotNull Plugin plugin, @KeyPattern.Value @NotNull String name, Function<NamespacedKey, T> function) {
         var key = new NamespacedKey(plugin, name);
-        var flag = new CraftFlag<>(key, type, defaultValue);
+        var flag = function.apply(key);
         if (registry.computeIfAbsent(plugin, p -> new HashSet<>()).add(flag)) return flag;
-        throw new IllegalStateException("already registered flag: " + key);
+        throw new IllegalStateException("Already registered flag: " + key);
     }
 
     @Override

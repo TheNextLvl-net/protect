@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public record CraftFlag<T>(
+public record CraftProtectionFlag<T>(
         @NotNull NamespacedKey key,
         @NotNull Class<? extends T> type,
-        T defaultValue
-) implements Flag<T> {
+        T defaultValue, T protectedValue
+) implements ProtectionFlag<T> {
 
     @Override
     public int compareTo(@NotNull Flag<?> flag) {
@@ -19,7 +19,7 @@ public record CraftFlag<T>(
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CraftFlag<?> craftFlag)) return false;
+        if (!(o instanceof CraftProtectionFlag<?> craftFlag)) return false;
         return Objects.equals(key, craftFlag.key);
     }
 
