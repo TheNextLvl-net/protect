@@ -129,6 +129,14 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockFertilize(BlockFertilizeEvent event) {
+        event.getBlocks().removeIf(block -> {
+            var area = plugin.areaProvider().getArea(block.getBlock());
+            return !area.getFlag(plugin.flags.blockFertilize);
+        });
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent event) {
         event.blockList().removeIf(block -> {
             var area = plugin.areaProvider().getArea(block);
