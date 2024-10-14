@@ -22,6 +22,8 @@ import net.thenextlvl.protect.event.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.event.AreaRedefineEvent;
 import net.thenextlvl.protect.event.AreaSchematicDeleteEvent;
 import net.thenextlvl.protect.event.AreaSchematicLoadEvent;
+import net.thenextlvl.protect.area.event.member.AreaMemberAddEvent;
+import net.thenextlvl.protect.area.event.member.AreaMemberRemoveEvent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -32,8 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @TypesAreNotNullByDefault
@@ -46,6 +47,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     private final File file = new File(getDataFolder(), getName() + ".json");
     private final File schematic;
     public @Nullable UUID owner;
+    private final Set<UUID> members = new HashSet<>();
     private T region;
 
     protected CraftRegionizedArea(File schematicFolder, @NamePattern.Regionized String name, World world, T region, int priority) {
@@ -73,10 +75,9 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     @SuppressWarnings("unchecked")
     public boolean setRegion(T region) {
-        var clone = (T) region.clone();
-        if (!new AreaRedefineEvent<>(this, clone).callEvent()) return false;
-        this.region = clone;
-        return true;
+        var event = new AreaRedefineEvent<>(this, (T) region.clone());
+        if (event.callEvent()) this.region = event.getRegion();
+        return !event.isCancelled();
     }
 
     @Override
@@ -85,13 +86,33 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     }
 
     @Override
-    public void setOwner(@Nullable UUID owner) {
-        var event = new AreaOwnerChangeEvent<>(this, owner);
-        if (event.callEvent()) internalSetOwner(event.getNewOwner());
+    public boolean isMember(UUID uuid) {
+        return members.contains(uuid);
     }
 
-    public void internalSetOwner(@Nullable UUID owner) {
-        this.owner = owner;
+    @Override
+    public boolean removeMember(UUID uuid) {
+        var event = new AreaMemberRemoveEvent<>(this, uuid);
+        return event.callEvent() && members.remove(event.getMember());
+    }
+
+    @Override
+    public boolean addMember(UUID uuid) {
+        var event = new AreaMemberAddEvent<>(this, uuid);
+        return event.callEvent() && members.add(event.getMember());
+    }
+
+    @Override
+    public Set<UUID> getMembers() {
+        return Set.copyOf(members);
+    }
+
+    @Override
+    public boolean setOwner(@Nullable UUID owner) {
+        if (Objects.equals(owner, getOwner())) return false;
+        var event = new AreaOwnerChangeEvent<>(this, owner);
+        if (event.callEvent()) this.owner = event.getOwner();
+        return !event.isCancelled();
     }
 
     @Override
