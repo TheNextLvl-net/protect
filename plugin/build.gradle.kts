@@ -117,7 +117,8 @@ paper {
             children = listOf(
                 "protect.command.area.flag.info",
                 "protect.command.area.flag.set",
-                "protect.command.area.flag.reset"
+                "protect.command.area.flag.reset",
+                "protect.command.area.protect"
             )
         }
 

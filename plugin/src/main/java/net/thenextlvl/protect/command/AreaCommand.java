@@ -20,6 +20,7 @@ public class AreaCommand {
                         .then(new AreaInfoCommand(plugin).create())
                         .then(new AreaListCommand(plugin).create())
                         .then(new AreaPriorityCommand(plugin).create())
+                        .then(new AreaProtectCommand(plugin).create())
                         .then(new AreaRedefineCommand(plugin).create())
                         .then(new AreaSchematicCommand(plugin).create())
                         .then(new AreaSelectCommand(plugin).create())
