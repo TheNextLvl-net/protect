@@ -1,8 +1,9 @@
-package net.thenextlvl.protect.event;
+package net.thenextlvl.protect.area.event.flag;
 
 import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.area.event.AreaEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;

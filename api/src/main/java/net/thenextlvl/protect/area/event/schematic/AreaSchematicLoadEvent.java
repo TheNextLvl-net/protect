@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.event;
+package net.thenextlvl.protect.area.event.schematic;
 
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.FieldsAreNotNullByDefault;
@@ -7,6 +7,7 @@ import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import net.thenextlvl.protect.area.RegionizedArea;
+import net.thenextlvl.protect.area.event.AreaEvent;
 
 import java.util.ArrayList;
 import java.util.List;

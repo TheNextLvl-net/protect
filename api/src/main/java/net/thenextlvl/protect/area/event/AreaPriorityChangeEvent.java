@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.event;
+package net.thenextlvl.protect.area.event;
 
 import lombok.Getter;
 import lombok.Setter;

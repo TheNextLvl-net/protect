@@ -2,9 +2,9 @@ package net.thenextlvl.protect.area;
 
 import lombok.*;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.event.AreaFlagChangeEvent;
-import net.thenextlvl.protect.event.AreaFlagResetEvent;
-import net.thenextlvl.protect.event.AreaPriorityChangeEvent;
+import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
+import net.thenextlvl.protect.area.event.flag.AreaFlagResetEvent;
+import net.thenextlvl.protect.area.event.AreaPriorityChangeEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;

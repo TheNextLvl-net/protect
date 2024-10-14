@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.event;
+package net.thenextlvl.protect.area.event.region;
 
 import com.sk89q.worldedit.regions.Region;
 import core.annotation.FieldsAreNotNullByDefault;
@@ -8,6 +8,7 @@ import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
+import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
 
 /**
