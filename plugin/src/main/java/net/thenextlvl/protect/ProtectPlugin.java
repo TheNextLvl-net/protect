@@ -147,6 +147,7 @@ public class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> blockBurning = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_burning", true, false);
         public final ProtectionFlag<Boolean> blockDrying = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_drying", true, false);
         public final ProtectionFlag<Boolean> blockFading = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_fading", true, false);
+        public final ProtectionFlag<Boolean> blockFertilize = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_fertilize", true, false);
         public final ProtectionFlag<Boolean> blockGrowth = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_growth", true, false);
         public final ProtectionFlag<Boolean> blockIgniting = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_igniting", true, false);
         public final ProtectionFlag<Boolean> blockMoisturising = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_moisturising", true, false);
