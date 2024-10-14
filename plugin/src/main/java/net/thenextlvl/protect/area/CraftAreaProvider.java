@@ -15,6 +15,7 @@ import core.file.FileIO;
 import core.file.format.GsonFile;
 import core.io.IO;
 import core.paper.adapters.key.KeyAdapter;
+import core.paper.adapters.world.LocationAdapter;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.adapter.area.AreaTypeAdapter;
@@ -121,6 +122,7 @@ public class CraftAreaProvider implements AreaProvider {
                 .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
                 .registerTypeHierarchyAdapter(Vector2.class, new Vector2Adapter())
                 .registerTypeHierarchyAdapter(Vector3.class, new Vector3Adapter())
+                .registerTypeHierarchyAdapter(Location.class, new LocationAdapter.Simple.WorldLess(world))
                 .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.Bukkit.INSTANCE)
                 .registerTypeHierarchyAdapter(Area.class, new AreaTypeAdapter(plugin, world))
                 .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(plugin))
