@@ -25,6 +25,12 @@ public class AreaOwnerChangeEvent<T extends RegionizedArea<?>> extends AreaEvent
     private @Nullable UUID owner;
     private boolean cancelled;
 
+    /**
+     * Constructs a new AreaOwnerChangeEvent.
+     *
+     * @param area  The area for which the ownership change event is being created
+     * @param owner The new owner's UUID. Can be null to indicate no owner
+     */
     public AreaOwnerChangeEvent(T area, @Nullable UUID owner) {
         super(area);
         this.owner = owner;
