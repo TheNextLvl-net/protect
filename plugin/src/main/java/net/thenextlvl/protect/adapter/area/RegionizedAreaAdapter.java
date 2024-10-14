@@ -14,7 +14,7 @@ import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
 public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftRegionizedArea<C>> implements AreaAdapter<T> {
@@ -37,8 +37,8 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
         var region = context.<C>deserialize(object.get("region"), new TypeToken<C>(getClass()) {
         }.getType());
         var area = constructArea(name, world, region, priority);
-        area.setFlags(context.deserialize(object.get("flags"), Map.class));
-        area.internalSetOwner(owner);
+        area.setFlags(context.deserialize(object.get("flags"), LinkedHashMap.class));
+        area.owner = owner;
         return area;
     }
 
