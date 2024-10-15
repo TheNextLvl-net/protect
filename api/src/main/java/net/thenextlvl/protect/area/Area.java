@@ -43,6 +43,14 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
     boolean setPriority(int priority);
 
     /**
+     * Determines whether this area can interact with another area.
+     *
+     * @param area the area to check interaction capability with
+     * @return true if this area can interact with the specified area, false otherwise
+     */
+    boolean canInteract(Area area);
+
+    /**
      * Retrieves the world associated with this Area.
      *
      * @return the world associated with this Area

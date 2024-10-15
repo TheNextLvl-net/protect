@@ -18,12 +18,12 @@ import core.annotation.TypesAreNotNullByDefault;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import net.thenextlvl.protect.area.event.member.AreaMemberAddEvent;
+import net.thenextlvl.protect.area.event.member.AreaMemberRemoveEvent;
 import net.thenextlvl.protect.area.event.member.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicDeleteEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadEvent;
-import net.thenextlvl.protect.area.event.member.AreaMemberAddEvent;
-import net.thenextlvl.protect.area.event.member.AreaMemberRemoveEvent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -113,6 +113,11 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
         var event = new AreaOwnerChangeEvent<>(this, owner);
         if (event.callEvent()) this.owner = event.getOwner();
         return !event.isCancelled();
+    }
+
+    @Override
+    public boolean canInteract(Area area) {
+        return area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner());
     }
 
     @Override
