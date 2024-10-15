@@ -35,7 +35,7 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
 
     @Override
     public boolean canInteract(Area area) {
-        return false;
+        return equals(area);
     }
 
     @Override
