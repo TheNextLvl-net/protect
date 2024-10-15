@@ -34,6 +34,11 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     }
 
     @Override
+    public boolean canInteract(Area area) {
+        return false;
+    }
+
+    @Override
     public List<Entity> getEntities() {
         return getWorld().getEntities();
     }
