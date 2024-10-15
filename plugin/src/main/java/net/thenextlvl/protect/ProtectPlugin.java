@@ -149,6 +149,7 @@ public class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> blockDrying = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_drying", true, false);
         public final ProtectionFlag<Boolean> blockFading = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_fading", true, false);
         public final ProtectionFlag<Boolean> blockFertilize = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_fertilize", true, false);
+        public final ProtectionFlag<Boolean> blockForming = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_forming", true, false);
         public final ProtectionFlag<Boolean> blockGrowth = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_growth", true, false);
         public final ProtectionFlag<Boolean> blockIgniting = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_igniting", true, false);
         public final ProtectionFlag<Boolean> blockMoisturising = flagRegistry().register(ProtectPlugin.this, Boolean.class, "block_moisturising", true, false);
@@ -170,6 +171,7 @@ public class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> explosions = flagRegistry().register(ProtectPlugin.this, Boolean.class, "explosions", true, false);
         public final ProtectionFlag<Boolean> fillBottle = flagRegistry().register(ProtectPlugin.this, Boolean.class, "fill_bottle", true, false);
         public final ProtectionFlag<Boolean> fillBucket = flagRegistry().register(ProtectPlugin.this, Boolean.class, "fill_bucket", true, false);
+        public final ProtectionFlag<Boolean> gameEvents = flagRegistry().register(ProtectPlugin.this, Boolean.class, "game_events", true, false);
         public final ProtectionFlag<Boolean> hangingBreak = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hanging_break", true, false);
         public final ProtectionFlag<Boolean> hangingPlace = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hanging_place", true, false);
         public final ProtectionFlag<Boolean> hunger = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hunger", true, false);
