@@ -1,7 +1,6 @@
 package net.thenextlvl.protect.area;
 
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
@@ -19,55 +18,15 @@ import java.util.Map;
 @ParametersAreNotNullByDefault
 public interface AreaService {
     /**
-     * Creates a CuboidArea object with the given parameters.
+     * Creates an AreaCreator with the given name, world, and region.
      *
-     * @param name  The name of the CuboidArea.
-     * @param world The world in which the CuboidArea is located.
-     * @param pos1  The first corner of the CuboidArea.
-     * @param pos2  The second corner of the CuboidArea.
-     * @return The created CuboidArea object.
+     * @param name   The name of the area.
+     * @param world  The world in which the area is located.
+     * @param region The region of the area.
+     * @param <T>    The type of the region.
+     * @return The AreaCreator object.
      */
-    CuboidArea create(@NamePattern.Regionized String name, World world, BlockVector3 pos1, BlockVector3 pos2);
-
-    /**
-     * Creates a CuboidArea object with the given name and region.
-     *
-     * @param name   The name of the CuboidArea.
-     * @param world  The world in which the CuboidArea is located
-     * @param region The region of the CuboidArea.
-     * @return The created CuboidArea object.
-     */
-    CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region);
-
-    /**
-     * Creates a CylinderArea object with the given name and region.
-     *
-     * @param name   The name of the CylinderArea.
-     * @param world  The world in which the CylinderArea is located.
-     * @param region The region of the CylinderArea.
-     * @return The created CylinderArea object.
-     */
-    CylinderArea create(@NamePattern.Regionized String name, World world, CylinderRegion region);
-
-    /**
-     * Creates an EllipsoidArea object with the given name and region.
-     *
-     * @param name   The name of the EllipsoidArea.
-     * @param world  The world in which the EllipsoidArea is located.
-     * @param region The region of the EllipsoidArea.
-     * @return The created EllipsoidArea object.
-     */
-    EllipsoidArea create(@NamePattern.Regionized String name, World world, EllipsoidRegion region);
-
-    /**
-     * Creates an IntersectionArea object with the given name, world, and region.
-     *
-     * @param name   The name of the IntersectionArea.
-     * @param world  The world in which the IntersectionArea is located.
-     * @param region The region of the IntersectionArea.
-     * @return The created IntersectionArea object.
-     */
-    IntersectionArea create(@NamePattern.Regionized String name, World world, RegionIntersection region);
+    <T extends Region> AreaCreator<T> creator(@NamePattern.Regionized String name, World world, T region);
 
     /**
      * Deletes the given Area.
