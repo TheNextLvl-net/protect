@@ -11,8 +11,8 @@ import net.thenextlvl.protect.area.Area;
  */
 @TypesAreNotNullByDefault
 @ParametersAreNotNullByDefault
-public class AreaCreateEvent<T extends Area> extends AreaEvent<T> {
-    public AreaCreateEvent(T area) {
+public class AreaCreateEvent extends AreaEvent<Area> {
+    public AreaCreateEvent(Area area) {
         super(area);
     }
 }
