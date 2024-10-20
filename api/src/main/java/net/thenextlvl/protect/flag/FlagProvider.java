@@ -10,7 +10,6 @@ import java.util.Objects;
  * The FlagProvider interface represents an object that can store and retrieve flags and their associated states.
  */
 public interface FlagProvider {
-
     /**
      * Retrieves the map of all flags and their associated state.
      *
