@@ -83,8 +83,8 @@ public class ProtectPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getWorlds().forEach(world -> {
-            areaProvider().saveAreas(world);
-            areaProvider().unloadAreas(world);
+            areaProvider().save(world);
+            areaProvider().unload(world);
         });
         metrics().shutdown();
     }
