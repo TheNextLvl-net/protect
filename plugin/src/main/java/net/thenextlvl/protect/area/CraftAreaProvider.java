@@ -27,6 +27,7 @@ import net.thenextlvl.protect.adapter.region.EllipsoidRegionAdapter;
 import net.thenextlvl.protect.adapter.vector.BlockVectorAdapter;
 import net.thenextlvl.protect.adapter.vector.Vector2Adapter;
 import net.thenextlvl.protect.adapter.vector.Vector3Adapter;
+import net.thenextlvl.protect.area.event.AreaLoadEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -86,25 +87,27 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public void loadAreas(World world) {
+    public void load(World world) {
         var areaFolder = new File(world.getWorldFolder(), "areas");
         var files = areaFolder.listFiles((file, name) -> name.endsWith(".json"));
-        if (files != null) for (var file : files) loadArea(world, file);
+        if (files != null) for (var file : files) load(world, file);
         if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
-        loadArea(new CraftGlobalArea(world, -1));
+        persist(new CraftGlobalArea(plugin, world, new LinkedHashMap<>(), -1));
     }
 
     @ApiStatus.Internal
-    public void loadArea(Area area) {
-        addAreaFile(area.getWorld(), loadFile(area.getWorld(), area, IO.of(area.getFile())).saveIfAbsent());
+    public void load(World world, File file) {
+        var loaded = read(world, null, IO.of(file));
+        new AreaLoadEvent(loaded.getRoot()).callEvent();
+        memoize(world, loaded);
     }
 
     @ApiStatus.Internal
-    public void loadArea(World world, File file) {
-        addAreaFile(world, loadFile(world, null, IO.of(file)));
+    public void persist(Area area) {
+        memoize(area.getWorld(), read(area.getWorld(), area, IO.of(area.getFile())).saveIfAbsent());
     }
 
-    private void addAreaFile(World world, FileIO<Area> file) {
+    private void memoize(World world, FileIO<Area> file) {
         var areas = this.areas.computeIfAbsent(world, k -> new HashSet<>());
         areas.stream().filter(io -> io.getRoot().equals(file.getRoot())).findAny()
                 .ifPresentOrElse(io -> plugin.getComponentLogger().warn(
@@ -114,7 +117,7 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public FileIO<Area> loadFile(World world, @Nullable Area area, IO file) {
+    public GsonFile<Area> read(World world, @Nullable Area area, IO file) {
         var gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
                 .registerTypeHierarchyAdapter(CylinderRegion.class, new CylinderRegionAdapter())
@@ -133,19 +136,22 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public void saveAreas(World world) {
-        areas.get(world).forEach(FileIO::save);
+    public void save(World world) {
+        var files = areas.get(world);
+        if (files != null) files.forEach(FileIO::save);
     }
 
     @ApiStatus.Internal
-    public void unloadAreas(World world) {
+    public void unload(World world) {
         areas.remove(world);
     }
 
     @ApiStatus.Internal
-    public boolean deleteArea(Area area) {
-        var areas = this.areas.get(area.getWorld());
-        if (areas != null) areas.removeIf(file -> file.getRoot().equals(area));
+    public boolean delete(Area area) {
+        areas.computeIfPresent(area.getWorld(), (world, areas) -> {
+            areas.removeIf(file -> file.getRoot().equals(area));
+            return areas.isEmpty() ? null : areas;
+        });
         return area.getFile().delete();
     }
 }
