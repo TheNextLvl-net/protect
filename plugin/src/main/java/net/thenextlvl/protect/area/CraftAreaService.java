@@ -1,14 +1,12 @@
 package net.thenextlvl.protect.area;
 
 import com.google.common.base.Preconditions;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.area.event.AreaCreateEvent;
 import net.thenextlvl.protect.area.event.AreaDeleteEvent;
 import net.thenextlvl.protect.area.event.player.PlayerAreaLeaveEvent;
 import net.thenextlvl.protect.area.event.player.PlayerAreaTransitionEvent;
@@ -29,41 +27,14 @@ public class CraftAreaService implements AreaService {
     private final ProtectPlugin plugin;
 
     @Override
-    public CuboidArea create(@NamePattern.Regionized String name, World world, BlockVector3 pos1, BlockVector3 pos2) {
-        return create(name, world, new CuboidRegion(pos1, pos2));
-    }
-
-    @Override
-    public CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region) {
-        return create(new CraftCuboidArea(plugin.schematicFolder(), name, world, region.clone(), 0));
-    }
-
-    @Override
-    public CylinderArea create(@NamePattern.Regionized String name, World world, CylinderRegion region) {
-        return create(new CraftCylinderArea(plugin.schematicFolder(), name, world, region.clone(), 0));
-    }
-
-    @Override
-    public EllipsoidArea create(@NamePattern.Regionized String name, World world, EllipsoidRegion region) {
-        return create(new CraftEllipsoidArea(plugin.schematicFolder(), name, world, region.clone(), 0));
-    }
-
-    @Override
-    public IntersectionArea create(@NamePattern.Regionized String name, World world, RegionIntersection region) {
-        var intersection = new RegionIntersection(region.getWorld(), region.getRegions());
-        return create(new CraftIntersectionArea(plugin.schematicFolder(), name, world, intersection, 0));
-    }
-
-    private <A extends Area> A create(A area) {
-        plugin.areaProvider().loadArea(area);
-        new AreaCreateEvent<>(area).callEvent();
-        return area;
+    public <T extends Region> AreaCreator<T> creator(@NamePattern.Regionized String name, World world, T region) {
+        return new CraftAreaCreator<>(plugin, name, world, region);
     }
 
     @Override
     public <T extends Region> boolean delete(RegionizedArea<T> area) {
-        if (!new AreaDeleteEvent<>(area).callEvent()) return false;
-        var remove = plugin.areaProvider().deleteArea(area);
+        if (!new AreaDeleteEvent(area).callEvent()) return false;
+        var remove = plugin.areaProvider().delete(area);
         if (remove) handlePostRemove(area);
         return remove;
     }
@@ -79,7 +50,7 @@ public class CraftAreaService implements AreaService {
         Preconditions.checkState(getAdapters().values().stream()
                 .filter(value -> value.getNamespacedKey().equals(adapter.getNamespacedKey()))
                 .findAny().isEmpty(), "Duplicate key for adapter: " + adapter.getNamespacedKey() + " in "
-                + adapter.getClass().getName());
+                                      + adapter.getClass().getName());
         getAdapters().put(type, adapter);
     }
 
