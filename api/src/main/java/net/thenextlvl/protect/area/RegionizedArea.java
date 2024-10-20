@@ -9,6 +9,7 @@ import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -57,19 +58,11 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
     Set<UUID> getMembers();
 
     /**
-     * Retrieves the UUID of the owner of the Area.
+     * Retrieves the owner of the regionized area.
      *
-     * @return the UUID of the owner
+     * @return an Optional containing the UUID of the owner, or empty
      */
-    @Nullable
-    UUID getOwner();
-
-    /**
-     * Checks if the area has an owner.
-     *
-     * @return true if the area has an owner, false otherwise
-     */
-    boolean hasOwner();
+    Optional<UUID> getOwner();
 
     /**
      * Checks if a given UUID is a member of the regionized area.
@@ -94,6 +87,14 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @return whether the member was removed
      */
     boolean removeMember(UUID uuid);
+
+    /**
+     * Sets the members of the regionized area.
+     *
+     * @param members a set of UUIDs representing the new members to set
+     * @return true if the members were successfully set, false otherwise
+     */
+    boolean setMembers(Set<UUID> members);
 
     /**
      * Sets the owner of the Area object.
