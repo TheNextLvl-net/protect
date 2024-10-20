@@ -35,13 +35,13 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldInit(WorldInitEvent event) {
-        plugin.areaProvider().loadAreas(event.getWorld());
+        plugin.areaProvider().load(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onWorldUnload(WorldUnloadEvent event) {
-        plugin.areaProvider().saveAreas(event.getWorld());
-        plugin.areaProvider().unloadAreas(event.getWorld());
+        plugin.areaProvider().save(event.getWorld());
+        plugin.areaProvider().unload(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
