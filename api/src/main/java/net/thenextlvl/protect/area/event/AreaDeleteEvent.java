@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area.event;
 
-import com.sk89q.worldedit.regions.Region;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
@@ -18,10 +17,10 @@ import org.bukkit.event.Cancellable;
 @Setter
 @TypesAreNotNullByDefault
 @ParametersAreNotNullByDefault
-public class AreaDeleteEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> implements Cancellable {
+public class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
     private boolean cancelled;
 
-    public AreaDeleteEvent(RegionizedArea<T> area) {
+    public AreaDeleteEvent(RegionizedArea<?> area) {
         super(area);
     }
 }
