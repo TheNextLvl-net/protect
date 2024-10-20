@@ -4,16 +4,14 @@ import lombok.*;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
 import net.thenextlvl.protect.area.event.flag.AreaFlagResetEvent;
-import net.thenextlvl.protect.area.event.AreaPriorityChangeEvent;
+import net.thenextlvl.protect.area.event.inheritance.AreaPriorityChangeEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,18 +19,13 @@ import java.util.Map;
 @Setter
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
 public abstract class CraftArea implements Area {
-    private final @Getter(AccessLevel.NONE) ProtectPlugin plugin = JavaPlugin.getPlugin(ProtectPlugin.class);
-    private Map<Flag<?>, @Nullable Object> flags = new LinkedHashMap<>();
-    private final String name;
+    protected final @Getter(AccessLevel.NONE) ProtectPlugin plugin;
+    private final @NamePattern String name;
     private final World world;
-    private int priority;
-
-    protected CraftArea(String name, World world, int priority) {
-        this.name = name;
-        this.world = world;
-        this.priority = priority;
-    }
+    protected Map<Flag<?>, @Nullable Object> flags;
+    protected int priority;
 
     public boolean setPriority(int priority) {
         if (this.priority == priority) return false;
