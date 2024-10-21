@@ -6,6 +6,7 @@ import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.schematic.SchematicHolder;
+import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -24,6 +25,7 @@ import java.util.UUID;
 @ParametersAreNotNullByDefault
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
     @Override
+    @Subst("RegEx")
     @NamePattern.Regionized
     String getName();
 

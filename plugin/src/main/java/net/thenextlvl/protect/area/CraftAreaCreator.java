@@ -16,7 +16,6 @@ import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
-import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +68,7 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     }
 
     @Override
-    public AreaCreator<T> parent(@Subst("RegEx") @Nullable RegionizedArea<?> area) {
+    public AreaCreator<T> parent(@Nullable RegionizedArea<?> area) {
         return parent(area == null ? null : area.getName());
     }
 
