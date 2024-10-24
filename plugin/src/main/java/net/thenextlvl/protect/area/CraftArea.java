@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,15 @@ public abstract class CraftArea implements Area {
 
     private Map<Flag<?>, @Nullable Object> flags;
     private @Getter int priority;
+
+    @Override
+    public @NotNull LinkedHashSet<Area> getParents() {
+        var parents = new LinkedHashSet<Area>();
+        var parent = getParent().orElse(null);
+        while (parent != null && parent != this && parents.add(parent))
+            parent = parent.getParent().orElse(null);
+        return parents;
+    }
 
     @Override
     public @NotNull Map<Flag<?>, @Nullable Object> getFlags() {
