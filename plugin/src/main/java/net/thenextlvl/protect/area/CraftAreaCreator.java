@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.area;
 
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.regions.Region;
 import core.annotation.FieldsAreNotNullByDefault;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Function;
 
 @Getter
 @Setter
@@ -72,39 +71,12 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
         return parent(area == null ? null : area.getName());
     }
 
-    private static final Set<Wrapper<?>> wrappers = new HashSet<>();
-
-    private record Wrapper<T extends Region>(
-            Class<T> type,
-            Function<CraftAreaCreator<T>, CraftRegionizedArea<T>> creator
-    ) {
-    }
-
-    private static <T extends Region> void registerWrapper(Wrapper<T> wrapper) {
-        wrappers.add(wrapper);
-    }
-
-    static {
-        registerWrapper(new Wrapper<>(CuboidRegion.class, CraftCuboidArea::new));
-        registerWrapper(new Wrapper<>(CylinderRegion.class, CraftCylinderArea::new));
-        registerWrapper(new Wrapper<>(EllipsoidRegion.class, CraftEllipsoidArea::new));
-        registerWrapper(new Wrapper<>(RegionIntersection.class, CraftIntersectionArea::new));
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Region> Optional<Wrapper<T>> getWrapper(Class<T> type) {
-        return wrappers.stream()
-                .filter(wrapper -> wrapper.type().isAssignableFrom(type))
-                .map(wrapper -> (Wrapper<T>) wrapper)
-                .findFirst();
-    }
-
     @Override
     @SuppressWarnings("unchecked")
-    public CraftRegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException {
-        var area = getWrapper((Class<T>) region().getClass()).orElseThrow(
-                () -> new UnsupportedRegionException(region().getClass())
-        ).creator().apply(this);
+    public RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException {
+        var area = plugin.areaService().getWrapper((Class<T>) region().getClass())
+                .orElseThrow(() -> new UnsupportedRegionException(region().getClass()))
+                .apply(this);
         plugin.areaProvider().persist(area);
         new AreaCreateEvent(area).callEvent();
         return area;
