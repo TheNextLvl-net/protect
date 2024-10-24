@@ -6,8 +6,6 @@ import net.thenextlvl.protect.area.Area;
 
 /**
  * The AreaLoadEvent class represents an event that is fired when an Area is loaded.
- *
- * @param <T> The type of the area of this event
  */
 @TypesAreNotNullByDefault
 @ParametersAreNotNullByDefault

@@ -10,8 +10,6 @@ import org.bukkit.event.Cancellable;
 /**
  * This event is triggered when an Area is requested for deletion.
  * Cancelling this event results in the area not being deleted.
- *
- * @param <T> The type of region associated with the area of this event
  */
 @Getter
 @Setter

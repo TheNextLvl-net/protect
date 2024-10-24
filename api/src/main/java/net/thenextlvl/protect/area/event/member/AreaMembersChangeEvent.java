@@ -14,8 +14,6 @@ import java.util.UUID;
 /**
  * An event that represents a change in the members of an area.
  * Cancelling this event results in the members not being set.
- *
- * @param <T> The type of the area associated with this event
  */
 @Getter
 @Setter
