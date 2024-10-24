@@ -110,14 +110,6 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
     boolean removeMember(UUID uuid);
 
     /**
-     * Sets the members of the regionized area.
-     *
-     * @param members a set of UUIDs representing the new members to set
-     * @return true if the members were successfully set, false otherwise
-     */
-    boolean setMembers(Set<UUID> members);
-
-    /**
      * Sets the owner of the Area object.
      *
      * @param owner the UUID of the owner to set
@@ -131,4 +123,11 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @return true if the area is too big, false otherwise
      */
     boolean isTooBig();
+
+    /**
+     * Sets the members of the regionized area.
+     *
+     * @param members a set of UUIDs representing the new members to set
+     */
+    void setMembers(Set<UUID> members);
 }
