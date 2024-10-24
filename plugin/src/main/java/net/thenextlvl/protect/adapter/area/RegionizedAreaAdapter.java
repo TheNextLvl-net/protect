@@ -54,7 +54,7 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
         object.addProperty("name", area.getName());
         object.addProperty("priority", area.getPriority());
         area.getOwner().ifPresent(owner -> object.add("owner", context.serialize(owner)));
-        area.getParent().ifPresent(parent -> object.addProperty("members", parent));
+        area.parent().ifPresent(parent -> object.addProperty("parent", parent));
         object.add("region", context.serialize(area.getRegion()));
         object.add("flags", context.serialize(area.getFlags()));
         return object;
