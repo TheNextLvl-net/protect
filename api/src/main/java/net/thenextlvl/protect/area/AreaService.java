@@ -5,7 +5,6 @@ import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.io.AreaAdapter;
-import net.thenextlvl.protect.io.RegionWrapper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jetbrains.annotations.Unmodifiable;
@@ -13,6 +12,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * The AreaService interface is used to create or delete instances of {@link Area}.
@@ -48,33 +48,34 @@ public interface AreaService {
      * @param type The class object representing the type of the region.
      * @return An Optional containing the RegionWrapper of the specified type if it exists, otherwise an empty Optional.
      */
-    <T extends Region> Optional<RegionWrapper<T>> getWrapper(Class<T> type);
+    <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(Class<T> type);
 
     /**
-     * Unregisters a RegionWrapper from the service.
+     * Unregisters the region wrapper of the specified type.
      *
-     * @param <T>     The type of the region.
-     * @param wrapper The RegionWrapper to unregister.
+     * @param <T>  The type of the region.
+     * @param type The class object representing the type of the region.
      * @return true if the unregistration is successful, false otherwise.
      */
-    <T extends Region> boolean unregisterWrapper(RegionWrapper<T> wrapper);
+    <T extends Region> boolean unregisterWrapper(Class<T> type);
 
     /**
-     * Registers a new region wrapper.
+     * Registers a new region wrapper using the specified type and creator function.
      *
      * @param <T>     The type of the region.
-     * @param wrapper The RegionWrapper to register.
+     * @param type    The class object representing the type of the region.
+     * @param creator The function to create a RegionizedArea from an AreaCreator.
      * @throws IllegalStateException if a region wrapper for the same type already exists.
      */
-    <T extends Region> void registerWrapper(RegionWrapper<T> wrapper) throws IllegalStateException;
+    <T extends Region> void registerWrapper(Class<T> type, Function<AreaCreator<T>, RegionizedArea<T>> creator) throws IllegalStateException;
 
     /**
-     * Retrieves an unmodifiable set of all registered region wrappers.
+     * Retrieves an unmodifiable set of region wrapper classes.
      *
-     * @return an unmodifiable set of all registered region wrappers.
+     * @return an unmodifiable set of classes representing region wrappers.
      */
     @Unmodifiable
-    Set<RegionWrapper<?>> getRegionWrappers();
+    Set<Class<? extends Region>> getRegionWrappers();
 
     /**
      * Retrieves all registered adapter functions for serializing and deserializing Area objects.
