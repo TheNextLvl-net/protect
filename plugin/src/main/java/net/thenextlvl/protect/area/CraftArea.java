@@ -15,17 +15,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-@Getter
 @Setter
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
 public abstract class CraftArea implements Area {
-    protected final @Getter(AccessLevel.NONE) ProtectPlugin plugin;
-    private final @NamePattern String name;
-    private final World world;
-    protected Map<Flag<?>, @Nullable Object> flags;
-    protected int priority;
+    protected final ProtectPlugin plugin;
+
+    @NamePattern
+    private final @Getter String name;
+    private final @Getter World world;
+
+    private Map<Flag<?>, @Nullable Object> flags;
+    private @Getter int priority;
+
+    @Override
+    public @NotNull Map<Flag<?>, @Nullable Object> getFlags() {
+        return Map.copyOf(flags);
+    }
 
     public boolean setPriority(int priority) {
         if (this.priority == priority) return false;
