@@ -2,20 +2,22 @@ package net.thenextlvl.protect.flag;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The FlagProvider interface represents an object that can store and retrieve flags and their associated states.
  */
 public interface FlagProvider {
     /**
-     * Retrieves the map of all flags and their associated state.
+     * Retrieves a map of all the flags and their associated states.
      *
-     * @return a map of flags and their associated state
+     * @return an unmodifiable map containing the flags as keys and their states as values.
+     * The map may include null values for certain flags.
      */
     @NotNull
+    @Unmodifiable
     Map<Flag<?>, @Nullable Object> getFlags();
 
     /**
@@ -33,9 +35,7 @@ public interface FlagProvider {
      * @param <T>   The type of the flag state.
      * @return whether the flag was changed.
      */
-    default <T> boolean setFlag(@NotNull Flag<T> flag, T state) {
-        return !Objects.equals(getFlags().put(flag, state), state);
-    }
+    <T> boolean setFlag(@NotNull Flag<T> flag, T state);
 
     /**
      * Retrieves the state of a flag.
@@ -44,10 +44,7 @@ public interface FlagProvider {
      * @param <T>  The type of the flag state.
      * @return The state of the flag.
      */
-    @SuppressWarnings("unchecked")
-    default <T> T getFlag(@NotNull Flag<T> flag) {
-        return (T) getFlags().getOrDefault(flag, flag.defaultValue());
-    }
+    <T> T getFlag(@NotNull Flag<T> flag);
 
     /**
      * Checks if the flag has a state defined.
@@ -56,9 +53,7 @@ public interface FlagProvider {
      * @param <T>  The type of the flag.
      * @return true if a state is defined, true otherwise.
      */
-    default <T> boolean hasFlag(@NotNull Flag<T> flag) {
-        return getFlags().containsKey(flag);
-    }
+    <T> boolean hasFlag(@NotNull Flag<T> flag);
 
     /**
      * Removes a flag from the FlagProvider.
@@ -67,7 +62,5 @@ public interface FlagProvider {
      * @param <T>  The type of the flag value.
      * @return true if the flag was successfully removed, false otherwise.
      */
-    default <T> boolean removeFlag(@NotNull Flag<T> flag) {
-        return getFlags().remove(flag) != null;
-    }
+    <T> boolean removeFlag(@NotNull Flag<T> flag);
 }
