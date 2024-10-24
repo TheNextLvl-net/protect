@@ -73,8 +73,8 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
         this.schematic = new File(plugin.schematicFolder(), name + ".schem");
     }
 
-    public CraftRegionizedArea(@Subst("RegEx") CraftAreaCreator<T> creator) {
-        this(creator.plugin(), creator.name(), creator.world(), creator.region(), creator.priority(),
+    public CraftRegionizedArea(ProtectPlugin plugin, @Subst("RegEx") AreaCreator<T> creator) {
+        this(plugin, creator.name(), creator.world(), creator.region(), creator.priority(),
                 creator.parent(), creator.owner(), creator.members(), creator.flags());
     }
 

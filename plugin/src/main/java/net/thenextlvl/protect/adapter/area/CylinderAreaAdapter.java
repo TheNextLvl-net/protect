@@ -12,6 +12,6 @@ public class CylinderAreaAdapter extends RegionizedAreaAdapter<CylinderRegion, C
 
     @Override
     protected CraftCylinderArea construct(CraftAreaCreator<CylinderRegion> creator) {
-        return new CraftCylinderArea(creator);
+        return new CraftCylinderArea(creator.plugin(), creator);
     }
 }

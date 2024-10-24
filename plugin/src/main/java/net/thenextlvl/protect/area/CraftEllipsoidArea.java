@@ -30,8 +30,8 @@ public class CraftEllipsoidArea extends CraftRegionizedArea<EllipsoidRegion> imp
         super(plugin, name, world, region, priority, parent, owner, members, flags);
     }
 
-    public CraftEllipsoidArea(CraftAreaCreator<EllipsoidRegion> creator) {
-        super(creator);
+    public CraftEllipsoidArea(ProtectPlugin plugin, AreaCreator<EllipsoidRegion> creator) {
+        super(plugin, creator);
     }
 
     @Override

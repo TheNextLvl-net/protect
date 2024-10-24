@@ -29,7 +29,7 @@ public class CraftIntersectionArea extends CraftRegionizedArea<RegionIntersectio
         super(plugin, name, world, region, priority, parent, owner, members, flags);
     }
 
-    public CraftIntersectionArea(CraftAreaCreator<RegionIntersection> creator) {
-        super(creator);
+    public CraftIntersectionArea(ProtectPlugin plugin, AreaCreator<RegionIntersection> creator) {
+        super(plugin, creator);
     }
 }

@@ -30,8 +30,8 @@ public class CraftCylinderArea extends CraftRegionizedArea<CylinderRegion> imple
         super(plugin, name, world, region, priority, parent, owner, members, flags);
     }
 
-    public CraftCylinderArea(CraftAreaCreator<CylinderRegion> creator) {
-        super(creator);
+    public CraftCylinderArea(ProtectPlugin plugin, AreaCreator<CylinderRegion> creator) {
+        super(plugin, creator);
     }
 
     @Override

@@ -12,6 +12,6 @@ public class EllipsoidAreaAdapter extends RegionizedAreaAdapter<EllipsoidRegion,
 
     @Override
     protected CraftEllipsoidArea construct(CraftAreaCreator<EllipsoidRegion> creator) {
-        return new CraftEllipsoidArea(creator);
+        return new CraftEllipsoidArea(creator.plugin(), creator);
     }
 }

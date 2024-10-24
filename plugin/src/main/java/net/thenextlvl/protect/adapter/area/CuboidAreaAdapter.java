@@ -12,6 +12,6 @@ public class CuboidAreaAdapter extends RegionizedAreaAdapter<CuboidRegion, Craft
 
     @Override
     protected CraftCuboidArea construct(CraftAreaCreator<CuboidRegion> creator) {
-        return new CraftCuboidArea(creator);
+        return new CraftCuboidArea(creator.plugin(), creator);
     }
 }

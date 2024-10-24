@@ -12,6 +12,6 @@ public class IntersectionAreaAdapter extends RegionizedAreaAdapter<RegionInterse
 
     @Override
     protected CraftIntersectionArea construct(CraftAreaCreator<RegionIntersection> creator) {
-        return new CraftIntersectionArea(creator);
+        return new CraftIntersectionArea(creator.plugin(), creator);
     }
 }

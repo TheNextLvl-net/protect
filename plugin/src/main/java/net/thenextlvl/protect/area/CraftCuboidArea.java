@@ -29,7 +29,7 @@ public class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implement
         super(plugin, name, world, region, priority, parent, owner, members, flags);
     }
 
-    public CraftCuboidArea(CraftAreaCreator<CuboidRegion> creator) {
-        super(creator);
+    public CraftCuboidArea(ProtectPlugin plugin, AreaCreator<CuboidRegion> creator) {
+        super(plugin, creator);
     }
 }
