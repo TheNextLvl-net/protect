@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Setter
 @ToString
@@ -53,16 +54,30 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getFlag(@NotNull Flag<T> flag) {
+        var value = (T) getFlags().get(flag);
+        if (value != null) return value;
+        return getParent().map(area -> area.getFlag(flag))
+                .orElseGet(flag::defaultValue);
+    }
+
+    @Override
     public <T> boolean setFlag(@NotNull Flag<T> flag, T state) {
         var event = new AreaFlagChangeEvent<>(this, flag, state);
         if (!event.callEvent()) return false;
-        return Area.super.setFlag(flag, event.getNewState());
+        return !Objects.equals(flags.put(flag, event.getNewState()), event.getNewState());
     }
 
     @Override
     public <T> boolean removeFlag(@NotNull Flag<T> flag) {
         var event = new AreaFlagResetEvent<>(this, flag);
-        return event.callEvent() && Area.super.removeFlag(flag);
+        return event.callEvent() && flags.remove(flag) != null;
+    }
+
+    @Override
+    public <T> boolean hasFlag(@NotNull Flag<T> flag) {
+        return flags.containsKey(flag);
     }
 
     @Override
