@@ -19,7 +19,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
      *
      * @return an Optional containing the parent area if it exists, otherwise an empty Optional
      */
-    Optional<String> getParent();
+    Optional<Area> getParent();
 
     /**
      * Retrieves the name of the area.
