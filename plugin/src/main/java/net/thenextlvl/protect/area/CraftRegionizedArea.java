@@ -130,6 +130,11 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     }
 
     @Override
+    public boolean isPermitted(UUID uuid) {
+        return (owner != null && owner.equals(uuid)) || members.contains(uuid);
+    }
+
+    @Override
     public boolean removeMember(UUID uuid) {
         var event = new AreaMemberRemoveEvent<>(this, uuid);
         return event.callEvent() && members.remove(event.getMember());

@@ -45,7 +45,7 @@ class AreaInfoCommand {
                 Placeholder.parsed("priority", String.valueOf(area.getPriority())));
         plugin.bundle().sendMessage(sender, "area.info.type",
                 Placeholder.parsed("type", plugin.areaService().getAdapter(area.getClass())
-                        .getNamespacedKey().asString()));
+                        .key().asString()));
         plugin.bundle().sendMessage(sender, "area.info.flags",
                 Placeholder.parsed("flags", area.getFlags().entrySet().stream()
                         .map(entry -> entry.getKey().key().asString() + "=" + entry.getValue())

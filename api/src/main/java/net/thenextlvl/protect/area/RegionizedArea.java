@@ -75,6 +75,14 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
     boolean isMember(UUID uuid);
 
     /**
+     * Checks if a given UUID is either the owner or a member of the regionized area.
+     *
+     * @param uuid the UUID to check
+     * @return true if the UUID is either the owner or a member, false otherwise
+     */
+    boolean isPermitted(UUID uuid);
+
+    /**
      * Adds a member to the regionized area.
      *
      * @param uuid the UUID of the member to add
