@@ -1,33 +1,29 @@
 package net.thenextlvl.protect.area.event.schematic;
 
-import com.sk89q.worldedit.regions.Region;
-import core.annotation.FieldsAreNotNullByDefault;
-import core.annotation.MethodsReturnNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
+import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * The AreaSchematicLoadEvent class represents an event that is triggered when a schematic is loaded for a regionized area.
- * It extends the AreaEvent class and is generic over a type T that must extend the Region class.
- *
- * @param <T> The type of region associated with the area.
+ * This event is fired when a schematic of a regionized area is loaded.
+ * This event is cancellable, meaning it can be prevented from proceeding.
  */
 @Getter
-@TypesAreNotNullByDefault
-@FieldsAreNotNullByDefault
-@MethodsReturnNotNullByDefault
-@ParametersAreNotNullByDefault
-public class AreaSchematicLoadEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> {
-    private final List<Consumer<RegionizedArea<T>>> successListeners = new ArrayList<>();
+@Setter
+public class AreaSchematicLoadEvent extends AreaEvent<@NotNull RegionizedArea<?>> implements Cancellable {
+    private boolean cancelled;
 
-    public AreaSchematicLoadEvent(RegionizedArea<T> area) {
+    /**
+     * Constructs a new AreaSchematicLoadEvent.
+     *
+     * @param area The regionized area whose schematic is being loaded.
+     */
+    @ApiStatus.Internal
+    public AreaSchematicLoadEvent(@NotNull RegionizedArea<?> area) {
         super(area);
     }
 }

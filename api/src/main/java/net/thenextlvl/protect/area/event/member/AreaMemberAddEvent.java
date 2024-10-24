@@ -1,30 +1,35 @@
 package net.thenextlvl.protect.area.event.member;
 
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 /**
  * An event that represents a change in the members of an area.
  * Cancelling this event results in the member not being added.
- *
- * @param <T> The type of the area associated with this event
+ * <p>
+ * Note: Calling {@link RegionizedArea#addMember(UUID)} within this event can lead to an infinite loop.
  */
 @Getter
 @Setter
-@TypesAreNotNullByDefault
-@ParametersAreNotNullByDefault
-public class AreaMemberAddEvent<T extends RegionizedArea<?>> extends AreaEvent<T> implements Cancellable {
-    private UUID member;
+public class AreaMemberAddEvent extends AreaEvent<@NotNull RegionizedArea<?>> implements Cancellable {
+    private @NotNull UUID member;
     private boolean cancelled;
 
-    public AreaMemberAddEvent(T area, UUID member) {
+    /**
+     * Constructs a new AreaMemberAddEvent.
+     *
+     * @param area  the regionized area to which a member is being added
+     * @param member the UUID of the member to be added to the area
+     */
+    @ApiStatus.Internal
+    public AreaMemberAddEvent(@NotNull RegionizedArea<?> area, @NotNull UUID member) {
         super(area);
         this.member = member;
     }

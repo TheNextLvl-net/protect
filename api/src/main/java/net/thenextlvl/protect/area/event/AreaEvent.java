@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This class represents an abstract base class for events related to areas.
  *
- * @param <T> The type of the area of this event
+ * @param <T> The area type of this event
  */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
