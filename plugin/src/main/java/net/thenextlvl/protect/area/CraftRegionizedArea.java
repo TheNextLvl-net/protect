@@ -27,6 +27,7 @@ import net.thenextlvl.protect.area.event.member.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicDeleteEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadEvent;
+import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadedEvent;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
@@ -219,7 +220,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     @Override
     public boolean loadSchematic() throws IOException, WorldEditException {
         if (!getSchematic().isFile()) return false;
-        var event = new AreaSchematicLoadEvent<>(this);
+        var event = new AreaSchematicLoadEvent(this);
         if (!event.callEvent()) return false;
         var world = BukkitAdapter.adapt(getWorld());
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
@@ -228,8 +229,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
             var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
                     copyBiomes(true).copyEntities(true).ignoreAirBlocks(false).build();
             Operations.complete(operation);
-            event.getSuccessListeners().forEach(consumer -> consumer.accept(this));
-            return true;
+            return new AreaSchematicLoadedEvent(this).callEvent();
         }
     }
 
