@@ -107,10 +107,14 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
 
     @Override
     public boolean setParent(@Subst("RegEx") @Nullable Area parent) throws CircularInheritanceException {
+        // this change ensures proper event handling
+        if (parent != null && parent.getName().equals(this.parent)) return false;
         checkCircularInheritance(parent);
         var event = new AreaParentChangeEvent(this, parent);
-        if (event.callEvent()) this.parent = event.getParent() != null ? event.getParent().getName() : null;
-        return !event.isCancelled();
+        if (!event.callEvent()) return false;
+        if (!Objects.equals(parent, event.getParent())) checkCircularInheritance(event.getParent());
+        this.parent = event.getParent() != null ? event.getParent().getName() : null;
+        return true;
     }
 
     public void checkCircularInheritance(@Nullable Area parent) throws CircularInheritanceException {
