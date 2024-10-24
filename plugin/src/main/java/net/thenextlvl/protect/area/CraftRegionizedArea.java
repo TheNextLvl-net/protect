@@ -51,10 +51,10 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
     private final File file = new File(getDataFolder(), getName() + ".json");
     private final File schematic;
-    protected @Nullable String parent;
-    protected @Nullable UUID owner;
-    protected Set<UUID> members;
-    protected T region;
+    private @Nullable String parent;
+    private @Nullable UUID owner;
+    private Set<UUID> members;
+    private T region;
 
     protected CraftRegionizedArea(ProtectPlugin plugin,
                                   @Subst("RegEx") @NamePattern.Regionized String name,
@@ -79,7 +79,11 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     }
 
     @Override
-    public Optional<String> getParent() {
+    public Optional<Area> getParent() {
+        return parent().flatMap(plugin.areaProvider()::getArea);
+    }
+
+    public Optional<String> parent() {
         return Optional.ofNullable(parent);
     }
 

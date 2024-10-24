@@ -33,7 +33,7 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     }
 
     @Override
-    public Optional<String> getParent() {
+    public Optional<Area> getParent() {
         return Optional.empty();
     }
 
