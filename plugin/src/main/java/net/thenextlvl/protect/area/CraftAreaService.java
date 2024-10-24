@@ -13,17 +13,18 @@ import net.thenextlvl.protect.area.event.player.PlayerAreaTransitionEvent;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @TypesAreNotNullByDefault
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public class CraftAreaService implements AreaService {
-    public final Map<Class<? extends Area>, AreaAdapter<?>> areaAdapters = new HashMap<>();
+    public final Map<Class<? extends Area>, AreaAdapter<?>> adapters = new HashMap<>();
     private final ProtectPlugin plugin;
 
     @Override
@@ -39,37 +40,71 @@ public class CraftAreaService implements AreaService {
         return remove;
     }
 
+    private final Set<RegionWrapper<?>> wrappers = new HashSet<>();
+
+    private record RegionWrapper<T extends Region>(
+            Class<T> type, Function<AreaCreator<T>, RegionizedArea<T>> creator
+    ) {
+    }
+
     @Override
-    public Map<Class<? extends Area>, AreaAdapter<?>> getAdapters() {
-        return areaAdapters;
+    @SuppressWarnings("unchecked")
+    public <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(Class<T> type) {
+        return wrappers.stream()
+                .filter(wrapper -> wrapper.type().isAssignableFrom(type))
+                .map(wrapper -> (RegionWrapper<T>) wrapper)
+                .map(RegionWrapper::creator)
+                .findFirst();
+    }
+
+    @Override
+    public <T extends Region> boolean unregisterWrapper(Class<T> type) {
+        return wrappers.removeIf(wrapper -> wrapper.type().isAssignableFrom(type));
+    }
+
+    @Override
+    public <T extends Region> void registerWrapper(Class<T> type, Function<AreaCreator<T>, RegionizedArea<T>> creator) throws IllegalStateException {
+        var wrapper = new RegionWrapper<>(type, creator);
+        Preconditions.checkState(wrappers.add(wrapper), "Duplicate wrapper for type: " + type.getName());
+    }
+
+    @Override
+    public @Unmodifiable Set<Class<? extends Region>> getRegionWrappers() {
+        return wrappers.stream().map(RegionWrapper::type)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public @Unmodifiable Map<Class<? extends Area>, AreaAdapter<?>> getAdapters() {
+        return Map.copyOf(adapters);
     }
 
     @Override
     public <T extends Area> void registerAdapter(Class<T> type, AreaAdapter<T> adapter) throws IllegalStateException {
-        Preconditions.checkState(!getAdapters().containsKey(type), "Duplicate adapter for type: " + type.getName());
-        Preconditions.checkState(getAdapters().values().stream()
-                .filter(value -> value.getNamespacedKey().equals(adapter.getNamespacedKey()))
-                .findAny().isEmpty(), "Duplicate key for adapter: " + adapter.getNamespacedKey() + " in "
+        Preconditions.checkState(!adapters.containsKey(type), "Duplicate adapter for type: " + type.getName());
+        Preconditions.checkState(adapters.values().stream()
+                .filter(value -> value.key().equals(adapter.key()))
+                .findAny().isEmpty(), "Duplicate key for adapter: " + adapter.key() + " in "
                                       + adapter.getClass().getName());
-        getAdapters().put(type, adapter);
+        adapters.put(type, adapter);
     }
 
     @Override
     public <T extends Area> boolean unregisterAdapter(Class<T> type) {
-        return getAdapters().remove(type) != null;
+        return adapters.remove(type) != null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Area> AreaAdapter<T> getAdapter(Class<T> type) throws NullPointerException {
-        return (AreaAdapter<T>) Objects.requireNonNull(getAdapters().get(type), "No adapter for type: " + type.getName());
+        return (AreaAdapter<T>) Objects.requireNonNull(adapters.get(type), "No adapter for type: " + type.getName());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Area> AreaAdapter<T> getAdapter(NamespacedKey key) throws IllegalArgumentException {
-        return (AreaAdapter<T>) getAdapters().values().stream()
-                .filter(adapter -> adapter.getNamespacedKey().equals(key))
+        return (AreaAdapter<T>) adapters.values().stream()
+                .filter(adapter -> adapter.key().equals(key))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("No adapter for key: " + key));
     }
 
