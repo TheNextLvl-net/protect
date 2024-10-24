@@ -9,8 +9,8 @@ public class CircularInheritanceException extends IllegalStateException {
         super(message, cause);
     }
 
-    public CircularInheritanceException(String s) {
-        super(s);
+    public CircularInheritanceException(String message) {
+        super(message);
     }
 
     public CircularInheritanceException() {
