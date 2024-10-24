@@ -12,10 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Setter
 @ToString
@@ -55,6 +52,13 @@ public abstract class CraftArea implements Area {
 
     @Override
     @SuppressWarnings("unchecked")
+    public void setFlags(@NotNull Map<Flag<?>, @Nullable Object> flags) {
+        if (Objects.equals(this.flags, flags)) return;
+        flags.forEach((flag, o) -> setFlag((Flag<Object>) flag, o));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public <T> T getFlag(@NotNull Flag<T> flag) {
         var value = (T) getFlags().get(flag);
         if (value != null) return value;
@@ -64,15 +68,17 @@ public abstract class CraftArea implements Area {
 
     @Override
     public <T> boolean setFlag(@NotNull Flag<T> flag, T state) {
+        if (Objects.equals(getFlag(flag), state)) return false;
         var event = new AreaFlagChangeEvent<>(this, flag, state);
-        if (!event.callEvent()) return false;
-        return !Objects.equals(flags.put(flag, event.getNewState()), event.getNewState());
+        return event.callEvent() && !Objects.equals(flags.put(flag, event.getNewState()), event.getNewState());
     }
 
     @Override
     public <T> boolean removeFlag(@NotNull Flag<T> flag) {
+        if (!flags.containsKey(flag)) return false;
         var event = new AreaFlagResetEvent<>(this, flag);
-        return event.callEvent() && flags.remove(flag) != null;
+        if (event.callEvent()) flags.remove(flag);
+        return !event.isCancelled();
     }
 
     @Override
