@@ -5,6 +5,7 @@ import com.sk89q.worldedit.regions.RegionSelector;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
+import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,16 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @return The region associated with this area.
      */
     T getRegion();
+
+    /**
+     * Sets the parent area of this area.
+     * The parent area inherits its values, such as flags, to this area.
+     *
+     * @param parent the parent area to set, or null to clear the parent area
+     * @return true if the parent area was successfully set, false otherwise
+     * @throws CircularInheritanceException if the parent is this area or contained in its inherited parents
+     */
+    boolean setParent(@Nullable Area parent) throws CircularInheritanceException;
 
     /**
      * Sets the region associated with this {@link RegionizedArea}.

@@ -3,9 +3,9 @@ package net.thenextlvl.protect.area;
 import core.annotation.MethodsReturnNotNullByDefault;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 
 /**
@@ -20,6 +20,13 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
      * @return an Optional containing the parent area if it exists, otherwise an empty Optional
      */
     Optional<Area> getParent();
+
+    /**
+     * Retrieves the set of parent areas associated with this area.
+     *
+     * @return a LinkedHashSet of parent areas.
+     */
+    LinkedHashSet<Area> getParents();
 
     /**
      * Retrieves the name of the area.
@@ -38,24 +45,6 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
      * @return the priority of the area
      */
     int getPriority();
-
-    /**
-     * Sets the parent area of this area.
-     * The parent area inherits its values, such as flags, to this area.
-     *
-     * @param parent the parent area to set, or null to clear the parent area
-     * @return true if the parent area was successfully set, false otherwise
-     */
-    boolean setParent(@Nullable Area parent);
-
-    /**
-     * Sets the parent area of this area by its name pattern.
-     * The parent area inherits its values, such as flags, to this area.
-     *
-     * @param parent the name pattern of the parent area to set, or null to clear the parent area
-     * @return true if the parent area was successfully set, false otherwise
-     */
-    boolean setParent(@Nullable @NamePattern String parent);
 
     /**
      * Sets the priority of the area.

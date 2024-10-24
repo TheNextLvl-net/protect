@@ -5,6 +5,7 @@ import core.annotation.TypesAreNotNullByDefault;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
@@ -25,11 +26,11 @@ public class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implement
                            @Nullable @NamePattern.Regionized String parent,
                            @Nullable UUID owner,
                            Set<UUID> members,
-                           Map<Flag<?>, @Nullable Object> flags) {
+                           Map<Flag<?>, @Nullable Object> flags) throws CircularInheritanceException {
         super(plugin, name, world, region, priority, parent, owner, members, flags);
     }
 
-    public CraftCuboidArea(ProtectPlugin plugin, AreaCreator<CuboidRegion> creator) {
+    public CraftCuboidArea(ProtectPlugin plugin, AreaCreator<CuboidRegion> creator) throws CircularInheritanceException {
         super(plugin, creator);
     }
 }

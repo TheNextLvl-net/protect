@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -42,16 +43,6 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     @SuppressWarnings("PatternValidation")
     public String getName() {
         return super.getName();
-    }
-
-    @Override
-    public boolean setParent(@Nullable Area parent) {
-        return false;
-    }
-
-    @Override
-    public boolean setParent(@Nullable String parent) {
-        return false;
     }
 
     @Override

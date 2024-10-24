@@ -27,6 +27,7 @@ import net.thenextlvl.protect.area.event.member.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicDeleteEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadEvent;
+import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -64,8 +65,9 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
                                   @Nullable String parent,
                                   @Nullable UUID owner,
                                   Set<UUID> members,
-                                  Map<Flag<?>, @Nullable Object> flags) {
+                                  Map<Flag<?>, @Nullable Object> flags) throws CircularInheritanceException {
         super(plugin, name, world, flags, priority);
+        if (parent != null) checkCircularInheritance(plugin.areaProvider().getArea(parent).orElse(null));
         this.members = new HashSet<>(members);
         this.owner = owner;
         this.parent = parent;
@@ -73,7 +75,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
         this.schematic = new File(plugin.schematicFolder(), name + ".schem");
     }
 
-    public CraftRegionizedArea(ProtectPlugin plugin, @Subst("RegEx") AreaCreator<T> creator) {
+    public CraftRegionizedArea(ProtectPlugin plugin, @Subst("RegEx") AreaCreator<T> creator) throws CircularInheritanceException {
         this(plugin, creator.name(), creator.world(), creator.region(), creator.priority(),
                 creator.parent(), creator.owner(), creator.members(), creator.flags());
     }
@@ -104,15 +106,19 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     }
 
     @Override
-    public boolean setParent(@Subst("RegEx") @Nullable Area parent) {
-        return setParent(parent != null ? parent.getName() : null);
+    public boolean setParent(@Subst("RegEx") @Nullable Area parent) throws CircularInheritanceException {
+        checkCircularInheritance(parent);
+        var event = new AreaParentChangeEvent(this, parent);
+        if (event.callEvent()) this.parent = event.getParent() != null ? event.getParent().getName() : null;
+        return !event.isCancelled();
     }
 
-    @Override
-    public boolean setParent(@Nullable String parent) {
-        var event = new AreaParentChangeEvent(this, parent);
-        if (event.callEvent()) this.parent = event.getParent();
-        return !event.isCancelled();
+    public void checkCircularInheritance(@Nullable Area parent) throws CircularInheritanceException {
+        var path = new LinkedList<Area>();
+        while (parent != null) {
+            if (parent == this) throw new CircularInheritanceException("Circular inheritance detected: ");
+            parent = parent.getParent().orElse(null);
+        }
     }
 
     @Override

@@ -15,9 +15,9 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 public class AreaParentChangeEvent extends AreaEvent<@NotNull Area> implements Cancellable {
     private boolean cancelled;
-    private @Nullable String parent;
+    private @Nullable Area parent;
 
-    public AreaParentChangeEvent(@NotNull Area area, @Nullable String parent) {
+    public AreaParentChangeEvent(@NotNull Area area, @Nullable Area parent) {
         super(area);
         this.parent = parent;
     }
