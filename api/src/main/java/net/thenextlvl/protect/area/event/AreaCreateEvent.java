@@ -1,16 +1,25 @@
 package net.thenextlvl.protect.area.event;
 
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.area.AreaCreator;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * The AreaCreateEvent class represents an event that is fired when a new Area is created.
+ * This event is fired when a new Area is created.
+ * <p>
+ * Note: Calling {@link AreaCreator#create()} or triggering a
+ * {@link org.bukkit.event.world.WorldInitEvent WorldInitEvent}
+ * within this event can lead to an infinite loop.
  */
-@TypesAreNotNullByDefault
-@ParametersAreNotNullByDefault
-public class AreaCreateEvent extends AreaEvent<Area> {
-    public AreaCreateEvent(Area area) {
+public class AreaCreateEvent extends AreaEvent<@NotNull Area> {
+    /**
+     * This event is fired when a new Area is created.
+     *
+     * @param area the area that has been created
+     */
+    @ApiStatus.Internal
+    public AreaCreateEvent(@NotNull Area area) {
         super(area);
     }
 }

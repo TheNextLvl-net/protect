@@ -22,11 +22,11 @@ import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.inheritance.AreaParentChangeEvent;
 import net.thenextlvl.protect.area.event.member.AreaMemberAddEvent;
 import net.thenextlvl.protect.area.event.member.AreaMemberRemoveEvent;
-import net.thenextlvl.protect.area.event.member.AreaMembersChangeEvent;
 import net.thenextlvl.protect.area.event.member.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicDeleteEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadEvent;
+import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadedEvent;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
@@ -52,9 +52,9 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
     private final File file = new File(getDataFolder(), getName() + ".json");
     private final File schematic;
+    private final Set<UUID> members;
     private @Nullable String parent;
     private @Nullable UUID owner;
-    private Set<UUID> members;
     private T region;
 
     protected CraftRegionizedArea(ProtectPlugin plugin,
@@ -107,10 +107,13 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
 
     @Override
     public boolean setParent(@Subst("RegEx") @Nullable Area parent) throws CircularInheritanceException {
+        if (parent != null && parent.getName().equals(this.parent)) return false;
         checkCircularInheritance(parent);
         var event = new AreaParentChangeEvent(this, parent);
-        if (event.callEvent()) this.parent = event.getParent() != null ? event.getParent().getName() : null;
-        return !event.isCancelled();
+        if (!event.callEvent()) return false;
+        if (!Objects.equals(parent, event.getParent())) checkCircularInheritance(event.getParent());
+        this.parent = event.getParent() != null ? event.getParent().getName() : null;
+        return true;
     }
 
     public void checkCircularInheritance(@Nullable Area parent) throws CircularInheritanceException {
@@ -146,21 +149,21 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
 
     @Override
     public boolean removeMember(UUID uuid) {
-        var event = new AreaMemberRemoveEvent<>(this, uuid);
+        var event = new AreaMemberRemoveEvent(this, uuid);
         return event.callEvent() && members.remove(event.getMember());
     }
 
     @Override
     public boolean addMember(UUID uuid) {
-        var event = new AreaMemberAddEvent<>(this, uuid);
+        var event = new AreaMemberAddEvent(this, uuid);
         return event.callEvent() && members.add(event.getMember());
     }
 
     @Override
-    public boolean setMembers(Set<UUID> members) {
-        var event = new AreaMembersChangeEvent(this, members);
-        if (event.callEvent()) this.members = new HashSet<>(event.getMembers());
-        return !event.isCancelled();
+    public void setMembers(Set<UUID> members) {
+        if (Objects.equals(members, this.members)) return;
+        for (var member : this.members) if (!members.contains(member)) removeMember(member);
+        for (var member : members) if (!this.members.contains(member)) addMember(member);
     }
 
     @Override
@@ -193,7 +196,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
 
     @Override
     public boolean deleteSchematic() {
-        return getSchematic().exists() && (new AreaSchematicDeleteEvent<>(this).callEvent() && getSchematic().delete());
+        return getSchematic().exists() && (new AreaSchematicDeleteEvent(this).callEvent() && getSchematic().delete());
     }
 
     @Override
@@ -216,7 +219,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     @Override
     public boolean loadSchematic() throws IOException, WorldEditException {
         if (!getSchematic().isFile()) return false;
-        var event = new AreaSchematicLoadEvent<>(this);
+        var event = new AreaSchematicLoadEvent(this);
         if (!event.callEvent()) return false;
         var world = BukkitAdapter.adapt(getWorld());
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
@@ -225,8 +228,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
             var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
                     copyBiomes(true).copyEntities(true).ignoreAirBlocks(false).build();
             Operations.complete(operation);
-            event.getSuccessListeners().forEach(consumer -> consumer.accept(this));
-            return true;
+            return new AreaSchematicLoadedEvent(this).callEvent();
         }
     }
 
