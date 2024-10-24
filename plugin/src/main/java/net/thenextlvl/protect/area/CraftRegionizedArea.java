@@ -150,13 +150,13 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
 
     @Override
     public boolean removeMember(UUID uuid) {
-        var event = new AreaMemberRemoveEvent<>(this, uuid);
+        var event = new AreaMemberRemoveEvent(this, uuid);
         return event.callEvent() && members.remove(event.getMember());
     }
 
     @Override
     public boolean addMember(UUID uuid) {
-        var event = new AreaMemberAddEvent<>(this, uuid);
+        var event = new AreaMemberAddEvent(this, uuid);
         return event.callEvent() && members.add(event.getMember());
     }
 
@@ -197,7 +197,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
 
     @Override
     public boolean deleteSchematic() {
-        return getSchematic().exists() && (new AreaSchematicDeleteEvent<>(this).callEvent() && getSchematic().delete());
+        return getSchematic().exists() && (new AreaSchematicDeleteEvent(this).callEvent() && getSchematic().delete());
     }
 
     @Override
