@@ -1,104 +1,110 @@
 package net.thenextlvl.protect.area;
 
 import com.google.common.base.Preconditions;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.area.event.AreaCreateEvent;
 import net.thenextlvl.protect.area.event.AreaDeleteEvent;
 import net.thenextlvl.protect.area.event.player.PlayerAreaLeaveEvent;
 import net.thenextlvl.protect.area.event.player.PlayerAreaTransitionEvent;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @TypesAreNotNullByDefault
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
 public class CraftAreaService implements AreaService {
-    public final Map<Class<? extends Area>, AreaAdapter<?>> areaAdapters = new HashMap<>();
+    public final Map<Class<? extends Area>, AreaAdapter<?>> adapters = new HashMap<>();
     private final ProtectPlugin plugin;
 
     @Override
-    public CuboidArea create(@NamePattern.Regionized String name, World world, BlockVector3 pos1, BlockVector3 pos2) {
-        return create(name, world, new CuboidRegion(pos1, pos2));
-    }
-
-    @Override
-    public CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region) {
-        return create(new CraftCuboidArea(plugin.schematicFolder(), name, world, region.clone(), 0));
-    }
-
-    @Override
-    public CylinderArea create(@NamePattern.Regionized String name, World world, CylinderRegion region) {
-        return create(new CraftCylinderArea(plugin.schematicFolder(), name, world, region.clone(), 0));
-    }
-
-    @Override
-    public EllipsoidArea create(@NamePattern.Regionized String name, World world, EllipsoidRegion region) {
-        return create(new CraftEllipsoidArea(plugin.schematicFolder(), name, world, region.clone(), 0));
-    }
-
-    @Override
-    public IntersectionArea create(@NamePattern.Regionized String name, World world, RegionIntersection region) {
-        var intersection = new RegionIntersection(region.getWorld(), region.getRegions());
-        return create(new CraftIntersectionArea(plugin.schematicFolder(), name, world, intersection, 0));
-    }
-
-    private <A extends Area> A create(A area) {
-        plugin.areaProvider().loadArea(area);
-        new AreaCreateEvent<>(area).callEvent();
-        return area;
+    public <T extends Region> AreaCreator<T> creator(@NamePattern.Regionized String name, World world, T region) {
+        return new CraftAreaCreator<>(plugin, name, world, region);
     }
 
     @Override
     public <T extends Region> boolean delete(RegionizedArea<T> area) {
-        if (!new AreaDeleteEvent<>(area).callEvent()) return false;
-        var remove = plugin.areaProvider().deleteArea(area);
+        if (!new AreaDeleteEvent(area).callEvent()) return false;
+        var remove = plugin.areaProvider().delete(area);
         if (remove) handlePostRemove(area);
         return remove;
     }
 
+    private final Set<RegionWrapper<?>> wrappers = new HashSet<>();
+
+    private record RegionWrapper<T extends Region>(
+            Class<T> type, Function<AreaCreator<T>, RegionizedArea<T>> creator
+    ) {
+    }
+
     @Override
-    public Map<Class<? extends Area>, AreaAdapter<?>> getAdapters() {
-        return areaAdapters;
+    @SuppressWarnings("unchecked")
+    public <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(Class<T> type) {
+        return wrappers.stream()
+                .filter(wrapper -> wrapper.type().isAssignableFrom(type))
+                .map(wrapper -> (RegionWrapper<T>) wrapper)
+                .map(RegionWrapper::creator)
+                .findFirst();
+    }
+
+    @Override
+    public <T extends Region> boolean unregisterWrapper(Class<T> type) {
+        return wrappers.removeIf(wrapper -> wrapper.type().isAssignableFrom(type));
+    }
+
+    @Override
+    public <T extends Region> void registerWrapper(Class<T> type, Function<AreaCreator<T>, RegionizedArea<T>> creator) throws IllegalStateException {
+        var wrapper = new RegionWrapper<>(type, creator);
+        Preconditions.checkState(wrappers.add(wrapper), "Duplicate wrapper for type: " + type.getName());
+    }
+
+    @Override
+    public @Unmodifiable Set<Class<? extends Region>> getRegionWrappers() {
+        return wrappers.stream().map(RegionWrapper::type)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public @Unmodifiable Map<Class<? extends Area>, AreaAdapter<?>> getAdapters() {
+        return Map.copyOf(adapters);
     }
 
     @Override
     public <T extends Area> void registerAdapter(Class<T> type, AreaAdapter<T> adapter) throws IllegalStateException {
-        Preconditions.checkState(!getAdapters().containsKey(type), "Duplicate adapter for type: " + type.getName());
-        Preconditions.checkState(getAdapters().values().stream()
-                .filter(value -> value.getNamespacedKey().equals(adapter.getNamespacedKey()))
-                .findAny().isEmpty(), "Duplicate key for adapter: " + adapter.getNamespacedKey() + " in "
-                + adapter.getClass().getName());
-        getAdapters().put(type, adapter);
+        Preconditions.checkState(!adapters.containsKey(type), "Duplicate adapter for type: " + type.getName());
+        Preconditions.checkState(adapters.values().stream()
+                .filter(value -> value.key().equals(adapter.key()))
+                .findAny().isEmpty(), "Duplicate key for adapter: " + adapter.key() + " in "
+                                      + adapter.getClass().getName());
+        adapters.put(type, adapter);
     }
 
     @Override
     public <T extends Area> boolean unregisterAdapter(Class<T> type) {
-        return getAdapters().remove(type) != null;
+        return adapters.remove(type) != null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Area> AreaAdapter<T> getAdapter(Class<T> type) throws NullPointerException {
-        return (AreaAdapter<T>) Objects.requireNonNull(getAdapters().get(type), "No adapter for type: " + type.getName());
+        return (AreaAdapter<T>) Objects.requireNonNull(adapters.get(type), "No adapter for type: " + type.getName());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Area> AreaAdapter<T> getAdapter(NamespacedKey key) throws IllegalArgumentException {
-        return (AreaAdapter<T>) getAdapters().values().stream()
-                .filter(adapter -> adapter.getNamespacedKey().equals(key))
+        return (AreaAdapter<T>) adapters.values().stream()
+                .filter(adapter -> adapter.key().equals(key))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("No adapter for key: " + key));
     }
 

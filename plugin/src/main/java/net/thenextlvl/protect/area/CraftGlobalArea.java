@@ -4,14 +4,20 @@ import core.annotation.FieldsAreNotNullByDefault;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import lombok.Getter;
+import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 @FieldsAreNotNullByDefault
@@ -21,14 +27,20 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File dataFolder;
     private final File file;
 
-    public CraftGlobalArea(World world, int priority) {
-        super("@" + world.getName(), world, priority);
+    public CraftGlobalArea(ProtectPlugin plugin, World world, Map<Flag<?>, @Nullable Object> flags, int priority) {
+        super(plugin, "@" + world.getName(), world, flags, priority);
         this.dataFolder = new File(world.getWorldFolder(), "areas");
         this.file = new File(getDataFolder(), getName() + ".json");
     }
 
     @Override
+    public Optional<Area> getParent() {
+        return Optional.empty();
+    }
+
+    @Override
     @NamePattern.Global
+    @SuppressWarnings("PatternValidation")
     public String getName() {
         return super.getName();
     }

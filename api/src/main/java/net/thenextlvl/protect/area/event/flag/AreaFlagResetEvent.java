@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event.flag;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
 import org.jetbrains.annotations.NotNull;
@@ -12,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> The type of the flag value.
  */
-@Getter
-@Setter
 public class AreaFlagResetEvent<T> extends AreaFlagEvent<T> {
-
     public AreaFlagResetEvent(@NotNull Area area, @NotNull Flag<T> flag) {
         super(area, flag);
     }

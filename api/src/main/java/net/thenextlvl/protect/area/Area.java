@@ -5,12 +5,29 @@ import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.World;
 
 import java.io.File;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 
 /**
  * The Area interface represents an area inside a world.
  */
 @MethodsReturnNotNullByDefault
 public interface Area extends Container, FlagProvider, Comparable<Area> {
+    /**
+     * Retrieves the parent area of this area.
+     * The parent area inherits its values, such as flags, to this area.
+     *
+     * @return an Optional containing the parent area if it exists, otherwise an empty Optional
+     */
+    Optional<Area> getParent();
+
+    /**
+     * Retrieves the set of parent areas associated with this area.
+     *
+     * @return a LinkedHashSet of parent areas.
+     */
+    LinkedHashSet<Area> getParents();
+
     /**
      * Retrieves the name of the area.
      *
@@ -21,10 +38,9 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
 
     /**
      * Retrieves the priority of the area.
+     * <p>
      * The priority determines the order in which areas are considered when resolving conflicts or determining containment.
      * A higher priority value indicates a higher priority for the area.
-     * <p>
-     * Note: This method does not validate the uniqueness of the priority value within the same container.
      *
      * @return the priority of the area
      */
@@ -34,8 +50,6 @@ public interface Area extends Container, FlagProvider, Comparable<Area> {
      * Sets the priority of the area.
      * The priority determines the order in which areas are considered when resolving conflicts or determining containment.
      * A higher priority value indicates a higher priority for the area.
-     * <p>
-     * Note: This method does not validate the uniqueness of the priority value within the same container.
      *
      * @param priority the priority value to set
      * @return whether the priority was changed

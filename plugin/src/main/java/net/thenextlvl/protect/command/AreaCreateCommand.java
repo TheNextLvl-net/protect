@@ -1,21 +1,19 @@
 package net.thenextlvl.protect.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.CylinderRegion;
-import com.sk89q.worldedit.regions.EllipsoidRegion;
-import com.sk89q.worldedit.regions.RegionIntersection;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.NamePattern;
+import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
@@ -28,11 +26,16 @@ class AreaCreateCommand {
                 .requires(stack -> stack.getSender() instanceof Player player
                                    && player.hasPermission("protect.command.area.create"))
                 .then(Commands.argument("name", StringArgumentType.string())
-                        .executes(this::execute));
+                        .then(Commands.argument("priority", IntegerArgumentType.integer())
+                                .executes(context -> {
+                                    var priority = context.getArgument("priority", int.class);
+                                    return execute(context, priority);
+                                }))
+                        .executes(context -> execute(context, 0)));
     }
 
     @SuppressWarnings("PatternValidation")
-    private int execute(CommandContext<CommandSourceStack> context) {
+    private int execute(CommandContext<CommandSourceStack> context, int priority) {
         var player = (Player) context.getSource().getSender();
         var name = context.getArgument("name", String.class);
 
@@ -49,23 +52,16 @@ class AreaCreateCommand {
 
         try {
             var session = WorldEditPlugin.getInstance().getSession(player);
-            var selection = session.getSelection();
-
-            switch (selection) {
-                case CuboidRegion region -> plugin.areaService().create(name, player.getWorld(), region);
-                case CylinderRegion region -> plugin.areaService().create(name, player.getWorld(), region);
-                case EllipsoidRegion region -> plugin.areaService().create(name, player.getWorld(), region);
-                case RegionIntersection region -> plugin.areaService().create(name, player.getWorld(), region);
-                default -> {
-                    plugin.bundle().sendMessage(player, "region.unsupported",
-                            Placeholder.parsed("type", selection.getClass().getSimpleName()));
-                    return 0;
-                }
-            }
-
-            plugin.bundle().sendMessage(player, "area.created", Placeholder.parsed("area", name));
+            var creator = plugin.areaService().creator(
+                    name, player.getWorld(), session.getSelection()
+            ).priority(priority).create();
+            plugin.bundle().sendMessage(player, "area.created",
+                    Placeholder.parsed("area", creator.getName()));
             return Command.SINGLE_SUCCESS;
-
+        } catch (UnsupportedRegionException e) {
+            plugin.bundle().sendMessage(player, "region.unsupported",
+                    Placeholder.parsed("type", e.getType().getSimpleName()));
+            return 0;
         } catch (IncompleteRegionException ignored) {
             plugin.bundle().sendMessage(player, "region.select");
             return 0;

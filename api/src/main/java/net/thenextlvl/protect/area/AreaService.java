@@ -1,15 +1,18 @@
 package net.thenextlvl.protect.area;
 
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.regions.Region;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * The AreaService interface is used to create or delete instances of {@link Area}.
@@ -19,55 +22,15 @@ import java.util.Map;
 @ParametersAreNotNullByDefault
 public interface AreaService {
     /**
-     * Creates a CuboidArea object with the given parameters.
+     * Creates an AreaCreator with the given name, world, and region.
      *
-     * @param name  The name of the CuboidArea.
-     * @param world The world in which the CuboidArea is located.
-     * @param pos1  The first corner of the CuboidArea.
-     * @param pos2  The second corner of the CuboidArea.
-     * @return The created CuboidArea object.
+     * @param name   The name of the area.
+     * @param world  The world in which the area is located.
+     * @param region The region of the area.
+     * @param <T>    The type of the region.
+     * @return The AreaCreator object.
      */
-    CuboidArea create(@NamePattern.Regionized String name, World world, BlockVector3 pos1, BlockVector3 pos2);
-
-    /**
-     * Creates a CuboidArea object with the given name and region.
-     *
-     * @param name   The name of the CuboidArea.
-     * @param world  The world in which the CuboidArea is located
-     * @param region The region of the CuboidArea.
-     * @return The created CuboidArea object.
-     */
-    CuboidArea create(@NamePattern.Regionized String name, World world, CuboidRegion region);
-
-    /**
-     * Creates a CylinderArea object with the given name and region.
-     *
-     * @param name   The name of the CylinderArea.
-     * @param world  The world in which the CylinderArea is located.
-     * @param region The region of the CylinderArea.
-     * @return The created CylinderArea object.
-     */
-    CylinderArea create(@NamePattern.Regionized String name, World world, CylinderRegion region);
-
-    /**
-     * Creates an EllipsoidArea object with the given name and region.
-     *
-     * @param name   The name of the EllipsoidArea.
-     * @param world  The world in which the EllipsoidArea is located.
-     * @param region The region of the EllipsoidArea.
-     * @return The created EllipsoidArea object.
-     */
-    EllipsoidArea create(@NamePattern.Regionized String name, World world, EllipsoidRegion region);
-
-    /**
-     * Creates an IntersectionArea object with the given name, world, and region.
-     *
-     * @param name   The name of the IntersectionArea.
-     * @param world  The world in which the IntersectionArea is located.
-     * @param region The region of the IntersectionArea.
-     * @return The created IntersectionArea object.
-     */
-    IntersectionArea create(@NamePattern.Regionized String name, World world, RegionIntersection region);
+    <T extends Region> AreaCreator<T> creator(@NamePattern.Regionized String name, World world, T region);
 
     /**
      * Deletes the given Area.
@@ -79,10 +42,47 @@ public interface AreaService {
     <T extends Region> boolean delete(RegionizedArea<T> area);
 
     /**
+     * Retrieves an Optional containing the RegionWrapper of the specified type if it exists.
+     *
+     * @param <T>  The type of the region.
+     * @param type The class object representing the type of the region.
+     * @return An Optional containing the RegionWrapper of the specified type if it exists, otherwise an empty Optional.
+     */
+    <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(Class<T> type);
+
+    /**
+     * Unregisters the region wrapper of the specified type.
+     *
+     * @param <T>  The type of the region.
+     * @param type The class object representing the type of the region.
+     * @return true if the unregistration is successful, false otherwise.
+     */
+    <T extends Region> boolean unregisterWrapper(Class<T> type);
+
+    /**
+     * Registers a new region wrapper using the specified type and creator function.
+     *
+     * @param <T>     The type of the region.
+     * @param type    The class object representing the type of the region.
+     * @param creator The function to create a RegionizedArea from an AreaCreator.
+     * @throws IllegalStateException if a region wrapper for the same type already exists.
+     */
+    <T extends Region> void registerWrapper(Class<T> type, Function<AreaCreator<T>, RegionizedArea<T>> creator) throws IllegalStateException;
+
+    /**
+     * Retrieves an unmodifiable set of region wrapper classes.
+     *
+     * @return an unmodifiable set of classes representing region wrappers.
+     */
+    @Unmodifiable
+    Set<Class<? extends Region>> getRegionWrappers();
+
+    /**
      * Retrieves all registered adapter functions for serializing and deserializing Area objects.
      *
      * @return The registered adapter functions for serializing and deserializing Area objects.
      */
+    @Unmodifiable
     Map<Class<? extends Area>, AreaAdapter<?>> getAdapters();
 
     /**

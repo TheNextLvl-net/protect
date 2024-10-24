@@ -29,7 +29,7 @@ public class AreaTypeAdapter implements JsonDeserializer<Area>, JsonSerializer<A
     public JsonElement serialize(Area area, Type type, JsonSerializationContext context) {
         var adapter = (AreaAdapter<Area>) plugin.areaService().getAdapter(area.getClass());
         var object = adapter.serialize(area, context);
-        object.add("type", context.serialize(adapter.getNamespacedKey()));
+        object.add("type", context.serialize(adapter.key()));
         return object;
     }
 }

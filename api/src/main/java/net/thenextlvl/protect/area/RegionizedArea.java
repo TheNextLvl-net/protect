@@ -5,10 +5,13 @@ import com.sk89q.worldedit.regions.RegionSelector;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
+import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.schematic.SchematicHolder;
+import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,6 +26,7 @@ import java.util.UUID;
 @ParametersAreNotNullByDefault
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
     @Override
+    @Subst("RegEx")
     @NamePattern.Regionized
     String getName();
 
@@ -41,6 +45,16 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
     T getRegion();
 
     /**
+     * Sets the parent area of this area.
+     * The parent area inherits its values, such as flags, to this area.
+     *
+     * @param parent the parent area to set, or null to clear the parent area
+     * @return true if the parent area was successfully set, false otherwise
+     * @throws CircularInheritanceException if the parent is this area or contained in its inherited parents
+     */
+    boolean setParent(@Nullable Area parent) throws CircularInheritanceException;
+
+    /**
      * Sets the region associated with this {@link RegionizedArea}.
      *
      * @param region the region to set
@@ -57,19 +71,11 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
     Set<UUID> getMembers();
 
     /**
-     * Retrieves the UUID of the owner of the Area.
+     * Retrieves the owner of the regionized area.
      *
-     * @return the UUID of the owner
+     * @return an Optional containing the UUID of the owner, or empty
      */
-    @Nullable
-    UUID getOwner();
-
-    /**
-     * Checks if the area has an owner.
-     *
-     * @return true if the area has an owner, false otherwise
-     */
-    boolean hasOwner();
+    Optional<UUID> getOwner();
 
     /**
      * Checks if a given UUID is a member of the regionized area.
@@ -78,6 +84,14 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @return true if the UUID is a member, false otherwise
      */
     boolean isMember(UUID uuid);
+
+    /**
+     * Checks if a given UUID is either the owner or a member of the regionized area.
+     *
+     * @param uuid the UUID to check
+     * @return true if the UUID is either the owner or a member, false otherwise
+     */
+    boolean isPermitted(UUID uuid);
 
     /**
      * Adds a member to the regionized area.
@@ -94,6 +108,14 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @return whether the member was removed
      */
     boolean removeMember(UUID uuid);
+
+    /**
+     * Sets the members of the regionized area.
+     *
+     * @param members a set of UUIDs representing the new members to set
+     * @return true if the members were successfully set, false otherwise
+     */
+    boolean setMembers(Set<UUID> members);
 
     /**
      * Sets the owner of the Area object.

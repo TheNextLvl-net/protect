@@ -4,27 +4,34 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.CraftGlobalArea;
+import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Getter
+
+@Accessors(fluent = true)
 public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
-    private final NamespacedKey namespacedKey;
+    private final @Getter NamespacedKey key;
+    private final ProtectPlugin plugin;
 
     public GlobalAreaAdapter(ProtectPlugin plugin) {
-        this.namespacedKey = new NamespacedKey(plugin, "global");
+        this.key = new NamespacedKey(plugin, "global");
+        this.plugin = plugin;
     }
 
     @Override
     public CraftGlobalArea deserialize(JsonObject object, World world, JsonDeserializationContext context) {
-        var area = new CraftGlobalArea(world, object.get("priority").getAsInt());
-        area.setFlags(context.deserialize(object.get("flags"), Map.class));
-        return area;
+        var priority = object.get("priority").getAsInt();
+        var flags = context.<Map<Flag<?>, @Nullable Object>>deserialize(object.get("flags"), LinkedHashMap.class);
+        return new CraftGlobalArea(plugin, world, flags, priority);
     }
 
     @Override

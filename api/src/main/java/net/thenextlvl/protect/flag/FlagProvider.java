@@ -2,25 +2,28 @@ package net.thenextlvl.protect.flag;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The FlagProvider interface represents an object that can store and retrieve flags and their associated states.
  */
 public interface FlagProvider {
-
     /**
-     * Retrieves the map of all flags and their associated state.
+     * Retrieves a map of all the flags and their associated states.
      *
-     * @return a map of flags and their associated state
+     * @return an unmodifiable map containing the flags as keys and their states as values.
+     * The map may include null values for certain flags.
      */
     @NotNull
+    @Unmodifiable
     Map<Flag<?>, @Nullable Object> getFlags();
 
     /**
-     * Sets the map of all flags and their associated state.
+     * Sets the flags for the FlagProvider instance.
+     * This method updates only the specified flags in the provided map.
+     * Any flags that were already defined but not included in the new map will remain unchanged.
      *
      * @param flags A map of flags and their associated states.
      */
@@ -34,21 +37,19 @@ public interface FlagProvider {
      * @param <T>   The type of the flag state.
      * @return whether the flag was changed.
      */
-    default <T> boolean setFlag(@NotNull Flag<T> flag, T state) {
-        return !Objects.equals(getFlags().put(flag, state), state);
-    }
+    <T> boolean setFlag(@NotNull Flag<T> flag, T state);
 
     /**
-     * Retrieves the state of a flag.
+     * Retrieves the value of the specified flag for this area. This method always returns a value.
+     * If the flag is not defined in this area, a value inherited from a parent area will be returned.
+     * If there is no inherited mapping, the default value of the flag will be returned.
+     * To check the presence of a flag, use {@link #hasFlag(Flag)}.
      *
-     * @param flag The flag to retrieve the state of.
-     * @param <T>  The type of the flag state.
-     * @return The state of the flag.
+     * @param flag The flag to retrieve the value for. Must not be null.
+     * @param <T>  The type of the flag value.
+     * @return The value of the specified flag. Nullability is defined by the flag's type.
      */
-    @SuppressWarnings("unchecked")
-    default <T> T getFlag(@NotNull Flag<T> flag) {
-        return (T) getFlags().getOrDefault(flag, flag.defaultValue());
-    }
+    <T> T getFlag(@NotNull Flag<T> flag);
 
     /**
      * Checks if the flag has a state defined.
@@ -57,9 +58,7 @@ public interface FlagProvider {
      * @param <T>  The type of the flag.
      * @return true if a state is defined, true otherwise.
      */
-    default <T> boolean hasFlag(@NotNull Flag<T> flag) {
-        return getFlags().containsKey(flag);
-    }
+    <T> boolean hasFlag(@NotNull Flag<T> flag);
 
     /**
      * Removes a flag from the FlagProvider.
@@ -68,7 +67,5 @@ public interface FlagProvider {
      * @param <T>  The type of the flag value.
      * @return true if the flag was successfully removed, false otherwise.
      */
-    default <T> boolean removeFlag(@NotNull Flag<T> flag) {
-        return getFlags().remove(flag) != null;
-    }
+    <T> boolean removeFlag(@NotNull Flag<T> flag);
 }

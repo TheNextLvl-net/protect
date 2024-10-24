@@ -4,34 +4,42 @@ import lombok.*;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
 import net.thenextlvl.protect.area.event.flag.AreaFlagResetEvent;
-import net.thenextlvl.protect.area.event.AreaPriorityChangeEvent;
+import net.thenextlvl.protect.area.event.inheritance.AreaPriorityChangeEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Getter
 @Setter
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
 public abstract class CraftArea implements Area {
-    private final @Getter(AccessLevel.NONE) ProtectPlugin plugin = JavaPlugin.getPlugin(ProtectPlugin.class);
-    private Map<Flag<?>, @Nullable Object> flags = new LinkedHashMap<>();
-    private final String name;
-    private final World world;
-    private int priority;
+    protected final ProtectPlugin plugin;
 
-    protected CraftArea(String name, World world, int priority) {
-        this.name = name;
-        this.world = world;
-        this.priority = priority;
+    @NamePattern
+    private final @Getter String name;
+    private final @Getter World world;
+
+    private Map<Flag<?>, @Nullable Object> flags;
+    private @Getter int priority;
+
+    @Override
+    public @NotNull LinkedHashSet<Area> getParents() {
+        var parents = new LinkedHashSet<Area>();
+        var parent = getParent().orElse(null);
+        while (parent != null && parent != this && parents.add(parent))
+            parent = parent.getParent().orElse(null);
+        return parents;
+    }
+
+    @Override
+    public @NotNull Map<Flag<?>, @Nullable Object> getFlags() {
+        return Map.copyOf(flags);
     }
 
     public boolean setPriority(int priority) {
@@ -43,16 +51,39 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public void setFlags(@NotNull Map<Flag<?>, @Nullable Object> flags) {
+        if (Objects.equals(this.flags, flags)) return;
+        flags.forEach((flag, o) -> setFlag((Flag<Object>) flag, o));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getFlag(@NotNull Flag<T> flag) {
+        var value = (T) getFlags().get(flag);
+        if (value != null) return value;
+        return getParent().map(area -> area.getFlag(flag))
+                .orElseGet(flag::defaultValue);
+    }
+
+    @Override
     public <T> boolean setFlag(@NotNull Flag<T> flag, T state) {
+        if (Objects.equals(getFlag(flag), state)) return false;
         var event = new AreaFlagChangeEvent<>(this, flag, state);
-        if (!event.callEvent()) return false;
-        return Area.super.setFlag(flag, event.getNewState());
+        return event.callEvent() && !Objects.equals(flags.put(flag, event.getNewState()), event.getNewState());
     }
 
     @Override
     public <T> boolean removeFlag(@NotNull Flag<T> flag) {
+        if (!flags.containsKey(flag)) return false;
         var event = new AreaFlagResetEvent<>(this, flag);
-        return event.callEvent() && Area.super.removeFlag(flag);
+        if (event.callEvent()) flags.remove(flag);
+        return !event.isCancelled();
+    }
+
+    @Override
+    public <T> boolean hasFlag(@NotNull Flag<T> flag) {
+        return flags.containsKey(flag);
     }
 
     @Override
