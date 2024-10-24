@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.CraftGlobalArea;
 import net.thenextlvl.protect.flag.Flag;
@@ -16,12 +17,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
+@Accessors(fluent = true)
 public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
-    private final @Getter NamespacedKey namespacedKey;
+    private final @Getter NamespacedKey key;
     private final ProtectPlugin plugin;
 
     public GlobalAreaAdapter(ProtectPlugin plugin) {
-        this.namespacedKey = new NamespacedKey(plugin, "global");
+        this.key = new NamespacedKey(plugin, "global");
         this.plugin = plugin;
     }
 

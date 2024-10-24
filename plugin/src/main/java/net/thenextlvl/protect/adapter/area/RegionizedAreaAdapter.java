@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.sk89q.worldedit.regions.Region;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.key.KeyPattern;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.CraftAreaCreator;
@@ -18,12 +19,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@Accessors(fluent = true)
 public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftRegionizedArea<C>> implements AreaAdapter<T> {
-    private final @Getter NamespacedKey namespacedKey;
+    private final @Getter NamespacedKey key;
     protected final ProtectPlugin plugin;
 
     public RegionizedAreaAdapter(ProtectPlugin plugin, @KeyPattern.Value String name) {
-        this.namespacedKey = new NamespacedKey(plugin, name);
+        this.key = new NamespacedKey(plugin, name);
         this.plugin = plugin;
     }
 

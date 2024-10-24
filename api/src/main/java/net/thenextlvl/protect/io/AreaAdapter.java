@@ -6,6 +6,7 @@ import com.google.gson.JsonSerializationContext;
 import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
+import net.kyori.adventure.key.Keyed;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -20,14 +21,14 @@ import org.bukkit.World;
 @TypesAreNotNullByDefault
 @MethodsReturnNotNullByDefault
 @ParametersAreNotNullByDefault
-public interface AreaAdapter<T extends Area> {
+public interface AreaAdapter<T extends Area> extends Keyed {
     /**
      * Retrieves the key associated with the adapter. The key is used for serialization and deserialization
      * of objects of type T that implement the Area interface.
      *
      * @return The key associated with the adapter.
      */
-    NamespacedKey getNamespacedKey();
+    NamespacedKey key();
 
     /**
      * Deserializes a JsonObject to an object of type T that implements the Area interface.
