@@ -3,6 +3,10 @@ package net.thenextlvl.protect;
 import com.fastasyncworldedit.core.util.WEManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.CylinderRegion;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
+import com.sk89q.worldedit.regions.RegionIntersection;
 import core.i18n.file.ComponentBundle;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -70,8 +74,9 @@ public class ProtectPlugin extends JavaPlugin {
     public void onLoad() {
         WEManager.weManager().addManager(new ProtectMaskManager(this));
         versionChecker().checkVersion();
+        registerAdapters();
         registerServices();
-        registerAdapter();
+        registerWrappers();
     }
 
     @Override
@@ -96,11 +101,18 @@ public class ProtectPlugin extends JavaPlugin {
         getServer().getServicesManager().register(AreaService.class, areaService(), this, ServicePriority.Highest);
     }
 
-    private void registerAdapter() {
+    private void registerAdapters() {
         areaService().registerAdapter(CraftGlobalArea.class, new GlobalAreaAdapter(this));
         areaService().registerAdapter(CraftCuboidArea.class, new CuboidAreaAdapter(this));
         areaService().registerAdapter(CraftCylinderArea.class, new CylinderAreaAdapter(this));
         areaService().registerAdapter(CraftEllipsoidArea.class, new EllipsoidAreaAdapter(this));
+    }
+
+    private void registerWrappers() {
+        areaService().registerWrapper(CuboidRegion.class, creator -> new CraftCuboidArea(this, creator));
+        areaService().registerWrapper(CylinderRegion.class, creator -> new CraftCylinderArea(this, creator));
+        areaService().registerWrapper(EllipsoidRegion.class, creator -> new CraftEllipsoidArea(this, creator));
+        areaService().registerWrapper(RegionIntersection.class, creator -> new CraftIntersectionArea(this, creator));
     }
 
     private void registerEvents() {
