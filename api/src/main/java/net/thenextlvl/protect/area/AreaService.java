@@ -5,10 +5,14 @@ import core.annotation.MethodsReturnNotNullByDefault;
 import core.annotation.ParametersAreNotNullByDefault;
 import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.io.AreaAdapter;
+import net.thenextlvl.protect.io.RegionWrapper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * The AreaService interface is used to create or delete instances of {@link Area}.
@@ -38,10 +42,46 @@ public interface AreaService {
     <T extends Region> boolean delete(RegionizedArea<T> area);
 
     /**
+     * Retrieves an Optional containing the RegionWrapper of the specified type if it exists.
+     *
+     * @param <T>  The type of the region.
+     * @param type The class object representing the type of the region.
+     * @return An Optional containing the RegionWrapper of the specified type if it exists, otherwise an empty Optional.
+     */
+    <T extends Region> Optional<RegionWrapper<T>> getWrapper(Class<T> type);
+
+    /**
+     * Unregisters a RegionWrapper from the service.
+     *
+     * @param <T>     The type of the region.
+     * @param wrapper The RegionWrapper to unregister.
+     * @return true if the unregistration is successful, false otherwise.
+     */
+    <T extends Region> boolean unregisterWrapper(RegionWrapper<T> wrapper);
+
+    /**
+     * Registers a new region wrapper.
+     *
+     * @param <T>     The type of the region.
+     * @param wrapper The RegionWrapper to register.
+     * @throws IllegalStateException if a region wrapper for the same type already exists.
+     */
+    <T extends Region> void registerWrapper(RegionWrapper<T> wrapper) throws IllegalStateException;
+
+    /**
+     * Retrieves an unmodifiable set of all registered region wrappers.
+     *
+     * @return an unmodifiable set of all registered region wrappers.
+     */
+    @Unmodifiable
+    Set<RegionWrapper<?>> getRegionWrappers();
+
+    /**
      * Retrieves all registered adapter functions for serializing and deserializing Area objects.
      *
      * @return The registered adapter functions for serializing and deserializing Area objects.
      */
+    @Unmodifiable
     Map<Class<? extends Area>, AreaAdapter<?>> getAdapters();
 
     /**
