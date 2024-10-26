@@ -13,8 +13,6 @@ import io.papermc.paper.command.brigadier.argument.resolvers.FinePositionResolve
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -29,7 +27,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @SuppressWarnings("UnstableApiUsage")
@@ -133,12 +130,10 @@ class AreaFlagCommand {
     private int info(CommandContext<CommandSourceStack> context, Area area) {
         var sender = context.getSource().getSender();
         var flag = (Flag<?>) context.getArgument("flag", Flag.class);
-        plugin.bundle().sendMessage(sender, "area.info.name", Placeholder.parsed("area", area.getName()));
-        plugin.bundle().sendMessage(sender, "area.info.flag", Placeholder.parsed("flag", flag.key().asString()));
-        if (area.hasFlag(flag)) plugin.bundle().sendMessage(sender, "area.info.flag.default",
-                Placeholder.parsed("flag", String.valueOf(flag.defaultValue())));
-        plugin.bundle().sendMessage(sender, "area.info.flag.value",
-                Placeholder.parsed("flag", String.valueOf(area.getFlag(flag))));
+        plugin.bundle().sendMessage(sender, "area.flag.info",
+                Placeholder.parsed("area", area.getName()),
+                Placeholder.parsed("flag", flag.key().asString()),
+                Placeholder.unparsed("value", String.valueOf(area.getFlag(flag))));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -146,10 +141,9 @@ class AreaFlagCommand {
         var sender = context.getSource().getSender();
         var flags = plugin.flagRegistry().getFlags(provider);
         var components = flags.stream()
-                .map(flag -> Component.text(flag.key().getKey())
-                        .hoverEvent(HoverEvent.showText(plugin.bundle().component(sender, "area.flag.list.hover")))
-                        .clickEvent(ClickEvent.suggestCommand("/area flag set " + flag.key().asString() + " ")))
-                .collect(Collectors.toSet());
+                .map(flag -> plugin.bundle().component(sender, "area.flag.list.format",
+                        Placeholder.parsed("flag", flag.key().asString())))
+                .toList();
         plugin.bundle().sendMessage(sender, "area.flag.list",
                 Placeholder.parsed("provider", provider.getName()),
                 Placeholder.parsed("amount", String.valueOf(flags.size())),

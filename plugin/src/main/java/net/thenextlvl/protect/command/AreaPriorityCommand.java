@@ -40,7 +40,8 @@ class AreaPriorityCommand {
     private int get(CommandContext<CommandSourceStack> context) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", Area.class);
-        plugin.bundle().sendMessage(sender, "area.info.priority",
+        plugin.bundle().sendMessage(sender, "area.priority",
+                Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("priority", String.valueOf(area.getPriority())));
         return Command.SINGLE_SUCCESS;
     }
