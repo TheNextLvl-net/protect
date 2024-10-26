@@ -2,6 +2,7 @@ package net.thenextlvl.protect.area.event.member;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
@@ -21,7 +22,7 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-public class AreaOwnerChangeEvent<T extends RegionizedArea<?>> extends AreaEvent<T> implements Cancellable {
+public class AreaOwnerChangeEvent extends AreaEvent<@NotNull Area> implements Cancellable {
     private @Nullable UUID owner;
     private boolean cancelled;
 
@@ -32,7 +33,7 @@ public class AreaOwnerChangeEvent<T extends RegionizedArea<?>> extends AreaEvent
      * @param owner The new owner's UUID. Can be null to indicate no owner
      */
     @ApiStatus.Internal
-    public AreaOwnerChangeEvent(@NotNull T area, @Nullable UUID owner) {
+    public AreaOwnerChangeEvent(@NotNull Area area, @Nullable UUID owner) {
         super(area);
         this.owner = owner;
     }
