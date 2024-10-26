@@ -145,7 +145,11 @@ public class ProtectPlugin extends JavaPlugin {
         public final Flag<@Nullable Location> teleportLocation = flagRegistry().register(ProtectPlugin.this, Location.class, "teleport_location", null);
         public final Flag<@Nullable Long> time = flagRegistry().register(ProtectPlugin.this, Long.class, "time", null);
         public final Flag<@Nullable String> farewell = flagRegistry().register(ProtectPlugin.this, String.class, "farewell", null);
+        public final Flag<@Nullable String> farewellActionbar = flagRegistry().register(ProtectPlugin.this, String.class, "farewell_actionbar", null);
+        public final Flag<@Nullable String> farewellTitle = flagRegistry().register(ProtectPlugin.this, String.class, "farewell_title", null);
         public final Flag<@Nullable String> greetings = flagRegistry().register(ProtectPlugin.this, String.class, "greetings", null);
+        public final Flag<@Nullable String> greetingsActionbar = flagRegistry().register(ProtectPlugin.this, String.class, "greetings_actionbar", null);
+        public final Flag<@Nullable String> greetingsTitle = flagRegistry().register(ProtectPlugin.this, String.class, "greetings_title", null);
         public final Flag<@Nullable WeatherType> weather = flagRegistry().register(ProtectPlugin.this, WeatherType.class, "weather", null);
 
         public final Flag<Boolean> areaEnter = flagRegistry().register(ProtectPlugin.this, "enter", true);

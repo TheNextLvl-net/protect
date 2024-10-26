@@ -164,7 +164,7 @@ class AreaFlagCommand {
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("flag", flag.key().asString()),
-                Placeholder.parsed("value", String.valueOf(value)));
+                Placeholder.unparsed("value", String.valueOf(value)));
         return Command.SINGLE_SUCCESS;
     }
 
