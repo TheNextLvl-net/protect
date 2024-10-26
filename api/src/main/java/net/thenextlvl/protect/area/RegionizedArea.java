@@ -9,14 +9,9 @@ import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 /**
- * The RegionizedArea interface represents an area that is bound to a region.
+ * The RegionizedArea interface represents an area bound to a region.
  * It extends the Area interface and the SchematicHolder interface.
  *
  * @param <T> The type of region associated with this area.
@@ -63,71 +58,9 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
     boolean setRegion(T region);
 
     /**
-     * Retrieves the set of UUIDs representing the members of the regionized area.
-     *
-     * @return a set of UUIDs representing the members.
-     */
-    @Unmodifiable
-    Set<UUID> getMembers();
-
-    /**
-     * Retrieves the owner of the regionized area.
-     *
-     * @return an Optional containing the UUID of the owner, or empty
-     */
-    Optional<UUID> getOwner();
-
-    /**
-     * Checks if a given UUID is a member of the regionized area.
-     *
-     * @param uuid the UUID to check
-     * @return true if the UUID is a member, false otherwise
-     */
-    boolean isMember(UUID uuid);
-
-    /**
-     * Checks if a given UUID is either the owner or a member of the regionized area.
-     *
-     * @param uuid the UUID to check
-     * @return true if the UUID is either the owner or a member, false otherwise
-     */
-    boolean isPermitted(UUID uuid);
-
-    /**
-     * Adds a member to the regionized area.
-     *
-     * @param uuid the UUID of the member to add
-     * @return whether the member was added
-     */
-    boolean addMember(UUID uuid);
-
-    /**
-     * Removes a member from the regionized area.
-     *
-     * @param uuid the UUID of the member to remove
-     * @return whether the member was removed
-     */
-    boolean removeMember(UUID uuid);
-
-    /**
-     * Sets the owner of the Area object.
-     *
-     * @param owner the UUID of the owner to set
-     * @return whether the owner was changed
-     */
-    boolean setOwner(@Nullable UUID owner);
-
-    /**
      * Checks if the area is too big.
      *
      * @return true if the area is too big, false otherwise
      */
     boolean isTooBig();
-
-    /**
-     * Sets the members of the regionized area.
-     *
-     * @param members a set of UUIDs representing the new members to set
-     */
-    void setMembers(Set<UUID> members);
 }
