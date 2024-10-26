@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area;
 
-import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -8,6 +7,7 @@ import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.regions.FlatRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
@@ -155,8 +155,8 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
              var writer = BuiltInClipboardFormat.FAST_V3.getWriter(new FileOutputStream(getSchematic()))) {
             var clipboard = new BlockArrayClipboard(getRegion());
             var extent = new ForwardExtentCopy(editSession, getRegion(), clipboard, getRegion().getMinimumPoint());
+            extent.setCopyingBiomes(getRegion() instanceof FlatRegion);
             extent.setCopyingEntities(true);
-            extent.setCopyingBiomes(true);
             Operations.complete(extent);
             writer.write(clipboard);
         }
@@ -168,7 +168,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
         var event = new AreaSchematicLoadEvent(this);
         if (!event.callEvent()) return false;
         var world = BukkitAdapter.adapt(getWorld());
-        try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
+        try (var editSession = WorldEdit.getInstance().newEditSession(world)) {
             var clipboard = BuiltInClipboardFormat.FAST_V3.getReader(new FileInputStream(getSchematic())).read();
             world.getEntities(getRegion()).forEach(com.sk89q.worldedit.entity.Entity::remove);
             var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
