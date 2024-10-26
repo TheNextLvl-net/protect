@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.adapter.area;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -13,8 +14,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Accessors(fluent = true)
@@ -31,14 +31,19 @@ public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
     public CraftGlobalArea deserialize(JsonObject object, World world, JsonDeserializationContext context) {
         var priority = object.get("priority").getAsInt();
         var flags = context.<Map<Flag<?>, @Nullable Object>>deserialize(object.get("flags"), LinkedHashMap.class);
-        return new CraftGlobalArea(plugin, world, flags, priority);
+        var members = Objects.<Set<UUID>>requireNonNullElseGet(context.deserialize(object.get("members"), new TypeToken<Set<UUID>>() {
+        }.getType()), HashSet::new);
+        var owner = object.has("owner") ? context.<UUID>deserialize(object.get("owner"), UUID.class) : null;
+        return new CraftGlobalArea(plugin, world, members, owner, flags, priority);
     }
 
     @Override
     public JsonObject serialize(CraftGlobalArea area, JsonSerializationContext context) {
         var object = new JsonObject();
-        object.addProperty("priority", area.getPriority());
+        area.getOwner().ifPresent(owner -> object.add("owner", context.serialize(owner)));
         object.add("flags", context.serialize(area.getFlags()));
+        object.add("members", context.serialize(area.getMembers()));
+        object.addProperty("priority", area.getPriority());
         return object;
     }
 }
