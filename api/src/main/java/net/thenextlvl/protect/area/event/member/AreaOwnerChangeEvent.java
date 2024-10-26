@@ -17,8 +17,6 @@ import java.util.UUID;
  * Cancelling this event results in the owner not being changed.
  * <p>
  * Note: Calling {@link RegionizedArea#setOwner(UUID)} within this event can lead to an infinite loop.
- *
- * @param <T> The type of the area associated with this event
  */
 @Getter
 @Setter

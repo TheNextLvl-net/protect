@@ -83,7 +83,7 @@ public interface AreaCreator<T extends Region> {
      * @param parent the identifier of the parent area, or null if there is no parent
      * @return the AreaCreator instance with the specified parent identifier set
      * @see #parent(RegionizedArea)
-     * @see Area#setParent(String)
+     * @see RegionizedArea#setParent(Area)
      */
     AreaCreator<T> parent(@Nullable @NamePattern String parent);
 
@@ -93,7 +93,7 @@ public interface AreaCreator<T extends Region> {
      * @param area the parent Area to be set, or null if there is no parent
      * @return the AreaCreator instance with the specified parent area set
      * @see #parent(String)
-     * @see Area#setParent(Area)
+     * @see RegionizedArea#setParent(Area)
      */
     AreaCreator<T> parent(@Nullable RegionizedArea<?> area);
 
