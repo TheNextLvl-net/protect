@@ -39,7 +39,8 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
         var parent = object.has("parent") ? object.get("parent").getAsString() : null;
         var owner = object.has("owner") ? context.<UUID>deserialize(object.get("owner"), UUID.class) : null;
 
-        var members = Objects.<Set<UUID>>requireNonNullElseGet(context.deserialize(object.get("members"), HashSet.class), HashSet::new);
+        var members = Objects.<Set<UUID>>requireNonNullElseGet(context.deserialize(object.get("members"), new TypeToken<Set<UUID>>() {
+        }.getType()), HashSet::new);
         var flags = context.<Map<Flag<?>, @Nullable Object>>deserialize(object.get("flags"), LinkedHashMap.class);
 
         var region = context.<C>deserialize(object.get("region"), new TypeToken<C>(getClass()) {
@@ -55,6 +56,7 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
         object.addProperty("priority", area.getPriority());
         area.getOwner().ifPresent(owner -> object.add("owner", context.serialize(owner)));
         area.parent().ifPresent(parent -> object.addProperty("parent", parent));
+        object.add("members", context.serialize(area.getMembers()));
         object.add("region", context.serialize(area.getRegion()));
         object.add("flags", context.serialize(area.getFlags()));
         return object;

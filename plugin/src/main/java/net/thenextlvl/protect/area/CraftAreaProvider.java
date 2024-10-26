@@ -92,7 +92,7 @@ public class CraftAreaProvider implements AreaProvider {
         var files = areaFolder.listFiles((file, name) -> name.endsWith(".json"));
         if (files != null) for (var file : files) load(world, file);
         if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
-        persist(new CraftGlobalArea(plugin, world, new LinkedHashMap<>(), -1));
+        persist(new CraftGlobalArea(plugin, world, Set.of(), null, new LinkedHashMap<>(), -1));
     }
 
     @ApiStatus.Internal

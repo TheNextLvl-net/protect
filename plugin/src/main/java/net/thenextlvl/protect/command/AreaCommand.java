@@ -19,6 +19,8 @@ public class AreaCommand {
                         .then(new AreaFlagCommand(plugin).create())
                         .then(new AreaInfoCommand(plugin).create())
                         .then(new AreaListCommand(plugin).create())
+                        .then(new AreaMembersCommand(plugin).create())
+                        .then(new AreaOwnerCommand(plugin).create())
                         .then(new AreaPriorityCommand(plugin).create())
                         .then(new AreaProtectCommand(plugin).create())
                         .then(new AreaRedefineCommand(plugin).create())

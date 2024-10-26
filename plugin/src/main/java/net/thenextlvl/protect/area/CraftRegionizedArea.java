@@ -20,9 +20,6 @@ import lombok.Getter;
 import lombok.ToString;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.inheritance.AreaParentChangeEvent;
-import net.thenextlvl.protect.area.event.member.AreaMemberAddEvent;
-import net.thenextlvl.protect.area.event.member.AreaMemberRemoveEvent;
-import net.thenextlvl.protect.area.event.member.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicDeleteEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadEvent;
@@ -52,9 +49,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
     private final File file = new File(getDataFolder(), getName() + ".json");
     private final File schematic;
-    private final Set<UUID> members;
     private @Nullable String parent;
-    private @Nullable UUID owner;
     private T region;
 
     protected CraftRegionizedArea(ProtectPlugin plugin,
@@ -66,10 +61,8 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
                                   @Nullable UUID owner,
                                   Set<UUID> members,
                                   Map<Flag<?>, @Nullable Object> flags) throws CircularInheritanceException {
-        super(plugin, name, world, flags, priority);
+        super(plugin, name, world, new HashSet<>(members), owner, flags, priority);
         if (parent != null) checkCircularInheritance(plugin.areaProvider().getArea(parent).orElse(null));
-        this.members = new HashSet<>(members);
-        this.owner = owner;
         this.parent = parent;
         this.region = region;
         this.schematic = new File(plugin.schematicFolder(), name + ".schem");
@@ -129,53 +122,6 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     public boolean setRegion(T region) {
         var event = new AreaRedefineEvent<>(this, (T) region.clone());
         if (event.callEvent()) this.region = event.getRegion();
-        return !event.isCancelled();
-    }
-
-    @Override
-    public Optional<UUID> getOwner() {
-        return Optional.ofNullable(owner);
-    }
-
-    @Override
-    public boolean isMember(UUID uuid) {
-        return members.contains(uuid);
-    }
-
-    @Override
-    public boolean isPermitted(UUID uuid) {
-        return (owner != null && owner.equals(uuid)) || members.contains(uuid);
-    }
-
-    @Override
-    public boolean removeMember(UUID uuid) {
-        var event = new AreaMemberRemoveEvent(this, uuid);
-        return event.callEvent() && members.remove(event.getMember());
-    }
-
-    @Override
-    public boolean addMember(UUID uuid) {
-        var event = new AreaMemberAddEvent(this, uuid);
-        return event.callEvent() && members.add(event.getMember());
-    }
-
-    @Override
-    public void setMembers(Set<UUID> members) {
-        if (Objects.equals(members, this.members)) return;
-        for (var member : this.members) if (!members.contains(member)) removeMember(member);
-        for (var member : members) if (!this.members.contains(member)) addMember(member);
-    }
-
-    @Override
-    public Set<UUID> getMembers() {
-        return Set.copyOf(members);
-    }
-
-    @Override
-    public boolean setOwner(@Nullable UUID owner) {
-        if (Objects.equals(owner, this.owner)) return false;
-        var event = new AreaOwnerChangeEvent<>(this, owner);
-        if (event.callEvent()) this.owner = event.getOwner();
         return !event.isCancelled();
     }
 

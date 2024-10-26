@@ -2,6 +2,7 @@ package net.thenextlvl.protect.area.event.member;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
@@ -18,7 +19,7 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-public class AreaMemberAddEvent extends AreaEvent<@NotNull RegionizedArea<?>> implements Cancellable {
+public class AreaMemberAddEvent extends AreaEvent<@NotNull Area> implements Cancellable {
     private @NotNull UUID member;
     private boolean cancelled;
 
@@ -29,7 +30,7 @@ public class AreaMemberAddEvent extends AreaEvent<@NotNull RegionizedArea<?>> im
      * @param member the UUID of the member to be added to the area
      */
     @ApiStatus.Internal
-    public AreaMemberAddEvent(@NotNull RegionizedArea<?> area, @NotNull UUID member) {
+    public AreaMemberAddEvent(@NotNull Area area, @NotNull UUID member) {
         super(area);
         this.member = member;
     }

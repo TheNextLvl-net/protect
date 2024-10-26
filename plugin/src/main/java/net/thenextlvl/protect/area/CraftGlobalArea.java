@@ -10,14 +10,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Getter
 @FieldsAreNotNullByDefault
@@ -27,8 +23,9 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File dataFolder;
     private final File file;
 
-    public CraftGlobalArea(ProtectPlugin plugin, World world, Map<Flag<?>, @Nullable Object> flags, int priority) {
-        super(plugin, "@" + world.getName(), world, flags, priority);
+    public CraftGlobalArea(ProtectPlugin plugin, World world, Set<UUID> members, @Nullable UUID owner,
+                           Map<Flag<?>, @Nullable Object> flags, int priority) {
+        super(plugin, "@" + world.getName(), world, members, owner, flags, priority);
         this.dataFolder = new File(world.getWorldFolder(), "areas");
         this.file = new File(getDataFolder(), getName() + ".json");
     }
