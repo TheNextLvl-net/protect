@@ -22,7 +22,6 @@ repositories {
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.34")
-    compileOnly("net.thenextlvl.core:annotations:2.0.1")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
