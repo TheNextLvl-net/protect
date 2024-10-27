@@ -6,7 +6,6 @@ import com.google.common.cache.CacheBuilder;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
-import com.sk89q.worldedit.regions.RegionIntersection;
 import core.i18n.file.ComponentBundle;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +29,7 @@ import net.thenextlvl.protect.listener.EntityListener;
 import net.thenextlvl.protect.listener.MovementListener;
 import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.mask.ProtectMaskManager;
+import net.thenextlvl.protect.region.GroupedRegion;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
 import net.thenextlvl.protect.version.PluginVersionChecker;
@@ -112,7 +112,7 @@ public class ProtectPlugin extends JavaPlugin {
         areaService().registerWrapper(CuboidRegion.class, creator -> new CraftCuboidArea(this, creator));
         areaService().registerWrapper(CylinderRegion.class, creator -> new CraftCylinderArea(this, creator));
         areaService().registerWrapper(EllipsoidRegion.class, creator -> new CraftEllipsoidArea(this, creator));
-        areaService().registerWrapper(RegionIntersection.class, creator -> new CraftIntersectionArea(this, creator));
+        areaService().registerWrapper(GroupedRegion.class, creator -> new CraftGroupedArea(this, creator));
     }
 
     private void registerEvents() {
