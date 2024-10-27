@@ -6,13 +6,13 @@ import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
-
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @SuppressWarnings("UnstableApiUsage")
@@ -36,20 +36,22 @@ class AreaInfoCommand {
 
     private int info(CommandContext<CommandSourceStack> context, Area area) {
         var sender = context.getSource().getSender();
+        var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
+        var flags = area.getFlags().entrySet().stream()
+                .map(entry -> plugin.bundle().component(sender, "area.flag.format",
+                        Placeholder.parsed("flag", entry.getKey().key().asString()),
+                        Placeholder.unparsed("value", String.valueOf(entry.getValue()))))
+                .toList();
 
-        plugin.bundle().sendMessage(sender, "area.info.name",
-                Placeholder.parsed("area", area.getName()));
-        plugin.bundle().sendMessage(sender, "area.info.world",
-                Placeholder.parsed("world", area.getWorld().getName()));
-        plugin.bundle().sendMessage(sender, "area.info.priority",
-                Placeholder.parsed("priority", String.valueOf(area.getPriority())));
-        plugin.bundle().sendMessage(sender, "area.info.type",
-                Placeholder.parsed("type", plugin.areaService().getAdapter(area.getClass())
-                        .key().asString()));
-        plugin.bundle().sendMessage(sender, "area.info.flags",
-                Placeholder.parsed("flags", area.getFlags().entrySet().stream()
-                        .map(entry -> entry.getKey().key().asString() + "=" + entry.getValue())
-                        .collect(Collectors.joining(", "))));
+        plugin.bundle().sendMessage(sender, "area.info",
+                Placeholder.component("flags", Component.join(JoinConfiguration.commas(true), flags)),
+                Placeholder.parsed("area", area.getName()),
+                Placeholder.parsed("file", area.getFile().getPath()),
+                Placeholder.parsed("priority", String.valueOf(area.getPriority())),
+                Placeholder.parsed("size", String.valueOf(area.getFile().length() / 1024)),
+                Placeholder.parsed("type", type),
+                Placeholder.parsed("world", area.getWorld().key().asString()));
+
         if (!(area instanceof RegionizedArea<?> regionizedArea))
             return Command.SINGLE_SUCCESS;
 
