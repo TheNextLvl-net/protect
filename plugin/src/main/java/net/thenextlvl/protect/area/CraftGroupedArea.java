@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area;
 
-import core.annotation.TypesAreNotNullByDefault;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import net.thenextlvl.protect.ProtectPlugin;
