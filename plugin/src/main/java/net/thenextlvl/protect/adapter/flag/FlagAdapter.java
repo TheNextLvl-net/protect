@@ -1,8 +1,6 @@
 package net.thenextlvl.protect.adapter.flag;
 
 import com.google.gson.*;
-import core.annotation.FieldsAreNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
@@ -12,8 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 
 @RequiredArgsConstructor
-@FieldsAreNotNullByDefault
-@ParametersAreNotNullByDefault
 public class FlagAdapter implements JsonSerializer<Flag<?>>, JsonDeserializer<Flag<?>> {
     private final ProtectPlugin plugin;
 

@@ -18,6 +18,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 
@@ -27,17 +28,24 @@ import java.util.*;
 public abstract class CraftArea implements Area {
     protected final ProtectPlugin plugin;
 
-    @NamePattern
-    private final @Getter String name;
-    private final @Getter World world;
-    private final Set<UUID> members;
+    @Getter
+    private final @NotNull String name;
+    @Getter
+    private final @NotNull World world;
+
+    private final @NotNull Set<@NotNull UUID> members;
     private @Nullable UUID owner;
 
-    private Map<Flag<?>, @Nullable Object> flags;
+    private @NotNull Map<@NotNull Flag<?>, @Nullable Object> flags;
     private @Getter int priority;
 
-    protected CraftArea(ProtectPlugin plugin, @NamePattern String name, World world, Set<UUID> members,
-                        @Nullable UUID owner, Map<Flag<?>, @Nullable Object> flags, int priority) {
+    protected CraftArea(@NotNull ProtectPlugin plugin,
+                        @NotNull String name,
+                        @NotNull World world,
+                        @NotNull Set<@NotNull UUID> members,
+                        @Nullable UUID owner,
+                        @NotNull Map<@NotNull Flag<?>, @Nullable Object> flags,
+                        int priority) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
@@ -53,7 +61,7 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public @NotNull LinkedHashSet<Area> getParents() {
+    public @NotNull LinkedHashSet<@NotNull Area> getParents() {
         var parents = new LinkedHashSet<Area>();
         var parent = getParent().orElse(null);
         while (parent != null && parent != this && parents.add(parent))
@@ -62,7 +70,7 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public @NotNull Map<Flag<?>, @Nullable Object> getFlags() {
+    public @NotNull Map<@NotNull Flag<?>, @Nullable Object> getFlags() {
         return Map.copyOf(flags);
     }
 
@@ -72,36 +80,36 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public boolean isMember(UUID uuid) {
+    public boolean isMember(@NotNull UUID uuid) {
         return members.contains(uuid);
     }
 
     @Override
-    public boolean isPermitted(UUID uuid) {
+    public boolean isPermitted(@NotNull UUID uuid) {
         return (owner != null && owner.equals(uuid)) || members.contains(uuid);
     }
 
     @Override
-    public boolean removeMember(UUID uuid) {
+    public boolean removeMember(@NotNull UUID uuid) {
         var event = new AreaMemberRemoveEvent(this, uuid);
         return event.callEvent() && members.remove(event.getMember());
     }
 
     @Override
-    public boolean addMember(UUID uuid) {
+    public boolean addMember(@NotNull UUID uuid) {
         var event = new AreaMemberAddEvent(this, uuid);
         return event.callEvent() && members.add(event.getMember());
     }
 
     @Override
-    public void setMembers(Set<UUID> members) {
+    public void setMembers(@NotNull Set<@NotNull UUID> members) {
         if (Objects.equals(members, this.members)) return;
         for (var member : this.members) if (!members.contains(member)) removeMember(member);
         for (var member : members) if (!this.members.contains(member)) addMember(member);
     }
 
     @Override
-    public @NotNull Set<UUID> getMembers() {
+    public @NotNull Set<@NotNull UUID> getMembers() {
         return Set.copyOf(members);
     }
 
@@ -123,7 +131,7 @@ public abstract class CraftArea implements Area {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void setFlags(@NotNull Map<Flag<?>, @Nullable Object> flags) {
+    public void setFlags(@NotNull Map<@NotNull Flag<?>, @Nullable Object> flags) {
         if (Objects.equals(this.flags, flags)) return;
         flags.forEach((flag, o) -> setFlag((Flag<Object>) flag, o));
     }
@@ -158,14 +166,16 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public @NotNull List<Entity> getHighestEntities() {
+    @Unmodifiable
+    public @NotNull List<@NotNull Entity> getHighestEntities() {
         return getEntities().stream()
                 .filter(player -> plugin.areaProvider().getArea(player).equals(this))
                 .toList();
     }
 
     @Override
-    public @NotNull List<Player> getHighestPlayers() {
+    @Unmodifiable
+    public @NotNull List<@NotNull Player> getHighestPlayers() {
         return getPlayers().stream()
                 .filter(player -> plugin.areaProvider().getArea(player).equals(this))
                 .toList();

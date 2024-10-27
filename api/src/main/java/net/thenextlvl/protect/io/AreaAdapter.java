@@ -3,13 +3,11 @@ package net.thenextlvl.protect.io;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import core.annotation.MethodsReturnNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import net.kyori.adventure.key.Keyed;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The AreaAdapter interface provides methods to deserialize and serialize an object of a specific type T that
@@ -18,17 +16,14 @@ import org.bukkit.World;
  *
  * @param <T> The type of the object that implements the Area interface.
  */
-@TypesAreNotNullByDefault
-@MethodsReturnNotNullByDefault
-@ParametersAreNotNullByDefault
 public interface AreaAdapter<T extends Area> extends Keyed {
     /**
-     * Retrieves the key associated with the adapter. The key is used for serialization and deserialization
-     * of objects of type T that implement the Area interface.
+     * Retrieves the key associated with the adapter.
+     * The key is used for de/serialization of objects that implement the Area interface.
      *
      * @return The key associated with the adapter.
      */
-    NamespacedKey key();
+    @NotNull NamespacedKey key();
 
     /**
      * Deserializes a JsonObject to an object of type T that implements the Area interface.
@@ -38,7 +33,7 @@ public interface AreaAdapter<T extends Area> extends Keyed {
      * @param context The JsonDeserializationContext used for deserialization.
      * @return The deserialized object of type T.
      */
-    T deserialize(JsonObject object, World world, JsonDeserializationContext context);
+    @NotNull T deserialize(@NotNull JsonObject object, @NotNull World world, @NotNull JsonDeserializationContext context);
 
     /**
      * Serializes the given area object to a JsonObject using the provided JsonSerializationContext.
@@ -47,5 +42,5 @@ public interface AreaAdapter<T extends Area> extends Keyed {
      * @param context The JsonSerializationContext used for serialization.
      * @return The serialized JsonObject representing the area object.
      */
-    JsonObject serialize(T area, JsonSerializationContext context);
+    @NotNull JsonObject serialize(@NotNull T area, @NotNull JsonSerializationContext context);
 }

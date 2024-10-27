@@ -1,14 +1,12 @@
 package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.Region;
-import core.annotation.MethodsReturnNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -21,18 +19,14 @@ import java.util.UUID;
  *
  * @param <T> The type of the region associated with the area.
  */
-@TypesAreNotNullByDefault
-@MethodsReturnNotNullByDefault
-@ParametersAreNotNullByDefault
 public interface AreaCreator<T extends Region> {
     /**
-     * Retrieves the name of the area that conforms to the {@link NamePattern.Regionized} pattern.
+     * Retrieves the name of the area.
      *
      * @return the name of the area as a string
      * @see RegionizedArea#getName()
      */
-    @NamePattern.Regionized
-    String name();
+    @NotNull String name();
 
     /**
      * Retrieves the owner of the area.
@@ -47,7 +41,7 @@ public interface AreaCreator<T extends Region> {
      *
      * @return a new AreaCreator instance that is a copy of the current instance
      */
-    AreaCreator<T> copy();
+    @NotNull AreaCreator<T> copy();
 
     /**
      * Sets the flags for the area being created.
@@ -57,16 +51,16 @@ public interface AreaCreator<T extends Region> {
      * @return the AreaCreator instance with the specified flags set
      * @see FlagProvider#setFlags(Map)
      */
-    AreaCreator<T> flags(Map<Flag<?>, @Nullable Object> flags);
+    @NotNull AreaCreator<T> flags(@NotNull Map<@NotNull Flag<?>, @Nullable Object> flags);
 
     /**
      * Sets the name for the area being created.
      *
-     * @param name the name of the area, which must conform to the {@link NamePattern.Regionized} pattern
+     * @param name the name of the area.
      * @return the AreaCreator instance with the specified name set
      * @see RegionizedArea#getName()
      */
-    AreaCreator<T> name(@NamePattern.Regionized String name);
+    @NotNull AreaCreator<T> name(@NotNull String name);
 
     /**
      * Sets the owner for the area being created.
@@ -75,7 +69,7 @@ public interface AreaCreator<T extends Region> {
      * @return the AreaCreator instance with the specified owner set
      * @see RegionizedArea#setOwner(UUID)
      */
-    AreaCreator<T> owner(@Nullable UUID owner);
+    @NotNull AreaCreator<T> owner(@Nullable UUID owner);
 
     /**
      * Sets the parent identifier for the area being created.
@@ -85,7 +79,7 @@ public interface AreaCreator<T extends Region> {
      * @see #parent(RegionizedArea)
      * @see RegionizedArea#setParent(Area)
      */
-    AreaCreator<T> parent(@Nullable @NamePattern String parent);
+    @NotNull AreaCreator<T> parent(@Nullable String parent);
 
     /**
      * Sets the parent area for the area being created.
@@ -95,7 +89,7 @@ public interface AreaCreator<T extends Region> {
      * @see #parent(String)
      * @see RegionizedArea#setParent(Area)
      */
-    AreaCreator<T> parent(@Nullable RegionizedArea<?> area);
+    @NotNull AreaCreator<T> parent(@Nullable RegionizedArea<?> area);
 
     /**
      * Sets the priority for the area being created.
@@ -104,7 +98,7 @@ public interface AreaCreator<T extends Region> {
      * @return the AreaCreator instance with the specified priority set
      * @see Area#setPriority(int)
      */
-    AreaCreator<T> priority(int priority);
+    @NotNull AreaCreator<T> priority(int priority);
 
     /**
      * Sets the region for the AreaCreator instance being created.
@@ -113,7 +107,7 @@ public interface AreaCreator<T extends Region> {
      * @return the AreaCreator instance with the specified region set
      * @see RegionizedArea#setRegion(Region)
      */
-    AreaCreator<T> region(T region);
+    @NotNull AreaCreator<T> region(@NotNull T region);
 
     /**
      * Sets the world for the AreaCreator instance being created.
@@ -122,7 +116,7 @@ public interface AreaCreator<T extends Region> {
      * @return the AreaCreator instance with the specified world set
      * @see Area#getWorld()
      */
-    AreaCreator<T> world(World world);
+    @NotNull AreaCreator<T> world(@NotNull World world);
 
     /**
      * Retrieves a map of flags set for the area being created.
@@ -132,7 +126,7 @@ public interface AreaCreator<T extends Region> {
      * @return a map of flags and their associated values, or an empty map if no flags are set
      * @see FlagProvider#getFlags()
      */
-    Map<Flag<?>, @Nullable Object> flags();
+    @NotNull Map<@NotNull Flag<?>, @Nullable Object> flags();
 
     /**
      * Creates a new instance of {@link RegionizedArea} that is bound to a region.
@@ -141,7 +135,7 @@ public interface AreaCreator<T extends Region> {
      * @throws UnsupportedRegionException   if the specified region is not supported
      * @throws CircularInheritanceException if there is a circular inheritance detected in the area hierarchy.
      */
-    RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException;
+    @NotNull RegionizedArea<@NotNull T> create() throws UnsupportedRegionException, CircularInheritanceException;
 
     /**
      * Retrieves the set of members associated with the area.
@@ -149,7 +143,7 @@ public interface AreaCreator<T extends Region> {
      * @return a set of UUIDs representing the members of the area
      * @see RegionizedArea#getMembers()
      */
-    Set<UUID> members();
+    @NotNull Set<@NotNull UUID> members();
 
     /**
      * Retrieves the identifier of the parent area, if any.
@@ -158,7 +152,6 @@ public interface AreaCreator<T extends Region> {
      * @see Area#getParent()
      */
     @Nullable
-    @NamePattern
     String parent();
 
     /**
@@ -167,7 +160,7 @@ public interface AreaCreator<T extends Region> {
      * @return the region as an instance of type T
      * @see RegionizedArea#getRegion()
      */
-    T region();
+    @NotNull T region();
 
     /**
      * Retrieves the world associated with the AreaCreator instance.
@@ -175,7 +168,7 @@ public interface AreaCreator<T extends Region> {
      * @return the world associated with the AreaCreator instance
      * @see Area#getWorld()
      */
-    World world();
+    @NotNull World world();
 
     /**
      * Retrieves the priority of the area.

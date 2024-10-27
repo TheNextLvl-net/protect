@@ -12,7 +12,6 @@ import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.area.NamePattern;
 import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import org.bukkit.entity.Player;
 
@@ -34,16 +33,9 @@ class AreaCreateCommand {
                         .executes(context -> execute(context, 0)));
     }
 
-    @SuppressWarnings("PatternValidation")
     private int execute(CommandContext<CommandSourceStack> context, int priority) {
         var player = (Player) context.getSource().getSender();
         var name = context.getArgument("name", String.class);
-
-        if (!name.matches(NamePattern.Regionized.PATTERN)) {
-            plugin.bundle().sendMessage(player, "area.name.pattern",
-                    Placeholder.parsed("pattern", NamePattern.Regionized.PATTERN));
-            return 0;
-        }
 
         if (plugin.areaProvider().getArea(name).isPresent()) {
             plugin.bundle().sendMessage(player, "area.exists", Placeholder.parsed("area", name));

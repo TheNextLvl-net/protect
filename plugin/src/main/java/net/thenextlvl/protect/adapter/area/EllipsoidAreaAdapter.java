@@ -4,14 +4,15 @@ import com.sk89q.worldedit.regions.EllipsoidRegion;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.CraftAreaCreator;
 import net.thenextlvl.protect.area.CraftEllipsoidArea;
+import org.jetbrains.annotations.NotNull;
 
 public class EllipsoidAreaAdapter extends RegionizedAreaAdapter<EllipsoidRegion, CraftEllipsoidArea> {
-    public EllipsoidAreaAdapter(ProtectPlugin plugin) {
+    public EllipsoidAreaAdapter(@NotNull ProtectPlugin plugin) {
         super(plugin, "ellipsoid");
     }
 
     @Override
-    protected CraftEllipsoidArea construct(CraftAreaCreator<EllipsoidRegion> creator) {
+    protected @NotNull CraftEllipsoidArea construct(@NotNull CraftAreaCreator<EllipsoidRegion> creator) {
         return new CraftEllipsoidArea(creator.plugin(), creator);
     }
 }

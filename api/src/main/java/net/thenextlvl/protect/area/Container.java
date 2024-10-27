@@ -1,21 +1,17 @@
 package net.thenextlvl.protect.area;
 
-import core.annotation.MethodsReturnNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
 /**
  * The Container interface represents a container that can contain entities and blocks.
  */
-@TypesAreNotNullByDefault
-@MethodsReturnNotNullByDefault
-@ParametersAreNotNullByDefault
 public interface Container {
 
     /**
@@ -24,7 +20,7 @@ public interface Container {
      * @param location the location to check
      * @return true if the location is contained within the container, false otherwise
      */
-    boolean contains(Location location);
+    boolean contains(@NotNull Location location);
 
     /**
      * Determines if the given block is contained within the container.
@@ -32,7 +28,7 @@ public interface Container {
      * @param block the block to check
      * @return true if the block is contained within the container, false otherwise
      */
-    default boolean contains(Block block) {
+    default boolean contains(@NotNull Block block) {
         return contains(block.getLocation());
     }
 
@@ -42,7 +38,7 @@ public interface Container {
      * @param entity the entity to check
      * @return true if the entity is contained within the container, false otherwise
      */
-    default boolean contains(Entity entity) {
+    default boolean contains(@NotNull Entity entity) {
         return contains(entity.getLocation());
     }
 
@@ -52,7 +48,8 @@ public interface Container {
      * @return a list of entities
      * @see Container#getHighestEntities()
      */
-    List<Entity> getEntities();
+    @Unmodifiable
+    @NotNull List<@NotNull Entity> getEntities();
 
     /**
      * Retrieves a list of players that are contained within this container.
@@ -60,25 +57,28 @@ public interface Container {
      * @return a list of players
      * @see Container#getHighestPlayers()
      */
-    List<Player> getPlayers();
+    @Unmodifiable
+    @NotNull List<@NotNull Player> getPlayers();
 
     /**
      * Retrieves a list of entities that are contained within this container.
-     * This method returns only those entities who's highest-area is equal to this one.
+     * This method returns only those entities whose highest-area is equal to this one.
      *
      * @return a List of Entity objects that are contained within this container
      * @see Area#getPriority()
      * @see Container#getEntities()
      */
-    List<Entity> getHighestEntities();
+    @Unmodifiable
+    @NotNull List<@NotNull Entity> getHighestEntities();
 
     /**
      * Retrieves a list of players that are contained within this container.
-     * This method returns only those players who's highest-area is equal to this one.
+     * This method returns only those players whose highest-area is equal to this one.
      *
      * @return a List of Player objects that are contained within this container
      * @see Area#getPriority()
      * @see Container#getPlayers()
      */
-    List<Player> getHighestPlayers();
+    @Unmodifiable
+    @NotNull List<@NotNull Player> getHighestPlayers();
 }

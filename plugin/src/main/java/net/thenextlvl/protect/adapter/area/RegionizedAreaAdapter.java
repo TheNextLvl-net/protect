@@ -15,24 +15,26 @@ import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 @Accessors(fluent = true)
 public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftRegionizedArea<C>> implements AreaAdapter<T> {
-    private final @Getter NamespacedKey key;
-    protected final ProtectPlugin plugin;
+    @Getter
+    private final @NotNull NamespacedKey key;
+    private final @NotNull ProtectPlugin plugin;
 
-    public RegionizedAreaAdapter(ProtectPlugin plugin, @KeyPattern.Value String name) {
+    public RegionizedAreaAdapter(@NotNull ProtectPlugin plugin, @KeyPattern.Value String name) {
         this.key = new NamespacedKey(plugin, name);
         this.plugin = plugin;
     }
 
-    protected abstract T construct(CraftAreaCreator<C> creator);
+    protected abstract T construct(@NotNull CraftAreaCreator<C> creator);
 
     @Override
-    public T deserialize(JsonObject object, World world, JsonDeserializationContext context) {
+    public @NotNull T deserialize(@NotNull JsonObject object, @NotNull World world, @NotNull JsonDeserializationContext context) {
         var name = object.get("name").getAsString();
         var priority = object.get("priority").getAsInt();
 
@@ -50,7 +52,7 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
     }
 
     @Override
-    public JsonObject serialize(T area, JsonSerializationContext context) {
+    public @NotNull JsonObject serialize(@NotNull T area, @NotNull JsonSerializationContext context) {
         var object = new JsonObject();
         object.addProperty("name", area.getName());
         object.addProperty("priority", area.getPriority());

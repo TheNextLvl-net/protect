@@ -8,9 +8,6 @@ import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
-import core.annotation.MethodsReturnNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import core.file.FileIO;
 import core.file.format.GsonFile;
 import core.io.IO;
@@ -33,6 +30,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -40,45 +38,42 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-@TypesAreNotNullByDefault
-@MethodsReturnNotNullByDefault
-@ParametersAreNotNullByDefault
 public class CraftAreaProvider implements AreaProvider {
-    private final Map<World, Set<FileIO<Area>>> areas = new HashMap<>();
-    private final ProtectPlugin plugin;
+    private final @NotNull Map<@NotNull World, @NotNull Set<@NotNull FileIO<@NotNull Area>>> areas = new HashMap<>();
+    private final @NotNull ProtectPlugin plugin;
 
     @Override
-    public Stream<Area> getAreas() {
+    public @NotNull Stream<@NotNull Area> getAreas() {
         return areas.values().stream()
                 .flatMap(Collection::stream)
                 .map(FileIO::getRoot);
     }
 
     @Override
-    public Stream<Area> getAreas(World world) {
+    public @NotNull Stream<@NotNull Area> getAreas(@NotNull World world) {
         return areas.getOrDefault(world, Collections.emptySet()).stream()
                 .map(FileIO::getRoot);
     }
 
     @Override
-    public Stream<Area> getAreas(Location location) {
+    public @NotNull Stream<@NotNull Area> getAreas(@NotNull Location location) {
         return getAreas(location.getWorld()).filter(area -> area.contains(location));
     }
 
     @Override
-    public Area getArea(Location location) {
+    public @NotNull Area getArea(@NotNull Location location) {
         return getAreas(location)
                 .max(Comparator.comparingInt(Area::getPriority))
                 .orElseGet(() -> getArea(location.getWorld()));
     }
 
     @Override
-    public Optional<Area> getArea(String name) {
+    public @NotNull Optional<Area> getArea(@NotNull String name) {
         return getAreas().filter(area -> area.getName().equals(name)).findAny();
     }
 
     @Override
-    public GlobalArea getArea(World world) {
+    public @NotNull GlobalArea getArea(@NotNull World world) {
         return getAreas(world)
                 .filter(area -> area instanceof GlobalArea)
                 .map(area -> (GlobalArea) area)
@@ -87,7 +82,7 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public void load(World world) {
+    public void load(@NotNull World world) {
         var areaFolder = new File(world.getWorldFolder(), "areas");
         var files = areaFolder.listFiles((file, name) -> name.endsWith(".json"));
         if (files != null) for (var file : files) load(world, file);
@@ -96,18 +91,18 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public void load(World world, File file) {
+    public void load(@NotNull World world, @NotNull File file) {
         var loaded = read(world, null, IO.of(file));
         new AreaLoadEvent(loaded.getRoot()).callEvent();
         memoize(world, loaded);
     }
 
     @ApiStatus.Internal
-    public void persist(Area area) {
+    public void persist(@NotNull Area area) {
         memoize(area.getWorld(), read(area.getWorld(), area, IO.of(area.getFile())).saveIfAbsent());
     }
 
-    private void memoize(World world, FileIO<Area> file) {
+    private void memoize(@NotNull World world, @NotNull FileIO<@NotNull Area> file) {
         var areas = this.areas.computeIfAbsent(world, k -> new HashSet<>());
         areas.stream().filter(io -> io.getRoot().equals(file.getRoot())).findAny()
                 .ifPresentOrElse(io -> plugin.getComponentLogger().warn(
@@ -117,7 +112,7 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public GsonFile<Area> read(World world, @Nullable Area area, IO file) {
+    public @NotNull GsonFile<@NotNull Area> read(@NotNull World world, @Nullable Area area, @NotNull IO file) {
         var gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
                 .registerTypeHierarchyAdapter(CylinderRegion.class, new CylinderRegionAdapter())
@@ -136,18 +131,18 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     @ApiStatus.Internal
-    public void save(World world) {
+    public void save(@NotNull World world) {
         var files = areas.get(world);
         if (files != null) files.forEach(FileIO::save);
     }
 
     @ApiStatus.Internal
-    public void unload(World world) {
+    public void unload(@NotNull World world) {
         areas.remove(world);
     }
 
     @ApiStatus.Internal
-    public boolean delete(Area area) {
+    public boolean delete(@NotNull Area area) {
         areas.computeIfPresent(area.getWorld(), (world, areas) -> {
             areas.removeIf(file -> file.getRoot().equals(area));
             return areas.isEmpty() ? null : areas;

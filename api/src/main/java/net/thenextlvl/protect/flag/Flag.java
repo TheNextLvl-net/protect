@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> The type of the flag value.
  */
-public interface Flag<T> extends Comparable<Flag<?>> {
+public interface Flag<T> extends Comparable<@NotNull Flag<?>> {
     /**
      * Retrieves the {@link NamespacedKey} associated with this flag.
      *

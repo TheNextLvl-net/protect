@@ -16,9 +16,8 @@ public interface FlagProvider {
      * @return an unmodifiable map containing the flags as keys and their states as values.
      * The map may include null values for certain flags.
      */
-    @NotNull
     @Unmodifiable
-    Map<Flag<?>, @Nullable Object> getFlags();
+    @NotNull Map<@NotNull Flag<?>, @Nullable Object> getFlags();
 
     /**
      * Sets the flags for the FlagProvider instance.
@@ -27,7 +26,7 @@ public interface FlagProvider {
      *
      * @param flags A map of flags and their associated states.
      */
-    void setFlags(@NotNull Map<Flag<?>, @Nullable Object> flags);
+    void setFlags(@NotNull Map<@NotNull Flag<?>, @Nullable Object> flags);
 
     /**
      * Sets the state of a flag.
@@ -45,7 +44,7 @@ public interface FlagProvider {
      * If there is no inherited mapping, the default value of the flag will be returned.
      * To check the presence of a flag, use {@link #hasFlag(Flag)}.
      *
-     * @param flag The flag to retrieve the value for. Must not be null.
+     * @param flag The flag to retrieve the value for.
      * @param <T>  The type of the flag value.
      * @return The value of the specified flag. Nullability is defined by the flag's type.
      */
