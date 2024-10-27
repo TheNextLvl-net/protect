@@ -4,7 +4,6 @@ import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
     id("java")
-    id("maven-publish")
     id("io.github.goooler.shadow") version "8.1.8"
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
@@ -168,19 +167,5 @@ modrinth {
     loaders.add("paper")
     dependencies {
         required.project("fastasyncworldedit")
-    }
-}
-
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-    repositories.maven {
-        val branch = if (version.toString().contains("-pre")) "snapshots" else "releases"
-        url = uri("https://repo.thenextlvl.net/$branch")
-        credentials {
-            username = System.getenv("REPOSITORY_USER")
-            password = System.getenv("REPOSITORY_TOKEN")
-        }
     }
 }

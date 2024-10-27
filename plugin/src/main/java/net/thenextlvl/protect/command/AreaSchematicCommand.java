@@ -55,7 +55,7 @@ class AreaSchematicCommand {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         var message = area.deleteSchematic() ? "area.schematic.delete.success" : "area.schematic.delete.failed";
-        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getName()));
+        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getSchematic().getName()));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -70,7 +70,7 @@ class AreaSchematicCommand {
             plugin.getComponentLogger().error("Failed to load area schematic", e);
         }
         var message = load ? "area.schematic.load.success" : "area.schematic.load.failed";
-        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getName()));
+        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getSchematic().getName()));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -81,10 +81,11 @@ class AreaSchematicCommand {
         try {
             area.saveSchematic();
             plugin.bundle().sendMessage(sender, "area.schematic.save.success",
-                    Placeholder.parsed("schematic", area.getName()));
+                    Placeholder.parsed("schematic", area.getSchematic().getName()),
+                    Placeholder.parsed("size", String.valueOf(area.getSchematic().length() / 1024)));
         } catch (IOException | WorldEditException e) {
             plugin.bundle().sendMessage(sender, "area.schematic.save.failed",
-                    Placeholder.parsed("schematic", area.getName()));
+                    Placeholder.parsed("schematic", area.getSchematic().getName()));
             plugin.getComponentLogger().error("Failed dto save area schematic", e);
         }
         return Command.SINGLE_SUCCESS;
