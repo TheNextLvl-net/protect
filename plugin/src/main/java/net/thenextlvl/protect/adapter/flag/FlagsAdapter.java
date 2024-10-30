@@ -6,6 +6,7 @@ import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
@@ -13,20 +14,20 @@ import java.util.Map;
 
 @NullMarked
 @RequiredArgsConstructor
-public class FlagsAdapter implements JsonSerializer<Map<Flag<?>, Object>>, JsonDeserializer<Map<Flag<?>, Object>> {
+public class FlagsAdapter implements JsonSerializer<Map<Flag<?>, @Nullable Object>>, JsonDeserializer<Map<Flag<?>, @Nullable Object>> {
     private final ProtectPlugin plugin;
 
     @Override
-    public JsonObject serialize(Map<Flag<?>, Object> flags, Type type, JsonSerializationContext context) {
+    public JsonObject serialize(Map<Flag<?>, @Nullable Object> flags, Type type, JsonSerializationContext context) {
         var object = new JsonObject();
         flags.forEach((flag, o) -> object.add(flag.key().asString(), context.serialize(o, flag.type())));
         return object;
     }
 
     @Override
-    public Map<Flag<?>, Object> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+    public Map<Flag<?>, @Nullable Object> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         var object = element.getAsJsonObject();
-        var flags = new LinkedHashMap<Flag<?>, Object>();
+        var flags = new LinkedHashMap<Flag<?>, @Nullable Object>();
         object.entrySet().forEach(entry -> {
             var key = NamespacedKey.fromString(entry.getKey());
             var flag = key != null ? plugin.flagRegistry().getFlag(key).orElse(null) : null;

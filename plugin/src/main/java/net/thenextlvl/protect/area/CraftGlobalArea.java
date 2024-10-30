@@ -2,7 +2,6 @@ package net.thenextlvl.protect.area;
 
 import lombok.Getter;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -19,17 +18,10 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File dataFolder;
     private final File file;
 
-    public CraftGlobalArea(
-            ProtectPlugin plugin,
-            World world,
-            Set<UUID> members,
-            @Nullable UUID owner,
-            Map<Flag<?>, @Nullable Object> flags,
-            int priority
-    ) {
-        super(plugin, "@" + world.getName(), world, members, owner, flags, priority);
+    public CraftGlobalArea(ProtectPlugin plugin, World world) {
+        super(plugin, "@" + world.getName(), world, new HashSet<>(), null, new LinkedHashMap<>(), -1);
         this.dataFolder = new File(world.getWorldFolder(), "areas");
-        this.file = new File(getDataFolder(), getName() + ".json");
+        this.file = new File(getDataFolder(), getName() + ".dat");
     }
 
     @Override
