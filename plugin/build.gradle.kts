@@ -33,7 +33,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.49"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.50"))
 
     implementation(project(":api"))
     implementation("net.thenextlvl.core:i18n:1.0.20")
