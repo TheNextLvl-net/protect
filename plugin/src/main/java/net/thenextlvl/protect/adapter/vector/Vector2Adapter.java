@@ -2,9 +2,11 @@ package net.thenextlvl.protect.adapter.vector;
 
 import com.google.gson.*;
 import com.sk89q.worldedit.math.Vector2;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Type;
 
+@NullMarked
 public class Vector2Adapter implements JsonSerializer<Vector2>, JsonDeserializer<Vector2> {
 
     @Override

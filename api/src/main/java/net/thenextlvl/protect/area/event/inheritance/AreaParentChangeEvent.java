@@ -6,9 +6,8 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The AreaParentChangeEvent class represents an event that occurs when the parent of an area is changed.
@@ -18,7 +17,8 @@ import org.jetbrains.annotations.Nullable;
  */
 @Getter
 @Setter
-public class AreaParentChangeEvent extends AreaEvent<@NotNull Area> implements Cancellable {
+@NullMarked
+public class AreaParentChangeEvent extends AreaEvent<Area> implements Cancellable {
     private boolean cancelled;
     private @Nullable Area parent;
 
@@ -29,8 +29,7 @@ public class AreaParentChangeEvent extends AreaEvent<@NotNull Area> implements C
      * @param area   the area whose parent is being changed
      * @param parent the new parent area, or null if the parent is being removed
      */
-    @ApiStatus.Internal
-    public AreaParentChangeEvent(@NotNull Area area, @Nullable Area parent) {
+    public AreaParentChangeEvent(Area area, @Nullable Area parent) {
         super(area);
         this.parent = parent;
     }

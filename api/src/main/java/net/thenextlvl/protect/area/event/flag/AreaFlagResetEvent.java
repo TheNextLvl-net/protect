@@ -2,8 +2,7 @@ package net.thenextlvl.protect.area.event.flag;
 
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents an event triggered when a flag is reset in an area.
@@ -11,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> The type of the flag value.
  */
+@NullMarked
 public class AreaFlagResetEvent<T> extends AreaFlagEvent<T> {
     /**
      * Constructs a new AreaFlagResetEvent with the specified area and flag.
@@ -18,8 +18,7 @@ public class AreaFlagResetEvent<T> extends AreaFlagEvent<T> {
      * @param area the area associated with this event
      * @param flag the flag associated with this event
      */
-    @ApiStatus.Internal
-    public AreaFlagResetEvent(@NotNull Area area, @NotNull Flag<T> flag) {
+    public AreaFlagResetEvent(Area area, Flag<T> flag) {
         super(area, flag);
     }
 }

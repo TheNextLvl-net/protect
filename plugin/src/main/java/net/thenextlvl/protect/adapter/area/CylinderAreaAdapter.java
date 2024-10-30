@@ -4,15 +4,16 @@ import com.sk89q.worldedit.regions.CylinderRegion;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.CraftAreaCreator;
 import net.thenextlvl.protect.area.CraftCylinderArea;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class CylinderAreaAdapter extends RegionizedAreaAdapter<CylinderRegion, CraftCylinderArea> {
-    public CylinderAreaAdapter(@NotNull ProtectPlugin plugin) {
+    public CylinderAreaAdapter(ProtectPlugin plugin) {
         super(plugin, "cylinder");
     }
 
     @Override
-    protected @NotNull CraftCylinderArea construct(@NotNull CraftAreaCreator<CylinderRegion> creator) {
+    protected CraftCylinderArea construct(CraftAreaCreator<CylinderRegion> creator) {
         return new CraftCylinderArea(creator.plugin(), creator);
     }
 }

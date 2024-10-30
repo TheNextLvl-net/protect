@@ -1,17 +1,18 @@
 package net.thenextlvl.protect.exception;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class CircularInheritanceException extends IllegalStateException {
-    public CircularInheritanceException(@NotNull Throwable cause) {
+    public CircularInheritanceException(Throwable cause) {
         super(cause);
     }
 
-    public CircularInheritanceException(@NotNull String message, @NotNull Throwable cause) {
+    public CircularInheritanceException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public CircularInheritanceException(@NotNull String message) {
+    public CircularInheritanceException(String message) {
         super(message);
     }
 

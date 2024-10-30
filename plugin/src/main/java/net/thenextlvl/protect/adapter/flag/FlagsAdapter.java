@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@NullMarked
 @RequiredArgsConstructor
 public class FlagsAdapter implements JsonSerializer<Map<Flag<?>, Object>>, JsonDeserializer<Map<Flag<?>, Object>> {
     private final ProtectPlugin plugin;

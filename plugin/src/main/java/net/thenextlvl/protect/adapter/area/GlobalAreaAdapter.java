@@ -12,12 +12,11 @@ import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 
-
+@NullMarked
 @Accessors(fluent = true)
 public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
     private final @Getter NamespacedKey key;
@@ -29,9 +28,9 @@ public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
     }
 
     @Override
-    public @NotNull CraftGlobalArea deserialize(@NotNull JsonObject object, @NotNull World world, @NotNull JsonDeserializationContext context) {
+    public CraftGlobalArea deserialize(JsonObject object, World world, JsonDeserializationContext context) {
         var priority = object.get("priority").getAsInt();
-        var flags = context.<Map<Flag<?>, @Nullable Object>>deserialize(object.get("flags"), LinkedHashMap.class);
+        var flags = context.<Map<Flag<?>, Object>>deserialize(object.get("flags"), LinkedHashMap.class);
         var members = Objects.<Set<UUID>>requireNonNullElseGet(context.deserialize(object.get("members"), new TypeToken<Set<UUID>>() {
         }.getType()), HashSet::new);
         var owner = object.has("owner") ? context.<UUID>deserialize(object.get("owner"), UUID.class) : null;
@@ -39,7 +38,7 @@ public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
     }
 
     @Override
-    public @NotNull JsonObject serialize(@NotNull CraftGlobalArea area, @NotNull JsonSerializationContext context) {
+    public JsonObject serialize(CraftGlobalArea area, JsonSerializationContext context) {
         var object = new JsonObject();
         area.getOwner().ifPresent(owner -> object.add("owner", context.serialize(owner)));
         object.add("flags", context.serialize(area.getFlags()));

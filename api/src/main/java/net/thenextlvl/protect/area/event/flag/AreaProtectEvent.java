@@ -5,8 +5,7 @@ import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents an event triggered by the /area protect command.
@@ -16,7 +15,8 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Setter
-public class AreaProtectEvent extends AreaEvent<@NotNull Area> implements Cancellable {
+@NullMarked
+public class AreaProtectEvent extends AreaEvent<Area> implements Cancellable {
     private boolean cancelled;
 
     /**
@@ -24,8 +24,7 @@ public class AreaProtectEvent extends AreaEvent<@NotNull Area> implements Cancel
      *
      * @param area The Area to be protected
      */
-    @ApiStatus.Internal
-    public AreaProtectEvent(@NotNull Area area) {
+    public AreaProtectEvent(Area area) {
         super(area);
     }
 }

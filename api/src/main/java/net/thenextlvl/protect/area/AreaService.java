@@ -4,8 +4,7 @@ import com.sk89q.worldedit.regions.Region;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +14,7 @@ import java.util.function.Function;
 /**
  * The AreaService interface is used to create or delete instances of {@link Area}.
  */
+@NullMarked
 public interface AreaService {
     /**
      * Creates an AreaCreator with the given name, world, and region.
@@ -25,10 +25,10 @@ public interface AreaService {
      * @param <T>    The type of the region.
      * @return The AreaCreator object.
      */
-    <T extends Region> @NotNull AreaCreator<T> creator(
-            @NotNull String name,
-            @NotNull World world,
-            @NotNull T region
+    <T extends Region> AreaCreator<T> creator(
+            String name,
+            World world,
+            T region
     );
 
     /**
@@ -38,7 +38,7 @@ public interface AreaService {
      * @param <T>  The type of the region.
      * @return True, if the deletion is successful, false otherwise.
      */
-    <T extends Region> boolean delete(@NotNull RegionizedArea<@NotNull T> area);
+    <T extends Region> boolean delete(RegionizedArea<T> area);
 
     /**
      * Retrieves an Optional containing the RegionWrapper of the specified type if it exists.
@@ -47,7 +47,7 @@ public interface AreaService {
      * @param type The class object representing the type of the region.
      * @return An Optional containing the RegionWrapper of the specified type if it exists, otherwise an empty Optional.
      */
-    <T extends Region> @NotNull Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(@NotNull Class<T> type);
+    <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(Class<T> type);
 
     /**
      * Unregisters the region wrapper of the specified type.
@@ -56,7 +56,7 @@ public interface AreaService {
      * @param type The class object representing the type of the region.
      * @return true if the unregistration is successful, false otherwise.
      */
-    <T extends Region> boolean unregisterWrapper(@NotNull Class<T> type);
+    <T extends Region> boolean unregisterWrapper(Class<T> type);
 
     /**
      * Registers a new region wrapper using the specified type and creator function.
@@ -67,8 +67,8 @@ public interface AreaService {
      * @throws IllegalStateException if a region wrapper for the same type already exists.
      */
     <T extends Region> void registerWrapper(
-            @NotNull Class<T> type,
-            @NotNull Function<AreaCreator<T>, RegionizedArea<T>> creator
+            Class<T> type,
+            Function<AreaCreator<T>, RegionizedArea<T>> creator
     ) throws IllegalStateException;
 
     /**
@@ -76,16 +76,14 @@ public interface AreaService {
      *
      * @return an unmodifiable set of classes representing region wrappers.
      */
-    @Unmodifiable
-    @NotNull Set<@NotNull Class<? extends Region>> getRegionWrappers();
+    Set<Class<? extends Region>> getRegionWrappers();
 
     /**
      * Retrieves all registered adapter functions for serializing and deserializing Area objects.
      *
      * @return The registered adapter functions for serializing and deserializing Area objects.
      */
-    @Unmodifiable
-    @NotNull Map<@NotNull Class<? extends Area>, @NotNull AreaAdapter<?>> getAdapters();
+    Map<Class<? extends Area>, AreaAdapter<?>> getAdapters();
 
     /**
      * Registers an adapter for serializing and deserializing Area objects of the specified type.
@@ -96,8 +94,8 @@ public interface AreaService {
      * @throws IllegalStateException if an adapter for the specified area type is already registered.
      */
     <T extends Area> void registerAdapter(
-            @NotNull Class<T> type,
-            @NotNull AreaAdapter<T> adapter
+            Class<T> type,
+            AreaAdapter<T> adapter
     ) throws IllegalStateException;
 
     /**
@@ -107,7 +105,7 @@ public interface AreaService {
      * @param <T>  The type parameter representing the area object.
      * @return true if the unregistration is successful, false otherwise.
      */
-    <T extends Area> boolean unregisterAdapter(@NotNull Class<T> type);
+    <T extends Area> boolean unregisterAdapter(Class<T> type);
 
     /**
      * Retrieves the adapter for serializing and deserializing objects of type T that implement the Area interface.
@@ -117,7 +115,7 @@ public interface AreaService {
      * @return The adapter for the specified area type.
      * @throws NullPointerException if no adapter was registered for the given type.
      */
-    <T extends Area> @NotNull AreaAdapter<T> getAdapter(@NotNull Class<T> type) throws NullPointerException;
+    <T extends Area> AreaAdapter<T> getAdapter(Class<T> type) throws NullPointerException;
 
     /**
      * Retrieves the adapter for serializing and deserializing objects of type T that implement the Area interface.
@@ -127,5 +125,5 @@ public interface AreaService {
      * @return The adapter for the specified area type.
      * @throws IllegalArgumentException thrown if no adapter for the specified key was registered.
      */
-    <T extends Area> @NotNull AreaAdapter<T> getAdapter(@NotNull NamespacedKey key) throws IllegalArgumentException;
+    <T extends Area> AreaAdapter<T> getAdapter(NamespacedKey key) throws IllegalArgumentException;
 }

@@ -4,8 +4,8 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.schematic.SchematicHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The RegionizedArea interface represents an area bound to a region.
@@ -13,20 +13,21 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <T> The type of region associated with this area.
  */
+@NullMarked
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
     /**
      * Retrieves the RegionSelector associated with this RegionizedArea.
      *
      * @return The RegionSelector associated with this RegionizedArea.
      */
-    @NotNull RegionSelector getRegionSelector();
+    RegionSelector getRegionSelector();
 
     /**
      * Retrieves the region associated with this area.
      *
      * @return The region associated with this area.
      */
-    @NotNull T getRegion();
+    T getRegion();
 
     /**
      * Sets the parent area of this area.
@@ -44,7 +45,7 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @param region the region to set
      * @return true if the region was successfully set, false otherwise
      */
-    boolean setRegion(@NotNull T region);
+    boolean setRegion(T region);
 
     /**
      * Checks if the area is too big.

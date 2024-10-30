@@ -6,7 +6,7 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents an abstract event bound to an area and flag
@@ -15,8 +15,9 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Setter
-public abstract class AreaFlagEvent<T> extends AreaEvent<@NotNull Area> implements Cancellable {
-    private final @NotNull Flag<T> flag;
+@NullMarked
+public abstract class AreaFlagEvent<T> extends AreaEvent<Area> implements Cancellable {
+    private final Flag<T> flag;
     private boolean cancelled;
 
     /**
@@ -25,7 +26,7 @@ public abstract class AreaFlagEvent<T> extends AreaEvent<@NotNull Area> implemen
      * @param area the area associated with this event
      * @param flag the flag associated with this event
      */
-    protected AreaFlagEvent(@NotNull Area area, @NotNull Flag<T> flag) {
+    protected AreaFlagEvent(Area area, Flag<T> flag) {
         super(area);
         this.flag = flag;
     }

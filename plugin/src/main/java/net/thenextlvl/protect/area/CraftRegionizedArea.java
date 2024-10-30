@@ -25,8 +25,8 @@ import net.thenextlvl.protect.exception.CircularInheritanceException;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,16 +35,17 @@ import java.io.IOException;
 import java.util.*;
 
 @Getter
+@NullMarked
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<@NotNull T> {
-    private final @NotNull File dataFolder = new File(getWorld().getWorldFolder(), "areas");
-    private final @NotNull File file = new File(getDataFolder(), getName() + ".json");
-    private final @NotNull File schematic;
+public class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
+    private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
+    private final File file = new File(getDataFolder(), getName() + ".json");
+    private final File schematic;
     private @Nullable String parent;
     private T region;
 
-    public CraftRegionizedArea(@NotNull ProtectPlugin plugin, @NotNull AreaCreator<T> creator) throws CircularInheritanceException {
+    public CraftRegionizedArea(ProtectPlugin plugin, AreaCreator<T> creator) throws CircularInheritanceException {
         super(plugin, creator.name(), creator.world(), new HashSet<>(creator.members()),
                 creator.owner(), new LinkedHashMap<>(creator.flags()), creator.priority());
         this.parent = creator.parent();
@@ -53,16 +54,16 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     }
 
     @Override
-    public @NotNull Optional<Area> getParent() {
+    public Optional<Area> getParent() {
         return parent().flatMap(plugin.areaProvider()::getArea);
     }
 
-    public @NotNull Optional<String> parent() {
+    public Optional<String> parent() {
         return Optional.ofNullable(parent);
     }
 
     @Override
-    public @NotNull RegionSelector getRegionSelector() {
+    public RegionSelector getRegionSelector() {
         return new CuboidRegionSelector(
                 getRegion().getWorld(),
                 getRegion().getMinimumPoint(),
@@ -91,14 +92,14 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean setRegion(@NotNull T region) {
+    public boolean setRegion(T region) {
         var event = new AreaRedefineEvent<>(this, (T) region.clone());
         if (event.callEvent()) this.region = event.getRegion();
         return !event.isCancelled();
     }
 
     @Override
-    public boolean canInteract(@NotNull Area area) {
+    public boolean canInteract(Area area) {
         return area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner());
     }
 
@@ -108,7 +109,7 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     }
 
     @Override
-    public boolean contains(@NotNull Location location) {
+    public boolean contains(Location location) {
         return getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
@@ -151,14 +152,14 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     }
 
     @Override
-    public @NotNull List<@NotNull Entity> getEntities() {
+    public List<Entity> getEntities() {
         return getWorld().getEntities().stream()
                 .filter(this::contains)
                 .toList();
     }
 
     @Override
-    public @NotNull List<@NotNull Player> getPlayers() {
+    public List<Player> getPlayers() {
         return getWorld().getPlayers().stream()
                 .filter(this::contains)
                 .toList();

@@ -15,26 +15,26 @@ import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 
+@NullMarked
 @Accessors(fluent = true)
 public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftRegionizedArea<C>> implements AreaAdapter<T> {
     @Getter
-    private final @NotNull NamespacedKey key;
-    private final @NotNull ProtectPlugin plugin;
+    private final NamespacedKey key;
+    private final ProtectPlugin plugin;
 
-    public RegionizedAreaAdapter(@NotNull ProtectPlugin plugin, @KeyPattern.Value String name) {
+    public RegionizedAreaAdapter(ProtectPlugin plugin, @KeyPattern.Value String name) {
         this.key = new NamespacedKey(plugin, name);
         this.plugin = plugin;
     }
 
-    protected abstract T construct(@NotNull CraftAreaCreator<C> creator);
+    protected abstract T construct(CraftAreaCreator<C> creator);
 
     @Override
-    public @NotNull T deserialize(@NotNull JsonObject object, @NotNull World world, @NotNull JsonDeserializationContext context) {
+    public T deserialize(JsonObject object, World world, JsonDeserializationContext context) {
         var name = object.get("name").getAsString();
         var priority = object.get("priority").getAsInt();
 
@@ -43,7 +43,7 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
 
         var members = Objects.<Set<UUID>>requireNonNullElseGet(context.deserialize(object.get("members"), new TypeToken<Set<UUID>>() {
         }.getType()), HashSet::new);
-        var flags = context.<Map<Flag<?>, @Nullable Object>>deserialize(object.get("flags"), LinkedHashMap.class);
+        var flags = context.<Map<Flag<?>, Object>>deserialize(object.get("flags"), LinkedHashMap.class);
 
         var region = context.<C>deserialize(object.get("region"), new TypeToken<C>(getClass()) {
         }.getType());
@@ -52,7 +52,7 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
     }
 
     @Override
-    public @NotNull JsonObject serialize(@NotNull T area, @NotNull JsonSerializationContext context) {
+    public JsonObject serialize(T area, JsonSerializationContext context) {
         var object = new JsonObject();
         object.addProperty("name", area.getName());
         object.addProperty("priority", area.getPriority());

@@ -4,9 +4,11 @@ import com.google.gson.*;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Type;
 
+@NullMarked
 public class EllipsoidRegionAdapter implements JsonSerializer<EllipsoidRegion>, JsonDeserializer<EllipsoidRegion> {
 
     @Override

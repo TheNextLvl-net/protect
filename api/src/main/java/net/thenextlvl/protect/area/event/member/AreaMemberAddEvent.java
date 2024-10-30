@@ -6,8 +6,7 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.UUID;
 
@@ -19,18 +18,18 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-public class AreaMemberAddEvent extends AreaEvent<@NotNull Area> implements Cancellable {
-    private @NotNull UUID member;
+@NullMarked
+public class AreaMemberAddEvent extends AreaEvent<Area> implements Cancellable {
+    private UUID member;
     private boolean cancelled;
 
     /**
      * Constructs a new AreaMemberAddEvent.
      *
-     * @param area  the regionized area to which a member is being added
+     * @param area   the regionized area to which a member is being added
      * @param member the UUID of the member to be added to the area
      */
-    @ApiStatus.Internal
-    public AreaMemberAddEvent(@NotNull Area area, @NotNull UUID member) {
+    public AreaMemberAddEvent(Area area, UUID member) {
         super(area);
         this.member = member;
     }

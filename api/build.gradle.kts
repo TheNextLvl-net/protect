@@ -22,9 +22,13 @@ repositories {
 
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.34")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core") {
+        exclude("org.jetbrains", "annotations")
+    }
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT") {
+        exclude("org.jetbrains", "annotations")
+    }
 
     implementation("net.thenextlvl.core:files:2.0.0")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.50"))

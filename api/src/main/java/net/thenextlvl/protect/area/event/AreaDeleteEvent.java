@@ -5,8 +5,7 @@ import lombok.Setter;
 import net.thenextlvl.protect.area.AreaService;
 import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is triggered when an Area is requested for deletion.
@@ -16,7 +15,8 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Setter
-public class AreaDeleteEvent extends AreaEvent<@NotNull RegionizedArea<?>> implements Cancellable {
+@NullMarked
+public class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
     private boolean cancelled;
 
     /**
@@ -24,8 +24,7 @@ public class AreaDeleteEvent extends AreaEvent<@NotNull RegionizedArea<?>> imple
      *
      * @param area the RegionizedArea that is requested to be deleted
      */
-    @ApiStatus.Internal
-    public AreaDeleteEvent(@NotNull RegionizedArea<?> area) {
+    public AreaDeleteEvent(RegionizedArea<?> area) {
         super(area);
     }
 }

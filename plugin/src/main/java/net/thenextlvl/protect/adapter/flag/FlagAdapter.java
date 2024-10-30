@@ -5,21 +5,23 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.NamespacedKey;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
+@NullMarked
 @RequiredArgsConstructor
 public class FlagAdapter implements JsonSerializer<Flag<?>>, JsonDeserializer<Flag<?>> {
     private final ProtectPlugin plugin;
 
     @Override
-    public @NotNull JsonElement serialize(Flag<?> flag, Type type, JsonSerializationContext context) {
+    public JsonElement serialize(Flag<?> flag, Type type, JsonSerializationContext context) {
         return new JsonPrimitive(flag.key().asString());
     }
 
     @Override
-    public Flag<?> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+    public @Nullable Flag<?> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         var key = NamespacedKey.fromString(element.getAsString());
         return key != null ? plugin.flagRegistry().getFlag(key).orElse(null) : null;
     }

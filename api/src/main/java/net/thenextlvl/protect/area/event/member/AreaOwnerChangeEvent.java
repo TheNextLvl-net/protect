@@ -6,9 +6,8 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -20,7 +19,8 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-public class AreaOwnerChangeEvent extends AreaEvent<@NotNull Area> implements Cancellable {
+@NullMarked
+public class AreaOwnerChangeEvent extends AreaEvent<Area> implements Cancellable {
     private @Nullable UUID owner;
     private boolean cancelled;
 
@@ -30,8 +30,7 @@ public class AreaOwnerChangeEvent extends AreaEvent<@NotNull Area> implements Ca
      * @param area  The area for which the ownership change event is being created
      * @param owner The new owner's UUID. Can be null to indicate no owner
      */
-    @ApiStatus.Internal
-    public AreaOwnerChangeEvent(@NotNull Area area, @Nullable UUID owner) {
+    public AreaOwnerChangeEvent(Area area, @Nullable UUID owner) {
         super(area);
         this.owner = owner;
     }

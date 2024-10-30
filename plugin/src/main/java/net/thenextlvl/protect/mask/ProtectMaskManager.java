@@ -12,12 +12,14 @@ import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.GlobalArea;
 import net.thenextlvl.protect.area.RegionizedArea;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NullMarked
 public class ProtectMaskManager extends BukkitMaskManager {
     private static final CuboidRegion GLOBAL = new CuboidRegion(
             BlockVector3.at(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE),

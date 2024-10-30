@@ -7,23 +7,24 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
 
 @Getter
+@NullMarked
 public class CraftGlobalArea extends CraftArea implements GlobalArea {
-    private final @NotNull File dataFolder;
-    private final @NotNull File file;
+    private final File dataFolder;
+    private final File file;
 
     public CraftGlobalArea(
-            @NotNull ProtectPlugin plugin,
-            @NotNull World world,
-            @NotNull Set<@NotNull UUID> members,
+            ProtectPlugin plugin,
+            World world,
+            Set<UUID> members,
             @Nullable UUID owner,
-            @NotNull Map<@NotNull Flag<?>, @Nullable Object> flags,
+            Map<Flag<?>, @Nullable Object> flags,
             int priority
     ) {
         super(plugin, "@" + world.getName(), world, members, owner, flags, priority);
@@ -32,32 +33,32 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     }
 
     @Override
-    public @NotNull Optional<Area> getParent() {
+    public Optional<Area> getParent() {
         return Optional.empty();
     }
 
     @Override
-    public boolean canInteract(@NotNull Area area) {
+    public boolean canInteract(Area area) {
         return equals(area);
     }
 
     @Override
-    public @NotNull List<@NotNull Entity> getEntities() {
+    public List<Entity> getEntities() {
         return getWorld().getEntities();
     }
 
     @Override
-    public @NotNull List<@NotNull Player> getPlayers() {
+    public List<Player> getPlayers() {
         return getWorld().getPlayers();
     }
 
     @Override
-    public boolean contains(@NotNull Location location) {
+    public boolean contains(Location location) {
         return getWorld().equals(location.getWorld());
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;

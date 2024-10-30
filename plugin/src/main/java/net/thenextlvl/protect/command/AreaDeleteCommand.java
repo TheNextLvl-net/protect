@@ -11,7 +11,9 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 @RequiredArgsConstructor
 @SuppressWarnings("UnstableApiUsage")
 class AreaDeleteCommand {

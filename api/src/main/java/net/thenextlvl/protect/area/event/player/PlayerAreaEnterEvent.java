@@ -5,8 +5,7 @@ import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is triggered when a player enters an area.
@@ -16,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Setter
+@NullMarked
 public class PlayerAreaEnterEvent extends PlayerAreaEvent implements Cancellable {
     private boolean cancelled;
 
@@ -25,8 +25,7 @@ public class PlayerAreaEnterEvent extends PlayerAreaEvent implements Cancellable
      * @param player the player associated with this event
      * @param area   the area associated with this event
      */
-    @ApiStatus.Internal
-    public PlayerAreaEnterEvent(@NotNull Player player, @NotNull Area area) {
+    public PlayerAreaEnterEvent(Player player, Area area) {
         super(player, area);
     }
 }

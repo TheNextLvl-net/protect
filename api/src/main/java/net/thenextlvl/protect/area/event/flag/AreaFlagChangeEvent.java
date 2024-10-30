@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents an event that occurs when a flag in an area is changed.
@@ -21,12 +20,11 @@ public class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
     /**
      * Constructs a new AreaFlagChangeEvent, which represents the change of a flag within an area.
      *
-     * @param area The area associated with this event.
-     * @param flag The flag that is being changed.
+     * @param area     The area associated with this event.
+     * @param flag     The flag that is being changed.
      * @param newState The new state of the flag.
      */
-    @ApiStatus.Internal
-    public AreaFlagChangeEvent(@NotNull Area area, @NotNull Flag<T> flag, T newState) {
+    public AreaFlagChangeEvent(@NonNull Area area, @NonNull Flag<T> flag, T newState) {
         super(area, flag);
         this.newState = newState;
     }

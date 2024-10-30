@@ -4,9 +4,11 @@ import com.google.gson.*;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.regions.CylinderRegion;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Type;
 
+@NullMarked
 public class CylinderRegionAdapter implements JsonSerializer<CylinderRegion>, JsonDeserializer<CylinderRegion> {
 
     @Override

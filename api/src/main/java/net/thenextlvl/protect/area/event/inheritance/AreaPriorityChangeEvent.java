@@ -5,8 +5,7 @@ import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents an event that occurs when the priority of an area is changed.
@@ -16,7 +15,8 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Setter
-public class AreaPriorityChangeEvent extends AreaEvent<@NotNull Area> implements Cancellable {
+@NullMarked
+public class AreaPriorityChangeEvent extends AreaEvent<Area> implements Cancellable {
     private boolean cancelled;
     private int priority;
 
@@ -26,8 +26,7 @@ public class AreaPriorityChangeEvent extends AreaEvent<@NotNull Area> implements
      * @param area     The area whose priority is being changed
      * @param priority The new priority value
      */
-    @ApiStatus.Internal
-    public AreaPriorityChangeEvent(@NotNull Area area, int priority) {
+    public AreaPriorityChangeEvent(Area area, int priority) {
         super(area);
         this.priority = priority;
     }

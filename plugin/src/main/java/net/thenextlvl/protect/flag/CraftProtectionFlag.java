@@ -1,18 +1,18 @@
 package net.thenextlvl.protect.flag;
 
 import org.bukkit.NamespacedKey;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
 public record CraftProtectionFlag<T>(
-        @NotNull NamespacedKey key,
-        @NotNull Class<? extends T> type,
+        @NonNull NamespacedKey key,
+        @NonNull Class<? extends T> type,
         T defaultValue, T protectedValue
 ) implements ProtectionFlag<T> {
 
     @Override
-    public int compareTo(@NotNull Flag<?> flag) {
+    public int compareTo(@NonNull Flag<?> flag) {
         return key().compareTo(flag.key());
     }
 

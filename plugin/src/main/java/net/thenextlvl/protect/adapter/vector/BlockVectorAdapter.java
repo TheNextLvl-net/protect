@@ -2,9 +2,11 @@ package net.thenextlvl.protect.adapter.vector;
 
 import com.google.gson.*;
 import com.sk89q.worldedit.math.BlockVector3;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Type;
 
+@NullMarked
 public class BlockVectorAdapter implements JsonSerializer<BlockVector3>, JsonDeserializer<BlockVector3> {
 
     @Override

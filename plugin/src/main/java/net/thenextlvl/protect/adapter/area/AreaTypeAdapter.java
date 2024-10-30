@@ -7,18 +7,19 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+@NullMarked
 @RequiredArgsConstructor
 public class AreaTypeAdapter implements JsonDeserializer<Area>, JsonSerializer<Area> {
-    private final @NotNull ProtectPlugin plugin;
-    private final @NotNull World world;
+    private final ProtectPlugin plugin;
+    private final World world;
 
     @Override
-    public @NotNull Area deserialize(@NotNull JsonElement element, @NotNull Type type, @NotNull JsonDeserializationContext context) {
+    public Area deserialize(JsonElement element, Type type, JsonDeserializationContext context) {
         var object = element.getAsJsonObject();
         var areaType = context.<NamespacedKey>deserialize(object.get("type"), NamespacedKey.class);
         var adapter = Objects.requireNonNull(plugin.areaService().getAdapter(areaType), "Missing adapter " + areaType);
@@ -27,7 +28,7 @@ public class AreaTypeAdapter implements JsonDeserializer<Area>, JsonSerializer<A
 
     @Override
     @SuppressWarnings("unchecked")
-    public @NotNull JsonElement serialize(@NotNull Area area, @NotNull Type type, @NotNull JsonSerializationContext context) {
+    public JsonElement serialize(Area area, Type type, JsonSerializationContext context) {
         var adapter = (AreaAdapter<Area>) plugin.areaService().getAdapter(area.getClass());
         var object = adapter.serialize(area, context);
         object.add("type", context.serialize(adapter.key()));

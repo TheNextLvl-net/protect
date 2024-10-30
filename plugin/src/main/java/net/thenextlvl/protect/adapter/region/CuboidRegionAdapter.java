@@ -3,9 +3,11 @@ package net.thenextlvl.protect.adapter.region;
 import com.google.gson.*;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Type;
 
+@NullMarked
 public class CuboidRegionAdapter implements JsonSerializer<CuboidRegion>, JsonDeserializer<CuboidRegion> {
 
     @Override

@@ -1,27 +1,28 @@
 package net.thenextlvl.protect.exception;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 @Getter
+@NullMarked
 public class UnsupportedRegionException extends IllegalArgumentException {
-    private final @NotNull Class<?> type;
+    private final Class<?> type;
 
-    public UnsupportedRegionException(@NotNull Class<?> type) {
+    public UnsupportedRegionException(Class<?> type) {
         this.type = type;
     }
 
-    public UnsupportedRegionException(@NotNull Class<?> type, @NotNull String message) {
+    public UnsupportedRegionException(Class<?> type, String message) {
         super(message);
         this.type = type;
     }
 
-    public UnsupportedRegionException(@NotNull Class<?> type, @NotNull String message, @NotNull Throwable cause) {
+    public UnsupportedRegionException(Class<?> type, String message, Throwable cause) {
         super(message, cause);
         this.type = type;
     }
 
-    public UnsupportedRegionException(@NotNull Class<?> type, @NotNull Throwable cause) {
+    public UnsupportedRegionException(Class<?> type, Throwable cause) {
         super(cause);
         this.type = type;
     }

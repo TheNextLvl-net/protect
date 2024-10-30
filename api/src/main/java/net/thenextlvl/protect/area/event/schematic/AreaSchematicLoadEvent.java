@@ -5,8 +5,7 @@ import lombok.Setter;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is fired when a schematic of a regionized area is loaded.
@@ -14,7 +13,8 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Setter
-public class AreaSchematicLoadEvent extends AreaEvent<@NotNull RegionizedArea<?>> implements Cancellable {
+@NullMarked
+public class AreaSchematicLoadEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
     private boolean cancelled;
 
     /**
@@ -22,8 +22,7 @@ public class AreaSchematicLoadEvent extends AreaEvent<@NotNull RegionizedArea<?>
      *
      * @param area The regionized area whose schematic is being loaded.
      */
-    @ApiStatus.Internal
-    public AreaSchematicLoadEvent(@NotNull RegionizedArea<?> area) {
+    public AreaSchematicLoadEvent(RegionizedArea<?> area) {
         super(area);
     }
 }
