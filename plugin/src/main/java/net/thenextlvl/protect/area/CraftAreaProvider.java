@@ -120,8 +120,8 @@ public class CraftAreaProvider implements AreaProvider {
                 .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
                 .registerTypeHierarchyAdapter(Vector2.class, new Vector2Adapter())
                 .registerTypeHierarchyAdapter(Vector3.class, new Vector3Adapter())
-                .registerTypeHierarchyAdapter(Location.class, new LocationAdapter.Simple.WorldLess(world))
-                .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.Bukkit.INSTANCE)
+                .registerTypeHierarchyAdapter(Location.class, LocationAdapter.simple(world))
+                .registerTypeHierarchyAdapter(NamespacedKey.class, KeyAdapter.bukkit())
                 .registerTypeHierarchyAdapter(Area.class, new AreaTypeAdapter(plugin, world))
                 .registerTypeHierarchyAdapter(Flag.class, new FlagAdapter(plugin))
                 .registerTypeHierarchyAdapter(new TypeToken<Map<Flag<?>, Object>>() {
