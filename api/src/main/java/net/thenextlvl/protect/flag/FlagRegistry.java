@@ -18,8 +18,7 @@ public interface FlagRegistry {
      *
      * @return a Set of flags associated with the FlagRegistry
      */
-    @NotNull
-    Set<Flag<?>> getFlags();
+    @NotNull Set<@NotNull Flag<?>> getFlags();
 
     /**
      * Retrieves the set of flags associated with the given plugin.
@@ -27,8 +26,7 @@ public interface FlagRegistry {
      * @param plugin the plugin for which to retrieve the flags
      * @return a set of flags associated with the plugin
      */
-    @NotNull
-    Set<Flag<?>> getFlags(@NotNull Plugin plugin);
+    @NotNull Set<@NotNull Flag<?>> getFlags(@NotNull Plugin plugin);
 
     /**
      * Retrieves the flag associated with the given NamespacedKey.
@@ -51,7 +49,7 @@ public interface FlagRegistry {
      * @see #register(Plugin, Class, String, Object)
      */
     @SuppressWarnings("unchecked")
-    default <T> @NotNull Flag<@NotNull T> register(@NotNull Plugin plugin, @KeyPattern @NotNull String name,
+    default <T> @NotNull Flag<@NotNull T> register(@NotNull Plugin plugin, @KeyPattern.Value String name,
                                                    @NotNull T defaultValue
     ) throws IllegalStateException {
         return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue);
@@ -69,7 +67,7 @@ public interface FlagRegistry {
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      */
     <T> @NotNull Flag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type,
-                                  @KeyPattern @NotNull String name, T defaultValue
+                                  @KeyPattern.Value String name, T defaultValue
     ) throws IllegalStateException;
 
     /**
@@ -85,7 +83,7 @@ public interface FlagRegistry {
      * @see #register(Plugin, Class, String, Object, Object)
      */
     @SuppressWarnings("unchecked")
-    default <T> @NotNull ProtectionFlag<@NotNull T> register(@NotNull Plugin plugin, @KeyPattern @NotNull String name,
+    default <T> @NotNull ProtectionFlag<@NotNull T> register(@NotNull Plugin plugin, @KeyPattern.Value @NotNull String name,
                                                              @NotNull T defaultValue, @NotNull T protectedValue
     ) throws IllegalStateException {
         return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue, protectedValue);
@@ -109,7 +107,7 @@ public interface FlagRegistry {
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      */
     <T> @NotNull ProtectionFlag<T> register(@NotNull Plugin plugin, @NotNull Class<? extends T> type,
-                                            @KeyPattern @NotNull String name, T defaultValue, T protectedValue
+                                            @KeyPattern.Value @NotNull String name, T defaultValue, T protectedValue
     ) throws IllegalStateException;
 
     /**

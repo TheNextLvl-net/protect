@@ -1,10 +1,6 @@
 package net.thenextlvl.protect.adapter.flag;
 
 import com.google.gson.*;
-import core.annotation.FieldsAreNotNullByDefault;
-import core.annotation.MethodsReturnNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
@@ -15,10 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@TypesAreNotNullByDefault
-@FieldsAreNotNullByDefault
-@MethodsReturnNotNullByDefault
-@ParametersAreNotNullByDefault
 public class FlagsAdapter implements JsonSerializer<Map<Flag<?>, Object>>, JsonDeserializer<Map<Flag<?>, Object>> {
     private final ProtectPlugin plugin;
 

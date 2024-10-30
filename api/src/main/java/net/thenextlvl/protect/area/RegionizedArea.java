@@ -2,12 +2,9 @@ package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
-import core.annotation.MethodsReturnNotNullByDefault;
-import core.annotation.ParametersAreNotNullByDefault;
-import core.annotation.TypesAreNotNullByDefault;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.schematic.SchematicHolder;
-import org.intellij.lang.annotations.Subst;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,28 +13,20 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <T> The type of region associated with this area.
  */
-@TypesAreNotNullByDefault
-@MethodsReturnNotNullByDefault
-@ParametersAreNotNullByDefault
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
-    @Override
-    @Subst("RegEx")
-    @NamePattern.Regionized
-    String getName();
-
     /**
      * Retrieves the RegionSelector associated with this RegionizedArea.
      *
      * @return The RegionSelector associated with this RegionizedArea.
      */
-    RegionSelector getRegionSelector();
+    @NotNull RegionSelector getRegionSelector();
 
     /**
      * Retrieves the region associated with this area.
      *
      * @return The region associated with this area.
      */
-    T getRegion();
+    @NotNull T getRegion();
 
     /**
      * Sets the parent area of this area.
@@ -55,7 +44,7 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @param region the region to set
      * @return true if the region was successfully set, false otherwise
      */
-    boolean setRegion(T region);
+    boolean setRegion(@NotNull T region);
 
     /**
      * Checks if the area is too big.

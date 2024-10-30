@@ -12,17 +12,17 @@ import java.util.stream.Collectors;
 
 @Getter
 public class CraftFlagRegistry implements FlagRegistry {
-    private final Map<Plugin, Set<Flag<?>>> registry = new HashMap<>();
+    private final @NotNull Map<@NotNull Plugin, @NotNull Set<@NotNull Flag<?>>> registry = new HashMap<>();
 
     @Override
-    public @NotNull Set<Flag<?>> getFlags() {
+    public @NotNull Set<@NotNull Flag<?>> getFlags() {
         return registry.values().stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public @NotNull Set<Flag<?>> getFlags(@NotNull Plugin plugin) {
+    public @NotNull Set<@NotNull Flag<?>> getFlags(@NotNull Plugin plugin) {
         return registry.get(plugin);
     }
 
@@ -45,7 +45,7 @@ public class CraftFlagRegistry implements FlagRegistry {
         return register(plugin, name, key -> new CraftProtectionFlag<>(key, type, defaultValue, protectedValue));
     }
 
-    private <T extends Flag<?>> T register(@NotNull Plugin plugin, @KeyPattern.Value @NotNull String name, Function<NamespacedKey, T> function) {
+    private <T extends Flag<?>> T register(@NotNull Plugin plugin, @KeyPattern.Value @NotNull String name, @NotNull Function<NamespacedKey, T> function) {
         var key = new NamespacedKey(plugin, name);
         var flag = function.apply(key);
         if (registry.computeIfAbsent(plugin, p -> new HashSet<>()).add(flag)) return flag;

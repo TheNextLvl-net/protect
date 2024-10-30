@@ -1,7 +1,7 @@
 package net.thenextlvl.protect.schematic;
 
 import com.sk89q.worldedit.WorldEditException;
-import core.annotation.MethodsReturnNotNullByDefault;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import java.io.IOException;
 /**
  * The SchematicHolder interface represents an object that holds and manages a schematic file.
  */
-@MethodsReturnNotNullByDefault
 public interface SchematicHolder {
 
     /**
@@ -17,7 +16,7 @@ public interface SchematicHolder {
      *
      * @return The schematic file.
      */
-    File getSchematic();
+    @NotNull File getSchematic();
 
     /**
      * Deletes the schematic file associated with this object.

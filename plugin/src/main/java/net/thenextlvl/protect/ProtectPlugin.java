@@ -6,7 +6,6 @@ import com.google.common.cache.CacheBuilder;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
-import com.sk89q.worldedit.regions.RegionIntersection;
 import core.i18n.file.ComponentBundle;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +29,7 @@ import net.thenextlvl.protect.listener.EntityListener;
 import net.thenextlvl.protect.listener.MovementListener;
 import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.mask.ProtectMaskManager;
+import net.thenextlvl.protect.region.GroupedRegion;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
 import net.thenextlvl.protect.version.PluginVersionChecker;
@@ -40,6 +40,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -49,18 +50,19 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Accessors(fluent = true)
 public class ProtectPlugin extends JavaPlugin {
-    private final Metrics metrics = new Metrics(this, 21712);
-    private final File schematicFolder = new File(getDataFolder(), "schematics");
-    private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
+    private final @NotNull Metrics metrics = new Metrics(this, 21712);
+    private final @NotNull File schematicFolder = new File(getDataFolder(), "schematics");
+    private final @NotNull PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
-    private final CraftProtectionService protectionService = new CraftProtectionService(this);
-    private final CraftFlagRegistry flagRegistry = new CraftFlagRegistry();
-    private final CraftAreaProvider areaProvider = new CraftAreaProvider(this);
-    private final CraftAreaService areaService = new CraftAreaService(this);
+    private final @NotNull CraftProtectionService protectionService = new CraftProtectionService(this);
+    private final @NotNull CraftFlagRegistry flagRegistry = new CraftFlagRegistry();
+    private final @NotNull CraftAreaProvider areaProvider = new CraftAreaProvider(this);
+    private final @NotNull CraftAreaService areaService = new CraftAreaService(this);
 
-    public final @Getter(AccessLevel.NONE) Flags flags = new Flags();
+    @Getter(AccessLevel.NONE)
+    public final @NotNull Flags flags = new Flags();
 
-    private final ComponentBundle bundle = new ComponentBundle(new File(getDataFolder(), "translations"),
+    private final @NotNull ComponentBundle bundle = new ComponentBundle(new File(getDataFolder(), "translations"),
             audience -> audience instanceof Player player ? player.locale() : Locale.US)
             .register("protect", Locale.US)
             .register("protect_german", Locale.GERMANY)
@@ -112,7 +114,7 @@ public class ProtectPlugin extends JavaPlugin {
         areaService().registerWrapper(CuboidRegion.class, creator -> new CraftCuboidArea(this, creator));
         areaService().registerWrapper(CylinderRegion.class, creator -> new CraftCylinderArea(this, creator));
         areaService().registerWrapper(EllipsoidRegion.class, creator -> new CraftEllipsoidArea(this, creator));
-        areaService().registerWrapper(RegionIntersection.class, creator -> new CraftIntersectionArea(this, creator));
+        areaService().registerWrapper(GroupedRegion.class, creator -> new CraftGroupedArea(this, creator));
     }
 
     private void registerEvents() {
@@ -126,18 +128,18 @@ public class ProtectPlugin extends JavaPlugin {
         new AreaCommand(this).register();
     }
 
-    private final Cache<Audience, String> cooldown = CacheBuilder.newBuilder()
+    private final @NotNull Cache<Audience, String> cooldown = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.SECONDS)
             .build();
 
-    public void failed(@Nullable Audience audience, Area area, String message) {
+    public void failed(@Nullable Audience audience, @NotNull Area area, @NotNull String message) {
         if (audience == null || !area.getFlag(flags.notifyFailedInteractions)) return;
         if (message.equals(cooldown.getIfPresent(audience))) return;
         bundle().sendMessage(audience, message, Placeholder.parsed("area", area.getName()));
         cooldown.put(audience, message);
     }
 
-    public void failed(@Nullable Audience audience, Cancellable cancellable, Area area, String message) {
+    public void failed(@Nullable Audience audience, @NotNull Cancellable cancellable, @NotNull Area area, @NotNull String message) {
         if (cancellable.isCancelled()) failed(audience, area, message);
     }
 
