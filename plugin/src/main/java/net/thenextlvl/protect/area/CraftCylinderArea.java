@@ -23,6 +23,11 @@ public class CraftCylinderArea extends CraftRegionizedArea<CylinderRegion> imple
     }
 
     @Override
+    protected CylinderRegion readRegion(CompoundTag tag) {
+        return plugin.nbt.fromTag(tag.getAsCompound("region"), CylinderRegion.class);
+    }
+
+    @Override
     public CylinderRegionSelector getRegionSelector() {
         return new CylinderRegionSelector(
                 getRegion().getWorld(),

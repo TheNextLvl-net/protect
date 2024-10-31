@@ -23,6 +23,11 @@ public class CraftEllipsoidArea extends CraftRegionizedArea<EllipsoidRegion> imp
     }
 
     @Override
+    protected EllipsoidRegion readRegion(CompoundTag tag) {
+        return plugin.nbt.fromTag(tag.getAsCompound("region"), EllipsoidRegion.class);
+    }
+
+    @Override
     public EllipsoidRegionSelector getRegionSelector() {
         return new EllipsoidRegionSelector(
                 getRegion().getWorld(),

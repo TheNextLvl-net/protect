@@ -20,4 +20,9 @@ public class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implement
     public CraftCuboidArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
         super(plugin, world, name, tag);
     }
+
+    @Override
+    protected CuboidRegion readRegion(CompoundTag tag) {
+        return plugin.nbt.fromTag(tag.getAsCompound("region"), CuboidRegion.class);
+    }
 }

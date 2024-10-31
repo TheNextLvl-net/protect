@@ -20,4 +20,9 @@ public class CraftGroupedArea extends CraftRegionizedArea<GroupedRegion> impleme
     public CraftGroupedArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
         super(plugin, world, name, tag);
     }
+
+    @Override
+    protected GroupedRegion readRegion(CompoundTag tag) {
+        return plugin.nbt.fromTag(tag.getAsCompound("region"), GroupedRegion.class);
+    }
 }
