@@ -48,7 +48,7 @@ public class AreaFile extends NBTFile<CompoundTag> {
     @Override
     public FileIO<CompoundTag> save(FileAttribute<?>... attributes) {
         setRootName(area.getName());
-        setRoot(area.serialize());
+        setRoot(area.serialize().getAsCompound());
         return super.save(attributes);
     }
 
