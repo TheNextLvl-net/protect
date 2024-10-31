@@ -13,6 +13,7 @@ import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import core.nbt.tag.CompoundTag;
+import core.nbt.tag.Tag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -40,7 +41,7 @@ import java.util.*;
 @NullMarked
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
+public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
     private final File file = new File(getDataFolder(), getName() + ".dat");
     private final File schematic;
@@ -58,6 +59,14 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
     public CraftRegionizedArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
         super(plugin, world, name, tag);
         this.schematic = new File(plugin.schematicFolder(), getName() + ".schem");
+        this.parent = readParent(tag);
+        this.region = readRegion(tag);
+    }
+
+    protected abstract T readRegion(CompoundTag tag);
+
+    private void writeRegion(CompoundTag tag) {
+        tag.add("region", plugin.nbt.toTag(region));
     }
 
     @Override
@@ -170,5 +179,21 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
         return getWorld().getPlayers().stream()
                 .filter(this::contains)
                 .toList();
+    }
+
+    @Override
+    public CompoundTag serialize() {
+        var tag = super.serialize();
+        writeParent(tag);
+        writeRegion(tag);
+        return tag;
+    }
+
+    private void writeParent(CompoundTag tag) {
+        if (parent != null) tag.add("parent", parent);
+    }
+
+    private @Nullable String readParent(CompoundTag tag) {
+        return tag.optional("parent").map(Tag::getAsString).orElse(null);
     }
 }
