@@ -3,10 +3,14 @@ package net.thenextlvl.protect;
 import com.fastasyncworldedit.core.util.WEManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector2;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import core.i18n.file.ComponentBundle;
+import core.nbt.serialization.NBT;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -18,6 +22,12 @@ import net.thenextlvl.protect.adapter.area.CuboidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.CylinderAreaAdapter;
 import net.thenextlvl.protect.adapter.area.EllipsoidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.GlobalAreaAdapter;
+import net.thenextlvl.protect.adapter.region.CuboidRegionAdapter;
+import net.thenextlvl.protect.adapter.region.CylinderRegionAdapter;
+import net.thenextlvl.protect.adapter.region.EllipsoidRegionAdapter;
+import net.thenextlvl.protect.adapter.vector.BlockVectorAdapter;
+import net.thenextlvl.protect.adapter.vector.Vector2Adapter;
+import net.thenextlvl.protect.adapter.vector.Vector3Adapter;
 import net.thenextlvl.protect.area.*;
 import net.thenextlvl.protect.command.AreaCommand;
 import net.thenextlvl.protect.flag.CraftFlagRegistry;
@@ -143,6 +153,15 @@ public class ProtectPlugin extends JavaPlugin {
     public void failed(@Nullable Audience audience, Cancellable cancellable, Area area, String message) {
         if (cancellable.isCancelled()) failed(audience, area, message);
     }
+
+    public final NBT nbt = NBT.builder()
+            .registerAdapter(CuboidRegion.class, new CuboidRegionAdapter())
+            .registerAdapter(CylinderRegion.class, new CylinderRegionAdapter())
+            .registerAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
+            .registerAdapter(BlockVector3.class, new BlockVectorAdapter())
+            .registerAdapter(Vector2.class, new Vector2Adapter())
+            .registerAdapter(Vector3.class, new Vector3Adapter())
+            .build();
 
     public class Flags {
         public final Flag<@Nullable Location> teleportLocation = flagRegistry().register(ProtectPlugin.this, Location.class, "teleport_location", null);
