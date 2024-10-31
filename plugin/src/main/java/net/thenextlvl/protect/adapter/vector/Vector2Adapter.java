@@ -1,24 +1,28 @@
 package net.thenextlvl.protect.adapter.vector;
 
-import com.google.gson.*;
 import com.sk89q.worldedit.math.Vector2;
+import core.nbt.serialization.TagAdapter;
+import core.nbt.serialization.TagDeserializationContext;
+import core.nbt.serialization.TagSerializationContext;
+import core.nbt.tag.CompoundTag;
+import core.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
-import java.lang.reflect.Type;
-
 @NullMarked
-public class Vector2Adapter implements JsonSerializer<Vector2>, JsonDeserializer<Vector2> {
-
+public class Vector2Adapter implements TagAdapter<Vector2> {
     @Override
-    public Vector2 deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-        var split = element.getAsString().split(", ");
-        var x = Double.parseDouble(split[0]);
-        var z = Double.parseDouble(split[1]);
+    public Vector2 deserialize(Tag tag, TagDeserializationContext context) {
+        var compound = tag.getAsCompound();
+        var x = compound.get("x").getAsInt();
+        var z = compound.get("z").getAsInt();
         return Vector2.at(x, z);
     }
 
     @Override
-    public JsonElement serialize(Vector2 vector, Type type, JsonSerializationContext context) {
-        return new JsonPrimitive(vector.x() + ", " + vector.z());
+    public Tag serialize(Vector2 vector, TagSerializationContext context) {
+        var tag = new CompoundTag();
+        tag.add("x", vector.x());
+        tag.add("z", vector.z());
+        return tag;
     }
 }
