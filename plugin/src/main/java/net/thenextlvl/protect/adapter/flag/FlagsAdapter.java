@@ -1,6 +1,10 @@
 package net.thenextlvl.protect.adapter.flag;
 
-import com.google.gson.*;
+import core.nbt.serialization.TagAdapter;
+import core.nbt.serialization.TagDeserializationContext;
+import core.nbt.serialization.TagSerializationContext;
+import core.nbt.tag.CompoundTag;
+import core.nbt.tag.Tag;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
@@ -8,32 +12,31 @@ import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @NullMarked
 @RequiredArgsConstructor
-public class FlagsAdapter implements JsonSerializer<Map<Flag<?>, @Nullable Object>>, JsonDeserializer<Map<Flag<?>, @Nullable Object>> {
+public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> {
     private final ProtectPlugin plugin;
 
     @Override
-    public JsonObject serialize(Map<Flag<?>, @Nullable Object> flags, Type type, JsonSerializationContext context) {
-        var object = new JsonObject();
-        flags.forEach((flag, o) -> object.add(flag.key().asString(), context.serialize(o, flag.type())));
-        return object;
+    public Map<Flag<?>, @Nullable Object> deserialize(Tag tag, TagDeserializationContext context) {
+        var compound = tag.getAsCompound();
+        var flags = new LinkedHashMap<Flag<?>, @Nullable Object>();
+        compound.forEach((key, value) -> {
+            var namespace = NamespacedKey.fromString(key);
+            var flag = namespace != null ? plugin.flagRegistry().getFlag(namespace).orElse(null) : null;
+            if (flag != null) flags.put(flag, context.deserialize(value, flag.type()));
+            else plugin.getComponentLogger().error("Unknown flag: {}", key);
+        });
+        return flags;
     }
 
     @Override
-    public Map<Flag<?>, @Nullable Object> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-        var object = element.getAsJsonObject();
-        var flags = new LinkedHashMap<Flag<?>, @Nullable Object>();
-        object.entrySet().forEach(entry -> {
-            var key = NamespacedKey.fromString(entry.getKey());
-            var flag = key != null ? plugin.flagRegistry().getFlag(key).orElse(null) : null;
-            if (flag != null) flags.put(flag, context.deserialize(entry.getValue(), flag.type()));
-            else plugin.getComponentLogger().error("Unknown flag: {}", entry.getKey());
-        });
-        return flags;
+    public Tag serialize(Map<Flag<?>, @Nullable Object> flags, TagSerializationContext context) {
+        var tag = new CompoundTag();
+        flags.forEach((flag, value) -> tag.add(flag.key().asString(), context.serialize(value, flag.type())));
+        return tag;
     }
 }
