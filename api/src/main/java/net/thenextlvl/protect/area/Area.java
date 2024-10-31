@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.area;
 
-import core.nbt.tag.CompoundTag;
+import core.nbt.serialization.TagSerializable;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -17,20 +17,7 @@ import java.util.UUID;
  * The Area interface represents an area inside a world.
  */
 @NullMarked
-public interface Area extends Container, FlagProvider, Comparable<Area> {
-    /**
-     * Serializes the current state of the Area object into a CompoundTag.
-     *
-     * @return a CompoundTag representing the serialized state of the Area object
-     */
-    CompoundTag serialize();
-
-    /**
-     * Deserializes the state of the Area object from the given CompoundTag.
-     *
-     * @param tag the CompoundTag containing the serialized state of the Area object
-     */
-    void deserialize(CompoundTag tag);
+public interface Area extends Container, FlagProvider, Comparable<Area>, TagSerializable {
 
     /**
      * Retrieves the set of parent areas associated with this area.
