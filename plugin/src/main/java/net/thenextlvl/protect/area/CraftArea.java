@@ -212,11 +212,11 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public void deserialize(CompoundTag tag) {
-        readFlags(tag);
-        readMembers(tag);
-        readOwner(tag);
-        readPriority(tag);
+    public void deserialize(Tag tag) {
+        readFlags(tag.getAsCompound());
+        readMembers(tag.getAsCompound());
+        readOwner(tag.getAsCompound());
+        readPriority(tag.getAsCompound());
     }
 
     private void readFlags(CompoundTag tag) {
