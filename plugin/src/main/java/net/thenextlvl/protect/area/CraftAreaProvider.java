@@ -1,18 +1,25 @@
 package net.thenextlvl.protect.area;
 
 import core.io.IO;
+import core.nbt.NBTInputStream;
+import core.nbt.NBTOutputStream;
+import core.nbt.serialization.ParserException;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.adapter.area.AreaFile;
 import net.thenextlvl.protect.area.event.AreaLoadEvent;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Stream;
+
+import static java.nio.file.StandardOpenOption.*;
 
 @NullMarked
 @RequiredArgsConstructor
@@ -85,16 +92,61 @@ public class CraftAreaProvider implements AreaProvider {
     }
 
     public Area read(World world, @Nullable Area area, IO file) {
-        var areaFile = new AreaFile(plugin, file, world, area);
-        areaFile.saveIfAbsent();
-        return areaFile.getArea();
+        if (area == null) return read(file, world);
+        if (file.exists()) return read(file, area);
+        save(area);
+        return area;
+    }
+
+    private NBTInputStream stream(IO file) throws IOException {
+        return new NBTInputStream(
+                file.inputStream(READ),
+                StandardCharsets.UTF_8
+        );
+    }
+
+    private Area read(IO file, World world) {
+        try (var inputStream = stream(file)) {
+            var entry = inputStream.readNamedTag();
+            var root = entry.getKey().getAsCompound();
+            var name = entry.getValue().orElseThrow(() -> new ParserException("Area misses root name"));
+            var split = root.get("type").getAsString().split(":", 2);
+            var type = new NamespacedKey(split[0], split[1]);
+            return plugin.areaService().getAdapter(type)
+                    .construct(world, name, root);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Area read(IO file, Area area) {
+        try (var inputStream = stream(file)) {
+            var tag = inputStream.readNamedTag().getKey();
+            area.deserialize(tag);
+            return area;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void save(World world) {
         var areas = this.areas.get(world);
-        if (areas != null) areas.stream()
-                .map(area -> new AreaFile(plugin, area))
-                .forEach(AreaFile::save);
+        if (areas != null) areas.forEach(this::save);
+    }
+
+    private void save(Area area) {
+        try {
+            var io = IO.of(area.getFile());
+            io.createParents();
+            try (var outputStream = new NBTOutputStream(
+                    io.outputStream(WRITE, CREATE, TRUNCATE_EXISTING),
+                    StandardCharsets.UTF_8
+            )) {
+                outputStream.writeTag(area.getName(), area.serialize());
+            }
+        } catch (IOException e) {
+            plugin.getComponentLogger().error("Failed to save area {}", area.getName(), e);
+        }
     }
 
     public void unload(World world) {
