@@ -4,7 +4,7 @@ import com.fastasyncworldedit.core.util.WEManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.reflect.TypeToken;
-import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.BlockVector3Imp;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -58,7 +58,10 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -175,7 +178,7 @@ public class ProtectPlugin extends JavaPlugin {
             .registerAdapter(CuboidRegion.class, new CuboidRegionAdapter())
             .registerAdapter(CylinderRegion.class, new CylinderRegionAdapter())
             .registerAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
-            .registerAdapter(BlockVector3.class, new BlockVectorAdapter())
+            .registerAdapter(BlockVector3Imp.class, new BlockVectorAdapter())
             .registerAdapter(Vector2.class, new Vector2Adapter())
             .registerAdapter(Vector3.class, new Vector3Adapter())
             .build();

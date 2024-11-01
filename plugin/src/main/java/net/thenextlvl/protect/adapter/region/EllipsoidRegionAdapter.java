@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.adapter.region;
 
-import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.BlockVector3Imp;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import core.nbt.serialization.TagAdapter;
@@ -15,7 +15,7 @@ public class EllipsoidRegionAdapter implements TagAdapter<EllipsoidRegion> {
     @Override
     public EllipsoidRegion deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();
-        var center = context.deserialize(compound.get("center"), BlockVector3.class);
+        var center = context.deserialize(compound.get("center"), BlockVector3Imp.class);
         var radius = context.deserialize(compound.get("radius"), Vector3.class);
         return new EllipsoidRegion(center, radius);
     }
