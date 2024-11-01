@@ -8,11 +8,9 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 /**
- * The AreaAdapter interface provides methods to deserialize and serialize an object of a specific type T that
- * implements the Area interface. It is used to convert the object data between JsonObject and the implementation
- * class of the Area.
+ * Interface for adapting Area objects for serialization and deserialization.
  *
- * @param <T> The type of the object that implements the Area interface.
+ * @param <T> the type of Area that this adapter handles
  */
 @NullMarked
 public interface AreaAdapter<T extends Area> extends Keyed {
@@ -24,5 +22,13 @@ public interface AreaAdapter<T extends Area> extends Keyed {
      */
     NamespacedKey key();
 
+    /**
+     * Constructs an Area object using the provided world, name, and CompoundTag.
+     *
+     * @param world the World associated with the Area
+     * @param name the name of the Area
+     * @param tag the CompoundTag containing the serialized data of the Area
+     * @return the constructed Area object
+     */
     Area construct(World world, String name, CompoundTag tag);
 }
