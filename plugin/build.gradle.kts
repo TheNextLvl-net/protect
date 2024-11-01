@@ -42,7 +42,7 @@ dependencies {
     implementation(project(":api"))
     implementation("net.thenextlvl.core:files:2.0.0")
     implementation("net.thenextlvl.core:i18n:1.0.20")
-    implementation("net.thenextlvl.core:nbt:2.2.12")
+    implementation("net.thenextlvl.core:nbt:2.2.13")
     implementation("net.thenextlvl.core:paper:1.5.3")
 
     annotationProcessor("org.projectlombok:lombok:1.18.34")
