@@ -1,12 +1,12 @@
 package net.thenextlvl.protect;
 
+import com.fastasyncworldedit.core.math.Vector3Impl;
 import com.fastasyncworldedit.core.util.WEManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.reflect.TypeToken;
 import com.sk89q.worldedit.math.BlockVector3Imp;
 import com.sk89q.worldedit.math.Vector2;
-import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
@@ -24,8 +24,7 @@ import net.thenextlvl.protect.adapter.area.CylinderAreaAdapter;
 import net.thenextlvl.protect.adapter.area.EllipsoidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.GlobalAreaAdapter;
 import net.thenextlvl.protect.adapter.object.*;
-import net.thenextlvl.protect.adapter.other.FlagsAdapter;
-import net.thenextlvl.protect.adapter.other.MembersAdapter;
+import net.thenextlvl.protect.adapter.other.*;
 import net.thenextlvl.protect.adapter.region.CuboidRegionAdapter;
 import net.thenextlvl.protect.adapter.region.CylinderRegionAdapter;
 import net.thenextlvl.protect.adapter.region.EllipsoidRegionAdapter;
@@ -49,7 +48,9 @@ import net.thenextlvl.protect.service.ProtectionService;
 import net.thenextlvl.protect.version.PluginVersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.WeatherType;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.plugin.ServicePriority;
@@ -175,12 +176,15 @@ public class ProtectPlugin extends JavaPlugin {
             .registerAdapter(Long.class, new LongAdapter())
             .registerAdapter(Short.class, new ShortAdapter())
             .registerAdapter(String.class, new StringAdapter())
+            .registerAdapter(Location.class, new LocationAdapter())
+            .registerAdapter(NamespacedKey.class, new NamespaceAdapter())
+            .registerAdapter(World.class, new WorldAdapter(getServer()))
             .registerAdapter(CuboidRegion.class, new CuboidRegionAdapter())
             .registerAdapter(CylinderRegion.class, new CylinderRegionAdapter())
             .registerAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
             .registerAdapter(BlockVector3Imp.class, new BlockVectorAdapter())
             .registerAdapter(Vector2.class, new Vector2Adapter())
-            .registerAdapter(Vector3.class, new Vector3Adapter())
+            .registerAdapter(Vector3Impl.class, new Vector3Adapter())
             .build();
 
     public class Flags {
