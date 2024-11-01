@@ -3,6 +3,7 @@ package net.thenextlvl.protect;
 import com.fastasyncworldedit.core.util.WEManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.reflect.TypeToken;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.math.Vector3;
@@ -22,6 +23,9 @@ import net.thenextlvl.protect.adapter.area.CuboidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.CylinderAreaAdapter;
 import net.thenextlvl.protect.adapter.area.EllipsoidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.GlobalAreaAdapter;
+import net.thenextlvl.protect.adapter.object.*;
+import net.thenextlvl.protect.adapter.other.FlagsAdapter;
+import net.thenextlvl.protect.adapter.other.MembersAdapter;
 import net.thenextlvl.protect.adapter.region.CuboidRegionAdapter;
 import net.thenextlvl.protect.adapter.region.CylinderRegionAdapter;
 import net.thenextlvl.protect.adapter.region.EllipsoidRegionAdapter;
@@ -54,7 +58,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Getter
@@ -155,6 +159,19 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     public final NBT nbt = NBT.builder()
+            .registerAdapter(new TypeToken<Map<Flag<?>, @Nullable Object>>() {
+            }.getType(), new FlagsAdapter(this))
+            .registerAdapter(new TypeToken<Set<UUID>>() {
+            }.getType(), new MembersAdapter())
+            .registerAdapter(UUID.class, new UUIDAdapter())
+            .registerAdapter(Boolean.class, new BooleanAdapter())
+            .registerAdapter(Byte.class, new ByteAdapter())
+            .registerAdapter(Double.class, new DoubleAdapter())
+            .registerAdapter(Float.class, new FloatAdapter())
+            .registerAdapter(Integer.class, new IntegerAdapter())
+            .registerAdapter(Long.class, new LongAdapter())
+            .registerAdapter(Short.class, new ShortAdapter())
+            .registerAdapter(String.class, new StringAdapter())
             .registerAdapter(CuboidRegion.class, new CuboidRegionAdapter())
             .registerAdapter(CylinderRegion.class, new CylinderRegionAdapter())
             .registerAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
