@@ -24,6 +24,6 @@ public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
 
     @Override
     public Area construct(World world, String name, CompoundTag tag) {
-        return new CraftGlobalArea(plugin, world);
+        return new CraftGlobalArea(plugin, world, tag);
     }
 }
