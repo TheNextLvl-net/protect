@@ -27,7 +27,7 @@ public class LocationAdapter implements TagAdapter<Location> {
     @Override
     public Tag serialize(Location location, TagSerializationContext context) throws ParserException {
         var tag = new CompoundTag();
-        tag.add("world", context.serialize(location.getWorld(), World.class));
+        tag.add("world", context.serialize(location.getWorld()));
         tag.add("x", location.getX());
         tag.add("y", location.getY());
         tag.add("z", location.getZ());
