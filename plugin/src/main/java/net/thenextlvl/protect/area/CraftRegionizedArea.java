@@ -49,8 +49,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     private T region;
 
     public CraftRegionizedArea(ProtectPlugin plugin, AreaCreator<T> creator) throws CircularInheritanceException {
-        super(plugin, creator.name(), creator.world(), new HashSet<>(creator.members()),
-                creator.owner(), new LinkedHashMap<>(creator.flags()), creator.priority());
+        super(plugin, creator.name(), creator.world(), creator.members(),
+                creator.owner(), creator.flags(), creator.priority());
         this.schematic = new File(plugin.schematicFolder(), getName() + ".schem");
         this.parent = creator.parent();
         this.region = creator.region();
