@@ -168,6 +168,7 @@ public class ProtectPlugin extends JavaPlugin {
             }.getType(), new MembersAdapter())
             .registerTypeHierarchyAdapter(Location.class, new LocationAdapter())
             .registerTypeHierarchyAdapter(NamespacedKey.class, new NamespaceAdapter())
+            .registerTypeHierarchyAdapter(WeatherType.class, new WeatherTypeAdapter())
             .registerTypeHierarchyAdapter(World.class, new WorldAdapter(getServer()))
             .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
             .registerTypeHierarchyAdapter(CylinderRegion.class, new CylinderRegionAdapter())
