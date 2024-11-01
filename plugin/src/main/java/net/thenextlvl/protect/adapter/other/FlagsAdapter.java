@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.adapter.flag;
+package net.thenextlvl.protect.adapter.other;
 
 import core.nbt.serialization.TagAdapter;
 import core.nbt.serialization.TagDeserializationContext;
@@ -12,7 +12,7 @@ import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 @NullMarked
@@ -23,7 +23,7 @@ public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> 
     @Override
     public Map<Flag<?>, @Nullable Object> deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();
-        var flags = new LinkedHashMap<Flag<?>, @Nullable Object>();
+        var flags = new HashMap<Flag<?>, @Nullable Object>();
         compound.forEach((key, value) -> {
             var namespace = NamespacedKey.fromString(key);
             var flag = namespace != null ? plugin.flagRegistry().getFlag(namespace).orElse(null) : null;
@@ -36,7 +36,11 @@ public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> 
     @Override
     public Tag serialize(Map<Flag<?>, @Nullable Object> flags, TagSerializationContext context) {
         var tag = new CompoundTag();
-        flags.forEach((flag, value) -> tag.add(flag.key().asString(), context.serialize(value, flag.type())));
+        flags.forEach((flag, value) -> {
+            if (value == null) return;
+            var serialized = context.serialize(value, flag.type());
+            tag.add(flag.key().asString(), serialized);
+        });
         return tag;
     }
 }
