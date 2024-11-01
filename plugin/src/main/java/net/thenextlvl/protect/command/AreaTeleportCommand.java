@@ -14,8 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.Objects;
-
 @RequiredArgsConstructor
 @SuppressWarnings("UnstableApiUsage")
 class AreaTeleportCommand {
@@ -33,8 +31,7 @@ class AreaTeleportCommand {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         var point = area.getRegion().getMaximumPoint();
-        var location = Objects.requireNonNullElseGet(area.getFlag(plugin.flags.teleportLocation), () ->
-                new Location(area.getWorld(), point.x() + 0.5, point.y(), point.z() + 0.5));
+        var location = new Location(area.getWorld(), point.x() + 0.5, point.y(), point.z() + 0.5);
         var block = location.getWorld().getHighestBlockAt(location);
         if (block.getY() < location.getY()) location.setY(block.getY() + 1);
         location.setPitch(player.getLocation().getPitch());
