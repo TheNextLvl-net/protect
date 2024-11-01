@@ -110,10 +110,8 @@ public class CraftAreaProvider implements AreaProvider {
             var entry = inputStream.readNamedTag();
             var root = entry.getKey().getAsCompound();
             var name = entry.getValue().orElseThrow(() -> new ParserException("Area misses root name"));
-            var split = root.get("type").getAsString().split(":", 2);
-            var type = new NamespacedKey(split[0], split[1]);
-            return plugin.areaService().getAdapter(type)
-                    .construct(world, name, root);
+            var type = plugin.nbt.fromTag(root.get("type"), NamespacedKey.class);
+            return plugin.areaService().getAdapter(type).construct(world, name, root);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
