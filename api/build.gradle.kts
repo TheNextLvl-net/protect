@@ -30,6 +30,7 @@ dependencies {
         exclude("org.jetbrains", "annotations")
     }
 
+    implementation("net.thenextlvl.core:nbt:2.2.13")
     implementation("net.thenextlvl.core:files:2.0.0")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.50"))
 

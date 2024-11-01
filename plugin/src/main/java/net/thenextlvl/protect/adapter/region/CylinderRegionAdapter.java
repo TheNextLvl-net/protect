@@ -1,33 +1,34 @@
 package net.thenextlvl.protect.adapter.region;
 
-import com.google.gson.*;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.regions.CylinderRegion;
+import core.nbt.serialization.TagAdapter;
+import core.nbt.serialization.TagDeserializationContext;
+import core.nbt.serialization.TagSerializationContext;
+import core.nbt.tag.CompoundTag;
+import core.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
-import java.lang.reflect.Type;
-
 @NullMarked
-public class CylinderRegionAdapter implements JsonSerializer<CylinderRegion>, JsonDeserializer<CylinderRegion> {
-
+public class CylinderRegionAdapter implements TagAdapter<CylinderRegion> {
     @Override
-    public CylinderRegion deserialize(JsonElement element, Type type, JsonDeserializationContext context) {
-        var object = element.getAsJsonObject();
-        var center = context.<BlockVector3>deserialize(object.get("center"), BlockVector3.class);
-        var radius = context.<Vector2>deserialize(object.get("radius"), Vector2.class);
-        var max = context.<Integer>deserialize(object.get("max"), int.class);
-        var min = context.<Integer>deserialize(object.get("min"), int.class);
+    public CylinderRegion deserialize(Tag tag, TagDeserializationContext context) {
+        var compound = tag.getAsCompound();
+        var center = context.deserialize(compound.get("center"), BlockVector3.class);
+        var radius = context.deserialize(compound.get("radius"), Vector2.class);
+        var max = compound.get("max").getAsInt();
+        var min = compound.get("min").getAsInt();
         return new CylinderRegion(center, radius, min, max);
     }
 
     @Override
-    public JsonElement serialize(CylinderRegion region, Type type, JsonSerializationContext context) {
-        var object = new JsonObject();
-        object.add("center", context.serialize(region.getCenter().toBlockPoint()));
-        object.add("radius", context.serialize(region.getRadius()));
-        object.addProperty("max", region.getMaximumY());
-        object.addProperty("min", region.getMinimumY());
-        return object;
+    public Tag serialize(CylinderRegion vector, TagSerializationContext context) {
+        var tag = new CompoundTag();
+        tag.add("center", context.serialize(vector.getCenter().toBlockPoint()));
+        tag.add("radius", context.serialize(vector.getRadius()));
+        tag.add("max", vector.getMaximumY());
+        tag.add("min", vector.getMinimumY());
+        return tag;
     }
 }

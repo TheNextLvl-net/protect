@@ -28,7 +28,7 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
 
     private @Nullable String parent = null;
     private @Nullable UUID owner = null;
-    private Map<Flag<?>, @Nullable Object> flags = new LinkedHashMap<>();
+    private Map<Flag<?>, @Nullable Object> flags = new HashMap<>();
     private Set<UUID> members = new HashSet<>();
     private int priority = 0;
 

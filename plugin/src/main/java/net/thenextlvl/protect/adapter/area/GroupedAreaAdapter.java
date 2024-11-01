@@ -1,9 +1,11 @@
 package net.thenextlvl.protect.adapter.area;
 
+import core.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.area.CraftAreaCreator;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.CraftGroupedArea;
 import net.thenextlvl.protect.region.GroupedRegion;
+import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -13,7 +15,7 @@ public class GroupedAreaAdapter extends RegionizedAreaAdapter<GroupedRegion, Cra
     }
 
     @Override
-    protected CraftGroupedArea construct(CraftAreaCreator<GroupedRegion> creator) {
-        return new CraftGroupedArea(creator.plugin(), creator);
+    public Area construct(World world, String name, CompoundTag tag) {
+        return new CraftGroupedArea(plugin, world, name, tag);
     }
 }

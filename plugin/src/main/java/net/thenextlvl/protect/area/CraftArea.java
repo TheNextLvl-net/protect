@@ -1,5 +1,8 @@
 package net.thenextlvl.protect.area;
 
+import com.google.common.reflect.TypeToken;
+import core.nbt.tag.CompoundTag;
+import core.nbt.tag.Tag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +41,7 @@ public abstract class CraftArea implements Area {
     private final Set<UUID> members;
     private @Nullable UUID owner;
 
-    private Map<Flag<?>, @Nullable Object> flags;
+    private final Map<Flag<?>, @Nullable Object> flags;
     private @Getter int priority;
 
     protected CraftArea(ProtectPlugin plugin,
@@ -51,10 +54,19 @@ public abstract class CraftArea implements Area {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
-        this.members = members;
+        this.members = new HashSet<>(members);
         this.owner = owner;
-        this.flags = flags;
+        this.flags = new HashMap<>(flags);
         this.priority = priority;
+    }
+
+    public CraftArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
+        this.plugin = plugin;
+        this.name = name;
+        this.world = world;
+        this.members = new HashSet<>();
+        this.flags = new HashMap<>();
+        deserialize(tag);
     }
 
     @Override
@@ -186,5 +198,51 @@ public abstract class CraftArea implements Area {
     @Override
     public int compareTo(Area area) {
         return Integer.compare(getPriority(), area.getPriority());
+    }
+
+    @Override
+    public CompoundTag serialize() {
+        var tag = new CompoundTag();
+        if (!flags.isEmpty()) tag.add("flags", plugin.nbt.toTag(flags, new TypeToken<Map<Flag<?>, Object>>() {
+        }.getType()));
+        if (!members.isEmpty()) tag.add("members", plugin.nbt.toTag(members, new TypeToken<Set<UUID>>() {
+        }.getType()));
+        if (owner != null) tag.add("owner", plugin.nbt.toTag(owner));
+        tag.add("priority", priority);
+        var adapter = plugin.areaService().getAdapter(getClass());
+        tag.add("type", adapter.key().asString());
+        return tag;
+    }
+
+    @Override
+    public void deserialize(Tag tag) {
+        var compound = tag.getAsCompound();
+        readFlags(compound).ifPresent(flags::putAll);
+        readMembers(compound).ifPresent(members::addAll);
+        readOwner(compound).ifPresent(owner -> this.owner = owner);
+        readPriority(compound).ifPresent(priority -> this.priority = priority);
+    }
+
+    private Optional<Map<Flag<?>, Object>> readFlags(CompoundTag tag) {
+        return tag.optional("flags").map(flags -> {
+            var type = new TypeToken<Map<Flag<?>, Object>>() {
+            }.getType();
+            return plugin.nbt.fromTag(flags, type);
+        });
+    }
+
+    private Optional<Set<UUID>> readMembers(CompoundTag tag) {
+        return tag.optional("members").map(members ->
+                plugin.nbt.fromTag(members, new TypeToken<Set<UUID>>() {
+                }.getType()));
+    }
+
+    private Optional<UUID> readOwner(CompoundTag tag) {
+        return tag.optional("owner").map(owner ->
+                plugin.nbt.fromTag(owner, UUID.class));
+    }
+
+    private Optional<Integer> readPriority(CompoundTag tag) {
+        return tag.optional("priority").map(Tag::getAsInt);
     }
 }

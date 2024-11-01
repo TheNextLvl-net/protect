@@ -12,6 +12,8 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import core.nbt.tag.CompoundTag;
+import core.nbt.tag.Tag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,6 +25,7 @@ import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadEvent;
 import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadedEvent;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
@@ -38,19 +41,32 @@ import java.util.*;
 @NullMarked
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
+public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
-    private final File file = new File(getDataFolder(), getName() + ".json");
+    private final File file = new File(getDataFolder(), getName() + ".dat");
     private final File schematic;
     private @Nullable String parent;
     private T region;
 
     public CraftRegionizedArea(ProtectPlugin plugin, AreaCreator<T> creator) throws CircularInheritanceException {
-        super(plugin, creator.name(), creator.world(), new HashSet<>(creator.members()),
-                creator.owner(), new LinkedHashMap<>(creator.flags()), creator.priority());
+        super(plugin, creator.name(), creator.world(), creator.members(),
+                creator.owner(), creator.flags(), creator.priority());
+        this.schematic = new File(plugin.schematicFolder(), getName() + ".schem");
         this.parent = creator.parent();
         this.region = creator.region();
-        this.schematic = new File(plugin.schematicFolder(), creator.name() + ".schem");
+    }
+
+    public CraftRegionizedArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
+        super(plugin, world, name, tag);
+        this.schematic = new File(plugin.schematicFolder(), getName() + ".schem");
+        this.parent = readParent(tag);
+        this.region = readRegion(tag);
+    }
+
+    protected abstract T readRegion(CompoundTag tag);
+
+    private void writeRegion(CompoundTag tag) {
+        tag.add("region", plugin.nbt.toTag(region));
     }
 
     @Override
@@ -163,5 +179,21 @@ public class CraftRegionizedArea<T extends Region> extends CraftArea implements 
         return getWorld().getPlayers().stream()
                 .filter(this::contains)
                 .toList();
+    }
+
+    @Override
+    public CompoundTag serialize() {
+        var tag = super.serialize();
+        writeParent(tag);
+        writeRegion(tag);
+        return tag;
+    }
+
+    private void writeParent(CompoundTag tag) {
+        if (parent != null) tag.add("parent", parent);
+    }
+
+    private @Nullable String readParent(CompoundTag tag) {
+        return tag.optional("parent").map(Tag::getAsString).orElse(null);
     }
 }
