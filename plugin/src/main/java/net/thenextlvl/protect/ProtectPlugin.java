@@ -1,12 +1,12 @@
 package net.thenextlvl.protect;
 
-import com.fastasyncworldedit.core.math.Vector3Impl;
 import com.fastasyncworldedit.core.util.WEManager;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.reflect.TypeToken;
-import com.sk89q.worldedit.math.BlockVector3Imp;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector2;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
@@ -23,7 +23,6 @@ import net.thenextlvl.protect.adapter.area.CuboidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.CylinderAreaAdapter;
 import net.thenextlvl.protect.adapter.area.EllipsoidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.GlobalAreaAdapter;
-import net.thenextlvl.protect.adapter.object.*;
 import net.thenextlvl.protect.adapter.other.*;
 import net.thenextlvl.protect.adapter.region.CuboidRegionAdapter;
 import net.thenextlvl.protect.adapter.region.CylinderRegionAdapter;
@@ -163,28 +162,19 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     public final NBT nbt = NBT.builder()
-            .registerAdapter(new TypeToken<Map<Flag<?>, @Nullable Object>>() {
+            .registerTypeAdapter(new TypeToken<Map<Flag<?>, @Nullable Object>>() {
             }.getType(), new FlagsAdapter(this))
-            .registerAdapter(new TypeToken<Set<UUID>>() {
+            .registerTypeAdapter(new TypeToken<Set<UUID>>() {
             }.getType(), new MembersAdapter())
-            .registerAdapter(UUID.class, new UUIDAdapter())
-            .registerAdapter(Boolean.class, new BooleanAdapter())
-            .registerAdapter(Byte.class, new ByteAdapter())
-            .registerAdapter(Double.class, new DoubleAdapter())
-            .registerAdapter(Float.class, new FloatAdapter())
-            .registerAdapter(Integer.class, new IntegerAdapter())
-            .registerAdapter(Long.class, new LongAdapter())
-            .registerAdapter(Short.class, new ShortAdapter())
-            .registerAdapter(String.class, new StringAdapter())
-            .registerAdapter(Location.class, new LocationAdapter())
-            .registerAdapter(NamespacedKey.class, new NamespaceAdapter())
-            .registerAdapter(World.class, new WorldAdapter(getServer()))
-            .registerAdapter(CuboidRegion.class, new CuboidRegionAdapter())
-            .registerAdapter(CylinderRegion.class, new CylinderRegionAdapter())
-            .registerAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
-            .registerAdapter(BlockVector3Imp.class, new BlockVectorAdapter())
-            .registerAdapter(Vector2.class, new Vector2Adapter())
-            .registerAdapter(Vector3Impl.class, new Vector3Adapter())
+            .registerTypeHierarchyAdapter(Location.class, new LocationAdapter())
+            .registerTypeHierarchyAdapter(NamespacedKey.class, new NamespaceAdapter())
+            .registerTypeHierarchyAdapter(World.class, new WorldAdapter(getServer()))
+            .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
+            .registerTypeHierarchyAdapter(CylinderRegion.class, new CylinderRegionAdapter())
+            .registerTypeHierarchyAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
+            .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
+            .registerTypeHierarchyAdapter(Vector2.class, new Vector2Adapter())
+            .registerTypeHierarchyAdapter(Vector3.class, new Vector3Adapter())
             .build();
 
     public class Flags {
