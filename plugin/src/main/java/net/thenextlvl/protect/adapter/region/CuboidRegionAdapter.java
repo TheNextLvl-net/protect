@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.adapter.region;
 
-import com.sk89q.worldedit.math.BlockVector3Imp;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import core.nbt.serialization.TagAdapter;
 import core.nbt.serialization.TagDeserializationContext;
@@ -14,8 +14,8 @@ public class CuboidRegionAdapter implements TagAdapter<CuboidRegion> {
     @Override
     public CuboidRegion deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();
-        var pos1 = context.deserialize(compound.get("pos1"), BlockVector3Imp.class);
-        var pos2 = context.deserialize(compound.get("pos2"), BlockVector3Imp.class);
+        var pos1 = context.deserialize(compound.get("pos1"), BlockVector3.class);
+        var pos2 = context.deserialize(compound.get("pos2"), BlockVector3.class);
         return new CuboidRegion(pos1, pos2);
     }
 
