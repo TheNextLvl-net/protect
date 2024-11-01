@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.area;
 
+import core.nbt.tag.CompoundTag;
 import lombok.Getter;
 import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.Location;
@@ -19,7 +20,13 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File file;
 
     public CraftGlobalArea(ProtectPlugin plugin, World world) {
-        super(plugin, "@" + world.getName(), world, new HashSet<>(), null, new LinkedHashMap<>(), -1);
+        super(plugin, "@" + world.getName(), world, Set.of(), null, Map.of(), -1);
+        this.dataFolder = new File(world.getWorldFolder(), "areas");
+        this.file = new File(getDataFolder(), getName() + ".dat");
+    }
+
+    public CraftGlobalArea(ProtectPlugin plugin, World world, CompoundTag tag) {
+        super(plugin, world, "@" + world.getName(), tag);
         this.dataFolder = new File(world.getWorldFolder(), "areas");
         this.file = new File(getDataFolder(), getName() + ".dat");
     }
