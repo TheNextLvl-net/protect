@@ -4,7 +4,6 @@ import com.sk89q.worldedit.regions.CylinderRegion;
 import core.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.area.AreaCreator;
 import net.thenextlvl.protect.area.CraftCylinderArea;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
@@ -13,11 +12,6 @@ import org.jspecify.annotations.NullMarked;
 public class CylinderAreaAdapter extends RegionizedAreaAdapter<CylinderRegion, CraftCylinderArea> {
     public CylinderAreaAdapter(ProtectPlugin plugin) {
         super(plugin, "cylinder");
-    }
-
-    @Override
-    protected CraftCylinderArea construct(AreaCreator<CylinderRegion> creator) {
-        return new CraftCylinderArea(plugin, creator);
     }
 
     @Override
