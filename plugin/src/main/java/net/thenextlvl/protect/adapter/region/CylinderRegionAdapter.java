@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.adapter.region;
 
-import com.sk89q.worldedit.math.BlockVector3Imp;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import core.nbt.serialization.TagAdapter;
@@ -15,7 +15,7 @@ public class CylinderRegionAdapter implements TagAdapter<CylinderRegion> {
     @Override
     public CylinderRegion deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();
-        var center = context.deserialize(compound.get("center"), BlockVector3Imp.class);
+        var center = context.deserialize(compound.get("center"), BlockVector3.class);
         var radius = context.deserialize(compound.get("radius"), Vector2.class);
         var max = compound.get("max").getAsInt();
         var min = compound.get("min").getAsInt();
