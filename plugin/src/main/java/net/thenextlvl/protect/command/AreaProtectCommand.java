@@ -21,7 +21,22 @@ class AreaProtectCommand {
         return Commands.literal("protect")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.protect"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
+                        .then(Commands.literal("remove")
+                                .executes(this::unprotect))
                         .executes(this::protect));
+    }
+
+    private int unprotect(CommandContext<CommandSourceStack> context) {
+        var area = context.getArgument("area", Area.class);
+        var changes = plugin.flagRegistry().getFlags().stream()
+                .filter(flag -> flag instanceof ProtectionFlag<?>)
+                .filter(area::removeFlag)
+                .count();
+        var message = changes > 0 ? "area.unprotected" : "nothing.changed";
+        plugin.bundle().sendMessage(context.getSource().getSender(), message,
+                Placeholder.parsed("amount", String.valueOf(changes)),
+                Placeholder.parsed("area", area.getName()));
+        return Command.SINGLE_SUCCESS;
     }
 
     @SuppressWarnings("unchecked")
