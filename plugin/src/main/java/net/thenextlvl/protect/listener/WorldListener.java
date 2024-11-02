@@ -151,11 +151,12 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockFromTo(BlockFromToEvent event) {
+    public void onLiquidFlow(BlockFromToEvent event) {
+        if (!event.getBlock().isLiquid()) return;
         event.setCancelled(isInteractionRestricted(
                 event.getBlock().getLocation(),
                 event.getToBlock().getLocation(),
-                plugin.flags.physics
+                plugin.flags.liquidFlow
         ));
     }
 
