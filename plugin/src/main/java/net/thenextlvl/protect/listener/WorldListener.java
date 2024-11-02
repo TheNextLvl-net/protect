@@ -95,15 +95,6 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
-        event.setCancelled(isInteractionRestricted(
-                event.getSourceBlock().getLocation(),
-                event.getBlock().getLocation(),
-                plugin.flags.physics
-        ));
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFade(BlockFadeEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.blockFading));

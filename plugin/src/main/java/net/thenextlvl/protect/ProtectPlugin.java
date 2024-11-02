@@ -36,10 +36,7 @@ import net.thenextlvl.protect.command.AreaCommand;
 import net.thenextlvl.protect.flag.CraftFlagRegistry;
 import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.flag.FlagRegistry;
-import net.thenextlvl.protect.listener.AreaListener;
-import net.thenextlvl.protect.listener.EntityListener;
-import net.thenextlvl.protect.listener.MovementListener;
-import net.thenextlvl.protect.listener.WorldListener;
+import net.thenextlvl.protect.listener.*;
 import net.thenextlvl.protect.mask.ProtectMaskManager;
 import net.thenextlvl.protect.region.GroupedRegion;
 import net.thenextlvl.protect.service.CraftProtectionService;
@@ -138,6 +135,7 @@ public class ProtectPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AreaListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityListener(this), this);
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
+        getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldListener(this), this);
     }
 
@@ -224,6 +222,7 @@ public class ProtectPlugin extends JavaPlugin {
         public final Flag<Boolean> fillBottle = flagRegistry().register(ProtectPlugin.this, Boolean.class, "fill_bottle", true, false);
         public final Flag<Boolean> fillBucket = flagRegistry().register(ProtectPlugin.this, Boolean.class, "fill_bucket", true, false);
         public final Flag<Boolean> gameEvents = flagRegistry().register(ProtectPlugin.this, Boolean.class, "game_events", true);
+        public final Flag<Boolean> gravity = flagRegistry().register(ProtectPlugin.this, Boolean.class, "gravity", true);
         public final Flag<Boolean> hunger = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hunger", true);
         public final Flag<Boolean> interact = flagRegistry().register(ProtectPlugin.this, Boolean.class, "interact", true, false);
         public final Flag<Boolean> leavesDecay = flagRegistry().register(ProtectPlugin.this, Boolean.class, "leaves_decay", true, false);
