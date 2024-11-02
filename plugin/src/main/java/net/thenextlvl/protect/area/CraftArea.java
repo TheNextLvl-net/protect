@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
 import net.thenextlvl.protect.area.event.flag.AreaFlagResetEvent;
@@ -25,6 +26,8 @@ import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 @Setter
 @ToString
@@ -43,6 +46,8 @@ public abstract class CraftArea implements Area {
 
     private final Map<Flag<?>, @Nullable Object> flags;
     private @Getter int priority;
+
+    private final CompoundTag dataContainer = new CompoundTag();
 
     protected CraftArea(ProtectPlugin plugin,
                         String name,
@@ -207,6 +212,7 @@ public abstract class CraftArea implements Area {
         }.getType()));
         if (!members.isEmpty()) tag.add("members", plugin.nbt.toTag(members, new TypeToken<Set<UUID>>() {
         }.getType()));
+        if (!dataContainer.isEmpty()) tag.add("data", dataContainer);
         if (owner != null) tag.add("owner", plugin.nbt.toTag(owner));
         tag.add("priority", priority);
         var adapter = plugin.areaService().getAdapter(getClass());
@@ -221,6 +227,7 @@ public abstract class CraftArea implements Area {
         readMembers(compound).ifPresent(members::addAll);
         readOwner(compound).ifPresent(owner -> this.owner = owner);
         readPriority(compound).ifPresent(priority -> this.priority = priority);
+        compound.<CompoundTag>optional("data").ifPresent(dataContainer::addAll);
     }
 
     private Optional<Map<Flag<?>, Object>> readFlags(CompoundTag tag) {
@@ -244,5 +251,77 @@ public abstract class CraftArea implements Area {
 
     private Optional<Integer> readPriority(CompoundTag tag) {
         return tag.optional("priority").map(Tag::getAsInt);
+    }
+
+    @Override
+    public <T extends Tag> Optional<T> get(Key key) {
+        return dataContainer.optional(key.asString());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Tag> Optional<T> remove(Key key) {
+        return Optional.ofNullable((T) dataContainer.remove(key.asString()));
+    }
+
+    @Override
+    public <T extends Tag> T getOrDefault(Key key, T defaultValue) {
+        return dataContainer.getOrDefault(key.asString(), defaultValue);
+    }
+
+    @Override
+    public <T extends Tag> void set(Key key, T value) {
+        dataContainer.add(key.asString(), value);
+    }
+
+    @Override
+    @SuppressWarnings("PatternValidation")
+    public Map<Key, Tag> getTags() {
+        return dataContainer.entrySet().stream()
+                .map(entry -> Map.entry(Key.key(entry.getKey()), entry.getValue()))
+                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    @Override
+    public Set<Key> getKeys() {
+        return dataContainer.keySet().stream()
+                .map(Key::key)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public Set<Map.Entry<Key, Tag>> entrySet() {
+        return getTags().entrySet();
+    }
+
+    @Override
+    public boolean has(Key key) {
+        return dataContainer.containsKey(key.asString());
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return dataContainer.isEmpty();
+    }
+
+    @Override
+    public void clear() {
+        dataContainer.entrySet().clear();
+    }
+
+    @Override
+    public void copyTo(DataContainer dataContainer) {
+        copyTo(dataContainer, false);
+    }
+
+    @Override
+    public void copyTo(DataContainer dataContainer, boolean replace) {
+        if (replace) dataContainer.clear();
+        forEach(dataContainer::set);
+    }
+
+    @Override
+    public void forEach(BiConsumer<Key, Tag> action) {
+        entrySet().forEach(entry -> action.accept(entry.getKey(), entry.getValue()));
     }
 }
