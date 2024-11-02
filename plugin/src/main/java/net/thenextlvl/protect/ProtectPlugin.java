@@ -218,13 +218,12 @@ public class ProtectPlugin extends JavaPlugin {
         public final Flag<Boolean> entityInteract = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_interact", true, false);
         public final Flag<Boolean> entityItemDrop = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_item_drop", true);
         public final Flag<Boolean> entityItemPickup = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_item_pickup", true);
+        public final Flag<Boolean> entityPlace = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_place", true, false);
         public final Flag<Boolean> entityShear = flagRegistry().register(ProtectPlugin.this, Boolean.class, "entity_shear", true, false);
         public final Flag<Boolean> explosions = flagRegistry().register(ProtectPlugin.this, Boolean.class, "explosions", true, false);
         public final Flag<Boolean> fillBottle = flagRegistry().register(ProtectPlugin.this, Boolean.class, "fill_bottle", true, false);
         public final Flag<Boolean> fillBucket = flagRegistry().register(ProtectPlugin.this, Boolean.class, "fill_bucket", true, false);
         public final Flag<Boolean> gameEvents = flagRegistry().register(ProtectPlugin.this, Boolean.class, "game_events", true);
-        public final Flag<Boolean> hangingBreak = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hanging_break", true, false);
-        public final Flag<Boolean> hangingPlace = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hanging_place", true, false);
         public final Flag<Boolean> hunger = flagRegistry().register(ProtectPlugin.this, Boolean.class, "hunger", true);
         public final Flag<Boolean> interact = flagRegistry().register(ProtectPlugin.this, Boolean.class, "interact", true, false);
         public final Flag<Boolean> leavesDecay = flagRegistry().register(ProtectPlugin.this, Boolean.class, "leaves_decay", true, false);
