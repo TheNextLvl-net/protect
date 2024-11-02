@@ -1,7 +1,7 @@
 package net.thenextlvl.protect.flag;
 
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.KeyPattern;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
@@ -32,14 +32,14 @@ public interface FlagRegistry {
     Set<Flag<?>> getFlags(Plugin plugin);
 
     /**
-     * Retrieves the flag associated with the given NamespacedKey.
+     * Retrieves the flag associated with the given Key.
      *
-     * @param key the NamespacedKey of the flag to retrieve
+     * @param key the Key of the flag to retrieve
      * @param <T> the type of the flag value
      * @return an Optional containing the flag, or an empty Optional if no flag was found
      */
     @NullMarked
-    <T> Optional<Flag<T>> getFlag(NamespacedKey key);
+    <T> Optional<Flag<T>> getFlag(Key key);
 
     /**
      * Registers a new flag with the specified plugin, name, and default value.
@@ -113,12 +113,12 @@ public interface FlagRegistry {
     ) throws IllegalStateException;
 
     /**
-     * Unregisters a flag identified by the given NamespacedKey.
+     * Unregisters a flag identified by the given Key.
      *
-     * @param flag the NamespacedKey of the flag to unregister
+     * @param flag the Key of the flag to unregister
      * @return true if the flag was unregistered, false otherwise
      */
-    boolean unregister(@NonNull NamespacedKey flag);
+    boolean unregister(@NonNull Key flag);
 
     /**
      * Unregisters all flags associated with the specified plugin.

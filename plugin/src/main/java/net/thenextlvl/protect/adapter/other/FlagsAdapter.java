@@ -6,9 +6,9 @@ import core.nbt.serialization.TagSerializationContext;
 import core.nbt.tag.CompoundTag;
 import core.nbt.tag.Tag;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
-import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -21,12 +21,13 @@ public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> 
     private final ProtectPlugin plugin;
 
     @Override
+    @SuppressWarnings("PatternValidation")
     public Map<Flag<?>, @Nullable Object> deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();
         var flags = new HashMap<Flag<?>, @Nullable Object>();
         compound.forEach((key, value) -> {
-            var namespace = NamespacedKey.fromString(key);
-            var flag = namespace != null ? plugin.flagRegistry().getFlag(namespace).orElse(null) : null;
+            var namespace = Key.key(key);
+            var flag = plugin.flagRegistry().getFlag(namespace).orElse(null);
             if (flag != null) flags.put(flag, context.deserialize(value, flag.type()));
             else plugin.getComponentLogger().error("Unknown flag: {}", key);
         });

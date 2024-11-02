@@ -6,19 +6,20 @@ import core.nbt.serialization.TagDeserializationContext;
 import core.nbt.serialization.TagSerializationContext;
 import core.nbt.tag.StringTag;
 import core.nbt.tag.Tag;
-import org.bukkit.NamespacedKey;
+import net.kyori.adventure.key.Key;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class NamespaceAdapter implements TagAdapter<NamespacedKey> {
+public class KeyAdapter implements TagAdapter<Key> {
     @Override
-    public NamespacedKey deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
+    @SuppressWarnings("PatternValidation")
+    public Key deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
         var split = tag.getAsString().split(":", 2);
-        return new NamespacedKey(split[0], split[1]);
+        return Key.key(split[0], split[1]);
     }
 
     @Override
-    public Tag serialize(NamespacedKey key, TagSerializationContext context) throws ParserException {
+    public Tag serialize(Key key, TagSerializationContext context) throws ParserException {
         return new StringTag(key.toString());
     }
 }

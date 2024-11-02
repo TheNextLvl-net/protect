@@ -5,10 +5,10 @@ import core.nbt.NBTInputStream;
 import core.nbt.NBTOutputStream;
 import core.nbt.serialization.ParserException;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.AreaLoadEvent;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -110,7 +110,7 @@ public class CraftAreaProvider implements AreaProvider {
             var entry = inputStream.readNamedTag();
             var root = entry.getKey().getAsCompound();
             var name = entry.getValue().orElseThrow(() -> new ParserException("Area misses root name"));
-            var type = plugin.nbt.fromTag(root.get("type"), NamespacedKey.class);
+            var type = plugin.nbt.fromTag(root.get("type"), Key.class);
             return plugin.areaService().getAdapter(type).construct(world, name, root);
         } catch (IOException e) {
             throw new RuntimeException(e);

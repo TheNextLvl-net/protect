@@ -1,9 +1,9 @@
 package net.thenextlvl.protect.io;
 
 import core.nbt.tag.CompoundTag;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
 import net.thenextlvl.protect.area.Area;
-import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
@@ -20,14 +20,14 @@ public interface AreaAdapter<T extends Area> extends Keyed {
      *
      * @return The key associated with the adapter.
      */
-    NamespacedKey key();
+    Key key();
 
     /**
      * Constructs an Area object using the provided world, name, and CompoundTag.
      *
      * @param world the World associated with the Area
-     * @param name the name of the Area
-     * @param tag the CompoundTag containing the serialized data of the Area
+     * @param name  the name of the Area
+     * @param tag   the CompoundTag containing the serialized data of the Area
      * @return the constructed Area object
      */
     Area construct(World world, String name, CompoundTag tag);
