@@ -32,29 +32,50 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     private Set<UUID> members = new HashSet<>();
     private int priority = 0;
 
+    @SuppressWarnings("unchecked")
     public CraftAreaCreator(ProtectPlugin plugin, String name, World world, T region, @Nullable String parent,
                             @Nullable UUID owner, Map<Flag<?>, @Nullable Object> flags, Set<UUID> members, int priority) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
-        this.region = region;
+        this.region = (T) region.clone();
         this.parent = parent;
         this.owner = owner;
-        this.flags = flags;
-        this.members = members;
+        this.flags = new HashMap<>(flags);
+        this.members = new HashSet<>(members);
         this.priority = priority;
     }
 
+    @SuppressWarnings("unchecked")
     public CraftAreaCreator(ProtectPlugin plugin, String name, World world, T region) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
-        this.region = region;
+        this.region = (T) region.clone();
     }
 
     @Override
     public AreaCreator<T> copy() {
         return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, priority);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public AreaCreator<T> region(T region) {
+        this.region = (T) region.clone();
+        return this;
+    }
+
+    @Override
+    public AreaCreator<T> flags(Map<Flag<?>, @Nullable Object> flags) {
+        this.flags = new HashMap<>(flags);
+        return this;
+    }
+
+    @Override
+    public AreaCreator<T> members(Set<UUID> members) {
+        this.members = new HashSet<>(members);
+        return this;
     }
 
     @Override
