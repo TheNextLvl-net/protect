@@ -2,6 +2,8 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.flag.Flag;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,18 +48,13 @@ public class EntityListener implements Listener {
         var flag = event.getTarget() instanceof Player
                 ? plugin.flags.entityAttackPlayer
                 : plugin.flags.entityAttackEntity;
-        event.setCancelled(!area.getFlag(flag));
+        event.setCancelled(isInteractionRestricted(event.getEntity(), event.getTarget(), flag));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
-        var flag = event.getDamager() instanceof Player && event.getEntity() instanceof Player
-                ? plugin.flags.playerAttackPlayer : event.getDamager() instanceof Player
-                ? plugin.flags.playerAttackEntity : !(event.getDamager() instanceof Player)
-                                                    && event.getEntity() instanceof Player
-                ? plugin.flags.entityAttackPlayer : plugin.flags.entityAttackEntity;
-        event.setCancelled(!area.getFlag(flag));
+        event.setCancelled(!plugin.protectionService().canAttack(event.getDamager(), event.getEntity()));
         plugin.failed(event.getDamager(), event, area, "area.failed.attack");
     }
 
@@ -76,22 +73,39 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingBreak(HangingBreakByEntityEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.hangingBreak));
-        plugin.failed(event.getRemover(), event, area, "area.failed.break");
+        event.setCancelled(!plugin.protectionService().canAttack(event.getRemover(), event.getEntity()));
+        plugin.failed(event.getRemover(), area, "area.failed.attack");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.hangingPlace));
+        event.setCancelled(!plugin.protectionService().canPerformAction(
+                event.getPlayer(), area, plugin.flags.entityPlace,
+                "protect.bypass.entity-place"
+        ));
+        plugin.failed(event.getPlayer(), event, area, "area.failed.place");
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityPlace(EntityPlaceEvent event) {
+        var area = plugin.areaProvider().getArea(event.getEntity());
+        event.setCancelled(!plugin.protectionService().canPerformAction(
+                event.getPlayer(), area, plugin.flags.entityPlace,
+                "protect.bypass.entity-place"
+        ));
         plugin.failed(event.getPlayer(), event, area, "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
+        event.setCancelled(isInteractionRestricted(
+                event.getPlayer(), event.getRightClicked(),
+                plugin.flags.armorStandManipulate
+        ));
+        if (!event.isCancelled()) return;
         var area = plugin.areaProvider().getArea(event.getRightClicked());
-        event.setCancelled(!area.getFlag(plugin.flags.armorStandManipulate));
-        plugin.failed(event.getPlayer(), event, area, "area.failed.interact");
+        plugin.failed(event.getPlayer(), area, "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -125,5 +139,13 @@ public class EntityListener implements Listener {
         if (!event.getEntityType().equals(EntityType.FALLING_BLOCK)) return;
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.blockPlace));
+    }
+
+    private boolean isInteractionRestricted(Entity source, Entity target, Flag<Boolean> flag) {
+        var first = plugin.areaProvider().getArea(source);
+        if (first.getFlag(flag) && first.isPermitted(source.getUniqueId())) return false;
+        var second = plugin.areaProvider().getArea(target);
+        if (second.getFlag(flag) && second.isPermitted(source.getUniqueId())) return false;
+        return !first.canInteract(second);
     }
 }

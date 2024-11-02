@@ -1,10 +1,12 @@
 package net.thenextlvl.protect.service;
 
 import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The ProtectionService interface provides methods to determine whether a player
@@ -148,6 +150,15 @@ public interface ProtectionService {
     boolean canInteractPhysical(Player player, Location location);
 
     /**
+     * Determines whether an entity can attack another entity.
+     *
+     * @param attacker the entity attempting to launch the attack
+     * @param victim   the entity that is the target of the attack
+     * @return true if the attack is permissible, false otherwise
+     */
+    boolean canAttack(Entity attacker, Entity victim);
+
+    /**
      * Determines whether a player can shear an entity.
      *
      * @param player the player who wants to shear
@@ -182,4 +193,15 @@ public interface ProtectionService {
      * @return true if the player can leave the area, false otherwise
      */
     boolean canLeave(Player player, Area area);
+
+    /**
+     * Determines whether an entity can perform a specific action in a given area.
+     *
+     * @param entity     the entity attempting to perform the action
+     * @param area       the area where the entity intends to perform the action
+     * @param flag       the flag indicating specific conditions or constraints for the action
+     * @param permission an optional permission string required to perform the action
+     * @return true if the entity can perform the action in the area, false otherwise
+     */
+    boolean canPerformAction(Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission);
 }
