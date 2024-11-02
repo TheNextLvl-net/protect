@@ -56,6 +56,14 @@ public interface AreaCreator<T extends Region> {
     AreaCreator<T> flags(Map<Flag<?>, @Nullable Object> flags);
 
     /**
+     * Sets the members for the area being created.
+     *
+     * @param members a set of UUIDs representing the members to be associated with the area
+     * @return the AreaCreator instance with the specified members set
+     */
+    AreaCreator<T> members(Set<UUID> members);
+
+    /**
      * Sets the name for the area being created.
      *
      * @param name the name of the area.
