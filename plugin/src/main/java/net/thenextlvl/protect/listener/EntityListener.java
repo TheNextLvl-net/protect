@@ -2,6 +2,7 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -117,5 +118,12 @@ public class EntityListener implements Listener {
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.shoot));
         plugin.failed(event.getEntity(), event, area, "area.failed.shoot");
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        if (!event.getEntityType().equals(EntityType.FALLING_BLOCK)) return;
+        var area = plugin.areaProvider().getArea(event.getEntity());
+        event.setCancelled(!area.getFlag(plugin.flags.blockPlace));
     }
 }
