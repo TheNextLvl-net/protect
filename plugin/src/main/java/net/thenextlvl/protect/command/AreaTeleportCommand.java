@@ -10,7 +10,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -30,13 +29,7 @@ class AreaTeleportCommand {
     private int teleport(CommandContext<CommandSourceStack> context) {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
-        var point = area.getRegion().getMaximumPoint();
-        var location = new Location(area.getWorld(), point.x() + 0.5, point.y(), point.z() + 0.5);
-        var block = location.getWorld().getHighestBlockAt(location);
-        if (block.getY() < location.getY()) location.setY(block.getY() + 1);
-        location.setPitch(player.getLocation().getPitch());
-        location.setYaw(player.getLocation().getYaw());
-        player.teleportAsync(location, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(success -> {
+        player.teleportAsync(area.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(success -> {
             var message = success ? "area.teleport.success" : "area.teleport.fail";
             plugin.bundle().sendMessage(player, message, Placeholder.parsed("area", area.getName()));
         });

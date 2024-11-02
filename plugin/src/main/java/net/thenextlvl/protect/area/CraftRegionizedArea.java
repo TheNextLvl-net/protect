@@ -26,8 +26,10 @@ import net.thenextlvl.protect.area.event.schematic.AreaSchematicLoadedEvent;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BoundingBox;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -67,6 +69,42 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     private void writeRegion(CompoundTag tag) {
         tag.add("region", plugin.nbt.toTag(region));
+    }
+
+    @Override
+    public Location getLocation() {
+        var center = getRegion().getCenter();
+        var location = new Location(getWorld(), center.x() + 0.5, getRegion().getMinimumY(), center.z() + 0.5);
+        if (getRegion().getLength() < getRegion().getWidth()) {
+            location.setZ(location.getZ() - (getRegion().getLength() / 2d) - 0.5);
+        } else {
+            location.setX(location.getX() - (getRegion().getWidth() / 2d) - 0.5);
+            location.setYaw(-90);
+        }
+
+        location.setY(getSafeHeight(location.getBlock()));
+
+        var block = location.getBlock();
+        var box = block.getCollisionShape().getBoundingBoxes().stream()
+                .max(Comparator.comparingDouble(BoundingBox::getMaxY))
+                .orElse(null);
+        location.setY(box != null ? block.getY() + box.getMaxY() : block.getY());
+        return location;
+    }
+
+    private int getSafeHeight(Block block) {
+        if (block.isPassable()) {
+            for (var y = block.getY(); y >= block.getWorld().getMinHeight(); y--) {
+                if (block.getWorld().getBlockAt(block.getX(), y, block.getZ()).isPassable()) continue;
+                return y + 1;
+            }
+        } else {
+            for (var y = block.getY(); y <= block.getWorld().getMaxHeight(); y++) {
+                if (!block.getWorld().getBlockAt(block.getX(), y, block.getZ()).isPassable()) continue;
+                return y;
+            }
+        }
+        return block.getWorld().getHighestBlockYAt(block.getX(), block.getZ());
     }
 
     @Override
