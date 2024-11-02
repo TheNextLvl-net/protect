@@ -1,8 +1,8 @@
 package net.thenextlvl.protect.flag;
 
 import lombok.Getter;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.KeyPattern;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
@@ -32,7 +32,7 @@ public class CraftFlagRegistry implements FlagRegistry {
     @Override
     @NullMarked
     @SuppressWarnings("unchecked")
-    public <T> Optional<Flag<T>> getFlag(NamespacedKey key) {
+    public <T> Optional<Flag<T>> getFlag(Key key) {
         return getFlags().stream()
                 .filter(flag -> flag.key().equals(key))
                 .map(flag -> (Flag<T>) flag)
@@ -49,15 +49,16 @@ public class CraftFlagRegistry implements FlagRegistry {
         return register(plugin, name, key -> new CraftProtectionFlag<>(key, type, defaultValue, protectedValue));
     }
 
-    private <T extends Flag<?>> T register(@NonNull Plugin plugin, @KeyPattern.Value @NonNull String name, @NonNull Function<NamespacedKey, T> function) {
-        var key = new NamespacedKey(plugin, name);
+    @SuppressWarnings("PatternValidation")
+    private <T extends Flag<?>> T register(@NonNull Plugin plugin, @KeyPattern.Value @NonNull String name, @NonNull Function<Key, T> function) {
+        var key = Key.key(plugin.getName().replace("-", "_").toLowerCase(), name);
         var flag = function.apply(key);
         if (registry.computeIfAbsent(plugin, p -> new HashSet<>()).add(flag)) return flag;
         throw new IllegalStateException("Already registered flag: " + key);
     }
 
     @Override
-    public boolean unregister(@NonNull NamespacedKey key) {
+    public boolean unregister(@NonNull Key key) {
         for (var flags : registry.values()) if (flags.removeIf(flag -> flag.key().equals(key))) return true;
         return false;
     }

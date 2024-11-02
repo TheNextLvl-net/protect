@@ -1,8 +1,8 @@
 package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.Region;
+import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.io.AreaAdapter;
-import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
@@ -120,10 +120,10 @@ public interface AreaService {
     /**
      * Retrieves the adapter for serializing and deserializing objects of type T that implement the Area interface.
      *
-     * @param key The NamespacedKey representing the type of the area object.
+     * @param key The Key representing the type of the area object.
      * @param <T> The type of the area object.
      * @return The adapter for the specified area type.
      * @throws IllegalArgumentException thrown if no adapter for the specified key was registered.
      */
-    <T extends Area> AreaAdapter<T> getAdapter(NamespacedKey key) throws IllegalArgumentException;
+    <T extends Area> AreaAdapter<T> getAdapter(Key key) throws IllegalArgumentException;
 }

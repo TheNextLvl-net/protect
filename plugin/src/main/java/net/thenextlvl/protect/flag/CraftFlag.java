@@ -1,12 +1,12 @@
 package net.thenextlvl.protect.flag;
 
-import org.bukkit.NamespacedKey;
+import net.kyori.adventure.key.Key;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
 public record CraftFlag<T>(
-        @NonNull NamespacedKey key,
+        @NonNull Key key,
         @NonNull Class<? extends T> type,
         T defaultValue
 ) implements Flag<T> {

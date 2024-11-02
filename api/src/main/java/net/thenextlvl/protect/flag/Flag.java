@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.flag;
 
-import org.bukkit.NamespacedKey;
+import net.kyori.adventure.key.Key;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -10,12 +10,12 @@ import org.jspecify.annotations.NonNull;
  */
 public interface Flag<T> extends Comparable<@NonNull Flag<?>> {
     /**
-     * Retrieves the {@link NamespacedKey} associated with this flag.
+     * Retrieves the {@link Key} associated with this flag.
      *
-     * @return the NamespacedKey of the flag
+     * @return the Key of the flag
      */
     @NonNull
-    NamespacedKey key();
+    Key key();
 
     /**
      * Retrieves the type of the flag value.

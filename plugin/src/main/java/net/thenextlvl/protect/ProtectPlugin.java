@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -47,7 +48,6 @@ import net.thenextlvl.protect.service.ProtectionService;
 import net.thenextlvl.protect.version.PluginVersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -167,7 +167,7 @@ public class ProtectPlugin extends JavaPlugin {
             .registerTypeAdapter(new TypeToken<Set<UUID>>() {
             }.getType(), new MembersAdapter())
             .registerTypeHierarchyAdapter(Location.class, new LocationAdapter())
-            .registerTypeHierarchyAdapter(NamespacedKey.class, new NamespaceAdapter())
+            .registerTypeHierarchyAdapter(Key.class, new KeyAdapter())
             .registerTypeHierarchyAdapter(WeatherType.class, new WeatherTypeAdapter())
             .registerTypeHierarchyAdapter(World.class, new WorldAdapter(getServer()))
             .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())

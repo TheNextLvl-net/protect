@@ -3,12 +3,12 @@ package net.thenextlvl.protect.area;
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.regions.Region;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.AreaDeleteEvent;
 import net.thenextlvl.protect.area.event.player.PlayerAreaLeaveEvent;
 import net.thenextlvl.protect.area.event.player.PlayerAreaTransitionEvent;
 import net.thenextlvl.protect.io.AreaAdapter;
-import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
@@ -97,7 +97,7 @@ public class CraftAreaService implements AreaService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Area> AreaAdapter<T> getAdapter(NamespacedKey key) throws IllegalArgumentException {
+    public <T extends Area> AreaAdapter<T> getAdapter(Key key) throws IllegalArgumentException {
         return (AreaAdapter<T>) adapters.values().stream()
                 .filter(adapter -> adapter.key().equals(key))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("No adapter for key: " + key));
