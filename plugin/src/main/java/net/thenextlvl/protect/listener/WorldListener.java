@@ -57,7 +57,7 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onCropTrample(PlayerInteractEvent event) {
+    public void onPhysicalInteract(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.PHYSICAL)) return;
         if (event.getClickedBlock() == null) return;
         var location = event.getClickedBlock().getLocation();
@@ -110,7 +110,7 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockFade(BlockFormEvent event) {
+    public void onBlockForm(BlockFormEvent event) {
         event.setCancelled(isInteractionRestricted(
                 event.getBlock().getLocation(),
                 event.getNewState().getLocation(),
