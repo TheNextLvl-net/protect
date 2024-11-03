@@ -128,15 +128,16 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public boolean setParent(@Nullable Area parent) throws CircularInheritanceException {
         if (parent != null && parent.getName().equals(this.parent)) return false;
-        checkCircularInheritance(parent);
+        if (parent != null) checkCircularInheritance(parent);
         var event = new AreaParentChangeEvent(this, parent);
         if (!event.callEvent()) return false;
-        if (!Objects.equals(parent, event.getParent())) checkCircularInheritance(event.getParent());
+        if (!Objects.equals(parent, event.getParent()) && event.getParent() != null)
+            checkCircularInheritance(event.getParent());
         this.parent = event.getParent() != null ? event.getParent().getName() : null;
         return true;
     }
 
-    public void checkCircularInheritance(@Nullable Area parent) throws CircularInheritanceException {
+    public void checkCircularInheritance(Area parent) throws CircularInheritanceException {
         var path = new LinkedList<Area>();
         while (parent != null) {
             if (parent == this) throw new CircularInheritanceException("Circular inheritance detected: ");
