@@ -2,6 +2,7 @@ package net.thenextlvl.protect.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.util.BlockUtil;
 import org.bukkit.Location;
@@ -11,7 +12,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.type.Farmland;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -159,27 +160,27 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSpongeAbsorb(SpongeAbsorbEvent event) {
-        filterStates(event, event.getBlock().getLocation(), event.getBlocks(), plugin.flags.blockAbsorb);
+        filterStates(event.getBlock().getLocation(), event.getBlocks(), null, plugin.flags.blockAbsorb);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onStructureGrow(StructureGrowEvent event) {
-        filterStates(event, event.getLocation(), event.getBlocks(), plugin.flags.blockGrowth);
+        filterStates(event.getLocation(), event.getBlocks(), event.getPlayer(), plugin.flags.blockGrowth);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFertilize(BlockFertilizeEvent event) {
-        filterStates(event, event.getBlock().getLocation(), event.getBlocks(), plugin.flags.blockFertilize);
+        filterStates(event.getBlock().getLocation(), event.getBlocks(), event.getPlayer(), plugin.flags.blockFertilize);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent event) {
-        filterBlocks(event, event.getBlock().getLocation(), event.blockList(), plugin.flags.explosions);
+        filterBlocks(event.getBlock().getLocation(), event.blockList(), plugin.flags.explosions);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
-        filterBlocks(event, event.getLocation(), event.blockList(), plugin.flags.explosions);
+        filterBlocks(event.getLocation(), event.blockList(), plugin.flags.explosions);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -267,21 +268,23 @@ public class WorldListener implements Listener {
         return target != null && !source.equals(target) && !area.canInteract(plugin.areaProvider().getArea(target));
     }
 
-    private void filterStates(Cancellable event, Location source, List<BlockState> blocks, Flag<Boolean> flag) {
-        filter(event, source, blocks, BlockState::getLocation, flag);
+    private void filterStates(Location source, List<BlockState> blocks, @Nullable Player player, Flag<Boolean> flag) {
+        filter(source, blocks, BlockState::getLocation, player, flag);
     }
 
-    private void filterBlocks(Cancellable event, Location source, List<Block> blocks, Flag<Boolean> flag) {
-        filter(event, source, blocks, Block::getLocation, flag);
+    private void filterBlocks(Location source, List<Block> blocks, Flag<Boolean> flag) {
+        filter(source, blocks, Block::getLocation, null, flag);
     }
 
-    private <T> void filter(Cancellable event, Location source, List<T> list, Function<T, Location> function, Flag<Boolean> flag) {
+    private <T> void filter(Location source, List<T> list, Function<T, Location> function, @Nullable Player player, Flag<Boolean> flag) {
+        filter(source, list, function, (area, target) -> {
+            if (player == null) return area.canInteract(target) && target.getFlag(flag);
+            return plugin.protectionService().canBuild(player, target) && target.getFlag(flag);
+        });
+    }
+
+    private <T> void filter(Location source, List<T> list, Function<T, Location> function, BiPredicate<Area, Area> filter) {
         var area = plugin.areaProvider().getArea(source);
-        if (!area.getFlag(flag)) event.setCancelled(true);
-        else if (list.removeIf(object -> {
-            var location = function.apply(object);
-            var target = plugin.areaProvider().getArea(location);
-            return !target.getFlag(flag) || !target.canInteract(area);
-        })) event.setCancelled(list.isEmpty());
+        list.removeIf(object -> !filter.test(area, plugin.areaProvider().getArea(function.apply(object))));
     }
 }
