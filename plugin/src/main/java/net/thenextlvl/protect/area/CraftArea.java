@@ -3,10 +3,8 @@ package net.thenextlvl.protect.area;
 import com.google.common.reflect.TypeToken;
 import core.nbt.tag.CompoundTag;
 import core.nbt.tag.Tag;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
@@ -30,9 +28,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @Setter
-@ToString
 @NullMarked
-@EqualsAndHashCode
 public abstract class CraftArea implements Area {
     protected final ProtectPlugin plugin;
 
@@ -323,5 +319,26 @@ public abstract class CraftArea implements Area {
     @Override
     public void forEach(BiConsumer<Key, Tag> action) {
         entrySet().forEach(entry -> action.accept(entry.getKey(), entry.getValue()));
+    }
+
+    @Override
+    public String toString() {
+        return "CraftArea{" +
+               "name='" + name + '\'' +
+               ", world=" + world +
+               '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CraftArea craftArea = (CraftArea) o;
+        return Objects.equals(name, craftArea.name) && Objects.equals(world, craftArea.world);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, world);
     }
 }
