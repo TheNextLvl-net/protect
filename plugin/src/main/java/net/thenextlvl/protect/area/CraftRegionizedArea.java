@@ -14,9 +14,7 @@ import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import core.nbt.tag.CompoundTag;
 import core.nbt.tag.Tag;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.inheritance.AreaParentChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
@@ -41,8 +39,6 @@ import java.util.*;
 
 @Getter
 @NullMarked
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
     private final File file = new File(getDataFolder(), getName() + ".dat");
@@ -155,7 +151,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean canInteract(Area area) {
-        return area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner());
+        return equals(area) || (parent != null && parent.equals(area.getName()))
+               || (area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner()));
     }
 
     @Override
@@ -165,7 +162,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean contains(Location location) {
-        return getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        return getWorld().equals(location.getWorld())
+               && getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     @Override
