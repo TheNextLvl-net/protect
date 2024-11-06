@@ -151,7 +151,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean canInteract(Area area) {
-        return area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner());
+        return equals(area) || (parent != null && parent.equals(area.getName()))
+               || (area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner()));
     }
 
     @Override
@@ -161,7 +162,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean contains(Location location) {
-        return getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        return getWorld().equals(location.getWorld())
+               && getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     @Override
