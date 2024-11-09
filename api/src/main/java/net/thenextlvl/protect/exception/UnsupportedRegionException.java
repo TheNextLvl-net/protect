@@ -9,7 +9,7 @@ public class UnsupportedRegionException extends IllegalArgumentException {
     private final Class<?> type;
 
     public UnsupportedRegionException(Class<?> type) {
-        this.type = type;
+        this(type, "Unsupported region type: " + type.getName());
     }
 
     public UnsupportedRegionException(Class<?> type, String message) {
