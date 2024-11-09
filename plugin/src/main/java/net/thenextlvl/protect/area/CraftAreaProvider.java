@@ -61,21 +61,29 @@ public class CraftAreaProvider implements AreaProvider {
                 .filter(area -> area instanceof GlobalArea)
                 .map(area -> (GlobalArea) area)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("No area found for world " + world.getName()));
+                .orElseThrow(() -> new IllegalStateException("No global area found for " + world.key().asString()));
     }
 
     public void load(World world) {
-        var areaFolder = new File(world.getWorldFolder(), "areas");
-        var files = areaFolder.listFiles((file, name) -> name.endsWith(".dat"));
-        if (files != null) for (var file : files) load(world, file);
-        if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
-        persist(new CraftGlobalArea(plugin, world));
+        try {
+            var areaFolder = new File(world.getWorldFolder(), "areas");
+            var files = areaFolder.listFiles((file, name) -> name.endsWith(".dat"));
+            if (files != null) for (var file : files) load(world, file);
+            if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
+            persist(new CraftGlobalArea(plugin, world));
+        } catch (Exception e) {
+            plugin.getComponentLogger().error("Failed to load areas for {}", world.key().asString(), e);
+        }
     }
 
-    public void load(World world, File file) {
-        var loaded = read(world, null, IO.of(file));
-        new AreaLoadEvent(loaded).callEvent();
-        memoize(world, loaded);
+    private void load(World world, File file) {
+        try {
+            var loaded = read(world, null, IO.of(file));
+            new AreaLoadEvent(loaded).callEvent();
+            memoize(world, loaded);
+        } catch (Exception e) {
+            plugin.getComponentLogger().error("Failed to load area {}", file.getPath(), e);
+        }
     }
 
     public void persist(Area area) {
@@ -91,7 +99,7 @@ public class CraftAreaProvider implements AreaProvider {
                 ), () -> areas.add(area));
     }
 
-    public Area read(World world, @Nullable Area area, IO file) {
+    private Area read(World world, @Nullable Area area, IO file) {
         if (area == null) return read(file, world);
         if (file.exists()) return read(file, area);
         save(area);
@@ -142,7 +150,7 @@ public class CraftAreaProvider implements AreaProvider {
             )) {
                 outputStream.writeTag(area.getName(), area.serialize());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             plugin.getComponentLogger().error("Failed to save area {}", area.getName(), e);
         }
     }
