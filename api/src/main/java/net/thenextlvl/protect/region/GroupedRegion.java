@@ -43,11 +43,15 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     public boolean addRegion(String name, Region region) {
-        return regions.putIfAbsent(name, region) == null;
+        return regions.putIfAbsent(name, region.clone()) == null;
     }
 
     public boolean hasRegion(String name) {
         return regions.containsKey(name);
+    }
+
+    public boolean hasRegion(Region region) {
+        return regions.containsValue(region);
     }
 
     public boolean removeRegion(String name) {
