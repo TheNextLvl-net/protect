@@ -85,7 +85,7 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     }
 
     @Override
-    public AreaCreator<T> parent(@Nullable RegionizedArea<?> area) {
+    public AreaCreator<T> parent(@Nullable Area area) {
         return parent(area == null ? null : area.getName());
     }
 
