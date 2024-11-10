@@ -35,6 +35,16 @@ public class CraftAreaService implements AreaService {
     }
 
     @Override
+    public <T extends Region> AreaCreator<T> creator(RegionizedArea<T> area) {
+        return new CraftAreaCreator<>(plugin,
+                area.getName(), area.getWorld(), area.getRegion(),
+                area.getParent().map(Area::getName).orElse(null),
+                area.getOwner().orElse(null),
+                area.getFlags(), area.getMembers(), area.getPriority()
+        );
+    }
+
+    @Override
     public <T extends Region> boolean delete(RegionizedArea<T> area) {
         if (!new AreaDeleteEvent(area).callEvent()) return false;
         var remove = plugin.areaProvider().delete(area);

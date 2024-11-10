@@ -32,6 +32,14 @@ public interface AreaService {
     );
 
     /**
+     * Creates an AreaCreator for the given RegionizedArea.
+     *
+     * @param area The RegionizedArea for which the AreaCreator will be created.
+     * @return The AreaCreator object for the specified RegionizedArea.
+     */
+    <T extends Region> AreaCreator<T> creator(RegionizedArea<T> area);
+
+    /**
      * Deletes the given Area.
      *
      * @param area The Area to delete.
