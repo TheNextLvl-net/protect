@@ -204,7 +204,9 @@ public class AreaGroupCommand {
 
         var region = group.getRegion().getRegion(name);
         if (region == null) {
-            plugin.bundle().sendMessage(player, "nothing.changed");
+            plugin.bundle().sendMessage(player, "area.group.region.unknown",
+                    Placeholder.parsed("group", group.getName()),
+                    Placeholder.parsed("region", name));
             return 0;
         }
 
