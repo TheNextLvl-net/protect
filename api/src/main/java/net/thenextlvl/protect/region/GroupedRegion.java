@@ -55,7 +55,7 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     public boolean removeRegion(String name) {
-        return regions.remove(name) != null;
+        return regions.size() > 1 && regions.remove(name) != null;
     }
 
     @Override
