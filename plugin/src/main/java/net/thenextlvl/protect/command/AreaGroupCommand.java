@@ -6,7 +6,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +31,25 @@ public class AreaGroupCommand {
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("group")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group"))
+                .then(add())
                 .then(delete())
                 .then(groupCreate())
                 .then(inspect())
                 .then(redefine())
-                .then(remove());
+                .then(remove())
+                .then(select());
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> add() {
+        return Commands.literal("add")
+                .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.add"))
+                .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
+                        .then(Commands.argument("name", StringArgumentType.string())
+                                .executes(context -> {
+                                    var name = context.getArgument("name", String.class);
+                                    return add(context, name);
+                                }))
+                        .executes(context -> add(context, "root")));
     }
 
     private LiteralArgumentBuilder<CommandSourceStack> delete() {
@@ -75,6 +91,15 @@ public class AreaGroupCommand {
                         .then(Commands.argument("region", StringArgumentType.string())
                                 .suggests(suggestGroups())
                                 .executes(this::remove)));
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> select() {
+        return Commands.literal("select")
+                .requires(stack -> stack.getSender().hasPermission("worldedit.selection.pos"))
+                .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
+                        .then(Commands.argument("region", StringArgumentType.string())
+                                .suggests(suggestGroups())
+                                .executes(this::select)));
     }
 
     private static SuggestionProvider<CommandSourceStack> suggestGroups() {
@@ -169,6 +194,27 @@ public class AreaGroupCommand {
 
         plugin.bundle().sendMessage(sender, "area.group.create",
                 Placeholder.parsed("area", grouped.getName()));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int select(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+        var group = context.getArgument("group", GroupedArea.class);
+        var name = context.getArgument("region", String.class);
+
+        var region = group.getRegion().getRegion(name);
+        if (region == null) {
+            plugin.bundle().sendMessage(player, "nothing.changed");
+            return 0;
+        }
+
+        var session = WorldEditPlugin.getInstance().getSession(player);
+        var selector = new CuboidRegionSelector(null, region.getMinimumPoint(), region.getMaximumPoint());
+        session.setRegionSelector(BukkitAdapter.adapt(group.getWorld()), selector);
+        session.updateServerCUI(BukkitAdapter.adapt(player));
+        plugin.bundle().sendMessage(player, "area.select.group",
+                Placeholder.parsed("group", group.getName()),
+                Placeholder.parsed("region", name));
         return Command.SINGLE_SUCCESS;
     }
 }
