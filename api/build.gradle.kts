@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.34")
+    compileOnly("org.projectlombok:lombok:1.18.36")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core") {
         exclude("org.jetbrains", "annotations")
     }
@@ -34,7 +34,7 @@ dependencies {
     implementation("net.thenextlvl.core:files:2.0.0")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.50"))
 
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 publishing {
