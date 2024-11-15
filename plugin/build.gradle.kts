@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.34")
+    compileOnly("org.projectlombok:lombok:1.18.36")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core") {
         exclude("org.jetbrains", "annotations")
     }
@@ -45,7 +45,7 @@ dependencies {
     implementation("net.thenextlvl.core:nbt:2.2.14")
     implementation("net.thenextlvl.core:paper:1.5.3")
 
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 tasks.shadowJar {
