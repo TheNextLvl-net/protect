@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Collections;
@@ -171,7 +170,7 @@ public class CraftAreaProvider implements AreaProvider {
         try {
             var io = IO.of(area.getFile());
             if (io.exists()) Files.move(area.getFile().toPath(),
-                    Path.of(area.getFile().getPath() + "_old"),
+                    area.getFallbackFile().toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
             else io.createParents();
             try (var outputStream = new NBTOutputStream(
@@ -195,6 +194,8 @@ public class CraftAreaProvider implements AreaProvider {
             areas.remove(area);
             return areas.isEmpty() ? null : areas;
         });
-        return area.getFile().delete();
+        var d1 = area.getFile().delete();
+        var d2 = area.getFallbackFile().delete();
+        return d1 || d2;
     }
 }

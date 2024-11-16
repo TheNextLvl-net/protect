@@ -41,6 +41,7 @@ import java.util.*;
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
+    private final File fallbackFile = new File(getDataFolder(), getName() + ".dat_old");
     private final File file = new File(getDataFolder(), getName() + ".dat");
     private final File schematic;
     private @Nullable String parent;
