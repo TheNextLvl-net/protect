@@ -57,6 +57,9 @@ class AreaCreateCommand {
         } catch (IncompleteRegionException ignored) {
             plugin.bundle().sendMessage(player, "region.select");
             return 0;
+        } catch (Exception e) {
+            plugin.bundle().sendMessage(player, "command.error");
+            return 0;
         }
     }
 }

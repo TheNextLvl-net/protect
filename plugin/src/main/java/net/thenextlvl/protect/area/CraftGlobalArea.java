@@ -16,19 +16,16 @@ import java.util.*;
 @Getter
 @NullMarked
 public class CraftGlobalArea extends CraftArea implements GlobalArea {
-    private final File dataFolder;
-    private final File file;
+    private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
+    private final File fallbackFile = new File(getDataFolder(), getName() + ".dat_old");
+    private final File file = new File(getDataFolder(), getName() + ".dat");
 
     public CraftGlobalArea(ProtectPlugin plugin, World world) {
         super(plugin, "@" + world.getName(), world, Set.of(), null, Map.of(), -1);
-        this.dataFolder = new File(world.getWorldFolder(), "areas");
-        this.file = new File(getDataFolder(), getName() + ".dat");
     }
 
     public CraftGlobalArea(ProtectPlugin plugin, World world, CompoundTag tag) {
         super(plugin, world, "@" + world.getName(), tag);
-        this.dataFolder = new File(world.getWorldFolder(), "areas");
-        this.file = new File(getDataFolder(), getName() + ".dat");
     }
 
     @Override

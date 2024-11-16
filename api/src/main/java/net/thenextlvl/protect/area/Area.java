@@ -83,6 +83,13 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
     File getFile();
 
     /**
+     * Retrieves the fallback file associated with this area.
+     *
+     * @return the fallback file associated with this area
+     */
+    File getFallbackFile();
+
+    /**
      * Adds a member to the regionized area.
      *
      * @param uuid the UUID of the member to add

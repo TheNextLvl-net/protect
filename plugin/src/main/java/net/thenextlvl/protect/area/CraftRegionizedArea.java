@@ -41,22 +41,21 @@ import java.util.*;
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
+    private final File fallbackFile = new File(getDataFolder(), getName() + ".dat_old");
     private final File file = new File(getDataFolder(), getName() + ".dat");
-    private final File schematic;
+    private final File schematic = new File(plugin.schematicFolder(), getName() + ".schem");
     private @Nullable String parent;
     private T region;
 
     public CraftRegionizedArea(ProtectPlugin plugin, AreaCreator<T> creator) throws CircularInheritanceException {
         super(plugin, creator.name(), creator.world(), creator.members(),
                 creator.owner(), creator.flags(), creator.priority());
-        this.schematic = new File(plugin.schematicFolder(), getName() + ".schem");
         this.parent = creator.parent();
         this.region = creator.region();
     }
 
     public CraftRegionizedArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
         super(plugin, world, name, tag);
-        this.schematic = new File(plugin.schematicFolder(), getName() + ".schem");
         this.parent = readParent(tag);
         this.region = readRegion(tag);
     }

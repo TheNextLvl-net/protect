@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -144,8 +145,9 @@ public interface AreaCreator<T extends Region> {
      * @return a new instance of {@code RegionizedArea<? super Region>}
      * @throws UnsupportedRegionException   if the specified region is not supported
      * @throws CircularInheritanceException if there is a circular inheritance detected in the area hierarchy.
+     * @throws IOException if an I/O error occurs during the creation process
      */
-    RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException;
+    RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException, IOException;
 
     /**
      * Retrieves the set of members associated with the area.
