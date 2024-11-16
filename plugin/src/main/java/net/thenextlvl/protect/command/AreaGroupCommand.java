@@ -14,12 +14,14 @@ import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.GroupedArea;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.GroupedAreaArgumentType;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import net.thenextlvl.protect.region.GroupedRegion;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public class AreaGroupCommand {
                 .then(add())
                 .then(delete())
                 .then(groupCreate())
-                .then(inspect())
+                .then(list())
                 .then(redefine())
                 .then(remove())
                 .then(select());
@@ -67,11 +69,12 @@ public class AreaGroupCommand {
                         .executes(this::create));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> inspect() {
-        return Commands.literal("inspect")
-                .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.inspect"))
-                .then(Commands.argument("area", new GroupedAreaArgumentType(plugin))
-                        .executes(this::inspect));
+    private LiteralArgumentBuilder<CommandSourceStack> list() {
+        return Commands.literal("list")
+                .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.list"))
+                .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
+                        .executes(this::list))
+                .executes(this::listAll);
     }
 
     private LiteralArgumentBuilder<CommandSourceStack> redefine() {
@@ -112,22 +115,58 @@ public class AreaGroupCommand {
 
     private int remove(CommandContext<CommandSourceStack> context) {
         var sender = context.getSource().getSender();
-        var area = context.getArgument("group", GroupedArea.class);
+        var group = context.getArgument("group", GroupedArea.class);
         var region = context.getArgument("region", String.class);
-        var success = area.getRegion().removeRegion(region);
+        var success = group.getRegion().removeRegion(region);
         var message = success ? "area.group.remove" : "nothing.changed";
         plugin.bundle().sendMessage(sender, message,
-                Placeholder.parsed("area", area.getName()),
+                Placeholder.parsed("area", group.getName()),
                 Placeholder.parsed("region", region));
         return success ? Command.SINGLE_SUCCESS : 0;
     }
 
-    private int redefine(CommandContext<CommandSourceStack> context) {
+    private int list(CommandContext<CommandSourceStack> context) {
+        var sender = context.getSource().getSender();
+        var group = context.getArgument("group", GroupedArea.class);
+        var regions = group.getRegion().getRegions().keySet();
+        plugin.bundle().sendMessage(sender, "area.list.regions",
+                Placeholder.parsed("amount", String.valueOf(regions.size())),
+                Placeholder.parsed("group", group.getName()),
+                Placeholder.parsed("regions", String.join(", ", regions)));
         return Command.SINGLE_SUCCESS;
     }
 
-    private int inspect(CommandContext<CommandSourceStack> context) {
+    private int listAll(CommandContext<CommandSourceStack> context) {
+        var sender = context.getSource().getSender();
+        var groups = plugin.areaProvider().getAreas()
+                .filter(area -> area instanceof GroupedArea)
+                .map(Area::getName)
+                .toList();
+        plugin.bundle().sendMessage(sender, "area.list.groups",
+                Placeholder.parsed("amount", String.valueOf(groups.size())),
+                Placeholder.parsed("groups", String.join(", ", groups)));
         return Command.SINGLE_SUCCESS;
+    }
+
+    private int redefine(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+        var group = context.getArgument("group", GroupedArea.class);
+        var name = context.getArgument("region", String.class);
+        try {
+            var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
+            var region = worldEdit.getSession(player).getSelection();
+            var redefine = region.getClass().isInstance(group.getRegion().getRegion(name));
+            var message = redefine ? "area.redefine.success.group" : "area.redefine.unsupported";
+            if (redefine) group.getRegion().setRegion(name, region);
+            plugin.bundle().sendMessage(player, message,
+                    Placeholder.parsed("group", group.getName()),
+                    Placeholder.parsed("region", name),
+                    Placeholder.parsed("type", region.getClass().getSimpleName()));
+            return redefine ? Command.SINGLE_SUCCESS : 0;
+        } catch (IncompleteRegionException e) {
+            plugin.bundle().sendMessage(player, "region.select");
+            return 0;
+        }
     }
 
     private int add(CommandContext<CommandSourceStack> context, String name) {
