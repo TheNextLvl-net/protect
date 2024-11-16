@@ -60,10 +60,8 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public AreaCreator<T> region(T region) {
-        this.region = (T) region.clone();
-        return this;
+    public <V extends Region> AreaCreator<V> region(V region) {
+        return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, priority);
     }
 
     @Override
@@ -85,7 +83,7 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     }
 
     @Override
-    public AreaCreator<T> parent(@Nullable RegionizedArea<?> area) {
+    public AreaCreator<T> parent(@Nullable Area area) {
         return parent(area == null ? null : area.getName());
     }
 

@@ -33,7 +33,7 @@ class AreaSelectCommand {
         var session = WorldEditPlugin.getInstance().getSession(player);
         session.setRegionSelector(BukkitAdapter.adapt(area.getWorld()), area.getRegionSelector());
         session.updateServerCUI(BukkitAdapter.adapt(player));
-        plugin.bundle().sendMessage(player, "area.selected", Placeholder.parsed("area", area.getName()));
+        plugin.bundle().sendMessage(player, "area.select", Placeholder.parsed("area", area.getName()));
         return Command.SINGLE_SUCCESS;
     }
 }

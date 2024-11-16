@@ -20,14 +20,12 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.thenextlvl.protect.adapter.area.CuboidAreaAdapter;
-import net.thenextlvl.protect.adapter.area.CylinderAreaAdapter;
-import net.thenextlvl.protect.adapter.area.EllipsoidAreaAdapter;
-import net.thenextlvl.protect.adapter.area.GlobalAreaAdapter;
+import net.thenextlvl.protect.adapter.area.*;
 import net.thenextlvl.protect.adapter.other.*;
 import net.thenextlvl.protect.adapter.region.CuboidRegionAdapter;
 import net.thenextlvl.protect.adapter.region.CylinderRegionAdapter;
 import net.thenextlvl.protect.adapter.region.EllipsoidRegionAdapter;
+import net.thenextlvl.protect.adapter.region.GroupedRegionAdapter;
 import net.thenextlvl.protect.adapter.vector.BlockVectorAdapter;
 import net.thenextlvl.protect.adapter.vector.Vector2Adapter;
 import net.thenextlvl.protect.adapter.vector.Vector3Adapter;
@@ -118,10 +116,11 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     private void registerAdapters() {
-        areaService().registerAdapter(CraftGlobalArea.class, new GlobalAreaAdapter(this));
         areaService().registerAdapter(CraftCuboidArea.class, new CuboidAreaAdapter(this));
         areaService().registerAdapter(CraftCylinderArea.class, new CylinderAreaAdapter(this));
         areaService().registerAdapter(CraftEllipsoidArea.class, new EllipsoidAreaAdapter(this));
+        areaService().registerAdapter(CraftGlobalArea.class, new GlobalAreaAdapter(this));
+        areaService().registerAdapter(CraftGroupedArea.class, new GroupedAreaAdapter(this));
     }
 
     private void registerWrappers() {
@@ -170,6 +169,7 @@ public class ProtectPlugin extends JavaPlugin {
             .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
             .registerTypeHierarchyAdapter(CylinderRegion.class, new CylinderRegionAdapter())
             .registerTypeHierarchyAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
+            .registerTypeHierarchyAdapter(GroupedRegion.class, new GroupedRegionAdapter(this))
             .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
             .registerTypeHierarchyAdapter(Vector2.class, new Vector2Adapter())
             .registerTypeHierarchyAdapter(Vector3.class, new Vector3Adapter())

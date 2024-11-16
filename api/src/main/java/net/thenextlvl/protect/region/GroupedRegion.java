@@ -43,15 +43,23 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     public boolean addRegion(String name, Region region) {
-        return regions.putIfAbsent(name, region) == null;
+        return regions.putIfAbsent(name, region.clone()) == null;
     }
 
     public boolean hasRegion(String name) {
         return regions.containsKey(name);
     }
 
+    public boolean hasRegion(Region region) {
+        return regions.containsValue(region);
+    }
+
     public boolean removeRegion(String name) {
-        return regions.remove(name) != null;
+        return regions.size() > 1 && regions.remove(name) != null;
+    }
+
+    public void setRegion(String name, Region region) {
+        regions.put(name, region.clone());
     }
 
     @Override
@@ -182,5 +190,12 @@ public class GroupedRegion extends AbstractRegion {
     @Override
     public boolean contains(int x, int y, int z) {
         return regions.values().stream().anyMatch(region -> region.contains(x, y, z));
+    }
+
+    @Override
+    public GroupedRegion clone() {
+        var clone = (GroupedRegion) super.clone();
+        clone.regions.putAll(regions);
+        return clone;
     }
 }
