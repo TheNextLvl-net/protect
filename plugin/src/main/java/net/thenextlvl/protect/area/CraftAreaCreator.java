@@ -13,6 +13,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 
 @Getter
@@ -89,7 +90,7 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException {
+    public RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException, IOException {
         var area = plugin.areaService().getWrapper((Class<T>) region().getClass())
                 .orElseThrow(() -> new UnsupportedRegionException(region().getClass()))
                 .apply(this);
