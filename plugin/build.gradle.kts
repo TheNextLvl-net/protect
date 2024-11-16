@@ -11,9 +11,11 @@ plugins {
 }
 
 java {
-    withSourcesJar()
-    targetCompatibility = JavaVersion.VERSION_21
-    sourceCompatibility = JavaVersion.VERSION_21
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+tasks.compileJava {
+    options.release.set(21)
 }
 
 group = project(":api").group
