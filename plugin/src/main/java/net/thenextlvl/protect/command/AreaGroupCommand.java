@@ -20,6 +20,7 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.GroupedAreaArgumentType;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import net.thenextlvl.protect.region.GroupedRegion;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,7 +52,11 @@ public class AreaGroupCommand {
                                     var name = context.getArgument("name", String.class);
                                     return add(context, name);
                                 }))
-                        .executes(context -> add(context, "root")));
+                        .executes(context -> {
+                            var group = context.getArgument("group", GroupedArea.class);
+                            var name = "region-" + (group.getRegion().getRegions().size() + 1);
+                            return add(context, name);
+                        }));
     }
 
     private LiteralArgumentBuilder<CommandSourceStack> delete() {
@@ -207,14 +212,20 @@ public class AreaGroupCommand {
             return 0;
         }
 
-        var region = group.getRegion().getRegions().values().iterator().next();
-        var area = plugin.areaService().creator(group)
-                .region(region)
-                .create();
-
-        plugin.bundle().sendMessage(sender, "area.group.delete",
-                Placeholder.parsed("group", area.getName()));
-        return Command.SINGLE_SUCCESS;
+        try {
+            var region = group.getRegion().getRegions().values().iterator().next();
+            var area = plugin.areaService().creator(group)
+                    .region(region)
+                    .create();
+            plugin.bundle().sendMessage(sender, "area.group.delete",
+                    Placeholder.parsed("group", area.getName()));
+            return Command.SINGLE_SUCCESS;
+        } catch (Exception e) {
+            plugin.getComponentLogger().error("Failed to create grouped area", e);
+            if (sender instanceof ConsoleCommandSender) return 0;
+            plugin.bundle().sendMessage(sender, "command.error");
+            return 0;
+        }
     }
 
     private int create(CommandContext<CommandSourceStack> context) {
@@ -227,13 +238,20 @@ public class AreaGroupCommand {
             return 0;
         }
 
-        var grouped = plugin.areaService().creator((RegionizedArea<?>) area)
-                .region(new GroupedRegion(Map.of("root", area.getRegion())))
-                .create();
+        try {
+            var grouped = plugin.areaService().creator((RegionizedArea<?>) area)
+                    .region(new GroupedRegion(Map.of("root", area.getRegion())))
+                    .create();
 
-        plugin.bundle().sendMessage(sender, "area.group.create",
-                Placeholder.parsed("area", grouped.getName()));
-        return Command.SINGLE_SUCCESS;
+            plugin.bundle().sendMessage(sender, "area.group.create",
+                    Placeholder.parsed("area", grouped.getName()));
+            return Command.SINGLE_SUCCESS;
+        } catch (Exception e) {
+            plugin.getComponentLogger().error("Failed to create grouped area", e);
+            if (sender instanceof ConsoleCommandSender) return 0;
+            plugin.bundle().sendMessage(sender, "command.error");
+            return 0;
+        }
     }
 
     private int select(CommandContext<CommandSourceStack> context) {
