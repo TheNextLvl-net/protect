@@ -58,6 +58,10 @@ public class GroupedRegion extends AbstractRegion {
         return regions.size() > 1 && regions.remove(name) != null;
     }
 
+    public void setRegion(String name, Region region) {
+        regions.put(name, region.clone());
+    }
+
     @Override
     public BlockVector3 getMinimumPoint() {
         var regions = this.regions.values().toArray(new Region[0]);
@@ -186,5 +190,12 @@ public class GroupedRegion extends AbstractRegion {
     @Override
     public boolean contains(int x, int y, int z) {
         return regions.values().stream().anyMatch(region -> region.contains(x, y, z));
+    }
+
+    @Override
+    public GroupedRegion clone() {
+        var clone = (GroupedRegion) super.clone();
+        clone.regions.putAll(regions);
+        return clone;
     }
 }
