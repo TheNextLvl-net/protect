@@ -170,14 +170,10 @@ public class CraftAreaProvider implements AreaProvider {
     private void save(Area area) {
         try {
             var io = IO.of(area.getFile());
-            io.createParents();
-
-            if (io.exists()) Files.move(
-                    area.getFile().toPath(),
+            if (io.exists()) Files.move(area.getFile().toPath(),
                     Path.of(area.getFile().getPath() + "_old"),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-
+                    StandardCopyOption.REPLACE_EXISTING);
+            else io.createParents();
             try (var outputStream = new NBTOutputStream(
                     io.outputStream(WRITE, CREATE, TRUNCATE_EXISTING),
                     StandardCharsets.UTF_8
