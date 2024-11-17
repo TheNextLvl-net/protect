@@ -21,7 +21,7 @@ public interface ProtectionService {
      * @param area   the area where the player intends to use worldedit
      * @return true if the player can use worldedit in the area, false otherwise
      */
-    boolean canEdit(Player player, Area area);
+    boolean canEdit(@Nullable Player player, Area area);
 
     /**
      * Determines whether a player can build in a given area.
@@ -30,7 +30,7 @@ public interface ProtectionService {
      * @param area   the area where the player intends to build
      * @return true if the player can build in this area, false otherwise
      */
-    boolean canBuild(Player player, Area area);
+    boolean canBuild(@Nullable Player player, Area area);
 
     /**
      * Determines whether a player can build at a given location.
@@ -39,7 +39,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to build
      * @return true if the player can build at the location, false otherwise
      */
-    boolean canBuild(Player player, Location location);
+    boolean canBuild(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can break a block in a given area.
@@ -48,7 +48,7 @@ public interface ProtectionService {
      * @param area   the area of the block the player intends to break
      * @return true if the player can break the block in this area, false otherwise
      */
-    boolean canBreak(Player player, Area area);
+    boolean canBreak(@Nullable Player player, Area area);
 
     /**
      * Determines whether a player can break a block at a given location.
@@ -57,7 +57,7 @@ public interface ProtectionService {
      * @param location the location of the block the player intends to break
      * @return true if the player can break the block at the location, false otherwise
      */
-    boolean canBreak(Player player, Location location);
+    boolean canBreak(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can empty a bucket at a given location.
@@ -66,7 +66,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to empty the bucket
      * @return true if the player can empty the bucket at the location, false otherwise
      */
-    boolean canEmptyBucket(Player player, Location location);
+    boolean canEmptyBucket(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can fill a bucket at a given location.
@@ -75,7 +75,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to fill the bucket
      * @return true if the player can fill the bucket at the location, false otherwise
      */
-    boolean canFillBucket(Player player, Location location);
+    boolean canFillBucket(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can empty a bottle at a given location.
@@ -84,7 +84,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to empty the bottle
      * @return true if the player can empty the bottle at the location, false otherwise
      */
-    boolean canEmptyBottle(Player player, Location location);
+    boolean canEmptyBottle(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can fill a bottle at a given location.
@@ -93,7 +93,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to fill the bottle
      * @return true if the player can fill the bottle at the location, false otherwise
      */
-    boolean canFillBottle(Player player, Location location);
+    boolean canFillBottle(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can wash a banner at a given location.
@@ -102,7 +102,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to wash the banner
      * @return true if the player can wash the banner at the location, false otherwise
      */
-    boolean canWashBanner(Player player, Location location);
+    boolean canWashBanner(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can wash a shulker at a given location.
@@ -111,7 +111,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to wash the shulker
      * @return true if the player can wash the shulker at the location, false otherwise
      */
-    boolean canWashShulker(Player player, Location location);
+    boolean canWashShulker(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can wash an armor at a given location.
@@ -120,7 +120,7 @@ public interface ProtectionService {
      * @param location the location where the player intends to wash the armor
      * @return true if the player can wash the armor at the location, false otherwise
      */
-    boolean canWashArmor(Player player, Location location);
+    boolean canWashArmor(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can interact with an object at a given location.
@@ -129,7 +129,7 @@ public interface ProtectionService {
      * @param location the location of the object the player intends to interact with
      * @return true if the player can interact with the object at the location, false otherwise
      */
-    boolean canInteract(Player player, Location location);
+    boolean canInteract(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can interact with an entity.
@@ -138,7 +138,7 @@ public interface ProtectionService {
      * @param entity the entity the player intends to interact with
      * @return true if the player can interact with the object at the location, false otherwise
      */
-    boolean canInteract(Player player, Entity entity);
+    boolean canInteract(@Nullable Player player, Entity entity);
 
     /**
      * Determines whether a player can physically interact with an object at a given location.
@@ -147,7 +147,7 @@ public interface ProtectionService {
      * @param location the location of the object the player intends to interact with
      * @return true if the player can physically interact with the object at the location, false otherwise
      */
-    boolean canInteractPhysical(Player player, Location location);
+    boolean canInteractPhysical(@Nullable Player player, Location location);
 
     /**
      * Determines whether an entity can attack another entity.
@@ -165,7 +165,7 @@ public interface ProtectionService {
      * @param entity the entity the player intends to shear
      * @return true if the player can shear the object at the location, false otherwise
      */
-    boolean canShear(Player player, Entity entity);
+    boolean canShear(@Nullable Player player, Entity entity);
 
     /**
      * Determines whether a player can trample a block at a given location.
@@ -174,7 +174,7 @@ public interface ProtectionService {
      * @param location the location of the block to trample
      * @return true if the player can trample the block at the location, false otherwise
      */
-    boolean canTrample(Player player, Location location);
+    boolean canTrample(@Nullable Player player, Location location);
 
     /**
      * Determines whether a player can place an entity in a given area.
@@ -201,7 +201,7 @@ public interface ProtectionService {
      * @param area   the area to enter
      * @return true if the player can enter the area, false otherwise
      */
-    boolean canEnter(Player player, Area area);
+    boolean canEnter(@Nullable Player player, Area area);
 
     /**
      * Determines whether a player can leave an area.
@@ -210,7 +210,7 @@ public interface ProtectionService {
      * @param area   the area to leave
      * @return true if the player can leave the area, false otherwise
      */
-    boolean canLeave(Player player, Area area);
+    boolean canLeave(@Nullable Player player, Area area);
 
     /**
      * Determines whether an entity can perform a specific action in a given area.
@@ -221,5 +221,5 @@ public interface ProtectionService {
      * @param permission an optional permission string required to perform the action
      * @return true if the entity can perform the action in the area, false otherwise
      */
-    boolean canPerformAction(Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission);
+    boolean canPerformAction(@Nullable Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission);
 }
