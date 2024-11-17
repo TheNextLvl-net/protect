@@ -23,10 +23,12 @@ class AreaParentCommand {
         return Commands.literal("parent")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.parent"))
                 .then(Commands.literal("set")
+                        .requires(stack -> stack.getSender().hasPermission("protect.command.area.parent.set"))
                         .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
                                 .then(Commands.argument("parent", new AreaArgumentType(plugin))
                                         .executes(this::set))))
                 .then(Commands.literal("remove")
+                        .requires(stack -> stack.getSender().hasPermission("protect.command.area.parent.remove"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin,
                                         (commandContext, area) -> area.getParent().isPresent()))
                                 .executes(this::remove)));

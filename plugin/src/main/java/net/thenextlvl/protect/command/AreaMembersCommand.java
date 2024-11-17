@@ -30,10 +30,12 @@ class AreaMembersCommand {
         return Commands.literal("members")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.members"))
                 .then(Commands.literal("add")
+                        .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.add"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .then(Commands.argument("players", ArgumentTypes.players())
                                         .executes(this::add))))
                 .then(Commands.literal("list")
+                        .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.list"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .executes(context -> {
                                     var area = context.getArgument("area", Area.class);
@@ -44,6 +46,7 @@ class AreaMembersCommand {
                             return list(context, area);
                         }))
                 .then(Commands.literal("remove")
+                        .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.remove"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin, (commandContext, area) ->
                                         !area.getMembers().isEmpty()))
                                 .then(Commands.argument("player", StringArgumentType.word())
