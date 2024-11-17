@@ -177,6 +177,24 @@ public interface ProtectionService {
     boolean canTrample(Player player, Location location);
 
     /**
+     * Determines whether a player can place an entity in a given area.
+     *
+     * @param player the player attempting to place the entity
+     * @param area   the area where the player intends to place the entity
+     * @return true if the player can place the entity in the area, false otherwise
+     */
+    boolean canPlaceEntity(@Nullable Player player, Area area);
+
+    /**
+     * Determines whether a player can place an entity.
+     *
+     * @param player the player attempting to place the entity
+     * @param entity the entity the player intends to place
+     * @return true if the player can place the entity, false otherwise
+     */
+    boolean canPlaceEntity(@Nullable Player player, Entity entity);
+
+    /**
      * Determines whether a player can enter an area.
      *
      * @param player the player who wants to enter the area

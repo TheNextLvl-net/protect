@@ -137,6 +137,17 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     @Override
+    public boolean canPlaceEntity(@Nullable Player player, Area area) {
+        return canPerformAction(player, area, plugin.flags.entityPlace, "protect.bypass.entity-place");
+    }
+
+    @Override
+    public boolean canPlaceEntity(@Nullable Player player, Entity entity) {
+        return canPerformAction(player, plugin.areaProvider().getArea(entity),
+                plugin.flags.entityPlace, "protect.bypass.entity-place");
+    }
+
+    @Override
     public boolean canEnter(Player player, Area area) {
         return canPerformAction(player, area, plugin.flags.areaEnter, "protect.bypass.enter");
     }

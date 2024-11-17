@@ -80,20 +80,14 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!plugin.protectionService().canPerformAction(
-                event.getPlayer(), area, plugin.flags.entityPlace,
-                "protect.bypass.entity-place"
-        ));
+        event.setCancelled(!plugin.protectionService().canPlaceEntity(event.getPlayer(), area));
         plugin.failed(event.getPlayer(), event, area, "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityPlace(EntityPlaceEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!plugin.protectionService().canPerformAction(
-                event.getPlayer(), area, plugin.flags.entityPlace,
-                "protect.bypass.entity-place"
-        ));
+        event.setCancelled(!plugin.protectionService().canPlaceEntity(event.getPlayer(), area));
         plugin.failed(event.getPlayer(), event, area, "area.failed.place");
     }
 
