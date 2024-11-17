@@ -46,57 +46,76 @@ BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Prote
 
 ## Area flags
 
-| Flag                                  | Description                                                                  | Values           |
-|---------------------------------------|------------------------------------------------------------------------------|------------------|
-| protect:enter                         | enable/disable entering areas                                                | true / false     |
-| protect:leave                         | enable/disable leaving areas                                                 | true / false     |
-| protect:armor_stand_manipulate        | enable/disable armor stand manipulation                                      | true / false     |
-| protect:armor_washing                 | enable/disable armor washing                                                 | true / false     |
-| protect:banner_washing                | enable/disable banner washing                                                | true / false     |
-| protect:block_absorb                  | enable/disable block absorption                                              | true / false     |
-| protect:block_break                   | enable/disable block breaking                                                | true / false     |
-| protect:block_burning                 | enable/disable block burning                                                 | true / false     |
-| protect:block_drying                  | enable/disable block drying                                                  | true / false     |
-| protect:block_fading                  | enable/disable block fading                                                  | true / false     |
-| protect:block_growth                  | enable/disable block growth                                                  | true / false     |
-| protect:block_igniting                | enable/disable block ignition                                                | true / false     |
-| protect:block_moisturising            | enable/disable block moisturising                                            | true / false     |
-| protect:block_place                   | enable/disable block placing                                                 | true / false     |
-| protect:block_spread                  | enable/disable block spread                                                  | true / false     |
-| protect:cauldron_evaporation          | enable/disable cauldron evaporation                                          | true / false     |
-| protect:cauldron_extinguish_entity    | enable/disable entity extinguishing by cauldron                              | true / false     |
-| protect:cauldron_level_change_unknown | enable/disable unknown changes to cauldrons                                  | true / false     |
-| protect:crop_trample                  | enable/disable crop trampling                                                | true / false     |
-| protect:damage                        | enable/disable damage                                                        | true / false     |
-| protect:empty_bottle                  | enable/disable emptying bottles                                              | true / false     |
-| protect:empty_bucket                  | enable/disable emptying buckets                                              | true / false     |
-| protect:entity_attack_entity          | enable/disable entity attacking entities                                     | true / false     |
-| protect:entity_attack_player          | enable/disable entity attacking players                                      | true / false     |
-| protect:entity_interact               | enable/disable entity interaction                                            | true / false     |
-| protect:entity_item_drop              | enable/disable entity drop items                                             | true / false     |
-| protect:entity_item_pickup            | enable/disable entity pickup items                                           | true / false     |
-| protect:entity_shear                  | enable/disable shearing entities                                             | true / false     |
-| protect:explosions                    | enable/disable explosions                                                    | true / false     |
-| protect:fill_bottle                   | enable/disable filling bottles                                               | true / false     |
-| protect:fill_bucket                   | enable/disable filling buckets                                               | true / false     |
-| protect:hanging_break                 | enable/disable breaking hanging entities<br/>(paintings, item frames)        | true / false     |
-| protect:hanging_place                 | enable/disable placing hanging entities<br/>(paintings, item frames)         | true / false     |
-| protect:hunger                        | enable/disable hunger                                                        | true / false     |
-| protect:interact                      | enable/disable block interaction                                             | true / false     |
-| protect:leaves_decay                  | enable/disable leaves decaying                                               | true / false     |
-| protect:natural_cauldron_fill         | enable/disable cauldron filling by natural causes<br/>(drip stone, downfall) | true / false     |
-| protect:natural_entity_spawn          | enable/disable natural entity spawning                                       | true / false     |
-| protect:physics                       | enable/disable physics                                                       | true / false     |
-| protect:player_attack_entity          | enable/disable player attack entities                                        | true / false     |
-| protect:player_attack_player          | enable/disable player attack players                                         | true / false     |
-| protect:player_item_drop              | enable/disable player drop items                                             | true / false     |
-| protect:redstone                      | enable/disable redstone                                                      | true / false     |
-| protect:shoot                         | enable/disable shooting projectile                                           | true / false     |
-| protect:shulker_washing               | enable/disable shulker washing                                               | true / false     |
-| protect:time                          | change the time inside of an area                                            | long             |
-| protect:farewell                      | message that is send to players when leaving an area                         | string           |
-| protect:greetings                     | message that is send to players when entering an area                        | string           |
-| protect:weather                       | change the weather inside of an area                                         | DOWNFALL / CLEAR |
+| Flag                        | Description                                   | Value              |
+|-----------------------------|-----------------------------------------------|--------------------|
+| protect:farewell            | message that is send when leaving an area     | MiniMessage String |
+| protect:farewell_actionbar  | actionbar that is shown when leaving an area  | MiniMessage String |
+| protect:farewell_title      | title that is send when leaving an area       | MiniMessage String |
+| protect:greetings           | message that is send when entering an area    | MiniMessage String |
+| protect:greetings_actionbar | actionbar that is shown when entering an area | MiniMessage String |
+| protect:greetings_title     | title that is send when entering an area      | MiniMessage String |
+| protect:time                | change the time inside of an area             | Integer            |
+| protect:weather             | change the weather inside of an area          | DOWNFALL / CLEAR   |
+
+### Boolean Flags
+
+| Flag                               | Description                                                        | 
+|------------------------------------|--------------------------------------------------------------------|
+| protect:enter                      | allows or denies entrance                                          | 
+| protect:leave                      | allows or denies exit                                              |
+| protect:damage                     | controls whether damage can be applied                             |
+| protect:entity_item_drop           | controls whether entities can drop items                           |
+| protect:entity_item_pickup         | controls whether entities can pickup items                         |
+| protect:game_events                | controls whether sculk sensors can pick up on game events (sounds) |
+| protect:gravity                    | enables or disables gravity                                        |
+| protect:hunger                     | controls whether hunger is applied                                 |
+| protect:liquid_flow                | enables or disables liquid flow                                    |
+| protect:natural_entity_spawn       | controls whether entities can naturally spawn                      |
+| protect:notify_failed_interactions | enables or disables failed-interaction messages                    |
+| protect:physics                    | enables or disables physics                                        |
+| protect:redstone                   | enables or disables redstone                                       |
+
+### Protection Flags
+
+| Flag                                  | Description                                                                                            |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------|
+| protect:armor_stand_manipulate        | allows or denies armor stand manipulations                                                             |
+| protect:armor_washing                 | allows or denies washing off the color of armor<br/>(in cauldrons)                                     |
+| protect:banner_washing                | allows or denies washing off the color of banners<br/>(in cauldrons)                                   |
+| protect:block_absorb                  | controls whether sponges can absorb water                                                              |
+| protect:block_break                   | allows or denies block breaking                                                                        |
+| protect:block_burning                 | controls whether blocks can burn                                                                       |
+| protect:block_drying                  | controls whether blocks can dry out<br/>(farmland)                                                     |
+| protect:block_fading                  | controls whether blocks can fade away<br/>(like ice or snow melting or corals fading)                  |
+| protect:block_fertilize               | controls whether blocks can be fertilized                                                              |
+| protect:block_forming                 | controls whether blocks can randomly form<br/>(like snow from a snow storm or ice in cold environment) |
+| protect:block_growth                  | controls whether blocks can grow<br/>(like wheat or carrots)                                           |
+| protect:block_igniting                | controls whether blocks can ignite<br/>(like fire spreading or lightning striking)                     |
+| protect:block_moisturising            | controls whether blocks can moisturise<br/>(farmland)                                                  |
+| protect:block_place                   | allows or denies block placing                                                                         |
+| protect:block_spread                  | controls whether blocks can spread<br/>(like grass or fire)                                            |
+| protect:cauldron_evaporation          | controls whether cauldrons can evaporate from biome dryness                                            |
+| protect:cauldron_extinguish_entity    | controls whether cauldrons can extinguish flaming entities                                             |
+| protect:cauldron_level_change_unknown | controls whether cauldrons can change their level for unknown reasons                                  |
+| protect:crop_trample                  | allows or denies crop trampling                                                                        |
+| protect:empty_bottle                  | allows or denies emptying a bottle                                                                     |
+| protect:empty_bucket                  | allows or denies emptying a bucket                                                                     |
+| protect:entity_attack_entity          | controls whether entities can attack other entities                                                    |
+| protect:entity_attack_player          | controls whether entities can attack players                                                           |
+| protect:entity_interact               | allows or denies interaction with entities<br/>(like trading with merchants)                           |
+| protect:entity_place                  | allows or denies placing entities<br/>(like boats or minecarts)                                        |
+| protect:entity_shear                  | allows or denies shearing entities<br/>(like sheep or snow golems)                                     |
+| protect:explosions                    | controls whether explosions can do block damage                                                        |
+| protect:fill_bottle                   | allows or denies filling a bottle                                                                      |
+| protect:fill_bucket                   | allows or denies filling a bucket                                                                      |
+| protect:interact                      | allows or denies block interactions<br/>(like opening chests or doors)                                 |
+| protect:leaves_decay                  | controls whether leaves can decay                                                                      |
+| protect:natural_cauldron_fill         | controls whether cauldrons can fill naturally<br/>(from rain)                                          |
+| protect:physical_interact             | allows or denies physical interactions<br/>(like standing on pressure plates or drip leaves)           |
+| protect:player_attack_entity          | controls whether players can attack entities                                                           |
+| protect:player_attack_player          | controls whether players can attack players                                                            |
+| protect:player_item_drop              | controls whether players can drop items                                                                |
+| protect:shulker_washing               | allows or denies washing off color the color of shulker chests<br/>(in cauldrons)                      |
 
 ## Permission Packs
 
