@@ -126,39 +126,41 @@ instead of dealing with a multitude of individual permissions.
 
 Allows players to manage all areas and bypass all restrictions
 
+    protect.bypass.admin
     protect.command.area.create
     protect.command.area.delete
-    protect.command.area.manage
-    protect.bypass.admin
+    protect.command.area.info
+    protect.command.area.list
+    protect.command.area.priority
+    protect.commands.area.flag
+    protect.commands.area.group
+    protect.commands.area.members
+    protect.commands.area.owner
+    protect.commands.area.parent
+    protect.commands.area.schematic
 
 ### protect.bypass.admin
 
 Allows players to bypass any restriction
 
-    protect.bypass.build
+    protect.bypass.attack
     protect.bypass.break
-    protect.bypass.interact
-    protect.bypass.physical-interact
-    protect.bypass.entity-interact
-    protect.bypass.trample
-    protect.bypass.enter
-    protect.bypass.leave
-    protect.bypass.empty-bucket
-    protect.bypass.fill-bucket
+    protect.bypass.build
     protect.bypass.empty-bottle
+    protect.bypass.empty-bucket
+    protect.bypass.enter
+    protect.bypass.entity-interact
+    protect.bypass.entity-place
+    protect.bypass.entity-shear
     protect.bypass.fill-bottle
+    protect.bypass.fill-bucket
+    protect.bypass.interact
+    protect.bypass.leave
+    protect.bypass.physical-interact
+    protect.bypass.trample
+    protect.bypass.wash-armor
     protect.bypass.wash-banner
     protect.bypass.wash-shulker
-    protect.bypass.wash-armor
-
-### protect.command.area
-
-Allows players to interact with areas in a non-destructive manner
-
-    protect.command.area.flag.info
-    protect.command.area.flag.list
-    protect.command.area.info
-    protect.command.area.list
 
 ### protect.command.area.flag
 
@@ -166,18 +168,42 @@ Allows players to manage area flags
 
     protect.command.area.flag.info
     protect.command.area.flag.list
-    protect.command.area.flag.set
     protect.command.area.flag.reset
+    protect.command.area.flag.set
+    protect.command.area.protect
 
-### protect.command.area.manage
+### protect.command.area.group
 
-Allows players to manage existing areas
+Allows players to manage area groups
 
-    protect.command.area
-    protect.command.area.flag
-    protect.command.area.priority
-    protect.command.area.redefine
-    protect.command.area.schematic
+    protect.command.area.group.add
+    protect.command.area.group.create
+    protect.command.area.group.delete
+    protect.command.area.group.list
+    protect.command.area.group.redefine
+    protect.command.area.group.remove
+
+### protect.command.area.members
+
+Allows players to manage area members
+
+    protect.command.area.members.add
+    protect.command.area.members.list
+    protect.command.area.members.remove
+
+### protect.command.area.owner
+
+Allows players to manage area owners
+
+    protect.command.area.owner.remove
+    protect.command.area.owner.set
+
+### protect.command.area.parent
+
+Allows players to manage area parents
+
+    protect.command.area.parent.remove
+    protect.command.area.parent.set
 
 ### protect.command.area.schematic
 
