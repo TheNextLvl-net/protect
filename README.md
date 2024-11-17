@@ -7,7 +7,7 @@ A lightweight modern alternative to WorldGuard optimized for API usage
 * [Permission Packs](#permission-packs)
 * [API](#api)
 
-BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Protect/21712)
+![https://bstats.org/plugin/bukkit/TheNextLvl%20Protect/21712](https://bstats.org/signatures/bukkit/TheNextLvl%20Protect.svg)
 
 ## Commands
 
