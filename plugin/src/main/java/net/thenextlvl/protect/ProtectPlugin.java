@@ -190,7 +190,7 @@ public class ProtectPlugin extends JavaPlugin {
             .build();
 
     public class Flags {
-        public final Flag<@Nullable Long> time = flagRegistry().register(ProtectPlugin.this, Long.class, "time", null);
+        public final Flag<@Nullable Integer> time = flagRegistry().register(ProtectPlugin.this, Integer.class, "time", null);
         public final Flag<@Nullable String> farewell = flagRegistry().register(ProtectPlugin.this, String.class, "farewell", null);
         public final Flag<@Nullable String> farewellActionbar = flagRegistry().register(ProtectPlugin.this, String.class, "farewell_actionbar", null);
         public final Flag<@Nullable String> farewellTitle = flagRegistry().register(ProtectPlugin.this, String.class, "farewell_title", null);
