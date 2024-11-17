@@ -3,7 +3,6 @@ package net.thenextlvl.protect.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.sk89q.worldedit.regions.Region;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +25,9 @@ class AreaDeleteCommand {
                         .executes(this::execute));
     }
 
-    @SuppressWarnings("unchecked")
     private int execute(CommandContext<CommandSourceStack> context) {
         var sender = context.getSource().getSender();
-        var area = (RegionizedArea<Region>) context.getArgument("area", RegionizedArea.class);
+        var area = (RegionizedArea<?>) context.getArgument("area", RegionizedArea.class);
 
         var message = area.getSchematic().exists()
                 ? "area.schematic.delete" : plugin.areaService().delete(area)
