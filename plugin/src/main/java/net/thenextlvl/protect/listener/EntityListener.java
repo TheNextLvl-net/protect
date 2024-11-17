@@ -80,14 +80,14 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onHangingPlace(HangingPlaceEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!plugin.protectionService().canPlaceEntity(event.getPlayer(), area));
+        event.setCancelled(!plugin.protectionService().canPlace(event.getPlayer(), area));
         plugin.failed(event.getPlayer(), event, area, "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityPlace(EntityPlaceEvent event) {
         var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!plugin.protectionService().canPlaceEntity(event.getPlayer(), area));
+        event.setCancelled(!plugin.protectionService().canPlace(event.getPlayer(), area));
         plugin.failed(event.getPlayer(), event, area, "area.failed.place");
     }
 
@@ -131,8 +131,8 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         if (!event.getEntityType().equals(EntityType.FALLING_BLOCK)) return;
-        var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.blockPlace));
+        if (plugin.protectionService().canPlace(event.getEntity(), event.getBlock().getLocation())) return;
+        event.setCancelled(true);
     }
 
     private boolean isInteractionRestricted(Entity source, Entity target, Flag<Boolean> flag) {
