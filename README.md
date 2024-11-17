@@ -11,23 +11,32 @@ BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Prote
 
 ## Commands
 
-| Command                              | Description                                       | Permission                            |
-|--------------------------------------|---------------------------------------------------|---------------------------------------|
-| /area create [name]                  | create new areas                                  | protect.command.area.create           |
-| /area delete [area]                  | delete existing areas                             | protect.command.area.delete           |
-| /area flag info [flag] (area)        | query information about area flags                | protect.command.area.flag.info        |
-| /area flag list                      | list all existing area flags                      | protect.command.area.flag.list        |
-| /area flag set [flag] [value] (area) | change specified flags of areas                   | protect.command.area.flag.set         |
-| /area flag reset [flag] (area)       | reset specified flags of areas                    | protect.command.area.flag.reset       |
-| /area info (area)                    | query information about specific areas            | protect.command.area.info             |
-| /area list                           | list all areas                                    | protect.command.area.list             |
-| /area priority [priority] (area)     | change the priority of areas                      | protect.command.area.priority         |
-| /area redefine [area]                | redefine the region of an existing area           | protect.command.area.redefine         |
-| /area schematic delete [area]        | delete an area's schematic                        | protect.command.area.schematic.delete |
-| /area schematic load [area]          | load in an area's schematic                       | protect.command.area.schematic.load   |
-| /area schematic save [area]          | save an area's schematic                          | protect.command.area.schematic.save   |
-| /area select (area)                  | (worldedit) select the region of an existing area | worldedit.selection.pos               |
-| /area teleport [area]                | teleport yourself to an area                      | protect.command.area.teleport         |
+| Command                                  | Description                                       | Permission                            |
+|------------------------------------------|---------------------------------------------------|---------------------------------------|
+| `/area create <name> [<priority>]`       | create new areas                                  | protect.command.area.create           |
+| `/area delete <area>`                    | delete existing areas                             | protect.command.area.delete           |
+| `/area flag info [flag] (area)`          | query information about area flags                | protect.command.area.flag.info        |
+| `/area flag list [<provider>]`           | list all existing area flags                      | protect.command.area.flag.list        |
+| `/area flag reset <flag> [<area>]`       | reset specified flags of areas                    | protect.command.area.flag.reset       |
+| `/area flag set <flag> <value> [<area>]` | change specified flags of areas                   | protect.command.area.flag.set         |
+| `/area group`                            |                                                   |                                       |
+| `/area info [<area>]`                    | query information about specific areas            | protect.command.area.info             |
+| `/area list`                             | list all areas                                    | protect.command.area.list             |
+| `/area members add <area> <players>`     | add members to an area                            | protect.command.area.members.add      |
+| `/area members list [<area>]`            | list all members of an area                       | protect.command.area.members.list     |
+| `/area members remove <player>`          | remove a member from an area                      | protect.command.area.members.remove   |
+| `/area owner remove <player>`            | remove the owner of an area                       | protect.command.area.owner.remove     |
+| `/area owner set <area> <player>`        | set the owner of an area                          | protect.command.area.owner.set        |
+| `/area parent remove <area>`             | remove the parent of an area                      | protect.command.area.parent.remove    |
+| `/area parent set <area> <parent>`       | set the parent of an area                         | protect.command.area.parent.set       |
+| `/area priority <area> [<priority>]`     | view or change the priority of areas              | protect.command.area.priority         |
+| `/area protect <area> [remove]`          | add, update or remove the protection of an area   | protect.command.area.protect          |
+| `/area redefine <area>`                  | redefine the region of an existing area           | protect.command.area.redefine         |
+| `/area schematic delete <area>`          | delete an area's schematic                        | protect.command.area.schematic.delete |
+| `/area schematic load <area>`            | load in an area's schematic                       | protect.command.area.schematic.load   |
+| `/area schematic save <area>`            | save an area's schematic                          | protect.command.area.schematic.save   |
+| `/area select <area>`                    | (worldedit) select the region of an existing area | worldedit.selection.pos               |
+| `/area teleport <area>`                  | teleport yourself to an area                      | protect.command.area.teleport         |
 
 ## Area flags
 
