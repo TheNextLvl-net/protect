@@ -48,36 +48,6 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     @Override
-    public boolean canEmptyBottle(@Nullable Entity entity, Location location) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(location),
-                plugin.flags.emptyBottle, "protect.bypass.empty-bottle");
-    }
-
-    @Override
-    public boolean canFillBottle(@Nullable Entity entity, Location location) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(location),
-                plugin.flags.fillBottle, "protect.bypass.fill-bottle");
-    }
-
-    @Override
-    public boolean canWashBanner(@Nullable Entity entity, Location location) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(location),
-                plugin.flags.bannerWashing, "protect.bypass.wash-banner");
-    }
-
-    @Override
-    public boolean canWashShulker(@Nullable Entity entity, Location location) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(location),
-                plugin.flags.shulkerWashing, "protect.bypass.wash-shulker");
-    }
-
-    @Override
-    public boolean canWashArmor(@Nullable Entity entity, Location location) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(location),
-                plugin.flags.armorWashing, "protect.bypass.wash-armor");
-    }
-
-    @Override
     public boolean canInteract(@Nullable Entity entity, Location location) {
         return canPerformAction(entity, plugin.areaProvider().getArea(location),
                 plugin.flags.interact, "protect.bypass.interact");

@@ -223,29 +223,12 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerChangeCauldronLevel(CauldronLevelChangeEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        event.setCancelled(!switch (event.getReason()) {
-            case ARMOR_WASH -> plugin.protectionService().canWashArmor(player, event.getBlock().getLocation());
-            case BANNER_WASH -> plugin.protectionService().canWashBanner(player, event.getBlock().getLocation());
-            case BOTTLE_EMPTY -> plugin.protectionService().canEmptyBottle(player, event.getBlock().getLocation());
-            case BOTTLE_FILL -> plugin.protectionService().canFillBottle(player, event.getBlock().getLocation());
-            case BUCKET_EMPTY -> plugin.protectionService().canPlace(player, event.getBlock().getLocation());
-            case BUCKET_FILL -> plugin.protectionService().canDestroy(player, event.getBlock().getLocation());
-            case SHULKER_WASH -> plugin.protectionService().canWashShulker(player, event.getBlock().getLocation());
-            default -> true;
-        });
-        plugin.failed(player, event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         var flag = switch (event.getReason()) {
             case EXTINGUISH -> plugin.flags.cauldronExtinguishEntity;
             case EVAPORATE -> plugin.flags.cauldronEvaporation;
             case NATURAL_FILL -> plugin.flags.naturalCauldronFill;
-            case UNKNOWN -> plugin.flags.cauldronLevelChangeUnknown;
             default -> null;
         };
         if (flag != null) event.setCancelled(!area.getFlag(flag));

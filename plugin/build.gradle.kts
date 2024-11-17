@@ -60,6 +60,7 @@ paper {
     main = "net.thenextlvl.protect.ProtectPlugin"
     description = "Protect certain areas or entire worlds"
     apiVersion = "1.21"
+    foliaSupported = true
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     authors = listOf("NonSwag")
     website = "https://thenextlvl.net"
@@ -96,19 +97,14 @@ paper {
             children = listOf(
                 "protect.bypass.attack",
                 "protect.bypass.destroy",
-                "protect.bypass.empty-bottle",
                 "protect.bypass.enter",
                 "protect.bypass.entity-interact",
                 "protect.bypass.entity-shear",
-                "protect.bypass.fill-bottle",
                 "protect.bypass.interact",
                 "protect.bypass.leave",
                 "protect.bypass.physical-interact",
                 "protect.bypass.place",
-                "protect.bypass.trample",
-                "protect.bypass.wash-armor",
-                "protect.bypass.wash-banner",
-                "protect.bypass.wash-shulker"
+                "protect.bypass.trample"
             )
         }
 

@@ -68,51 +68,6 @@ public interface ProtectionService {
     boolean canDestroy(@Nullable Entity entity, Location location);
 
     /**
-     * Determines whether an entity can empty a bottle at a given location.
-     *
-     * @param entity   the entity that wants to empty a bottle
-     * @param location the location where the entity intends to empty the bottle
-     * @return true if the entity can empty the bottle at the location, false otherwise
-     */
-    boolean canEmptyBottle(@Nullable Entity entity, Location location);
-
-    /**
-     * Determines whether an entity can fill a bottle at a given location.
-     *
-     * @param entity   the entity that wants to fill a bottle
-     * @param location the location where the entity intends to fill the bottle
-     * @return true if the entity can fill the bottle at the location, false otherwise
-     */
-    boolean canFillBottle(@Nullable Entity entity, Location location);
-
-    /**
-     * Determines whether an entity can wash a banner at a given location.
-     *
-     * @param entity   the entity that wants to wash a banner
-     * @param location the location where the entity intends to wash the banner
-     * @return true if the entity can wash the banner at the location, false otherwise
-     */
-    boolean canWashBanner(@Nullable Entity entity, Location location);
-
-    /**
-     * Determines whether an entity can wash a shulker at a given location.
-     *
-     * @param entity   the entity that wants to wash a shulker
-     * @param location the location where the entity intends to wash the shulker
-     * @return true if the entity can wash the shulker at the location, false otherwise
-     */
-    boolean canWashShulker(@Nullable Entity entity, Location location);
-
-    /**
-     * Determines whether an entity can wash an armor at a given location.
-     *
-     * @param entity   the entity that wants to wash an armor
-     * @param location the location where the entity intends to wash the armor
-     * @return true if the entity can wash the armor at the location, false otherwise
-     */
-    boolean canWashArmor(@Nullable Entity entity, Location location);
-
-    /**
      * Determines whether an entity can interact with an object at a given location.
      *
      * @param entity   the entity that wants to interact
