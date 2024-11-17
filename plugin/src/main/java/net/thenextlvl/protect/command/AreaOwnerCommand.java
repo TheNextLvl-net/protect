@@ -23,10 +23,12 @@ class AreaOwnerCommand {
         return Commands.literal("owner")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.owner"))
                 .then(Commands.literal("set")
+                        .requires(stack -> stack.getSender().hasPermission("protect.command.area.owner.set"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .then(Commands.argument("player", ArgumentTypes.player())
                                         .executes(this::set))))
                 .then(Commands.literal("remove")
+                        .requires(stack -> stack.getSender().hasPermission("protect.command.area.owner.remove"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin,
                                         (commandContext, area) -> area.getOwner().isPresent()))
                                 .executes(this::remove)));
