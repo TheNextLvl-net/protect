@@ -201,7 +201,18 @@ public class ProtectPlugin extends JavaPlugin {
 
         public final Flag<Boolean> areaEnter = flagRegistry().register(ProtectPlugin.this, "enter", true);
         public final Flag<Boolean> areaLeave = flagRegistry().register(ProtectPlugin.this, "leave", true);
+        public final Flag<Boolean> damage = flagRegistry().register(ProtectPlugin.this, "damage", true);
+        public final Flag<Boolean> entityItemDrop = flagRegistry().register(ProtectPlugin.this, "entity_item_drop", true);
+        public final Flag<Boolean> entityItemPickup = flagRegistry().register(ProtectPlugin.this, "entity_item_pickup", true);
+        public final Flag<Boolean> gameEvents = flagRegistry().register(ProtectPlugin.this, "game_events", true);
+        public final Flag<Boolean> gravity = flagRegistry().register(ProtectPlugin.this, "gravity", true);
+        public final Flag<Boolean> hunger = flagRegistry().register(ProtectPlugin.this, "hunger", true);
+        public final Flag<Boolean> liquidFlow = flagRegistry().register(ProtectPlugin.this, "liquid_flow", true);
+        public final Flag<Boolean> naturalEntitySpawn = flagRegistry().register(ProtectPlugin.this, "natural_entity_spawn", true);
         public final Flag<Boolean> notifyFailedInteractions = flagRegistry().register(ProtectPlugin.this, "notify_failed_interactions", false);
+        public final Flag<Boolean> physics = flagRegistry().register(ProtectPlugin.this, "physics", true);
+        public final Flag<Boolean> redstone = flagRegistry().register(ProtectPlugin.this, "redstone", true);
+        public final Flag<Boolean> shoot = flagRegistry().register(ProtectPlugin.this, "shoot", true);
 
         public final ProtectionFlag<Boolean> armorStandManipulate = flagRegistry().register(ProtectPlugin.this, "armor_stand_manipulate", true, false);
         public final ProtectionFlag<Boolean> armorWashing = flagRegistry().register(ProtectPlugin.this, "armor_washing", true, false);
@@ -222,34 +233,23 @@ public class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> cauldronExtinguishEntity = flagRegistry().register(ProtectPlugin.this, "cauldron_extinguish_entity", true, false);
         public final ProtectionFlag<Boolean> cauldronLevelChangeUnknown = flagRegistry().register(ProtectPlugin.this, "cauldron_level_change_unknown", true, false);
         public final ProtectionFlag<Boolean> cropTrample = flagRegistry().register(ProtectPlugin.this, "crop_trample", true, false);
-        public final Flag<Boolean> damage = flagRegistry().register(ProtectPlugin.this, "damage", true);
         public final ProtectionFlag<Boolean> emptyBottle = flagRegistry().register(ProtectPlugin.this, "empty_bottle", true, false);
         public final ProtectionFlag<Boolean> emptyBucket = flagRegistry().register(ProtectPlugin.this, "empty_bucket", true, false);
         public final ProtectionFlag<Boolean> entityAttackEntity = flagRegistry().register(ProtectPlugin.this, "entity_attack_entity", true, false);
         public final ProtectionFlag<Boolean> entityAttackPlayer = flagRegistry().register(ProtectPlugin.this, "entity_attack_player", true, false);
         public final ProtectionFlag<Boolean> entityInteract = flagRegistry().register(ProtectPlugin.this, "entity_interact", true, false);
-        public final Flag<Boolean> entityItemDrop = flagRegistry().register(ProtectPlugin.this, "entity_item_drop", true);
-        public final Flag<Boolean> entityItemPickup = flagRegistry().register(ProtectPlugin.this, "entity_item_pickup", true);
         public final ProtectionFlag<Boolean> entityPlace = flagRegistry().register(ProtectPlugin.this, "entity_place", true, false);
         public final ProtectionFlag<Boolean> entityShear = flagRegistry().register(ProtectPlugin.this, "entity_shear", true, false);
         public final ProtectionFlag<Boolean> explosions = flagRegistry().register(ProtectPlugin.this, "explosions", true, false);
         public final ProtectionFlag<Boolean> fillBottle = flagRegistry().register(ProtectPlugin.this, "fill_bottle", true, false);
         public final ProtectionFlag<Boolean> fillBucket = flagRegistry().register(ProtectPlugin.this, "fill_bucket", true, false);
-        public final Flag<Boolean> gameEvents = flagRegistry().register(ProtectPlugin.this, "game_events", true);
-        public final Flag<Boolean> gravity = flagRegistry().register(ProtectPlugin.this, "gravity", true);
-        public final Flag<Boolean> hunger = flagRegistry().register(ProtectPlugin.this, "hunger", true);
         public final ProtectionFlag<Boolean> interact = flagRegistry().register(ProtectPlugin.this, "interact", true, false);
         public final ProtectionFlag<Boolean> leavesDecay = flagRegistry().register(ProtectPlugin.this, "leaves_decay", true, false);
-        public final Flag<Boolean> liquidFlow = flagRegistry().register(ProtectPlugin.this, "liquid_flow", true);
         public final ProtectionFlag<Boolean> naturalCauldronFill = flagRegistry().register(ProtectPlugin.this, "natural_cauldron_fill", true, false);
-        public final Flag<Boolean> naturalEntitySpawn = flagRegistry().register(ProtectPlugin.this, "natural_entity_spawn", true);
         public final ProtectionFlag<Boolean> physicalInteract = flagRegistry().register(ProtectPlugin.this, "physical_interact", true, false);
-        public final Flag<Boolean> physics = flagRegistry().register(ProtectPlugin.this, "physics", true);
         public final ProtectionFlag<Boolean> playerAttackEntity = flagRegistry().register(ProtectPlugin.this, "player_attack_entity", true, false);
         public final ProtectionFlag<Boolean> playerAttackPlayer = flagRegistry().register(ProtectPlugin.this, "player_attack_player", true, false);
         public final ProtectionFlag<Boolean> playerItemDrop = flagRegistry().register(ProtectPlugin.this, "player_item_drop", true, false);
-        public final Flag<Boolean> redstone = flagRegistry().register(ProtectPlugin.this, "redstone", true);
-        public final Flag<Boolean> shoot = flagRegistry().register(ProtectPlugin.this, "shoot", true);
         public final ProtectionFlag<Boolean> shulkerWashing = flagRegistry().register(ProtectPlugin.this, "shulker_washing", true, false);
     }
 }
