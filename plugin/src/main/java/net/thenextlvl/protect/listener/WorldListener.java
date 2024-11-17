@@ -53,13 +53,13 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        event.setCancelled(!plugin.protectionService().canBreak(event.getPlayer(), event.getBlock().getLocation()));
+        event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        event.setCancelled(!plugin.protectionService().canBuild(event.getPlayer(), event.getBlock().getLocation()));
+        event.setCancelled(!plugin.protectionService().canPlace(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
@@ -88,7 +88,7 @@ public class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
         event.setCancelled(!event.getReplacedBlockStates().stream().allMatch(blockState ->
-                plugin.protectionService().canBuild(event.getPlayer(), blockState.getLocation())));
+                plugin.protectionService().canPlace(event.getPlayer(), blockState.getLocation())));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
@@ -197,14 +197,14 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        event.setCancelled(!plugin.protectionService().canFillBucket(event.getPlayer(), event.getBlock().getLocation()));
-        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
+        event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        event.setCancelled(!plugin.protectionService().canEmptyBucket(event.getPlayer(), event.getBlock().getLocation()));
-        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
+        event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -223,29 +223,12 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerChangeCauldronLevel(CauldronLevelChangeEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        event.setCancelled(!switch (event.getReason()) {
-            case ARMOR_WASH -> plugin.protectionService().canWashArmor(player, event.getBlock().getLocation());
-            case BANNER_WASH -> plugin.protectionService().canWashBanner(player, event.getBlock().getLocation());
-            case BOTTLE_EMPTY -> plugin.protectionService().canEmptyBottle(player, event.getBlock().getLocation());
-            case BOTTLE_FILL -> plugin.protectionService().canFillBottle(player, event.getBlock().getLocation());
-            case BUCKET_EMPTY -> plugin.protectionService().canEmptyBucket(player, event.getBlock().getLocation());
-            case BUCKET_FILL -> plugin.protectionService().canFillBucket(player, event.getBlock().getLocation());
-            case SHULKER_WASH -> plugin.protectionService().canWashShulker(player, event.getBlock().getLocation());
-            default -> true;
-        });
-        plugin.failed(player, event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
         var flag = switch (event.getReason()) {
             case EXTINGUISH -> plugin.flags.cauldronExtinguishEntity;
             case EVAPORATE -> plugin.flags.cauldronEvaporation;
             case NATURAL_FILL -> plugin.flags.naturalCauldronFill;
-            case UNKNOWN -> plugin.flags.cauldronLevelChangeUnknown;
             default -> null;
         };
         if (flag != null) event.setCancelled(!area.getFlag(flag));
@@ -285,7 +268,7 @@ public class WorldListener implements Listener {
     private <T> void filter(Location source, List<T> list, Function<T, Location> function, @Nullable Player player, Flag<Boolean> flag) {
         filter(source, list, function, (area, target) -> {
             if (player == null) return area.canInteract(target) && target.getFlag(flag);
-            return plugin.protectionService().canBuild(player, target) && target.getFlag(flag);
+            return plugin.protectionService().canPlace(player, target) && target.getFlag(flag);
         });
     }
 

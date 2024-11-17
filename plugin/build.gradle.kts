@@ -60,6 +60,7 @@ paper {
     main = "net.thenextlvl.protect.ProtectPlugin"
     description = "Protect certain areas or entire worlds"
     apiVersion = "1.21"
+    foliaSupported = true
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     authors = listOf("NonSwag")
     website = "https://thenextlvl.net"
@@ -95,23 +96,15 @@ paper {
             description = "Allows players to bypass any restriction"
             children = listOf(
                 "protect.bypass.attack",
-                "protect.bypass.break",
-                "protect.bypass.build",
-                "protect.bypass.empty-bottle",
-                "protect.bypass.empty-bucket",
+                "protect.bypass.destroy",
                 "protect.bypass.enter",
                 "protect.bypass.entity-interact",
-                "protect.bypass.entity-place",
                 "protect.bypass.entity-shear",
-                "protect.bypass.fill-bottle",
-                "protect.bypass.fill-bucket",
                 "protect.bypass.interact",
                 "protect.bypass.leave",
                 "protect.bypass.physical-interact",
-                "protect.bypass.trample",
-                "protect.bypass.wash-armor",
-                "protect.bypass.wash-banner",
-                "protect.bypass.wash-shulker"
+                "protect.bypass.place",
+                "protect.bypass.trample"
             )
         }
 

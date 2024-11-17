@@ -18,87 +18,50 @@ public class CraftProtectionService implements ProtectionService {
     private final ProtectPlugin plugin;
 
     @Override
-    public boolean canEdit(Player player, Area area) {
-        return canBuild(player, area) && canBreak(player, area);
+    public boolean canEdit(@Nullable Entity entity, Area area) {
+        return canPlace(entity, area) && canDestroy(entity, area);
     }
 
     @Override
-    public boolean canBuild(Player player, Area area) {
-        return canPerformAction(player, area, plugin.flags.blockPlace, "protect.bypass.build");
+    public boolean canEdit(@Nullable Entity entity, Location location) {
+        return canEdit(entity, plugin.areaProvider().getArea(location));
     }
 
     @Override
-    public boolean canBuild(Player player, Location location) {
-        return canBuild(player, plugin.areaProvider().getArea(location));
+    public boolean canPlace(@Nullable Entity entity, Area area) {
+        return canPerformAction(entity, area, plugin.flags.place, "protect.bypass.place");
     }
 
     @Override
-    public boolean canBreak(Player player, Area area) {
-        return canPerformAction(player, area, plugin.flags.blockBreak, "protect.bypass.break");
+    public boolean canPlace(@Nullable Entity entity, Location location) {
+        return canPlace(entity, plugin.areaProvider().getArea(location));
     }
 
     @Override
-    public boolean canBreak(Player player, Location location) {
-        return canBreak(player, plugin.areaProvider().getArea(location));
+    public boolean canDestroy(@Nullable Entity entity, Area area) {
+        return canPerformAction(entity, area, plugin.flags.destroy, "protect.bypass.destroy");
     }
 
     @Override
-    public boolean canEmptyBucket(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.emptyBucket, "protect.bypass.empty-bucket");
+    public boolean canDestroy(@Nullable Entity entity, Location location) {
+        return canDestroy(entity, plugin.areaProvider().getArea(location));
     }
 
     @Override
-    public boolean canFillBucket(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.fillBucket, "protect.bypass.fill-bucket");
-    }
-
-    @Override
-    public boolean canEmptyBottle(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.emptyBottle, "protect.bypass.empty-bottle");
-    }
-
-    @Override
-    public boolean canFillBottle(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.fillBottle, "protect.bypass.fill-bottle");
-    }
-
-    @Override
-    public boolean canWashBanner(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.bannerWashing, "protect.bypass.wash-banner");
-    }
-
-    @Override
-    public boolean canWashShulker(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.shulkerWashing, "protect.bypass.wash-shulker");
-    }
-
-    @Override
-    public boolean canWashArmor(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
-                plugin.flags.armorWashing, "protect.bypass.wash-armor");
-    }
-
-    @Override
-    public boolean canInteract(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
+    public boolean canInteract(@Nullable Entity entity, Location location) {
+        return canPerformAction(entity, plugin.areaProvider().getArea(location),
                 plugin.flags.interact, "protect.bypass.interact");
     }
 
     @Override
-    public boolean canInteract(Player player, Entity entity) {
-        return canPerformAction(player, plugin.areaProvider().getArea(entity),
+    public boolean canInteract(@Nullable Entity entity, Entity interacted) {
+        return canPerformAction(entity, plugin.areaProvider().getArea(interacted),
                 plugin.flags.entityInteract, "protect.bypass.entity-interact");
     }
 
     @Override
-    public boolean canInteractPhysical(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
+    public boolean canInteractPhysical(@Nullable Entity entity, Location location) {
+        return canPerformAction(entity, plugin.areaProvider().getArea(location),
                 plugin.flags.physicalInteract, "protect.bypass.physical-interact");
     }
 
@@ -125,36 +88,25 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     @Override
-    public boolean canShear(Player player, Entity entity) {
-        return canPerformAction(player, plugin.areaProvider().getArea(entity),
+    public boolean canShear(@Nullable Entity entity, Entity sheared) {
+        return canPerformAction(entity, plugin.areaProvider().getArea(sheared),
                 plugin.flags.entityShear, "protect.bypass.entity-shear");
     }
 
     @Override
-    public boolean canTrample(Player player, Location location) {
-        return canPerformAction(player, plugin.areaProvider().getArea(location),
+    public boolean canTrample(@Nullable Entity entity, Location location) {
+        return canPerformAction(entity, plugin.areaProvider().getArea(location),
                 plugin.flags.cropTrample, "protect.bypass.trample");
     }
 
     @Override
-    public boolean canPlaceEntity(@Nullable Player player, Area area) {
-        return canPerformAction(player, area, plugin.flags.entityPlace, "protect.bypass.entity-place");
+    public boolean canEnter(@Nullable Entity entity, Area area) {
+        return canPerformAction(entity, area, plugin.flags.areaEnter, "protect.bypass.enter");
     }
 
     @Override
-    public boolean canPlaceEntity(@Nullable Player player, Entity entity) {
-        return canPerformAction(player, plugin.areaProvider().getArea(entity),
-                plugin.flags.entityPlace, "protect.bypass.entity-place");
-    }
-
-    @Override
-    public boolean canEnter(Player player, Area area) {
-        return canPerformAction(player, area, plugin.flags.areaEnter, "protect.bypass.enter");
-    }
-
-    @Override
-    public boolean canLeave(Player player, Area area) {
-        return canPerformAction(player, area, plugin.flags.areaLeave, "protect.bypass.leave");
+    public boolean canLeave(@Nullable Entity entity, Area area) {
+        return canPerformAction(entity, area, plugin.flags.areaLeave, "protect.bypass.leave");
     }
 
     @Override

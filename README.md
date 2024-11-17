@@ -80,10 +80,7 @@ BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Prote
 | Flag                                  | Description                                                                                            |
 |---------------------------------------|--------------------------------------------------------------------------------------------------------|
 | protect:armor_stand_manipulate        | allows or denies armor stand manipulations                                                             |
-| protect:armor_washing                 | allows or denies washing off the color of armor<br/>(in cauldrons)                                     |
-| protect:banner_washing                | allows or denies washing off the color of banners<br/>(in cauldrons)                                   |
 | protect:block_absorb                  | controls whether sponges can absorb water                                                              |
-| protect:block_break                   | allows or denies block breaking                                                                        |
 | protect:block_burning                 | controls whether blocks can burn                                                                       |
 | protect:block_drying                  | controls whether blocks can dry out<br/>(farmland)                                                     |
 | protect:block_fading                  | controls whether blocks can fade away<br/>(like ice or snow melting or corals fading)                  |
@@ -92,30 +89,24 @@ BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Prote
 | protect:block_growth                  | controls whether blocks can grow<br/>(like wheat or carrots)                                           |
 | protect:block_igniting                | controls whether blocks can ignite<br/>(like fire spreading or lightning striking)                     |
 | protect:block_moisturising            | controls whether blocks can moisturise<br/>(farmland)                                                  |
-| protect:block_place                   | allows or denies block placing                                                                         |
 | protect:block_spread                  | controls whether blocks can spread<br/>(like grass or fire)                                            |
 | protect:cauldron_evaporation          | controls whether cauldrons can evaporate from biome dryness                                            |
 | protect:cauldron_extinguish_entity    | controls whether cauldrons can extinguish flaming entities                                             |
-| protect:cauldron_level_change_unknown | controls whether cauldrons can change their level for unknown reasons                                  |
 | protect:crop_trample                  | allows or denies crop trampling                                                                        |
-| protect:empty_bottle                  | allows or denies emptying a bottle                                                                     |
-| protect:empty_bucket                  | allows or denies emptying a bucket                                                                     |
+| protect:destroy                       | allows or denies destroying objects (like blocks or entities)                                          |
 | protect:entity_attack_entity          | controls whether entities can attack other entities                                                    |
 | protect:entity_attack_player          | controls whether entities can attack players                                                           |
 | protect:entity_interact               | allows or denies interaction with entities<br/>(like trading with merchants)                           |
-| protect:entity_place                  | allows or denies placing entities<br/>(like boats or minecarts)                                        |
 | protect:entity_shear                  | allows or denies shearing entities<br/>(like sheep or snow golems)                                     |
 | protect:explosions                    | controls whether explosions can do block damage                                                        |
-| protect:fill_bottle                   | allows or denies filling a bottle                                                                      |
-| protect:fill_bucket                   | allows or denies filling a bucket                                                                      |
 | protect:interact                      | allows or denies block interactions<br/>(like opening chests or doors)                                 |
 | protect:leaves_decay                  | controls whether leaves can decay                                                                      |
-| protect:natural_cauldron_fill         | controls whether cauldrons can fill naturally<br/>(from rain)                                          |
+| protect:natural_cauldron_fill         | controls whether cauldrons can fill naturally<br/>(like from rain or dripstone)                        |
 | protect:physical_interact             | allows or denies physical interactions<br/>(like standing on pressure plates or drip leaves)           |
+| protect:place                         | allows or denies placing objects (like blocks or entities)                                             |
 | protect:player_attack_entity          | controls whether players can attack entities                                                           |
 | protect:player_attack_player          | controls whether players can attack players                                                            |
 | protect:player_item_drop              | controls whether players can drop items                                                                |
-| protect:shulker_washing               | allows or denies washing off color the color of shulker chests<br/>(in cauldrons)                      |
 
 ## Permission Packs
 
@@ -144,23 +135,15 @@ Allows players to manage all areas and bypass all restrictions
 Allows players to bypass any restriction
 
     protect.bypass.attack
-    protect.bypass.break
-    protect.bypass.build
-    protect.bypass.empty-bottle
-    protect.bypass.empty-bucket
+    protect.bypass.destroy
     protect.bypass.enter
     protect.bypass.entity-interact
-    protect.bypass.entity-place
     protect.bypass.entity-shear
-    protect.bypass.fill-bottle
-    protect.bypass.fill-bucket
     protect.bypass.interact
     protect.bypass.leave
     protect.bypass.physical-interact
+    protect.bypass.place
     protect.bypass.trample
-    protect.bypass.wash-armor
-    protect.bypass.wash-banner
-    protect.bypass.wash-shulker
 
 ### protect.command.area.flag
 
