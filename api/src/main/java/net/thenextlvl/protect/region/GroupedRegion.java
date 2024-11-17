@@ -25,44 +25,104 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a region composed of multiple named subregions.
+ * <p>
+ * The GroupedRegion class allows for managing a collection of regions identified by unique names.
+ */
 @NullMarked
 public class GroupedRegion extends AbstractRegion {
     private final Map<String, Region> regions = new HashMap<>();
 
+    /**
+     * Constructs a GroupedRegion with the specified regions.
+     *
+     * @param regions A map of regions where the key is the region name and the value is the Region instance.
+     *                The map mustn't be empty.
+     */
     public GroupedRegion(Map<String, Region> regions) {
         this(null, regions);
     }
 
+    /**
+     * Constructs a GroupedRegion with the specified world and regions.
+     *
+     * @param world   The world associated with this GroupedRegion. Can be null.
+     * @param regions A map of regions where the key is the region name and the value is the Region instance.
+     *                The map mustn't be empty.
+     */
     public GroupedRegion(@Nullable World world, Map<String, Region> regions) {
         super(world);
         Preconditions.checkArgument(!regions.isEmpty(), "empty region map is not supported");
         this.regions.putAll(regions);
     }
 
+    /**
+     * Retrieves an unmodifiable view of the region map contained within this GroupedRegion.
+     *
+     * @return an unmodifiable map of regions where the key is the region name and the value is the Region instance.
+     */
     public Map<String, Region> getRegions() {
         return Map.copyOf(regions);
     }
 
+    /**
+     * Retrieves a region by its name.
+     *
+     * @param name The name of the region to retrieve.
+     * @return The region associated with the specified name, or null if no such region exists.
+     */
     public @Nullable Region getRegion(String name) {
         return regions.get(name);
     }
 
+    /**
+     * Adds a region to the grouped regions map if it is not already present.
+     *
+     * @param name   The name of the region to add.
+     * @param region The region instance to be added.
+     * @return true if the region was added successfully, false if a region with the same name already exists.
+     */
     public boolean addRegion(String name, Region region) {
         return regions.putIfAbsent(name, region.clone()) == null;
     }
 
+    /**
+     * Checks if a region with the specified name exists in the grouped regions map.
+     *
+     * @param name The name of the region to check for existence.
+     * @return true if a region with the specified name exists, false otherwise.
+     */
     public boolean hasRegion(String name) {
         return regions.containsKey(name);
     }
 
+    /**
+     * Checks if the specified region exists in the grouped regions map.
+     *
+     * @param region The region to check for existence.
+     * @return true if the region exists in the map, false otherwise.
+     */
     public boolean hasRegion(Region region) {
         return regions.containsValue(region);
     }
 
+    /**
+     * Removes a region by its name from the grouped regions map if the map contains more than one region.
+     *
+     * @param name The name of the region to remove.
+     * @return true if the region was successfully removed, false otherwise.
+     */
     public boolean removeRegion(String name) {
         return regions.size() > 1 && regions.remove(name) != null;
     }
 
+    /**
+     * Sets or updates the specified region in the grouped regions map.
+     *
+     * @param name   The name of the region to set or update.
+     * @param region The Region instance to be associated with the specified name.
+     */
     public void setRegion(String name, Region region) {
         regions.put(name, region.clone());
     }
