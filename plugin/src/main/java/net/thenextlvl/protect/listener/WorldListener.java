@@ -59,7 +59,7 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        event.setCancelled(!plugin.protectionService().canBuild(event.getPlayer(), event.getBlock().getLocation()));
+        event.setCancelled(!plugin.protectionService().canPlace(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
@@ -88,7 +88,7 @@ public class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
         event.setCancelled(!event.getReplacedBlockStates().stream().allMatch(blockState ->
-                plugin.protectionService().canBuild(event.getPlayer(), blockState.getLocation())));
+                plugin.protectionService().canPlace(event.getPlayer(), blockState.getLocation())));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
@@ -285,7 +285,7 @@ public class WorldListener implements Listener {
     private <T> void filter(Location source, List<T> list, Function<T, Location> function, @Nullable Player player, Flag<Boolean> flag) {
         filter(source, list, function, (area, target) -> {
             if (player == null) return area.canInteract(target) && target.getFlag(flag);
-            return plugin.protectionService().canBuild(player, target) && target.getFlag(flag);
+            return plugin.protectionService().canPlace(player, target) && target.getFlag(flag);
         });
     }
 
