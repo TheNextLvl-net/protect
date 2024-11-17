@@ -144,19 +144,16 @@ Allows players to manage all areas and bypass all restrictions
 Allows players to bypass any restriction
 
     protect.bypass.attack
-    protect.bypass.break
-    protect.bypass.build
+    protect.bypass.destroy
     protect.bypass.empty-bottle
-    protect.bypass.empty-bucket
     protect.bypass.enter
     protect.bypass.entity-interact
-    protect.bypass.entity-place
     protect.bypass.entity-shear
     protect.bypass.fill-bottle
-    protect.bypass.fill-bucket
     protect.bypass.interact
     protect.bypass.leave
     protect.bypass.physical-interact
+    protect.bypass.place
     protect.bypass.trample
     protect.bypass.wash-armor
     protect.bypass.wash-banner

@@ -50,40 +50,22 @@ public interface ProtectionService {
     boolean canPlace(@Nullable Entity entity, Location location);
 
     /**
-     * Determines whether an entity can break a block in a given area.
+     * Determines whether an entity can destroy something in a given area.
      *
-     * @param entity the entity that wants to break the block
-     * @param area   the area of the block the entity intends to break
-     * @return true if the entity can break the block in this area, false otherwise
+     * @param entity the entity that wants to destroy something
+     * @param area   the area of the object the entity intends to destroy
+     * @return true if the entity can destroy the object in this area, false otherwise
      */
-    boolean canBreak(@Nullable Entity entity, Area area);
+    boolean canDestroy(@Nullable Entity entity, Area area);
 
     /**
-     * Determines whether an entity can break a block at a given location.
+     * Determines whether an entity can destroy something at a given location.
      *
-     * @param entity   the entity that wants to break the block
-     * @param location the location of the block the entity intends to break
-     * @return true if the entity can break the block at the location, false otherwise
+     * @param entity   the entity that wants to destroy something
+     * @param location the location of the object the entity intends to destroy
+     * @return true if the entity can destroy the object at the location, false otherwise
      */
-    boolean canBreak(@Nullable Entity entity, Location location);
-
-    /**
-     * Determines whether an entity can empty a bucket at a given location.
-     *
-     * @param entity   the entity that wants to empty a bucket
-     * @param location the location where the entity intends to empty the bucket
-     * @return true if the entity can empty the bucket at the location, false otherwise
-     */
-    boolean canEmptyBucket(@Nullable Entity entity, Location location);
-
-    /**
-     * Determines whether an entity can fill a bucket at a given location.
-     *
-     * @param entity   the entity that wants to fill a bucket
-     * @param location the location where the entity intends to fill the bucket
-     * @return true if the entity can fill the bucket at the location, false otherwise
-     */
-    boolean canFillBucket(@Nullable Entity entity, Location location);
+    boolean canDestroy(@Nullable Entity entity, Location location);
 
     /**
      * Determines whether an entity can empty a bottle at a given location.

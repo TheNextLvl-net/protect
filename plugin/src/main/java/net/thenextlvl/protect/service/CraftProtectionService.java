@@ -19,7 +19,7 @@ public class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canEdit(@Nullable Entity entity, Area area) {
-        return canPlace(entity, area) && canBreak(entity, area);
+        return canPlace(entity, area) && canDestroy(entity, area);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canPlace(@Nullable Entity entity, Area area) {
-        return canPerformAction(entity, area, plugin.flags.placement, "protect.bypass.build");
+        return canPerformAction(entity, area, plugin.flags.place, "protect.bypass.place");
     }
 
     @Override
@@ -38,25 +38,13 @@ public class CraftProtectionService implements ProtectionService {
     }
 
     @Override
-    public boolean canBreak(@Nullable Entity entity, Area area) {
-        return canPerformAction(entity, area, plugin.flags.blockBreak, "protect.bypass.break");
+    public boolean canDestroy(@Nullable Entity entity, Area area) {
+        return canPerformAction(entity, area, plugin.flags.destroy, "protect.bypass.destroy");
     }
 
     @Override
-    public boolean canBreak(@Nullable Entity entity, Location location) {
-        return canBreak(entity, plugin.areaProvider().getArea(location));
-    }
-
-    @Override
-    public boolean canEmptyBucket(@Nullable Entity entity, Location location) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(location),
-                plugin.flags.emptyBucket, "protect.bypass.empty-bucket");
-    }
-
-    @Override
-    public boolean canFillBucket(@Nullable Entity entity, Location location) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(location),
-                plugin.flags.fillBucket, "protect.bypass.fill-bucket");
+    public boolean canDestroy(@Nullable Entity entity, Location location) {
+        return canDestroy(entity, plugin.areaProvider().getArea(location));
     }
 
     @Override

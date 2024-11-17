@@ -53,7 +53,7 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        event.setCancelled(!plugin.protectionService().canBreak(event.getPlayer(), event.getBlock().getLocation()));
+        event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.break");
     }
 
@@ -197,14 +197,14 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        event.setCancelled(!plugin.protectionService().canFillBucket(event.getPlayer(), event.getBlock().getLocation()));
-        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
+        event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        event.setCancelled(!plugin.protectionService().canEmptyBucket(event.getPlayer(), event.getBlock().getLocation()));
-        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.interact");
+        event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -230,8 +230,8 @@ public class WorldListener implements Listener {
             case BANNER_WASH -> plugin.protectionService().canWashBanner(player, event.getBlock().getLocation());
             case BOTTLE_EMPTY -> plugin.protectionService().canEmptyBottle(player, event.getBlock().getLocation());
             case BOTTLE_FILL -> plugin.protectionService().canFillBottle(player, event.getBlock().getLocation());
-            case BUCKET_EMPTY -> plugin.protectionService().canEmptyBucket(player, event.getBlock().getLocation());
-            case BUCKET_FILL -> plugin.protectionService().canFillBucket(player, event.getBlock().getLocation());
+            case BUCKET_EMPTY -> plugin.protectionService().canPlace(player, event.getBlock().getLocation());
+            case BUCKET_FILL -> plugin.protectionService().canDestroy(player, event.getBlock().getLocation());
             case SHULKER_WASH -> plugin.protectionService().canWashShulker(player, event.getBlock().getLocation());
             default -> true;
         });
