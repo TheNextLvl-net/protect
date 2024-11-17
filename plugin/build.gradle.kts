@@ -59,7 +59,7 @@ paper {
     name = "Protect"
     main = "net.thenextlvl.protect.ProtectPlugin"
     description = "Protect certain areas or entire worlds"
-    apiVersion = "1.20"
+    apiVersion = "1.21"
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     authors = listOf("NonSwag")
     website = "https://thenextlvl.net"
