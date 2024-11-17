@@ -192,7 +192,7 @@ public class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockRedstone(BlockRedstoneEvent event) {
         var area = plugin.areaProvider().getArea(event.getBlock());
-        if (!area.getFlag(plugin.flags.redstone)) event.setNewCurrent(0);
+        if (!area.getFlag(plugin.flags.redstone)) event.setNewCurrent(event.getOldCurrent());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
