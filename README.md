@@ -19,7 +19,13 @@ BStats can be found [here](https://bstats.org/plugin/bukkit/TheNextLvl%2520Prote
 | `/area flag list [<provider>]`           | list all existing area flags                      | protect.command.area.flag.list        |
 | `/area flag reset <flag> [<area>]`       | reset specified flags of areas                    | protect.command.area.flag.reset       |
 | `/area flag set <flag> <value> [<area>]` | change specified flags of areas                   | protect.command.area.flag.set         |
-| `/area group`                            |                                                   |                                       |
+| `/area group add <group> [<name>]`       | add your current selection to a group             | protect.command.area.group.add        |
+| `/area group create <area>`              | create a group from an area                       | protect.command.area.group.create     |
+| `/area group delete <group>`             | delete a group (does not delete the area)         | protect.command.area.group.delete     |
+| `/area group list [<group>]`             | list all groups or regions of a group             | protect.command.area.group.list       |
+| `/area group redefine <group> <region>`  | redefine a region inside a group                  | protect.command.area.group.redefine   |
+| `/area group remove <group> <region>`    | remove a region from a group                      | protect.command.area.group.remove     |
+| `/area group select <group> <region>`    | select a region inside a group                    | worldedit.selection.pos               |
 | `/area info [<area>]`                    | query information about specific areas            | protect.command.area.info             |
 | `/area list`                             | list all areas                                    | protect.command.area.list             |
 | `/area members add <area> <players>`     | add members to an area                            | protect.command.area.members.add      |
