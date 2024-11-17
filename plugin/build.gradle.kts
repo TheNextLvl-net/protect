@@ -193,27 +193,27 @@ paper {
         register("protect.command.area.schematic") { children = listOf("protect.command.area") }
         register("protect.command.area.teleport") { children = listOf("protect.command.area") }
 
-        register("protect.command.area.flag.info") { children = listOf("protect.commands.area.flag") }
-        register("protect.command.area.flag.list") { children = listOf("protect.commands.area.flag") }
-        register("protect.command.area.flag.reset") { children = listOf("protect.commands.area.flag") }
-        register("protect.command.area.flag.set") { children = listOf("protect.commands.area.flag") }
+        register("protect.command.area.flag.info") { children = listOf("protect.command.area.flag") }
+        register("protect.command.area.flag.list") { children = listOf("protect.command.area.flag") }
+        register("protect.command.area.flag.reset") { children = listOf("protect.command.area.flag") }
+        register("protect.command.area.flag.set") { children = listOf("protect.command.area.flag") }
 
-        register("protect.command.area.group.add") { children = listOf("protect.commands.area.group") }
-        register("protect.command.area.group.create") { children = listOf("protect.commands.area.group") }
-        register("protect.command.area.group.delete") { children = listOf("protect.commands.area.group") }
-        register("protect.command.area.group.list") { children = listOf("protect.commands.area.group") }
-        register("protect.command.area.group.redefine") { children = listOf("protect.commands.area.group") }
-        register("protect.command.area.group.remove") { children = listOf("protect.commands.area.group") }
+        register("protect.command.area.group.add") { children = listOf("protect.command.area.group") }
+        register("protect.command.area.group.create") { children = listOf("protect.command.area.group") }
+        register("protect.command.area.group.delete") { children = listOf("protect.command.area.group") }
+        register("protect.command.area.group.list") { children = listOf("protect.command.area.group") }
+        register("protect.command.area.group.redefine") { children = listOf("protect.command.area.group") }
+        register("protect.command.area.group.remove") { children = listOf("protect.command.area.group") }
 
-        register("protect.command.area.members.add") { children = listOf("protect.commands.area.members") }
-        register("protect.command.area.members.list") { children = listOf("protect.commands.area.members") }
-        register("protect.command.area.members.remove") { children = listOf("protect.commands.area.members") }
+        register("protect.command.area.members.add") { children = listOf("protect.command.area.members") }
+        register("protect.command.area.members.list") { children = listOf("protect.command.area.members") }
+        register("protect.command.area.members.remove") { children = listOf("protect.command.area.members") }
 
-        register("protect.command.area.owner.remove") { children = listOf("protect.commands.area.owner") }
-        register("protect.command.area.owner.set") { children = listOf("protect.commands.area.owner") }
+        register("protect.command.area.owner.remove") { children = listOf("protect.command.area.owner") }
+        register("protect.command.area.owner.set") { children = listOf("protect.command.area.owner") }
 
-        register("protect.command.area.parent.remove") { children = listOf("protect.commands.area.parent") }
-        register("protect.command.area.parent.set") { children = listOf("protect.commands.area.parent") }
+        register("protect.command.area.parent.remove") { children = listOf("protect.command.area.parent") }
+        register("protect.command.area.parent.set") { children = listOf("protect.command.area.parent") }
 
         register("protect.command.area.schematic.delete") { children = listOf("protect.command.area.schematic") }
         register("protect.command.area.schematic.load") { children = listOf("protect.command.area.schematic") }
