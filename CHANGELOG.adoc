@@ -1,3 +1,10 @@
+== 3.0.1
+
+ Fix error when an entity un-targets another entity
+ Fix falling block handling in protected areas
+ Fix source-target filtering
+ Improve movement handling logic for players and entities
+
 == 3.0.0
 
 This version introduces a new area file format based on Mojang's NBT format (.dat files).
