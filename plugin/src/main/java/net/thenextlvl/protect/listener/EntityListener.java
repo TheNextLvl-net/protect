@@ -44,6 +44,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
+        if (event.getTarget() == null) return;
         var area = plugin.areaProvider().getArea(event.getEntity());
         var flag = event.getTarget() instanceof Player
                 ? plugin.flags.entityAttackPlayer
