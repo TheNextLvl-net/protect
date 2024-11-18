@@ -131,7 +131,11 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         if (!event.getEntityType().equals(EntityType.FALLING_BLOCK)) return;
-        if (plugin.protectionService().canPlace(event.getEntity(), event.getBlock().getLocation())) return;
+        if (event.getTo().isEmpty()) return;
+        var origin = event.getEntity().getOrigin();
+        var from = origin != null ? plugin.areaProvider().getArea(origin) : null;
+        var area = plugin.areaProvider().getArea(event.getEntity());
+        if (from != null && from.canInteract(area)) return;
         event.setCancelled(true);
     }
 
