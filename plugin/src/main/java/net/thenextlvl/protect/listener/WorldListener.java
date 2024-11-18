@@ -268,7 +268,7 @@ public class WorldListener implements Listener {
     private <T> void filter(Location source, List<T> list, Function<T, Location> function, @Nullable Player player, Flag<Boolean> flag) {
         filter(source, list, function, (area, target) -> {
             if (player == null) return area.canInteract(target) && target.getFlag(flag);
-            return plugin.protectionService().canPlace(player, target) && target.getFlag(flag);
+            return target.isPermitted(player.getUniqueId()) && target.getFlag(flag);
         });
     }
 
