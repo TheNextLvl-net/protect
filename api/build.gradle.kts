@@ -35,7 +35,7 @@ dependencies {
 
     implementation("net.thenextlvl.core:nbt:2.2.14")
     implementation("net.thenextlvl.core:files:2.0.0")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.50"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.51"))
 
     annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
