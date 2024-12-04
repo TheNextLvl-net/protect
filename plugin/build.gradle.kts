@@ -34,7 +34,7 @@ dependencies {
         exclude("org.jetbrains", "annotations")
     }
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT") {
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT") {
         exclude("org.jetbrains", "annotations")
     }
 
