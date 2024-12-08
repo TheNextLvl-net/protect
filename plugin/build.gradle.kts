@@ -231,7 +231,7 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
             jar.set(tasks.shadowJar.flatMap { it.archiveFile })
             platformVersions.set(versions)
             dependencies {
-                url("FastAsyncWorldEdit", "https://hangar.papermc.io/IntellectualSites/FastAsyncWorldEdit") {
+                hangar("FastAsyncWorldEdit") {
                     required.set(true)
                 }
             }
