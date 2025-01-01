@@ -39,7 +39,7 @@ dependencies {
     }
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.51"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
 
     implementation(project(":api"))
     implementation("net.thenextlvl.core:files:2.0.0")
