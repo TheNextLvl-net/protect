@@ -15,9 +15,9 @@
 
 == 3.0.0
 
-This version introduces a new area file format based on Mojang's NBT format (.dat files).
+ This version introduces a new area file format based on Mojang's NBT format (.dat files).
 
-You have to manually recreate all areas since there is no automatic file conversion from the old format to the new .dat format.
+ You have to manually recreate all areas since there is no automatic file conversion from the old format to the new .dat format.
 
 === Additions
 
