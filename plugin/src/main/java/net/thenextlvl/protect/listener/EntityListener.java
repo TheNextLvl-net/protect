@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 @RequiredArgsConstructor
 public class EntityListener implements Listener {
@@ -37,6 +38,12 @@ public class EntityListener implements Listener {
         var area = plugin.areaProvider().getArea(player);
         if (event.getCause().equals(EntityDamageEvent.DamageCause.KILL)) return;
         event.setCancelled(!area.getFlag(plugin.flags.damage));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onVehicleDestroy(VehicleDestroyEvent event) {
+        if (event.getAttacker() == null) return;
+        event.setCancelled(!plugin.protectionService().canAttack(event.getAttacker(), event.getVehicle()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
