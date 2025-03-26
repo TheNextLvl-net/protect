@@ -4,8 +4,8 @@ import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
     id("java")
-    id("io.github.goooler.shadow") version "8.1.8"
-    id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("com.gradleup.shadow") version "9.0.0-beta9"
+    id("de.eldoria.plugin-yml.paper") version "0.7.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
     id("com.modrinth.minotaur") version "2.+"
 }
