@@ -29,14 +29,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.36")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core") {
-        exclude("org.jetbrains", "annotations")
-    }
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT") {
-        exclude("org.jetbrains", "annotations")
-    }
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
@@ -46,8 +41,6 @@ dependencies {
     implementation("net.thenextlvl.core:i18n:1.0.20")
     implementation("net.thenextlvl.core:nbt:2.3.0")
     implementation("net.thenextlvl.core:paper:2.0.3")
-
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 tasks.shadowJar {
