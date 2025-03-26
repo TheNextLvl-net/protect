@@ -1,7 +1,6 @@
 package net.thenextlvl.protect.listener;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.event.player.PlayerAreaEnterEvent;
@@ -20,9 +19,12 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import java.util.stream.Stream;
 
-@RequiredArgsConstructor
 public class MovementListener implements Listener {
     private final ProtectPlugin plugin;
+
+    public MovementListener(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {

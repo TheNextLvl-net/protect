@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
@@ -13,10 +12,12 @@ import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-@RequiredArgsConstructor
-@SuppressWarnings("UnstableApiUsage")
 class AreaDeleteCommand {
     private final ProtectPlugin plugin;
+
+    AreaDeleteCommand(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("delete")

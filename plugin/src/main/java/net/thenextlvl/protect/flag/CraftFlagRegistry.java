@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.flag;
 
-import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.KeyPattern;
 import org.bukkit.plugin.Plugin;
@@ -11,9 +10,12 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Getter
 public class CraftFlagRegistry implements FlagRegistry {
     private final Map<Plugin, Set<Flag<?>>> registry = new HashMap<>();
+
+    public Map<Plugin, Set<Flag<?>>> getRegistry() {
+        return registry;
+    }
 
     @Override
     @NullMarked

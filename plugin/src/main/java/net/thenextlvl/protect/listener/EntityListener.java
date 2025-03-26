@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.listener;
 
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.entity.Entity;
@@ -28,9 +27,12 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
-@RequiredArgsConstructor
 public class EntityListener implements Listener {
     private final ProtectPlugin plugin;
+
+    public EntityListener(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {

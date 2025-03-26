@@ -3,8 +3,6 @@ package net.thenextlvl.protect.area;
 import com.google.common.reflect.TypeToken;
 import core.nbt.tag.CompoundTag;
 import core.nbt.tag.Tag;
-import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
@@ -27,21 +25,18 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-@Setter
 @NullMarked
 public abstract class CraftArea implements Area {
     protected final ProtectPlugin plugin;
 
-    @Getter
     private final String name;
-    @Getter
     private final World world;
 
     private final Set<UUID> members;
     private @Nullable UUID owner;
 
     private final Map<Flag<?>, @Nullable Object> flags;
-    private @Getter int priority;
+    private int priority;
 
     private final CompoundTag dataContainer = new CompoundTag();
 
@@ -117,10 +112,25 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    @Override
     public void setMembers(Set<UUID> members) {
         if (Objects.equals(members, this.members)) return;
         for (var member : this.members) if (!members.contains(member)) removeMember(member);
         for (var member : members) if (!this.members.contains(member)) addMember(member);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public World getWorld() {
+        return world;
     }
 
     @Override

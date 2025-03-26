@@ -5,7 +5,6 @@ import core.nbt.serialization.TagDeserializationContext;
 import core.nbt.serialization.TagSerializationContext;
 import core.nbt.tag.CompoundTag;
 import core.nbt.tag.Tag;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
@@ -16,9 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NullMarked
-@RequiredArgsConstructor
 public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> {
     private final ProtectPlugin plugin;
+
+    public FlagsAdapter(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     @SuppressWarnings("PatternValidation")

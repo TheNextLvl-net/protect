@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.service;
 
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
@@ -13,9 +12,12 @@ import org.jspecify.annotations.Nullable;
 import static org.bukkit.entity.EntityType.PLAYER;
 
 @NullMarked
-@RequiredArgsConstructor
 public class CraftProtectionService implements ProtectionService {
     private final ProtectPlugin plugin;
+
+    public CraftProtectionService(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean canEdit(@Nullable Entity entity, Area area) {

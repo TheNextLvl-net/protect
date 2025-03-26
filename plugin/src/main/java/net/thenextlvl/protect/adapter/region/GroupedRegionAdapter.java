@@ -10,8 +10,6 @@ import core.nbt.serialization.TagDeserializationContext;
 import core.nbt.serialization.TagSerializationContext;
 import core.nbt.tag.CompoundTag;
 import core.nbt.tag.Tag;
-import lombok.RequiredArgsConstructor;
-import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import net.thenextlvl.protect.region.GroupedRegion;
 import org.jspecify.annotations.NullMarked;
@@ -19,10 +17,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.HashMap;
 
 @NullMarked
-@RequiredArgsConstructor
 public class GroupedRegionAdapter implements TagAdapter<GroupedRegion> {
-    private final ProtectPlugin plugin;
-
     @Override
     public GroupedRegion deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
         var compound = tag.getAsCompound();

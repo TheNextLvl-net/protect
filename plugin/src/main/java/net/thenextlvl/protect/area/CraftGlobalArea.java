@@ -1,7 +1,6 @@
 package net.thenextlvl.protect.area;
 
 import core.nbt.tag.CompoundTag;
-import lombok.Getter;
 import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,7 +12,6 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 
-@Getter
 @NullMarked
 public class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
@@ -31,6 +29,21 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     @Override
     public Optional<Area> getParent() {
         return Optional.empty();
+    }
+
+    @Override
+    public File getDataFolder() {
+        return dataFolder;
+    }
+
+    @Override
+    public File getFile() {
+        return file;
+    }
+
+    @Override
+    public File getFallbackFile() {
+        return fallbackFile;
     }
 
     @Override

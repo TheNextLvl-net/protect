@@ -9,7 +9,6 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -21,10 +20,12 @@ import org.bukkit.OfflinePlayer;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-@RequiredArgsConstructor
-@SuppressWarnings("UnstableApiUsage")
 class AreaMembersCommand {
     private final ProtectPlugin plugin;
+
+    AreaMembersCommand(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("members")

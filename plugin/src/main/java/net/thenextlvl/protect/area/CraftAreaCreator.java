@@ -1,9 +1,6 @@
 package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.Region;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.AreaCreateEvent;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
@@ -16,16 +13,13 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.*;
 
-@Getter
-@Setter
 @NullMarked
-@Accessors(fluent = true, chain = true)
 public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     private final ProtectPlugin plugin;
 
     private String name;
     private World world;
-    private T region;
+    private final T region;
 
     private @Nullable String parent = null;
     private @Nullable UUID owner = null;
@@ -56,6 +50,16 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     }
 
     @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public @Nullable UUID owner() {
+        return owner;
+    }
+
+    @Override
     public AreaCreator<T> copy() {
         return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, priority);
     }
@@ -63,6 +67,17 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     @Override
     public <V extends Region> AreaCreator<V> region(V region) {
         return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, priority);
+    }
+
+    @Override
+    public AreaCreator<T> world(World world) {
+        this.world = world;
+        return this;
+    }
+
+    @Override
+    public Map<Flag<?>, @Nullable Object> flags() {
+        return flags;
     }
 
     @Override
@@ -78,6 +93,18 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     }
 
     @Override
+    public AreaCreator<T> name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @Override
+    public AreaCreator<T> owner(@Nullable UUID owner) {
+        this.owner = owner;
+        return this;
+    }
+
+    @Override
     public AreaCreator<T> parent(@Nullable String parent) {
         this.parent = parent;
         return this;
@@ -89,6 +116,12 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     }
 
     @Override
+    public AreaCreator<T> priority(int priority) {
+        this.priority = priority;
+        return this;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException, IOException {
         var area = plugin.areaService().getWrapper((Class<T>) region().getClass())
@@ -97,5 +130,30 @@ public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
         plugin.areaProvider().persist(area);
         new AreaCreateEvent(area).callEvent();
         return area;
+    }
+
+    @Override
+    public Set<UUID> members() {
+        return members;
+    }
+
+    @Override
+    public @Nullable String parent() {
+        return parent;
+    }
+
+    @Override
+    public T region() {
+        return region;
+    }
+
+    @Override
+    public World world() {
+        return world;
+    }
+
+    @Override
+    public int priority() {
+        return priority;
     }
 }

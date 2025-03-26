@@ -7,17 +7,18 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.bukkit.entity.Player;
 
-@RequiredArgsConstructor
-@SuppressWarnings("UnstableApiUsage")
 class AreaSelectCommand {
     private final ProtectPlugin plugin;
+
+    AreaSelectCommand(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("select")

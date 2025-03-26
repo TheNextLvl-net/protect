@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -14,10 +13,12 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
 
-@RequiredArgsConstructor
-@SuppressWarnings("UnstableApiUsage")
 class AreaInfoCommand {
     private final ProtectPlugin plugin;
+
+    AreaInfoCommand(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("info")

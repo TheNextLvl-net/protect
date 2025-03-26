@@ -2,7 +2,6 @@ package net.thenextlvl.protect.area;
 
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.regions.Region;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.AreaDeleteEvent;
@@ -12,16 +11,24 @@ import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @NullMarked
-@RequiredArgsConstructor
 public class CraftAreaService implements AreaService {
     private final Map<Class<? extends Area>, AreaAdapter<?>> adapters = new HashMap<>();
     private final Set<RegionWrapper<?>> wrappers = new HashSet<>();
     private final ProtectPlugin plugin;
+
+    public CraftAreaService(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     private record RegionWrapper<T extends Region>(
             Class<T> type,

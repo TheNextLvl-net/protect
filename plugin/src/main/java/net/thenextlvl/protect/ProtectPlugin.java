@@ -12,9 +12,6 @@ import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import core.i18n.file.ComponentBundle;
 import core.nbt.serialization.NBT;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -72,9 +69,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Getter
 @NullMarked
-@Accessors(fluent = true)
 public class ProtectPlugin extends JavaPlugin {
     private final Metrics metrics = new Metrics(this, 21712);
     private final File schematicFolder = new File(getDataFolder(), "schematics");
@@ -85,7 +80,6 @@ public class ProtectPlugin extends JavaPlugin {
     private final CraftAreaProvider areaProvider = new CraftAreaProvider(this);
     private final CraftAreaService areaService = new CraftAreaService(this);
 
-    @Getter(AccessLevel.NONE)
     public final Flags flags = new Flags();
 
     private final ComponentBundle bundle = new ComponentBundle(new File(getDataFolder(), "translations"),
@@ -101,7 +95,7 @@ public class ProtectPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         WEManager.weManager().addManager(new ProtectMaskManager(this));
-        versionChecker().checkVersion();
+        versionChecker.checkVersion();
         registerAdapters();
         registerServices();
         registerWrappers();
@@ -119,7 +113,7 @@ public class ProtectPlugin extends JavaPlugin {
             areaProvider().save(world);
             areaProvider().unload(world);
         });
-        metrics().shutdown();
+        metrics.shutdown();
     }
 
     private void registerServices() {
@@ -171,6 +165,30 @@ public class ProtectPlugin extends JavaPlugin {
         if (cancellable.isCancelled()) failed(audience, area, message);
     }
 
+    public File schematicFolder() {
+        return schematicFolder;
+    }
+
+    public CraftProtectionService protectionService() {
+        return protectionService;
+    }
+
+    public CraftFlagRegistry flagRegistry() {
+        return flagRegistry;
+    }
+
+    public CraftAreaProvider areaProvider() {
+        return areaProvider;
+    }
+
+    public CraftAreaService areaService() {
+        return areaService;
+    }
+
+    public ComponentBundle bundle() {
+        return bundle;
+    }
+
     public final NBT nbt = NBT.builder()
             .registerTypeAdapter(new TypeToken<Map<Flag<?>, @Nullable Object>>() {
             }.getType(), new FlagsAdapter(this))
@@ -183,7 +201,7 @@ public class ProtectPlugin extends JavaPlugin {
             .registerTypeHierarchyAdapter(CuboidRegion.class, new CuboidRegionAdapter())
             .registerTypeHierarchyAdapter(CylinderRegion.class, new CylinderRegionAdapter())
             .registerTypeHierarchyAdapter(EllipsoidRegion.class, new EllipsoidRegionAdapter())
-            .registerTypeHierarchyAdapter(GroupedRegion.class, new GroupedRegionAdapter(this))
+            .registerTypeHierarchyAdapter(GroupedRegion.class, new GroupedRegionAdapter())
             .registerTypeHierarchyAdapter(BlockVector3.class, new BlockVectorAdapter())
             .registerTypeHierarchyAdapter(Vector2.class, new Vector2Adapter())
             .registerTypeHierarchyAdapter(Vector3.class, new Vector3Adapter())

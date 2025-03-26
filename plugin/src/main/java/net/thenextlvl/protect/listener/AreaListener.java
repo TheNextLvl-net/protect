@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.listener;
 
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -22,9 +21,12 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-@RequiredArgsConstructor
 public class AreaListener implements Listener {
     private final ProtectPlugin plugin;
+
+    public AreaListener(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerAreaEnter(PlayerAreaEnterEvent event) {

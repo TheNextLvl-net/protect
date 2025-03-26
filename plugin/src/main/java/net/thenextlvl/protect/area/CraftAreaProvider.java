@@ -4,7 +4,6 @@ import core.io.IO;
 import core.nbt.NBTInputStream;
 import core.nbt.NBTOutputStream;
 import core.nbt.serialization.ParserException;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.AreaLoadEvent;
@@ -35,12 +34,15 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
 
 @NullMarked
-@RequiredArgsConstructor
 public class CraftAreaProvider implements AreaProvider {
     private static final String ISSUES = "https://github.com/TheNextLvl-net/protect/issues/new";
 
     private final Map<World, Set<Area>> areas = new HashMap<>();
     private final ProtectPlugin plugin;
+
+    public CraftAreaProvider(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public Stream<Area> getAreas() {

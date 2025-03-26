@@ -1,22 +1,29 @@
 package net.thenextlvl.protect.listener;
 
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Powerable;
-import org.bukkit.block.data.type.*;
+import org.bukkit.block.data.type.Chest;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Fence;
+import org.bukkit.block.data.type.GlassPane;
+import org.bukkit.block.data.type.Stairs;
+import org.bukkit.block.data.type.Wall;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.jspecify.annotations.Nullable;
 
-@RequiredArgsConstructor
 public class PhysicsListener implements Listener {
     private final ProtectPlugin plugin;
+
+    public PhysicsListener(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPhysics(BlockPhysicsEvent event) {

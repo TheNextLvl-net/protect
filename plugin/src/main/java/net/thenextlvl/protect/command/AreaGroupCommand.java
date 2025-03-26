@@ -11,7 +11,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -26,10 +25,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
 
-@RequiredArgsConstructor
-@SuppressWarnings("UnstableApiUsage")
 public class AreaGroupCommand {
     private final ProtectPlugin plugin;
+
+    AreaGroupCommand(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("group")

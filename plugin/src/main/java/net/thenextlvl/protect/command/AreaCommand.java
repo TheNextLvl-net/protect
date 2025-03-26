@@ -2,13 +2,14 @@ package net.thenextlvl.protect.command;
 
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.protect.ProtectPlugin;
 
-@SuppressWarnings("UnstableApiUsage")
-@RequiredArgsConstructor
 public class AreaCommand {
     private final ProtectPlugin plugin;
+
+    public AreaCommand(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     public void register() {
         plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->

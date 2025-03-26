@@ -14,7 +14,6 @@ import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import core.nbt.tag.CompoundTag;
 import core.nbt.tag.Tag;
-import lombok.Getter;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.inheritance.AreaParentChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
@@ -37,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-@Getter
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
@@ -107,6 +105,21 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
         return parent().flatMap(plugin.areaProvider()::getArea);
     }
 
+    @Override
+    public File getDataFolder() {
+        return dataFolder;
+    }
+
+    @Override
+    public File getFile() {
+        return file;
+    }
+
+    @Override
+    public File getFallbackFile() {
+        return fallbackFile;
+    }
+
     public Optional<String> parent() {
         return Optional.ofNullable(parent);
     }
@@ -118,6 +131,11 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
                 getRegion().getMinimumPoint(),
                 getRegion().getMaximumPoint()
         );
+    }
+
+    @Override
+    public T getRegion() {
+        return region;
     }
 
     @Override
@@ -163,6 +181,11 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     public boolean contains(Location location) {
         return getWorld().equals(location.getWorld())
                && getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    }
+
+    @Override
+    public File getSchematic() {
+        return schematic;
     }
 
     @Override

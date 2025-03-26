@@ -7,7 +7,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.sk89q.worldedit.WorldEditException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
@@ -15,10 +14,12 @@ import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 
 import java.io.IOException;
 
-@RequiredArgsConstructor
-@SuppressWarnings("UnstableApiUsage")
 class AreaSchematicCommand {
     private final ProtectPlugin plugin;
+
+    AreaSchematicCommand(ProtectPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("schematic")

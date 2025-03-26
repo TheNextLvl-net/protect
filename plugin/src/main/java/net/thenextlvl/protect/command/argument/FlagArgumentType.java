@@ -8,7 +8,6 @@ import net.thenextlvl.protect.flag.Flag;
 
 import java.util.function.Predicate;
 
-@SuppressWarnings("UnstableApiUsage")
 public class FlagArgumentType extends WrappedArgumentType<Key, Flag<?>> {
     public FlagArgumentType(ProtectPlugin plugin) {
         this(plugin, flag -> true);
