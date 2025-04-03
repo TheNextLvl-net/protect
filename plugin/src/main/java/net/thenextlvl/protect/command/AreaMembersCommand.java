@@ -21,30 +21,24 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 class AreaMembersCommand {
-    private final ProtectPlugin plugin;
-
-    AreaMembersCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("members")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.members"))
                 .then(Commands.literal("add")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.add"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .then(Commands.argument("players", ArgumentTypes.players())
-                                        .executes(this::add))))
+                                        .executes(context -> add(context, plugin)))))
                 .then(Commands.literal("list")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.list"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .executes(context -> {
                                     var area = context.getArgument("area", Area.class);
-                                    return list(context, area);
+                                    return list(context, area, plugin);
                                 }))
                         .executes(context -> {
                             var area = plugin.areaProvider().getArea(context.getSource().getLocation());
-                            return list(context, area);
+                            return list(context, area, plugin);
                         }))
                 .then(Commands.literal("remove")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.remove"))
@@ -59,10 +53,10 @@ class AreaMembersCommand {
                                                             .filter(Objects::nonNull)
                                                             .forEach(builder::suggest))
                                                     .thenApply(unused -> builder.build());
-                                        }).executes(this::remove))));
+                                        }).executes(context -> remove(context, plugin)))));
     }
 
-    private int list(CommandContext<CommandSourceStack> context, Area area) {
+    private static int list(CommandContext<CommandSourceStack> context, Area area, ProtectPlugin plugin) {
         plugin.getServer().getAsyncScheduler().runNow(plugin, task -> {
             var sender = context.getSource().getSender();
             var members = area.getMembers().stream()
@@ -80,7 +74,7 @@ class AreaMembersCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int add(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int add(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) throws CommandSyntaxException {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", Area.class);
         var resolver = context.getArgument("players", PlayerSelectorArgumentResolver.class);
@@ -95,7 +89,7 @@ class AreaMembersCommand {
         return added.size();
     }
 
-    private int remove(CommandContext<CommandSourceStack> context) {
+    private static int remove(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         plugin.getServer().getAsyncScheduler().runNow(plugin, task -> {
             var sender = context.getSource().getSender();
             var area = context.getArgument("area", Area.class);

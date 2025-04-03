@@ -12,6 +12,7 @@ import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import core.i18n.file.ComponentBundle;
 import core.nbt.serialization.NBT;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -35,7 +36,16 @@ import net.thenextlvl.protect.adapter.region.GroupedRegionAdapter;
 import net.thenextlvl.protect.adapter.vector.BlockVectorAdapter;
 import net.thenextlvl.protect.adapter.vector.Vector2Adapter;
 import net.thenextlvl.protect.adapter.vector.Vector3Adapter;
-import net.thenextlvl.protect.area.*;
+import net.thenextlvl.protect.area.Area;
+import net.thenextlvl.protect.area.AreaProvider;
+import net.thenextlvl.protect.area.AreaService;
+import net.thenextlvl.protect.area.CraftAreaProvider;
+import net.thenextlvl.protect.area.CraftAreaService;
+import net.thenextlvl.protect.area.CraftCuboidArea;
+import net.thenextlvl.protect.area.CraftCylinderArea;
+import net.thenextlvl.protect.area.CraftEllipsoidArea;
+import net.thenextlvl.protect.area.CraftGlobalArea;
+import net.thenextlvl.protect.area.CraftGroupedArea;
 import net.thenextlvl.protect.command.AreaCommand;
 import net.thenextlvl.protect.flag.CraftFlagRegistry;
 import net.thenextlvl.protect.flag.Flag;
@@ -147,7 +157,8 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        new AreaCommand(this).register();
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->
+                event.registrar().register(AreaCommand.create(this))));
     }
 
     private final Cache<Audience, String> cooldown = CacheBuilder.newBuilder()

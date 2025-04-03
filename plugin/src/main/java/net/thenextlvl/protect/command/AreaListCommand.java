@@ -11,19 +11,13 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.GlobalArea;
 
 class AreaListCommand {
-    private final ProtectPlugin plugin;
-
-    AreaListCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("list")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.list"))
-                .executes(this::list);
+                .executes(context -> list(context, plugin));
     }
 
-    private int list(CommandContext<CommandSourceStack> context) {
+    private static int list(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var globalAreas = plugin.areaProvider().getAreas()
                 .filter(area -> area instanceof GlobalArea)

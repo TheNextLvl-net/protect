@@ -15,44 +15,38 @@ import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import java.io.IOException;
 
 class AreaSchematicCommand {
-    private final ProtectPlugin plugin;
-
-    AreaSchematicCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("schematic")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.schematic"))
-                .then(delete())
-                .then(load())
-                .then(save());
+                .then(delete(plugin))
+                .then(load(plugin))
+                .then(save(plugin));
     }
 
-    private ArgumentBuilder<CommandSourceStack, ?> delete() {
+    private static ArgumentBuilder<CommandSourceStack, ?> delete(ProtectPlugin plugin) {
         return Commands.literal("delete")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.schematic.delete"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin,
                                 area -> area.getSchematic().exists()))
-                        .executes(this::delete));
+                        .executes(context -> delete(context, plugin)));
     }
 
-    private ArgumentBuilder<CommandSourceStack, ?> load() {
+    private static ArgumentBuilder<CommandSourceStack, ?> load(ProtectPlugin plugin) {
         return Commands.literal("load")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.schematic.load"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin,
                                 area -> area.getSchematic().exists()))
-                        .executes(this::load));
+                        .executes(context -> load(context, plugin)));
     }
 
-    private ArgumentBuilder<CommandSourceStack, ?> save() {
+    private static ArgumentBuilder<CommandSourceStack, ?> save(ProtectPlugin plugin) {
         return Commands.literal("save")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.schematic.save"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
-                        .executes(this::save));
+                        .executes(context -> save(context, plugin)));
     }
 
-    private int delete(CommandContext<CommandSourceStack> context) {
+    private static int delete(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         var message = area.deleteSchematic() ? "area.schematic.delete.success" : "area.schematic.delete.failed";
@@ -60,7 +54,7 @@ class AreaSchematicCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int load(CommandContext<CommandSourceStack> context) {
+    private static int load(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         if (area.isTooBig()) plugin.bundle().sendMessage(sender, "area.warning.size");
@@ -75,7 +69,7 @@ class AreaSchematicCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int save(CommandContext<CommandSourceStack> context) {
+    private static int save(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         if (area.isTooBig()) plugin.bundle().sendMessage(sender, "area.warning.size");

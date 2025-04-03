@@ -14,28 +14,22 @@ import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 
 class AreaParentCommand {
-    private final ProtectPlugin plugin;
-
-    AreaParentCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("parent")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.parent"))
                 .then(Commands.literal("set")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.parent.set"))
                         .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
                                 .then(Commands.argument("parent", new AreaArgumentType(plugin))
-                                        .executes(this::set))))
+                                        .executes(context -> set(context, plugin)))))
                 .then(Commands.literal("remove")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.parent.remove"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin,
                                         (commandContext, area) -> area.getParent().isPresent()))
-                                .executes(this::remove)));
+                                .executes(context -> remove(context, plugin))));
     }
 
-    private int set(CommandContext<CommandSourceStack> context) {
+    private static int set(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         try {
             var sender = context.getSource().getSender();
             var area = context.getArgument("area", RegionizedArea.class);
@@ -53,7 +47,7 @@ class AreaParentCommand {
         }
     }
 
-    private int remove(CommandContext<CommandSourceStack> context) {
+    private static int remove(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         var success = area.setParent(null);

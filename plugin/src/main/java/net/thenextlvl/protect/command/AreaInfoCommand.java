@@ -14,28 +14,22 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
 
 class AreaInfoCommand {
-    private final ProtectPlugin plugin;
-
-    AreaInfoCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("info")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.info"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
                         .executes(context -> {
                             var area = context.getArgument("area", Area.class);
-                            return info(context, area);
+                            return info(context, area, plugin);
                         }))
                 .executes(context -> {
                     var location = context.getSource().getLocation();
                     var area = plugin.areaProvider().getArea(location);
-                    return info(context, area);
+                    return info(context, area, plugin);
                 });
     }
 
-    private int info(CommandContext<CommandSourceStack> context, Area area) {
+    private static int info(CommandContext<CommandSourceStack> context, Area area, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
         var flags = area.getFlags().entrySet().stream()
