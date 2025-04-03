@@ -24,11 +24,13 @@ version = project(":api").version
 repositories {
     mavenCentral()
     maven("https://maven.enginehub.org/repo/")
+    maven("https://repo.nexomc.com/releases")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.thenextlvl.net/releases")
 }
 
 dependencies {
+    compileOnly("com.nexomc:nexo:1.1.0")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
@@ -61,6 +63,10 @@ paper {
         register("FastAsyncWorldEdit") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
+        }
+        register("Nexo") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            required = false
         }
     }
     permissions {
