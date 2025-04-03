@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.AreaService;
 import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.event.Cancellable;
@@ -13,8 +11,6 @@ import org.jspecify.annotations.NullMarked;
  * <p>
  * Note: Calling {@link AreaService#delete(RegionizedArea)} within this event can lead to an infinite loop.
  */
-@Getter
-@Setter
 @NullMarked
 public class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
     private boolean cancelled;
@@ -26,5 +22,15 @@ public class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Can
      */
     public AreaDeleteEvent(RegionizedArea<?> area) {
         super(area);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 }

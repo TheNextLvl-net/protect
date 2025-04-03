@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event.member;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
@@ -17,8 +15,6 @@ import java.util.UUID;
  * <p>
  * Note: Calling {@link RegionizedArea#setOwner(UUID)} within this event can lead to an infinite loop.
  */
-@Getter
-@Setter
 @NullMarked
 public class AreaOwnerChangeEvent extends AreaEvent<Area> implements Cancellable {
     private @Nullable UUID owner;
@@ -33,5 +29,23 @@ public class AreaOwnerChangeEvent extends AreaEvent<Area> implements Cancellable
     public AreaOwnerChangeEvent(Area area, @Nullable UUID owner) {
         super(area);
         this.owner = owner;
+    }
+
+    public @Nullable UUID getOwner() {
+        return owner;
+    }
+
+    public void setOwner(@Nullable UUID owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 }

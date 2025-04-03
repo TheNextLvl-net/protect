@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event.inheritance;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
@@ -15,8 +13,6 @@ import org.jspecify.annotations.Nullable;
  * <p>
  * Note: Calling {@link RegionizedArea#setParent(Area)} within this event can lead to an infinite loop.
  */
-@Getter
-@Setter
 @NullMarked
 public class AreaParentChangeEvent extends AreaEvent<Area> implements Cancellable {
     private boolean cancelled;
@@ -32,5 +28,23 @@ public class AreaParentChangeEvent extends AreaEvent<Area> implements Cancellabl
     public AreaParentChangeEvent(Area area, @Nullable Area parent) {
         super(area);
         this.parent = parent;
+    }
+
+    public @Nullable Area getParent() {
+        return parent;
+    }
+
+    public void setParent(@Nullable Area parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 }

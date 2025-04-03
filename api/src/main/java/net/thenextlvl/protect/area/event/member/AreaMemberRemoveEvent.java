@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event.member;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.area.event.AreaEvent;
@@ -17,8 +15,6 @@ import java.util.UUID;
  * <p>
  * Note: Calling {@link RegionizedArea#removeMember(UUID)} within this event can lead to an infinite loop.
  */
-@Getter
-@Setter
 @NullMarked
 public class AreaMemberRemoveEvent extends AreaEvent<Area> implements Cancellable {
     private UUID member;
@@ -33,5 +29,23 @@ public class AreaMemberRemoveEvent extends AreaEvent<Area> implements Cancellabl
     public AreaMemberRemoveEvent(Area area, UUID member) {
         super(area);
         this.member = member;
+    }
+
+    public UUID getMember() {
+        return member;
+    }
+
+    public void setMember(UUID member) {
+        this.member = member;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 }

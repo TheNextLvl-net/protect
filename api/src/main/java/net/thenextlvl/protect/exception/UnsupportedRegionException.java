@@ -1,9 +1,7 @@
 package net.thenextlvl.protect.exception;
 
-import lombok.Getter;
 import org.jspecify.annotations.NullMarked;
 
-@Getter
 @NullMarked
 public class UnsupportedRegionException extends IllegalArgumentException {
     private final Class<?> type;
@@ -25,5 +23,9 @@ public class UnsupportedRegionException extends IllegalArgumentException {
     public UnsupportedRegionException(Class<?> type, Throwable cause) {
         super(cause);
         this.type = type;
+    }
+
+    public Class<?> getType() {
+        return type;
     }
 }

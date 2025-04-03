@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area.event.player;
 
-import lombok.Getter;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -10,10 +9,9 @@ import org.jspecify.annotations.NullMarked;
 /**
  * This class represents an abstract base class for events related to areas and players.
  */
-@Getter
 @NullMarked
 public abstract class PlayerAreaEvent extends PlayerEvent {
-    private static final @Getter HandlerList handlerList = new HandlerList();
+    private static final HandlerList handlerList = new HandlerList();
     private final Area area;
 
     /**
@@ -27,8 +25,16 @@ public abstract class PlayerAreaEvent extends PlayerEvent {
         this.area = area;
     }
 
+    public Area getArea() {
+        return area;
+    }
+
     @Override
     public HandlerList getHandlers() {
-        return getHandlerList();
+        return handlerList;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 }

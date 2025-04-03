@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area.event;
 
-import lombok.Getter;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -11,10 +10,9 @@ import org.jspecify.annotations.NullMarked;
  *
  * @param <T> The area type of this event
  */
-@Getter
 @NullMarked
 public abstract class AreaEvent<T extends Area> extends Event {
-    private static final @Getter HandlerList handlerList = new HandlerList();
+    private static final HandlerList handlerList = new HandlerList();
     private final T area;
 
     protected AreaEvent(T area) {
@@ -26,8 +24,16 @@ public abstract class AreaEvent<T extends Area> extends Event {
         this.area = area;
     }
 
+    public T getArea() {
+        return area;
+    }
+
     @Override
     public HandlerList getHandlers() {
-        return getHandlerList();
+        return handlerList;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 }
