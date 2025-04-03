@@ -14,21 +14,15 @@ import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.bukkit.entity.Player;
 
 class AreaSelectCommand {
-    private final ProtectPlugin plugin;
-
-    AreaSelectCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("select")
                 .requires(stack -> stack.getSender() instanceof Player player
                                    && player.hasPermission("worldedit.selection.pos"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
-                        .executes(this::select));
+                        .executes(context -> select(context, plugin)));
     }
 
-    private int select(CommandContext<CommandSourceStack> context) {
+    private static int select(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         var session = WorldEditPlugin.getInstance().getSession(player);

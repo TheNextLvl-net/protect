@@ -15,22 +15,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 class AreaRedefineCommand {
-    private final ProtectPlugin plugin;
-
-    AreaRedefineCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("redefine")
                 .requires(stack -> stack.getSender() instanceof Player player
                                    && player.hasPermission("protect.command.area.redefine"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
-                        .executes(this::redefine));
+                        .executes(context -> redefine(context, plugin)));
     }
 
     @SuppressWarnings("unchecked")
-    private int redefine(CommandContext<CommandSourceStack> context) {
+    private static int redefine(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         if (area.getSchematic().exists()) {

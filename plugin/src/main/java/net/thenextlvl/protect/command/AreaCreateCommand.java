@@ -15,13 +15,7 @@ import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import org.bukkit.entity.Player;
 
 class AreaCreateCommand {
-    private final ProtectPlugin plugin;
-
-    AreaCreateCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("create")
                 .requires(stack -> stack.getSender() instanceof Player player
                                    && player.hasPermission("protect.command.area.create"))
@@ -29,12 +23,12 @@ class AreaCreateCommand {
                         .then(Commands.argument("priority", IntegerArgumentType.integer())
                                 .executes(context -> {
                                     var priority = context.getArgument("priority", int.class);
-                                    return execute(context, priority);
+                                    return execute(context, priority, plugin);
                                 }))
-                        .executes(context -> execute(context, 0)));
+                        .executes(context -> execute(context, 0, plugin)));
     }
 
-    private int execute(CommandContext<CommandSourceStack> context, int priority) {
+    private static int execute(CommandContext<CommandSourceStack> context, int priority, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var name = context.getArgument("name", String.class);
 

@@ -26,92 +26,86 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Map;
 
 public class AreaGroupCommand {
-    private final ProtectPlugin plugin;
-
-    AreaGroupCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("group")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group"))
-                .then(add())
-                .then(delete())
-                .then(groupCreate())
-                .then(list())
-                .then(redefine())
-                .then(remove())
-                .then(select());
+                .then(add(plugin))
+                .then(delete(plugin))
+                .then(groupCreate(plugin))
+                .then(list(plugin))
+                .then(redefine(plugin))
+                .then(remove(plugin))
+                .then(select(plugin));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> add() {
+    private static LiteralArgumentBuilder<CommandSourceStack> add(ProtectPlugin plugin) {
         return Commands.literal("add")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.add"))
                 .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
                         .then(Commands.argument("name", StringArgumentType.string())
                                 .executes(context -> {
                                     var name = context.getArgument("name", String.class);
-                                    return add(context, name);
+                                    return add(context, name, plugin);
                                 }))
                         .executes(context -> {
                             var group = context.getArgument("group", GroupedArea.class);
                             var name = "region-" + (group.getRegion().getRegions().size() + 1);
-                            return add(context, name);
+                            return add(context, name, plugin);
                         }));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> delete() {
+    private static LiteralArgumentBuilder<CommandSourceStack> delete(ProtectPlugin plugin) {
         return Commands.literal("delete")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.delete"))
                 .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
-                        .executes(this::delete));
+                        .executes(context -> delete(context, plugin)));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> groupCreate() {
+    private static LiteralArgumentBuilder<CommandSourceStack> groupCreate(ProtectPlugin plugin) {
         return Commands.literal("create")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.create"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin,
                                 regionizedArea -> !(regionizedArea instanceof GroupedArea)))
-                        .executes(this::create));
+                        .executes(context -> create(context, plugin)));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> list() {
+    private static LiteralArgumentBuilder<CommandSourceStack> list(ProtectPlugin plugin) {
         return Commands.literal("list")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.list"))
                 .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
-                        .executes(this::list))
-                .executes(this::listAll);
+                        .executes(context -> list(context, plugin)))
+                .executes(context -> listAll(context, plugin));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> redefine() {
+    private static LiteralArgumentBuilder<CommandSourceStack> redefine(ProtectPlugin plugin) {
         return Commands.literal("redefine")
                 .requires(stack -> stack.getSender() instanceof Player player
                                    && player.hasPermission("protect.command.area.group.redefine"))
                 .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
                         .then(Commands.argument("region", StringArgumentType.string())
-                                .suggests(suggestGroups())
-                                .executes(this::redefine)));
+                                .suggests(suggestGroups(plugin))
+                                .executes(context -> redefine(context, plugin))));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> remove() {
+    private static LiteralArgumentBuilder<CommandSourceStack> remove(ProtectPlugin plugin) {
         return Commands.literal("remove")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group.remove"))
                 .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
                         .then(Commands.argument("region", StringArgumentType.string())
-                                .suggests(suggestGroups())
-                                .executes(this::remove)));
+                                .suggests(suggestGroups(plugin))
+                                .executes(context -> remove(context, plugin))));
     }
 
-    private LiteralArgumentBuilder<CommandSourceStack> select() {
+    private static LiteralArgumentBuilder<CommandSourceStack> select(ProtectPlugin plugin) {
         return Commands.literal("select")
                 .requires(stack -> stack.getSender().hasPermission("worldedit.selection.pos"))
                 .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
                         .then(Commands.argument("region", StringArgumentType.string())
-                                .suggests(suggestGroups())
-                                .executes(this::select)));
+                                .suggests(suggestGroups(plugin))
+                                .executes(context -> select(context, plugin))));
     }
 
-    private static SuggestionProvider<CommandSourceStack> suggestGroups() {
+    private static SuggestionProvider<CommandSourceStack> suggestGroups(ProtectPlugin plugin) {
         return (context, builder) -> {
             var group = context.getChild().getArgument("group", GroupedArea.class);
             group.getRegion().getRegions().keySet().forEach(builder::suggest);
@@ -119,7 +113,7 @@ public class AreaGroupCommand {
         };
     }
 
-    private int remove(CommandContext<CommandSourceStack> context) {
+    private static int remove(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var group = context.getArgument("group", GroupedArea.class);
         var region = context.getArgument("region", String.class);
@@ -131,7 +125,7 @@ public class AreaGroupCommand {
         return success ? Command.SINGLE_SUCCESS : 0;
     }
 
-    private int list(CommandContext<CommandSourceStack> context) {
+    private static int list(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var group = context.getArgument("group", GroupedArea.class);
         var regions = group.getRegion().getRegions().keySet();
@@ -142,7 +136,7 @@ public class AreaGroupCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int listAll(CommandContext<CommandSourceStack> context) {
+    private static int listAll(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var groups = plugin.areaProvider().getAreas()
                 .filter(area -> area instanceof GroupedArea)
@@ -154,7 +148,7 @@ public class AreaGroupCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int redefine(CommandContext<CommandSourceStack> context) {
+    private static int redefine(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var group = context.getArgument("group", GroupedArea.class);
         var name = context.getArgument("region", String.class);
@@ -175,7 +169,7 @@ public class AreaGroupCommand {
         }
     }
 
-    private int add(CommandContext<CommandSourceStack> context, String name) {
+    private static int add(CommandContext<CommandSourceStack> context, String name, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         try {
             var session = WorldEditPlugin.getInstance().getSession(player);
@@ -203,7 +197,7 @@ public class AreaGroupCommand {
         }
     }
 
-    private int delete(CommandContext<CommandSourceStack> context) {
+    private static int delete(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var group = context.getArgument("group", GroupedArea.class);
 
@@ -229,7 +223,7 @@ public class AreaGroupCommand {
         }
     }
 
-    private int create(CommandContext<CommandSourceStack> context) {
+    private static int create(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
 
@@ -255,7 +249,7 @@ public class AreaGroupCommand {
         }
     }
 
-    private int select(CommandContext<CommandSourceStack> context) {
+    private static int select(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var group = context.getArgument("group", GroupedArea.class);
         var name = context.getArgument("region", String.class);

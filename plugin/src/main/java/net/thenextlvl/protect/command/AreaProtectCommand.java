@@ -12,22 +12,16 @@ import net.thenextlvl.protect.command.argument.AreaArgumentType;
 import net.thenextlvl.protect.flag.ProtectionFlag;
 
 class AreaProtectCommand {
-    private final ProtectPlugin plugin;
-
-    AreaProtectCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("protect")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.protect"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
                         .then(Commands.literal("remove")
-                                .executes(this::unprotect))
-                        .executes(this::protect));
+                                .executes(context -> unprotect(context, plugin)))
+                        .executes(context -> protect(context, plugin)));
     }
 
-    private int unprotect(CommandContext<CommandSourceStack> context) {
+    private static int unprotect(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var area = context.getArgument("area", Area.class);
         var changes = plugin.flagRegistry().getFlags().stream()
                 .filter(flag -> flag instanceof ProtectionFlag<?>)
@@ -41,7 +35,7 @@ class AreaProtectCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private int protect(CommandContext<CommandSourceStack> context) {
+    private static int protect(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var area = context.getArgument("area", Area.class);
         var changes = plugin.flagRegistry().getFlags().stream()
                 .filter(flag -> flag instanceof ProtectionFlag<?>)
