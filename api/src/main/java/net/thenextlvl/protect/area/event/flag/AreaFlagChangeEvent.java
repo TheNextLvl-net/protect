@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event.flag;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
 import org.jspecify.annotations.NonNull;
@@ -12,8 +10,6 @@ import org.jspecify.annotations.NonNull;
  *
  * @param <T> The type of the flag value.
  */
-@Getter
-@Setter
 public class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
     private T newState;
 
@@ -26,6 +22,14 @@ public class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
      */
     public AreaFlagChangeEvent(@NonNull Area area, @NonNull Flag<T> flag, T newState) {
         super(area, flag);
+        this.newState = newState;
+    }
+
+    public T getNewState() {
+        return newState;
+    }
+
+    public void setNewState(T newState) {
         this.newState = newState;
     }
 }

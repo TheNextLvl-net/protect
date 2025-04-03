@@ -24,7 +24,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.36")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
@@ -32,8 +31,6 @@ dependencies {
     implementation("net.thenextlvl.core:nbt:2.3.1")
     implementation("net.thenextlvl.core:files:2.0.2")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
-
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 publishing {

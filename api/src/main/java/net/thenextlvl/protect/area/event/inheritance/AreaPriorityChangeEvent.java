@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event.inheritance;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import org.bukkit.event.Cancellable;
@@ -13,8 +11,6 @@ import org.jspecify.annotations.NullMarked;
  * <p>
  * Note: Calling {@link Area#setPriority(int)} within this event can lead to an infinite loop.
  */
-@Getter
-@Setter
 @NullMarked
 public class AreaPriorityChangeEvent extends AreaEvent<Area> implements Cancellable {
     private boolean cancelled;
@@ -29,5 +25,23 @@ public class AreaPriorityChangeEvent extends AreaEvent<Area> implements Cancella
     public AreaPriorityChangeEvent(Area area, int priority) {
         super(area);
         this.priority = priority;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 }

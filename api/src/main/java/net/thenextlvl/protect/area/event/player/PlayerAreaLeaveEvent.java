@@ -1,7 +1,5 @@
 package net.thenextlvl.protect.area.event.player;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -14,8 +12,6 @@ import org.jspecify.annotations.NullMarked;
  * Players leaving an area can be intercepted by listening for this event.
  * If the event is cancelled, the player is prevented from leaving the area.
  */
-@Getter
-@Setter
 @NullMarked
 public class PlayerAreaLeaveEvent extends PlayerAreaEvent implements Cancellable {
     private boolean cancelled;
@@ -28,5 +24,15 @@ public class PlayerAreaLeaveEvent extends PlayerAreaEvent implements Cancellable
      */
     public PlayerAreaLeaveEvent(Player player, Area area) {
         super(player, area);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 }
