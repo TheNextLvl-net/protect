@@ -54,6 +54,7 @@ import net.thenextlvl.protect.flag.ProtectionFlag;
 import net.thenextlvl.protect.listener.AreaListener;
 import net.thenextlvl.protect.listener.EntityListener;
 import net.thenextlvl.protect.listener.MovementListener;
+import net.thenextlvl.protect.listener.NexoListener;
 import net.thenextlvl.protect.listener.PhysicsListener;
 import net.thenextlvl.protect.listener.WorldListener;
 import net.thenextlvl.protect.mask.ProtectMaskManager;
@@ -67,6 +68,7 @@ import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
@@ -113,8 +115,8 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        registerCommands();
         registerEvents();
+        registerCommands();
     }
 
     @Override
@@ -154,6 +156,12 @@ public class ProtectPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
         getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldListener(this), this);
+        var nexo = getServer().getPluginManager().getPlugin("Nexo");
+        if (nexo != null) registerNexoEvents(nexo);
+    }
+
+    private void registerNexoEvents(Plugin nexo) {
+        getServer().getPluginManager().registerEvents(new NexoListener(this, nexo), this);
     }
 
     private void registerCommands() {
