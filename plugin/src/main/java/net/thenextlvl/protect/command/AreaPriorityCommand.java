@@ -12,22 +12,16 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
 
 class AreaPriorityCommand {
-    private final ProtectPlugin plugin;
-
-    AreaPriorityCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("priority")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.priority"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
                         .then(Commands.argument("priority", IntegerArgumentType.integer())
-                                .executes(this::set))
-                        .executes(this::get));
+                                .executes(context -> set(context, plugin)))
+                        .executes(context -> get(context, plugin)));
     }
 
-    private int set(CommandContext<CommandSourceStack> context) {
+    private static int set(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", Area.class);
         var priority = context.getArgument("priority", int.class);
@@ -38,7 +32,7 @@ class AreaPriorityCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int get(CommandContext<CommandSourceStack> context) {
+    private static int get(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", Area.class);
         plugin.bundle().sendMessage(sender, "area.priority",

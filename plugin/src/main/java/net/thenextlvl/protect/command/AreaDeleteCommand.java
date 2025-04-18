@@ -13,20 +13,14 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 class AreaDeleteCommand {
-    private final ProtectPlugin plugin;
-
-    AreaDeleteCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("delete")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.delete"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
-                        .executes(this::execute));
+                        .executes(context -> execute(context, plugin)));
     }
 
-    private int execute(CommandContext<CommandSourceStack> context) {
+    private static int execute(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = (RegionizedArea<?>) context.getArgument("area", RegionizedArea.class);
 

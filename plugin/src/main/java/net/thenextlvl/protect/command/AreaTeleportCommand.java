@@ -13,21 +13,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 class AreaTeleportCommand {
-    private final ProtectPlugin plugin;
-
-    AreaTeleportCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("teleport")
                 .requires(stack -> stack.getSender() instanceof Player player
                                    && player.hasPermission("protect.command.area.teleport"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
-                        .executes(this::teleport));
+                        .executes(context -> teleport(context, plugin)));
     }
 
-    private int teleport(CommandContext<CommandSourceStack> context) {
+    private static int teleport(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         player.teleportAsync(area.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(success -> {

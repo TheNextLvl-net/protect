@@ -4,7 +4,7 @@ import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.0.0-beta9"
+    id("com.gradleup.shadow") version "9.0.0-beta12"
     id("de.eldoria.plugin-yml.paper") version "0.7.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.3"
     id("com.modrinth.minotaur") version "2.+"
@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.nexomc:nexo:1.1.0")
+    compileOnly("com.nexomc:nexo:1.3.0")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")

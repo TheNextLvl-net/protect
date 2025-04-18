@@ -14,28 +14,22 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
 
 class AreaOwnerCommand {
-    private final ProtectPlugin plugin;
-
-    AreaOwnerCommand(ProtectPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    LiteralArgumentBuilder<CommandSourceStack> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("owner")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.owner"))
                 .then(Commands.literal("set")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.owner.set"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .then(Commands.argument("player", ArgumentTypes.player())
-                                        .executes(this::set))))
+                                        .executes(context -> set(context, plugin)))))
                 .then(Commands.literal("remove")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.owner.remove"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin,
                                         (commandContext, area) -> area.getOwner().isPresent()))
-                                .executes(this::remove)));
+                                .executes(context -> remove(context, plugin))));
     }
 
-    private int set(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int set(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) throws CommandSyntaxException {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", Area.class);
         var resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
@@ -48,7 +42,7 @@ class AreaOwnerCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int remove(CommandContext<CommandSourceStack> context) {
+    private static int remove(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", Area.class);
         var success = area.setOwner(null);

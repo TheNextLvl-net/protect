@@ -12,6 +12,7 @@ import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import core.i18n.file.ComponentBundle;
 import core.nbt.serialization.NBT;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -164,7 +165,8 @@ public class ProtectPlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        new AreaCommand(this).register();
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->
+                event.registrar().register(AreaCommand.create(this))));
     }
 
     private final Cache<Audience, String> cooldown = CacheBuilder.newBuilder()
