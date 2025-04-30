@@ -33,7 +33,7 @@ class AreaInfoCommand {
         var sender = context.getSource().getSender();
         var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
         var flags = area.getFlags().entrySet().stream()
-                .map(entry -> plugin.bundle().component(sender, "area.flag.format",
+                .map(entry -> plugin.bundle().component("area.flag.format", sender,
                         Placeholder.parsed("flag", entry.getKey().key().asString()),
                         Placeholder.unparsed("value", String.valueOf(entry.getValue()))))
                 .toList();

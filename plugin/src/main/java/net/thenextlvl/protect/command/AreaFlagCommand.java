@@ -142,7 +142,7 @@ class AreaFlagCommand {
         var sender = context.getSource().getSender();
         var flags = plugin.flagRegistry().getFlags(provider);
         var components = flags.stream()
-                .map(flag -> plugin.bundle().component(sender, "area.flag.list.format",
+                .map(flag -> plugin.bundle().component("area.flag.list.format", sender,
                         Placeholder.parsed("flag", flag.key().asString())))
                 .toList();
         plugin.bundle().sendMessage(sender, "area.flag.list",
