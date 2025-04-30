@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -28,7 +29,7 @@ class AreaPriorityCommand {
         var message = area.setPriority(priority) ? "area.priority.set" : "nothing.changed";
         plugin.bundle().sendMessage(sender, message,
                 Placeholder.parsed("area", area.getName()),
-                Placeholder.parsed("priority", String.valueOf(area.getPriority())));
+                Formatter.number("priority", area.getPriority()));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -37,7 +38,7 @@ class AreaPriorityCommand {
         var area = context.getArgument("area", Area.class);
         plugin.bundle().sendMessage(sender, "area.priority",
                 Placeholder.parsed("area", area.getName()),
-                Placeholder.parsed("priority", String.valueOf(area.getPriority())));
+                Formatter.number("priority", area.getPriority()));
         return Command.SINGLE_SUCCESS;
     }
 }
