@@ -16,8 +16,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.FinePositionResolver;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -147,8 +146,8 @@ class AreaFlagCommand {
                 .toList();
         plugin.bundle().sendMessage(sender, "area.flag.list",
                 Placeholder.parsed("provider", provider.getName()),
-                Placeholder.parsed("amount", String.valueOf(flags.size())),
-                Placeholder.component("flags", Component.join(JoinConfiguration.commas(true), components)));
+                Formatter.number("amount", flags.size()),
+                Formatter.joining("flags", components));
         return Command.SINGLE_SUCCESS;
     }
 

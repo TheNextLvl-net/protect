@@ -59,6 +59,7 @@ import net.thenextlvl.protect.mask.ProtectMaskManager;
 import net.thenextlvl.protect.region.GroupedRegion;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
+import net.thenextlvl.protect.util.MessageMigrator;
 import net.thenextlvl.protect.version.PluginVersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
@@ -95,6 +96,7 @@ public class ProtectPlugin extends JavaPlugin {
     private final Key key = Key.key("protect", "translations");
     private final Path translations = getDataPath().resolve("translations");
     private final ComponentBundle bundle = ComponentBundle.builder(key, translations)
+            .migrator(new MessageMigrator())
             .placeholder("failed_prefix", "prefix.failed")
             .placeholder("prefix", "prefix")
             .resource("protect.properties", Locale.US)
