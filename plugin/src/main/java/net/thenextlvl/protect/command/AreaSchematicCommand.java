@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.sk89q.worldedit.WorldEditException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
@@ -77,7 +78,7 @@ class AreaSchematicCommand {
             area.saveSchematic();
             plugin.bundle().sendMessage(sender, "area.schematic.save.success",
                     Placeholder.parsed("schematic", area.getSchematic().getName()),
-                    Placeholder.parsed("size", String.valueOf(area.getSchematic().length() / 1024)));
+                    Formatter.number("size", area.getSchematic().length() / 1024));
         } catch (IOException | WorldEditException e) {
             plugin.bundle().sendMessage(sender, "area.schematic.save.failed",
                     Placeholder.parsed("schematic", area.getSchematic().getName()));

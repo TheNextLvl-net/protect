@@ -15,9 +15,7 @@ import core.nbt.serialization.NBT;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.thenextlvl.protect.adapter.area.CuboidAreaAdapter;
 import net.thenextlvl.protect.adapter.area.CylinderAreaAdapter;
 import net.thenextlvl.protect.adapter.area.EllipsoidAreaAdapter;
@@ -61,12 +59,12 @@ import net.thenextlvl.protect.mask.ProtectMaskManager;
 import net.thenextlvl.protect.region.GroupedRegion;
 import net.thenextlvl.protect.service.CraftProtectionService;
 import net.thenextlvl.protect.service.ProtectionService;
+import net.thenextlvl.protect.util.MessageMigrator;
 import net.thenextlvl.protect.version.PluginVersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
@@ -75,6 +73,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -94,15 +93,15 @@ public class ProtectPlugin extends JavaPlugin {
 
     public final Flags flags = new Flags();
 
-    private final ComponentBundle bundle = new ComponentBundle(new File(getDataFolder(), "translations"),
-            audience -> audience instanceof Player player ? player.locale() : Locale.US)
-            .register("protect", Locale.US)
-            .register("protect_german", Locale.GERMANY)
-            .miniMessage(bundle -> MiniMessage.builder().tags(TagResolver.resolver(
-                    TagResolver.standard(),
-                    Placeholder.component("failed_prefix", bundle.component(Locale.US, "prefix.failed")),
-                    Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
-            )).build());
+    private final Key key = Key.key("protect", "translations");
+    private final Path translations = getDataPath().resolve("translations");
+    private final ComponentBundle bundle = ComponentBundle.builder(key, translations)
+            .migrator(new MessageMigrator())
+            .placeholder("failed_prefix", "prefix.failed")
+            .placeholder("prefix", "prefix")
+            .resource("protect.properties", Locale.US)
+            .resource("protect_german.properties", Locale.GERMANY)
+            .build();
 
     @Override
     public void onLoad() {

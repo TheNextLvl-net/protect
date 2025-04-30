@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -29,7 +30,7 @@ class AreaProtectCommand {
                 .count();
         var message = changes > 0 ? "area.unprotected" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
-                Placeholder.parsed("amount", String.valueOf(changes)),
+                Formatter.number("amount", changes),
                 Placeholder.parsed("area", area.getName()));
         return Command.SINGLE_SUCCESS;
     }
@@ -44,7 +45,7 @@ class AreaProtectCommand {
                 .count();
         var message = changes > 0 ? "area.protected" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
-                Placeholder.parsed("amount", String.valueOf(changes)),
+                Formatter.number("amount", changes),
                 Placeholder.parsed("area", area.getName()));
         return Command.SINGLE_SUCCESS;
     }

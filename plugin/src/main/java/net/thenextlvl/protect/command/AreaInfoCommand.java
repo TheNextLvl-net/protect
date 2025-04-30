@@ -6,12 +6,13 @@ import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
+import org.bukkit.OfflinePlayer;
 
 class AreaInfoCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
@@ -33,17 +34,24 @@ class AreaInfoCommand {
         var sender = context.getSource().getSender();
         var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
         var flags = area.getFlags().entrySet().stream()
-                .map(entry -> plugin.bundle().component(sender, "area.flag.format",
+                .map(entry -> plugin.bundle().component("area.flag.format", sender,
                         Placeholder.parsed("flag", entry.getKey().key().asString()),
                         Placeholder.unparsed("value", String.valueOf(entry.getValue()))))
                 .toList();
 
+        var owner = area.getOwner()
+                .map(plugin.getServer()::getOfflinePlayer)
+                .map(OfflinePlayer::getName)
+                .map(Component::text)
+                .orElseGet(Component::empty);
+
         plugin.bundle().sendMessage(sender, "area.info",
-                Placeholder.component("flags", Component.join(JoinConfiguration.commas(true), flags)),
+                Formatter.joining("flags", flags),
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("file", area.getFile().getPath()),
-                Placeholder.parsed("priority", String.valueOf(area.getPriority())),
-                Placeholder.parsed("size", String.valueOf(area.getFile().length() / 1024)),
+                Formatter.number("priority", area.getPriority()),
+                Formatter.number("size", area.getFile().length() / 1024),
+                Placeholder.component("owner", owner),
                 Placeholder.parsed("type", type),
                 Placeholder.parsed("world", area.getWorld().key().asString()));
 

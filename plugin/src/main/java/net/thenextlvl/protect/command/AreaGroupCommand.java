@@ -11,6 +11,8 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -128,23 +130,26 @@ public class AreaGroupCommand {
     private static int list(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var group = context.getArgument("group", GroupedArea.class);
-        var regions = group.getRegion().getRegions().keySet();
+        var regions = group.getRegion().getRegions().keySet().stream()
+                .map(Component::text)
+                .toList();
         plugin.bundle().sendMessage(sender, "area.list.regions",
-                Placeholder.parsed("amount", String.valueOf(regions.size())),
+                Formatter.number("amount", regions.size()),
                 Placeholder.parsed("group", group.getName()),
-                Placeholder.parsed("regions", String.join(", ", regions)));
+                Formatter.joining("regions", regions));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int listAll(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var sender = context.getSource().getSender();
         var groups = plugin.areaProvider().getAreas()
-                .filter(area -> area instanceof GroupedArea)
+                .filter(GroupedArea.class::isInstance)
                 .map(Area::getName)
+                .map(Component::text)
                 .toList();
         plugin.bundle().sendMessage(sender, "area.list.groups",
-                Placeholder.parsed("amount", String.valueOf(groups.size())),
-                Placeholder.parsed("groups", String.join(", ", groups)));
+                Formatter.number("amount", groups.size()),
+                Formatter.joining("groups", groups));
         return Command.SINGLE_SUCCESS;
     }
 

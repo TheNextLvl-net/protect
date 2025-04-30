@@ -10,7 +10,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
@@ -68,8 +68,8 @@ class AreaMembersCommand {
             var message = members.isEmpty() ? "area.members.none" : "area.members";
             plugin.bundle().sendMessage(sender, message,
                     Placeholder.parsed("area", area.getName()),
-                    Placeholder.parsed("amount", String.valueOf(members.size())),
-                    Placeholder.component("members", Component.join(JoinConfiguration.commas(true), members)));
+                    Formatter.number("amount", members.size()),
+                    Formatter.joining("members", members));
         });
         return Command.SINGLE_SUCCESS;
     }
