@@ -28,7 +28,7 @@ public class PhysicsListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPhysics(BlockPhysicsEvent event) {
 
-        if ((event.getSourceBlock().isEmpty() && event.getChangedType().isEmpty()) || (
+        if ((event.getSourceBlock().isEmpty() && event.getChangedType().isAir()) || (
                 event.getSourceBlock().getType().equals(Material.SNOW)
                 || event.getSourceBlock().getType().equals(Material.POWDER_SNOW)
                 || event.getSourceBlock().getType().equals(Material.SNOW_BLOCK))) {
