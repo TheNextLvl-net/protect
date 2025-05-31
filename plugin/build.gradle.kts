@@ -25,6 +25,7 @@ repositories {
     mavenCentral()
     maven("https://maven.enginehub.org/repo/")
     maven("https://repo.nexomc.com/releases")
+    maven("https://repo.nexomc.com/snapshots")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.thenextlvl.net/releases")
 }
