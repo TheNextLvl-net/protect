@@ -34,7 +34,7 @@ dependencies {
     compileOnly("com.nexomc:nexo:1.9.0-dev.23")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.1.1-SNAPSHOT")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
