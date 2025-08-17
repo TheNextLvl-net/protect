@@ -45,11 +45,13 @@ import net.thenextlvl.protect.area.CraftEllipsoidArea;
 import net.thenextlvl.protect.area.CraftGlobalArea;
 import net.thenextlvl.protect.area.CraftGroupedArea;
 import net.thenextlvl.protect.command.AreaCommand;
+import net.thenextlvl.protect.controller.CollisionController;
 import net.thenextlvl.protect.flag.CraftFlagRegistry;
 import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.flag.FlagRegistry;
 import net.thenextlvl.protect.flag.ProtectionFlag;
 import net.thenextlvl.protect.listener.AreaListener;
+import net.thenextlvl.protect.listener.ConnectionListener;
 import net.thenextlvl.protect.listener.EntityListener;
 import net.thenextlvl.protect.listener.MovementListener;
 import net.thenextlvl.protect.listener.NexoListener;
@@ -86,6 +88,8 @@ public class ProtectPlugin extends JavaPlugin {
     private final File schematicFolder = new File(getDataFolder(), "schematics");
     private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
+    private final CollisionController collisionController = new CollisionController();
+    
     private final CraftProtectionService protectionService = new CraftProtectionService(this);
     private final CraftFlagRegistry flagRegistry = new CraftFlagRegistry();
     private final CraftAreaProvider areaProvider = new CraftAreaProvider(this);
@@ -120,6 +124,7 @@ public class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        getServer().getOnlinePlayers().forEach(collisionController::remove);
         getServer().getWorlds().forEach(world -> {
             areaProvider().save(world);
             areaProvider().unload(world);
@@ -151,6 +156,7 @@ public class ProtectPlugin extends JavaPlugin {
 
     private void registerEvents() {
         getServer().getPluginManager().registerEvents(new AreaListener(this), this);
+        getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityListener(this), this);
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
         getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
@@ -185,6 +191,10 @@ public class ProtectPlugin extends JavaPlugin {
 
     public File schematicFolder() {
         return schematicFolder;
+    }
+
+    public CollisionController collisionController() {
+        return collisionController;
     }
 
     public CraftProtectionService protectionService() {
@@ -263,6 +273,7 @@ public class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> blockSpread = flagRegistry().register(ProtectPlugin.this, "block_spread", true, false);
         public final ProtectionFlag<Boolean> cauldronEvaporation = flagRegistry().register(ProtectPlugin.this, "cauldron_evaporation", true, false);
         public final ProtectionFlag<Boolean> cauldronExtinguishEntity = flagRegistry().register(ProtectPlugin.this, "cauldron_extinguish_entity", true, false);
+        public final ProtectionFlag<Boolean> collisions = flagRegistry().register(ProtectPlugin.this, "collisions", true, false);
         public final ProtectionFlag<Boolean> cropTrample = flagRegistry().register(ProtectPlugin.this, "crop_trample", true, false);
         public final ProtectionFlag<Boolean> destroy = flagRegistry().register(ProtectPlugin.this, "destroy", true, false);
         public final ProtectionFlag<Boolean> entityAttackEntity = flagRegistry().register(ProtectPlugin.this, "entity_attack_entity", true, false);
