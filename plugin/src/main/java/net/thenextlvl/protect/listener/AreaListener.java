@@ -64,6 +64,9 @@ public class AreaListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerAreaTransition(PlayerAreaTransitionEvent event) {
+        var collides = event.getArea().getFlag(plugin.flags.collisions);
+        plugin.collisionController().setCollidable(event.getPlayer(), collides);
+
         var weather = event.getArea().getFlag(plugin.flags.weather);
         if (weather != null) event.getPlayer().setPlayerWeather(weather);
         else if (event.getPrevious().hasFlag(plugin.flags.weather))
@@ -87,6 +90,11 @@ public class AreaListener implements Listener {
             event.getArea().getHighestPlayers().forEach(player -> {
                 if (time != null) player.setPlayerTime(time, false);
                 else player.resetPlayerTime();
+            });
+        } else if (event.getFlag().equals(plugin.flags.collisions)) {
+            var collides = (boolean) event.getNewState();
+            event.getArea().getHighestPlayers().forEach(player -> {
+                plugin.collisionController().setCollidable(player, collides);
             });
         }
     }
