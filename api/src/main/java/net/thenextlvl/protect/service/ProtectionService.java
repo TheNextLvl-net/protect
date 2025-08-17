@@ -79,7 +79,7 @@ public interface ProtectionService {
     /**
      * Determines whether an entity can interact with an entity.
      *
-     * @param entity the entity that wants to interact
+     * @param entity     the entity that wants to interact
      * @param interacted the entity that is intended to be interacted with
      * @return true if the entity can interact with the object at the location, false otherwise
      */
@@ -106,7 +106,7 @@ public interface ProtectionService {
     /**
      * Determines whether an entity can shear an entity.
      *
-     * @param entity the entity that wants to shear
+     * @param entity  the entity that wants to shear
      * @param sheared the entity that is intended to be sheared
      * @return true if the entity can shear the entity, false otherwise
      */
