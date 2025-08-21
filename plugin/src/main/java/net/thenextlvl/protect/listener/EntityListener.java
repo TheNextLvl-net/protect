@@ -161,6 +161,7 @@ public class EntityListener implements Listener {
 
     private boolean isInteractionRestricted(Entity source, Entity target, Flag<Boolean> flag) {
         var first = plugin.areaProvider().getArea(source);
+        var flag1 = first.getFlag(flag);
         if (first.getFlag(flag) && first.isPermitted(source.getUniqueId())) return false;
         var second = plugin.areaProvider().getArea(target);
         if (second.getFlag(flag) && second.isPermitted(source.getUniqueId())) return false;

@@ -30,7 +30,7 @@ public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> 
         compound.forEach((key, value) -> {
             var namespace = Key.key(key);
             var flag = plugin.flagRegistry().getFlag(namespace).orElse(null);
-            if (flag != null) flags.put(flag, context.deserialize(value, flag.type()));
+            if (flag != null) flags.put(flag, context.deserialize(value, flag.getValueType()));
             else plugin.getComponentLogger().error("Unknown flag: {}", key);
         });
         return flags;
@@ -41,7 +41,7 @@ public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> 
         var tag = CompoundTag.empty();
         flags.forEach((flag, value) -> {
             if (value == null) return;
-            var serialized = context.serialize(value, flag.type());
+            var serialized = context.serialize(value, flag.getValueType());
             tag.add(flag.key().asString(), serialized);
         });
         return tag;

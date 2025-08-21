@@ -1,23 +1,11 @@
 package net.thenextlvl.protect.command;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.FloatArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.LongArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import core.paper.command.argument.EnumArgumentType;
-import core.paper.command.argument.codec.EnumStringCodec;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
-import io.papermc.paper.command.brigadier.argument.resolvers.FinePositionResolver;
 import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
@@ -26,29 +14,9 @@ import net.thenextlvl.protect.command.argument.AreaArgumentType;
 import net.thenextlvl.protect.command.argument.FlagArgumentType;
 import net.thenextlvl.protect.command.argument.FlagProviderArgumentType;
 import net.thenextlvl.protect.flag.Flag;
-import org.bukkit.Location;
-import org.bukkit.WeatherType;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Map;
-import java.util.function.Supplier;
-
 class AreaFlagCommand {
-    private static final Map<Class<?>, Converter> argumentTypes = Map.of(
-            Boolean.class, new Converter(BoolArgumentType::bool),
-            Double.class, new Converter(DoubleArgumentType::doubleArg),
-            Float.class, new Converter(FloatArgumentType::floatArg),
-            Integer.class, new Converter(IntegerArgumentType::integer),
-            Long.class, new Converter(LongArgumentType::longArg),
-            String.class, new Converter(StringArgumentType::string),
-            Location.class, new Converter(ArgumentTypes::finePosition, (type, context) -> {
-                var resolver = context.getArgument("value", FinePositionResolver.class);
-                var area = context.getArgument("area", Area.class);
-                return resolver.resolve(context.getSource()).toLocation(area.getWorld());
-            }),
-            WeatherType.class, new Converter(() -> EnumArgumentType.of(WeatherType.class, EnumStringCodec.lowerHyphen()))
-    );
-
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("flag")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag"))
@@ -89,23 +57,20 @@ class AreaFlagCommand {
                 });
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> set( ProtectPlugin plugin) {
+    private static ArgumentBuilder<CommandSourceStack, ?> set(ProtectPlugin plugin) {
         var command = Commands.literal("set")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag.set"));
         plugin.flagRegistry().getRegistry().values().forEach(flags -> flags.forEach(flag -> {
-            var converter = argumentTypes.get(flag.type());
-            if (converter == null) {
-                plugin.getComponentLogger().error("No argument type for flag type: {}", flag.type().getName());
-            } else command.then(Commands.literal(flag.key().asString())
-                    .then(Commands.argument("value", converter.type().get())
+            command.then(Commands.literal(flag.key().asString())
+                    .then(Commands.argument("value", flag.getArgumentType())
                             .then(Commands.argument("area", new AreaArgumentType(plugin))
                                     .executes(context -> {
                                         var area = context.getArgument("area", Area.class);
-                                        return set(context, converter.resolver(), flag, area, plugin);
+                                        return set(context, flag, area, plugin);
                                     }))
                             .executes(context -> {
                                 var location = context.getSource().getLocation();
-                                return set(context, converter.resolver(), flag, plugin.areaProvider().getArea(location), plugin);
+                                return set(context, flag, plugin.areaProvider().getArea(location), plugin);
                             })));
         }));
         return command;
@@ -152,9 +117,8 @@ class AreaFlagCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static int set(CommandContext<CommandSourceStack> context, Resolver<?> resolver, Flag flag, Area area, ProtectPlugin plugin) throws CommandSyntaxException {
-        var value = resolver.resolve(flag.type(), context);
+    private static <T> int set(CommandContext<CommandSourceStack> context, Flag<T> flag, Area area, ProtectPlugin plugin) {
+        var value = context.getArgument("value", flag.getValueType());
         var message = area.setFlag(flag, value) ? "area.flag.set" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Placeholder.parsed("area", area.getName()),
@@ -170,19 +134,5 @@ class AreaFlagCommand {
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("flag", flag.key().asString()));
         return Command.SINGLE_SUCCESS;
-    }
-
-    private record Converter(
-            Supplier<ArgumentType<?>> type,
-            Resolver<?> resolver
-    ) {
-        public Converter(Supplier<ArgumentType<?>> supplier) {
-            this(supplier, (type, context) -> context.getArgument("value", type));
-        }
-    }
-
-    @FunctionalInterface
-    public interface Resolver<T> {
-        T resolve(Class<T> type, CommandContext<CommandSourceStack> context) throws CommandSyntaxException;
     }
 }

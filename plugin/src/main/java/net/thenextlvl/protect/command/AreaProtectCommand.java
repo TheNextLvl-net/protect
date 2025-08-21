@@ -10,7 +10,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
-import net.thenextlvl.protect.flag.ProtectionFlag;
+import net.thenextlvl.protect.flag.Flag;
 
 class AreaProtectCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
@@ -25,7 +25,7 @@ class AreaProtectCommand {
     private static int unprotect(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var area = context.getArgument("area", Area.class);
         var changes = plugin.flagRegistry().getFlags().stream()
-                .filter(flag -> flag instanceof ProtectionFlag<?>)
+                .filter(flag -> flag.getProtectedValue() != null)
                 .filter(area::removeFlag)
                 .count();
         var message = changes > 0 ? "area.unprotected" : "nothing.changed";
@@ -39,9 +39,8 @@ class AreaProtectCommand {
     private static int protect(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var area = context.getArgument("area", Area.class);
         var changes = plugin.flagRegistry().getFlags().stream()
-                .filter(flag -> flag instanceof ProtectionFlag<?>)
-                .map(flag -> (ProtectionFlag<Object>) flag)
-                .filter(flag -> area.setFlag(flag, flag.protectedValue()))
+                .map(flag -> (Flag<Object>) flag)
+                .filter(flag -> area.setFlag(flag, flag.getProtectedValue()))
                 .count();
         var message = changes > 0 ? "area.protected" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
