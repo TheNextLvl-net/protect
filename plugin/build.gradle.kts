@@ -28,6 +28,7 @@ repositories {
     maven("https://repo.nexomc.com/snapshots")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.thenextlvl.net/releases")
+    maven("https://repo.thenextlvl.net/snapshots")
 }
 
 dependencies {
@@ -43,7 +44,7 @@ dependencies {
     implementation("net.thenextlvl.core:files:3.0.0")
     implementation("net.thenextlvl.core:i18n:3.2.0")
     implementation("net.thenextlvl.core:nbt:2.3.2")
-    implementation("net.thenextlvl.core:paper:2.2.1")
+    implementation("net.thenextlvl.core:paper:2.3.0-pre1")
 }
 
 tasks.shadowJar {
