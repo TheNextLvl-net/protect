@@ -168,7 +168,7 @@ public abstract class CraftArea implements Area {
         var value = (T) getFlags().get(flag);
         if (value != null) return value;
         return getParent().map(area -> area.getFlag(flag))
-                .orElseGet(flag::defaultValue);
+                .orElseGet(flag::getDefaultValue);
     }
 
     @Override
