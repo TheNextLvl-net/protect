@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.thenextlvl.protect"
-version = "3.1.0"
+version = "3.1.1"
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(21)
