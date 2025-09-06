@@ -12,6 +12,8 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import core.paper.command.argument.EnumArgumentType;
+import core.paper.command.argument.codec.EnumStringCodec;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
@@ -21,7 +23,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
-import net.thenextlvl.protect.command.argument.EnumArgumentType;
 import net.thenextlvl.protect.command.argument.FlagArgumentType;
 import net.thenextlvl.protect.command.argument.FlagProviderArgumentType;
 import net.thenextlvl.protect.flag.Flag;
@@ -45,7 +46,7 @@ class AreaFlagCommand {
                 var area = context.getArgument("area", Area.class);
                 return resolver.resolve(context.getSource()).toLocation(area.getWorld());
             }),
-            WeatherType.class, new Converter(() -> new EnumArgumentType<>(WeatherType.class))
+            WeatherType.class, new Converter(() -> EnumArgumentType.of(WeatherType.class, EnumStringCodec.lowerHyphen()))
     );
 
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
