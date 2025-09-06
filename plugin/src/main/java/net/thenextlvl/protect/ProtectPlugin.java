@@ -14,6 +14,7 @@ import core.i18n.file.ComponentBundle;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.key.KeyPattern;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.nbt.serialization.NBT;
 import net.thenextlvl.protect.adapter.area.CuboidAreaAdapter;
@@ -49,7 +50,10 @@ import net.thenextlvl.protect.controller.CollisionController;
 import net.thenextlvl.protect.flag.CraftFlagRegistry;
 import net.thenextlvl.protect.flag.Flag;
 import net.thenextlvl.protect.flag.FlagRegistry;
-import net.thenextlvl.protect.flag.ProtectionFlag;
+import net.thenextlvl.protect.flag.standard.BooleanFlag;
+import net.thenextlvl.protect.flag.standard.EnumFlag;
+import net.thenextlvl.protect.flag.standard.LongFlag;
+import net.thenextlvl.protect.flag.standard.StringFlag;
 import net.thenextlvl.protect.listener.AreaListener;
 import net.thenextlvl.protect.listener.ConnectionListener;
 import net.thenextlvl.protect.listener.EntityListener;
@@ -89,7 +93,7 @@ public class ProtectPlugin extends JavaPlugin {
     private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
     private final CollisionController collisionController = new CollisionController();
-    
+
     private final CraftProtectionService protectionService = new CraftProtectionService(this);
     private final CraftFlagRegistry flagRegistry = new CraftFlagRegistry();
     private final CraftAreaProvider areaProvider = new CraftAreaProvider(this);
@@ -236,58 +240,67 @@ public class ProtectPlugin extends JavaPlugin {
             .build();
 
     public class Flags {
-        public final Flag<@Nullable Long> time = flagRegistry().register(ProtectPlugin.this, Long.class, "time", null);
-        public final Flag<@Nullable String> farewell = flagRegistry().register(ProtectPlugin.this, String.class, "farewell", null);
-        public final Flag<@Nullable String> farewellActionbar = flagRegistry().register(ProtectPlugin.this, String.class, "farewell_actionbar", null);
-        public final Flag<@Nullable String> farewellTitle = flagRegistry().register(ProtectPlugin.this, String.class, "farewell_title", null);
-        public final Flag<@Nullable String> greetings = flagRegistry().register(ProtectPlugin.this, String.class, "greetings", null);
-        public final Flag<@Nullable String> greetingsActionbar = flagRegistry().register(ProtectPlugin.this, String.class, "greetings_actionbar", null);
-        public final Flag<@Nullable String> greetingsTitle = flagRegistry().register(ProtectPlugin.this, String.class, "greetings_title", null);
-        public final Flag<@Nullable WeatherType> weather = flagRegistry().register(ProtectPlugin.this, WeatherType.class, "weather", null);
+        public final LongFlag time = register(new LongFlag(key("time")));
+        public final StringFlag farewell = register(new StringFlag(key("farewell")));
+        public final StringFlag farewellActionbar = register(new StringFlag(key("farewell_actionbar")));
+        public final StringFlag farewellTitle = register(new StringFlag(key("farewell_title")));
+        public final StringFlag greetings = register(new StringFlag(key("greetings")));
+        public final StringFlag greetingsActionbar = register(new StringFlag(key("greetings_actionbar")));
+        public final StringFlag greetingsTitle = register(new StringFlag(key("greetings_title")));
+        public final EnumFlag<@Nullable WeatherType> weather = register(new EnumFlag<>(key("weather"), WeatherType.class));
 
-        public final Flag<Boolean> areaEnter = flagRegistry().register(ProtectPlugin.this, "enter", true);
-        public final Flag<Boolean> areaLeave = flagRegistry().register(ProtectPlugin.this, "leave", true);
-        public final Flag<Boolean> damage = flagRegistry().register(ProtectPlugin.this, "damage", true);
-        public final Flag<Boolean> entityItemDrop = flagRegistry().register(ProtectPlugin.this, "entity_item_drop", true);
-        public final Flag<Boolean> entityItemPickup = flagRegistry().register(ProtectPlugin.this, "entity_item_pickup", true);
-        public final Flag<Boolean> gameEvents = flagRegistry().register(ProtectPlugin.this, "game_events", true);
-        public final Flag<Boolean> gravity = flagRegistry().register(ProtectPlugin.this, "gravity", true);
-        public final Flag<Boolean> hunger = flagRegistry().register(ProtectPlugin.this, "hunger", true);
-        public final Flag<Boolean> liquidFlow = flagRegistry().register(ProtectPlugin.this, "liquid_flow", true);
-        public final Flag<Boolean> naturalEntitySpawn = flagRegistry().register(ProtectPlugin.this, "natural_entity_spawn", true);
-        public final Flag<Boolean> notifyFailedInteractions = flagRegistry().register(ProtectPlugin.this, "notify_failed_interactions", false);
-        public final Flag<Boolean> physics = flagRegistry().register(ProtectPlugin.this, "physics", true);
-        public final Flag<Boolean> redstone = flagRegistry().register(ProtectPlugin.this, "redstone", true);
-        public final Flag<Boolean> shoot = flagRegistry().register(ProtectPlugin.this, "shoot", true);
+        public final BooleanFlag areaEnter = register(new BooleanFlag(key("enter"), true));
+        public final BooleanFlag areaLeave = register(new BooleanFlag(key("leave"), true));
+        public final BooleanFlag damage = register(new BooleanFlag(key("damage"), true));
+        public final BooleanFlag entityItemDrop = register(new BooleanFlag(key("entity_item_drop"), true));
+        public final BooleanFlag entityItemPickup = register(new BooleanFlag(key("entity_item_pickup"), true));
+        public final BooleanFlag gameEvents = register(new BooleanFlag(key("game_events"), true));
+        public final BooleanFlag gravity = register(new BooleanFlag(key("gravity"), true));
+        public final BooleanFlag hunger = register(new BooleanFlag(key("hunger"), true));
+        public final BooleanFlag liquidFlow = register(new BooleanFlag(key("liquid_flow"), true));
+        public final BooleanFlag naturalEntitySpawn = register(new BooleanFlag(key("natural_entity_spawn"), true));
+        public final BooleanFlag notifyFailedInteractions = register(new BooleanFlag(key("notify_failed_interactions"), false));
+        public final BooleanFlag physics = register(new BooleanFlag(key("physics"), true));
+        public final BooleanFlag redstone = register(new BooleanFlag(key("redstone"), true));
+        public final BooleanFlag shoot = register(new BooleanFlag(key("shoot"), true));
 
-        public final ProtectionFlag<Boolean> armorStandManipulate = flagRegistry().register(ProtectPlugin.this, "armor_stand_manipulate", true, false);
-        public final ProtectionFlag<Boolean> blockAbsorb = flagRegistry().register(ProtectPlugin.this, "block_absorb", true, false);
-        public final ProtectionFlag<Boolean> blockBurning = flagRegistry().register(ProtectPlugin.this, "block_burning", true, false);
-        public final ProtectionFlag<Boolean> blockDrying = flagRegistry().register(ProtectPlugin.this, "block_drying", true, false);
-        public final ProtectionFlag<Boolean> blockFading = flagRegistry().register(ProtectPlugin.this, "block_fading", true, false);
-        public final ProtectionFlag<Boolean> blockFertilize = flagRegistry().register(ProtectPlugin.this, "block_fertilize", true, false);
-        public final ProtectionFlag<Boolean> blockForming = flagRegistry().register(ProtectPlugin.this, "block_forming", true, false);
-        public final ProtectionFlag<Boolean> blockGrowth = flagRegistry().register(ProtectPlugin.this, "block_growth", true, false);
-        public final ProtectionFlag<Boolean> blockIgniting = flagRegistry().register(ProtectPlugin.this, "block_igniting", true, false);
-        public final ProtectionFlag<Boolean> blockMoisturising = flagRegistry().register(ProtectPlugin.this, "block_moisturising", true, false);
-        public final ProtectionFlag<Boolean> blockSpread = flagRegistry().register(ProtectPlugin.this, "block_spread", true, false);
-        public final ProtectionFlag<Boolean> cauldronEvaporation = flagRegistry().register(ProtectPlugin.this, "cauldron_evaporation", true, false);
-        public final ProtectionFlag<Boolean> cauldronExtinguishEntity = flagRegistry().register(ProtectPlugin.this, "cauldron_extinguish_entity", true, false);
-        public final ProtectionFlag<Boolean> collisions = flagRegistry().register(ProtectPlugin.this, "collisions", true, false);
-        public final ProtectionFlag<Boolean> cropTrample = flagRegistry().register(ProtectPlugin.this, "crop_trample", true, false);
-        public final ProtectionFlag<Boolean> destroy = flagRegistry().register(ProtectPlugin.this, "destroy", true, false);
-        public final ProtectionFlag<Boolean> entityAttackEntity = flagRegistry().register(ProtectPlugin.this, "entity_attack_entity", true, false);
-        public final ProtectionFlag<Boolean> entityAttackPlayer = flagRegistry().register(ProtectPlugin.this, "entity_attack_player", true, false);
-        public final ProtectionFlag<Boolean> entityInteract = flagRegistry().register(ProtectPlugin.this, "entity_interact", true, false);
-        public final ProtectionFlag<Boolean> entityShear = flagRegistry().register(ProtectPlugin.this, "entity_shear", true, false);
-        public final ProtectionFlag<Boolean> explosions = flagRegistry().register(ProtectPlugin.this, "explosions", true, false);
-        public final ProtectionFlag<Boolean> interact = flagRegistry().register(ProtectPlugin.this, "interact", true, false);
-        public final ProtectionFlag<Boolean> leavesDecay = flagRegistry().register(ProtectPlugin.this, "leaves_decay", true, false);
-        public final ProtectionFlag<Boolean> naturalCauldronFill = flagRegistry().register(ProtectPlugin.this, "natural_cauldron_fill", true, false);
-        public final ProtectionFlag<Boolean> physicalInteract = flagRegistry().register(ProtectPlugin.this, "physical_interact", true, false);
-        public final ProtectionFlag<Boolean> place = flagRegistry().register(ProtectPlugin.this, "place", true, false);
-        public final ProtectionFlag<Boolean> playerAttackEntity = flagRegistry().register(ProtectPlugin.this, "player_attack_entity", true, false);
-        public final ProtectionFlag<Boolean> playerAttackPlayer = flagRegistry().register(ProtectPlugin.this, "player_attack_player", true, false);
-        public final ProtectionFlag<Boolean> playerItemDrop = flagRegistry().register(ProtectPlugin.this, "player_item_drop", true, false);
+        public final BooleanFlag armorStandManipulate = register(new BooleanFlag(key("armor_stand_manipulate"), true, false));
+        public final BooleanFlag blockAbsorb = register(new BooleanFlag(key("block_absorb"), true, false));
+        public final BooleanFlag blockBurning = register(new BooleanFlag(key("block_burning"), true, false));
+        public final BooleanFlag blockDrying = register(new BooleanFlag(key("block_drying"), true, false));
+        public final BooleanFlag blockFading = register(new BooleanFlag(key("block_fading"), true, false));
+        public final BooleanFlag blockFertilize = register(new BooleanFlag(key("block_fertilize"), true, false));
+        public final BooleanFlag blockForming = register(new BooleanFlag(key("block_forming"), true, false));
+        public final BooleanFlag blockGrowth = register(new BooleanFlag(key("block_growth"), true, false));
+        public final BooleanFlag blockIgniting = register(new BooleanFlag(key("block_igniting"), true, false));
+        public final BooleanFlag blockMoisturising = register(new BooleanFlag(key("block_moisturising"), true, false));
+        public final BooleanFlag blockSpread = register(new BooleanFlag(key("block_spread"), true, false));
+        public final BooleanFlag cauldronEvaporation = register(new BooleanFlag(key("cauldron_evaporation"), true, false));
+        public final BooleanFlag cauldronExtinguishEntity = register(new BooleanFlag(key("cauldron_extinguish_entity"), true, false));
+        public final BooleanFlag collisions = register(new BooleanFlag(key("collisions"), true, false));
+        public final BooleanFlag cropTrample = register(new BooleanFlag(key("crop_trample"), true, false));
+        public final BooleanFlag destroy = register(new BooleanFlag(key("destroy"), true, false));
+        public final BooleanFlag entityAttackEntity = register(new BooleanFlag(key("entity_attack_entity"), true, false));
+        public final BooleanFlag entityAttackPlayer = register(new BooleanFlag(key("entity_attack_player"), true, false));
+        public final BooleanFlag entityInteract = register(new BooleanFlag(key("entity_interact"), true, false));
+        public final BooleanFlag entityShear = register(new BooleanFlag(key("entity_shear"), true, false));
+        public final BooleanFlag explosions = register(new BooleanFlag(key("explosions"), true, false));
+        public final BooleanFlag interact = register(new BooleanFlag(key("interact"), true, false));
+        public final BooleanFlag leavesDecay = register(new BooleanFlag(key("leaves_decay"), true, false));
+        public final BooleanFlag naturalCauldronFill = register(new BooleanFlag(key("natural_cauldron_fill"), true, false));
+        public final BooleanFlag physicalInteract = register(new BooleanFlag(key("physical_interact"), true, false));
+        public final BooleanFlag place = register(new BooleanFlag(key("place"), true, false));
+        public final BooleanFlag playerAttackEntity = register(new BooleanFlag(key("player_attack_entity"), true, false));
+        public final BooleanFlag playerAttackPlayer = register(new BooleanFlag(key("player_attack_player"), true, false));
+        public final BooleanFlag playerItemDrop = register(new BooleanFlag(key("player_item_drop"), true, false));
+
+        private <T extends Flag<?>> T register(T flag) {
+            flagRegistry.register(ProtectPlugin.this, flag);
+            return flag;
+        }
+
+        private Key key(@KeyPattern.Value String name) {
+            return Key.key("protect", name);
+        }
     }
 }
