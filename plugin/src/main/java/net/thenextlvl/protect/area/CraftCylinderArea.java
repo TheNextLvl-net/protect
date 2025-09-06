@@ -2,7 +2,7 @@ package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.selector.CylinderRegionSelector;
-import core.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import org.bukkit.World;
@@ -20,7 +20,7 @@ public class CraftCylinderArea extends CraftRegionizedArea<CylinderRegion> imple
 
     @Override
     protected CylinderRegion readRegion(CompoundTag tag) {
-        return plugin.nbt.fromTag(tag.getAsCompound("region"), CylinderRegion.class);
+        return plugin.nbt.deserialize(tag.getAsCompound("region"), CylinderRegion.class);
     }
 
     @Override

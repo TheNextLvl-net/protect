@@ -1,9 +1,9 @@
 package net.thenextlvl.protect.area;
 
 import com.google.common.reflect.TypeToken;
-import core.nbt.tag.CompoundTag;
-import core.nbt.tag.Tag;
 import net.kyori.adventure.key.Key;
+import net.thenextlvl.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.Tag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.flag.AreaFlagChangeEvent;
 import net.thenextlvl.protect.area.event.flag.AreaFlagResetEvent;
@@ -38,7 +38,7 @@ public abstract class CraftArea implements Area {
     private final Map<Flag<?>, @Nullable Object> flags;
     private int priority;
 
-    private final CompoundTag dataContainer = new CompoundTag();
+    private final CompoundTag dataContainer = CompoundTag.empty();
 
     protected CraftArea(ProtectPlugin plugin,
                         String name,
@@ -213,13 +213,13 @@ public abstract class CraftArea implements Area {
 
     @Override
     public CompoundTag serialize() {
-        var tag = new CompoundTag();
-        if (!flags.isEmpty()) tag.add("flags", plugin.nbt.toTag(flags, new TypeToken<Map<Flag<?>, Object>>() {
+        var tag = CompoundTag.empty();
+        if (!flags.isEmpty()) tag.add("flags", plugin.nbt.serialize(flags, new TypeToken<Map<Flag<?>, Object>>() {
         }.getType()));
-        if (!members.isEmpty()) tag.add("members", plugin.nbt.toTag(members, new TypeToken<Set<UUID>>() {
+        if (!members.isEmpty()) tag.add("members", plugin.nbt.serialize(members, new TypeToken<Set<UUID>>() {
         }.getType()));
         if (!dataContainer.isEmpty()) tag.add("data", dataContainer);
-        if (owner != null) tag.add("owner", plugin.nbt.toTag(owner));
+        if (owner != null) tag.add("owner", plugin.nbt.serialize(owner));
         tag.add("priority", priority);
         var adapter = plugin.areaService().getAdapter(getClass());
         tag.add("type", adapter.key().asString());
@@ -240,19 +240,19 @@ public abstract class CraftArea implements Area {
         return tag.optional("flags").map(flags -> {
             var type = new TypeToken<Map<Flag<?>, Object>>() {
             }.getType();
-            return plugin.nbt.fromTag(flags, type);
+            return plugin.nbt.deserialize(flags, type);
         });
     }
 
     private Optional<Set<UUID>> readMembers(CompoundTag tag) {
         return tag.optional("members").map(members ->
-                plugin.nbt.fromTag(members, new TypeToken<Set<UUID>>() {
+                plugin.nbt.deserialize(members, new TypeToken<Set<UUID>>() {
                 }.getType()));
     }
 
     private Optional<UUID> readOwner(CompoundTag tag) {
         return tag.optional("owner").map(owner ->
-                plugin.nbt.fromTag(owner, UUID.class));
+                plugin.nbt.deserialize(owner, UUID.class));
     }
 
     private Optional<Integer> readPriority(CompoundTag tag) {

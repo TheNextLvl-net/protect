@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.area;
 
-import core.nbt.serialization.TagSerializable;
+import net.thenextlvl.nbt.serialization.TagSerializable;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.Server;
 import org.bukkit.World;

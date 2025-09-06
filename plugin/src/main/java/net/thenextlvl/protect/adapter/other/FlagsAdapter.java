@@ -1,11 +1,11 @@
 package net.thenextlvl.protect.adapter.other;
 
-import core.nbt.serialization.TagAdapter;
-import core.nbt.serialization.TagDeserializationContext;
-import core.nbt.serialization.TagSerializationContext;
-import core.nbt.tag.CompoundTag;
-import core.nbt.tag.Tag;
 import net.kyori.adventure.key.Key;
+import net.thenextlvl.nbt.serialization.TagAdapter;
+import net.thenextlvl.nbt.serialization.TagDeserializationContext;
+import net.thenextlvl.nbt.serialization.TagSerializationContext;
+import net.thenextlvl.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.Tag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
 import org.jspecify.annotations.NullMarked;
@@ -38,7 +38,7 @@ public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> 
 
     @Override
     public Tag serialize(Map<Flag<?>, @Nullable Object> flags, TagSerializationContext context) {
-        var tag = new CompoundTag();
+        var tag = CompoundTag.empty();
         flags.forEach((flag, value) -> {
             if (value == null) return;
             var serialized = context.serialize(value, flag.type());

@@ -1,8 +1,8 @@
 package net.thenextlvl.protect.io;
 
-import core.nbt.tag.CompoundTag;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;

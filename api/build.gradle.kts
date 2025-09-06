@@ -21,6 +21,7 @@ repositories {
     maven("https://maven.enginehub.org/repo/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.thenextlvl.net/releases")
+    maven("https://repo.thenextlvl.net/snapshots")
 }
 
 dependencies {
@@ -28,7 +29,7 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
 
-    implementation("net.thenextlvl.core:nbt:2.3.3")
+    implementation("net.thenextlvl:nbt:3.0.0-pre1")
     implementation("net.thenextlvl.core:files:3.0.0")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.55"))
 }

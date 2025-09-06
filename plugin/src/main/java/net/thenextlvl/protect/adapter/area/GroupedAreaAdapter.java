@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.adapter.area;
 
-import core.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.CraftGroupedArea;

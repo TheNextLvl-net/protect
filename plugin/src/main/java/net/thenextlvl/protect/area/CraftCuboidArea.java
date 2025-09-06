@@ -1,7 +1,7 @@
 package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.CuboidRegion;
-import core.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import org.bukkit.World;
@@ -19,6 +19,6 @@ public class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implement
 
     @Override
     protected CuboidRegion readRegion(CompoundTag tag) {
-        return plugin.nbt.fromTag(tag.getAsCompound("region"), CuboidRegion.class);
+        return plugin.nbt.deserialize(tag.getAsCompound("region"), CuboidRegion.class);
     }
 }

@@ -1,7 +1,7 @@
 package net.thenextlvl.protect.adapter.area;
 
-import core.nbt.tag.CompoundTag;
 import net.kyori.adventure.key.Key;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.CraftGlobalArea;

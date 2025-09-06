@@ -12,8 +12,8 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import core.nbt.tag.CompoundTag;
-import core.nbt.tag.Tag;
+import net.thenextlvl.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.Tag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.inheritance.AreaParentChangeEvent;
 import net.thenextlvl.protect.area.event.region.AreaRedefineEvent;
@@ -34,7 +34,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
@@ -61,7 +65,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     protected abstract T readRegion(CompoundTag tag);
 
     private void writeRegion(CompoundTag tag) {
-        tag.add("region", plugin.nbt.toTag(region));
+        tag.add("region", plugin.nbt.serialize(region));
     }
 
     @Override

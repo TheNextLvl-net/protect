@@ -1,7 +1,7 @@
 package net.thenextlvl.protect.area;
 
-import core.nbt.tag.Tag;
 import net.kyori.adventure.key.Key;
+import net.thenextlvl.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;

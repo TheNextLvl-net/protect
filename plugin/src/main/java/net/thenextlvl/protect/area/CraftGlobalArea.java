@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.area;
 
-import core.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -10,7 +10,11 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @NullMarked
 public class CraftGlobalArea extends CraftArea implements GlobalArea {

@@ -1,11 +1,11 @@
 package net.thenextlvl.protect.adapter.vector;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import core.nbt.serialization.TagAdapter;
-import core.nbt.serialization.TagDeserializationContext;
-import core.nbt.serialization.TagSerializationContext;
-import core.nbt.tag.CompoundTag;
-import core.nbt.tag.Tag;
+import net.thenextlvl.nbt.serialization.TagAdapter;
+import net.thenextlvl.nbt.serialization.TagDeserializationContext;
+import net.thenextlvl.nbt.serialization.TagSerializationContext;
+import net.thenextlvl.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -21,7 +21,7 @@ public class BlockVectorAdapter implements TagAdapter<BlockVector3> {
 
     @Override
     public Tag serialize(BlockVector3 vector, TagSerializationContext context) {
-        var tag = new CompoundTag();
+        var tag = CompoundTag.empty();
         tag.add("x", vector.x());
         tag.add("y", vector.y());
         tag.add("z", vector.z());

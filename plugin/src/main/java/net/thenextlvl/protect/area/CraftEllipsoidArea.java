@@ -2,7 +2,7 @@ package net.thenextlvl.protect.area;
 
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.selector.EllipsoidRegionSelector;
-import core.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import org.bukkit.World;
@@ -20,7 +20,7 @@ public class CraftEllipsoidArea extends CraftRegionizedArea<EllipsoidRegion> imp
 
     @Override
     protected EllipsoidRegion readRegion(CompoundTag tag) {
-        return plugin.nbt.fromTag(tag.getAsCompound("region"), EllipsoidRegion.class);
+        return plugin.nbt.deserialize(tag.getAsCompound("region"), EllipsoidRegion.class);
     }
 
     @Override

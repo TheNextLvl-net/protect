@@ -1,6 +1,6 @@
 package net.thenextlvl.protect.area;
 
-import core.nbt.tag.CompoundTag;
+import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.region.GroupedRegion;
@@ -19,6 +19,6 @@ public class CraftGroupedArea extends CraftRegionizedArea<GroupedRegion> impleme
 
     @Override
     protected GroupedRegion readRegion(CompoundTag tag) {
-        return plugin.nbt.fromTag(tag.getAsCompound("region"), GroupedRegion.class);
+        return plugin.nbt.deserialize(tag.getAsCompound("region"), GroupedRegion.class);
     }
 }

@@ -1,11 +1,11 @@
 package net.thenextlvl.protect.adapter.other;
 
-import core.nbt.serialization.ParserException;
-import core.nbt.serialization.TagAdapter;
-import core.nbt.serialization.TagDeserializationContext;
-import core.nbt.serialization.TagSerializationContext;
-import core.nbt.tag.StringTag;
-import core.nbt.tag.Tag;
+import net.thenextlvl.nbt.serialization.ParserException;
+import net.thenextlvl.nbt.serialization.TagAdapter;
+import net.thenextlvl.nbt.serialization.TagDeserializationContext;
+import net.thenextlvl.nbt.serialization.TagSerializationContext;
+import net.thenextlvl.nbt.tag.StringTag;
+import net.thenextlvl.nbt.tag.Tag;
 import org.bukkit.WeatherType;
 import org.jspecify.annotations.NullMarked;
 
@@ -18,6 +18,6 @@ public class WeatherTypeAdapter implements TagAdapter<WeatherType> {
 
     @Override
     public Tag serialize(WeatherType type, TagSerializationContext context) throws ParserException {
-        return new StringTag(type.name());
+        return StringTag.of(type.name());
     }
 }
