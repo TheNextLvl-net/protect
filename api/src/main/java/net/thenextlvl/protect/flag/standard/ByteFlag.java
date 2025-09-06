@@ -2,9 +2,10 @@ package net.thenextlvl.protect.flag.standard;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import core.paper.command.WrappedArgumentType;
+import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import net.kyori.adventure.key.Key;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 public final class ByteFlag extends NumberFlag<Byte> {
@@ -31,10 +32,19 @@ public final class ByteFlag extends NumberFlag<Byte> {
 
     @Override
     public @NonNull ArgumentType<Byte> getArgumentType() {
-        return new WrappedArgumentType<>(
-                IntegerArgumentType.integer(Byte.MIN_VALUE, Byte.MAX_VALUE),
-                (reader, type) -> type.byteValue(),
-                (context, builder) -> builder.buildFuture()
-        );
+        return new ByteArgumentType();
+    }
+
+    @NullMarked
+    private static final class ByteArgumentType implements CustomArgumentType.Converted<Byte, Integer> {
+        @Override
+        public Byte convert(Integer nativeType) {
+            return nativeType.byteValue();
+        }
+
+        @Override
+        public ArgumentType<Integer> getNativeType() {
+            return IntegerArgumentType.integer(Byte.MIN_VALUE, Byte.MAX_VALUE);
+        }
     }
 }

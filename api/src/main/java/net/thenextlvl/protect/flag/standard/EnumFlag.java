@@ -1,7 +1,8 @@
 package net.thenextlvl.protect.flag.standard;
 
 import com.mojang.brigadier.arguments.ArgumentType;
-import core.paper.command.CustomArgumentTypes;
+import core.paper.command.argument.EnumArgumentType;
+import core.paper.command.argument.codec.EnumStringCodec;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.flag.Flag;
 import org.jspecify.annotations.NonNull;
@@ -37,6 +38,6 @@ public final class EnumFlag<T extends Enum<T>> extends Flag<T> {
 
     @Override
     public @NonNull ArgumentType<T> getArgumentType() {
-        return CustomArgumentTypes.enumType(getValueType());
+        return EnumArgumentType.of(getValueType(), EnumStringCodec.lowerHyphen());
     }
 }
