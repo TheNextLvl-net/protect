@@ -1,29 +1,52 @@
 package net.thenextlvl.protect.command.argument;
 
-import core.paper.command.WrappedArgumentType;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
+import org.jspecify.annotations.NullMarked;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
-public class FlagArgumentType extends WrappedArgumentType<Key, Flag<?>> {
+@NullMarked
+public final class FlagArgumentType implements CustomArgumentType.Converted<Flag<?>, Key> {
+    private final ProtectPlugin plugin;
+    private final Predicate<? super Flag<?>> filter;
+
     public FlagArgumentType(ProtectPlugin plugin) {
         this(plugin, flag -> true);
     }
 
     public FlagArgumentType(ProtectPlugin plugin, Predicate<? super Flag<?>> filter) {
-        super(ArgumentTypes.key(), (reader, type) -> plugin.flagRegistry().getFlag(type)
-                        .filter(filter).orElseThrow(() -> new IllegalArgumentException("Unknown flag: " + type)),
-                (context, builder) -> {
-                    plugin.flagRegistry().getFlags().stream()
-                            .filter(filter)
-                            .map(Flag::key)
-                            .map(Key::asString)
-                            .filter(s -> s.contains(builder.getRemaining()))
-                            .forEach(builder::suggest);
-                    return builder.buildFuture();
-                });
+        this.plugin = plugin;
+        this.filter = filter;
+    }
+
+    @Override
+    public Flag<?> convert(Key nativeType) {
+        return plugin.flagRegistry().getFlag(nativeType).filter(filter).orElseThrow(() ->
+                new IllegalArgumentException("Unknown flag: " + nativeType));
+    }
+
+    @Override
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+        plugin.flagRegistry().getFlags().stream()
+                .filter(filter)
+                .map(Flag::key)
+                .map(Key::asString)
+                .filter(s -> s.contains(builder.getRemaining()))
+                .forEach(builder::suggest);
+        return builder.buildFuture();
+    }
+
+    @Override
+    public ArgumentType<Key> getNativeType() {
+        return ArgumentTypes.key();
     }
 }
