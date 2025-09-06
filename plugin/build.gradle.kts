@@ -33,18 +33,14 @@ repositories {
 
 dependencies {
     compileOnly("com.nexomc:nexo:1.12.0-dev.0-dev")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.1.1-SNAPSHOT")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.55"))
 
     implementation(project(":api"))
-    implementation("net.thenextlvl.core:files:3.0.0")
     implementation("net.thenextlvl.core:i18n:3.2.1")
     implementation("net.thenextlvl.core:paper:2.3.0-pre4")
-    implementation("net.thenextlvl:nbt:3.0.0-pre1")
 }
 
 tasks.shadowJar {

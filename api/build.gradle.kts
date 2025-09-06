@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("java-library")
     id("maven-publish")
 }
 
@@ -25,13 +26,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
+    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
 
-    implementation("net.thenextlvl:nbt:3.0.0-pre1")
-    implementation("net.thenextlvl.core:files:3.0.0")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.55"))
+    api("net.thenextlvl:nbt:3.0.0-pre1")
+    api("net.thenextlvl.core:files:3.0.0")
+    api(platform("com.intellectualsites.bom:bom-newest:1.55"))
 }
 
 publishing {
