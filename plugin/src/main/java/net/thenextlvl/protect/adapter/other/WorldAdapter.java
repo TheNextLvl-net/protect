@@ -1,11 +1,11 @@
 package net.thenextlvl.protect.adapter.other;
 
-import core.nbt.serialization.ParserException;
-import core.nbt.serialization.TagAdapter;
-import core.nbt.serialization.TagDeserializationContext;
-import core.nbt.serialization.TagSerializationContext;
-import core.nbt.tag.Tag;
 import net.kyori.adventure.key.Key;
+import net.thenextlvl.nbt.serialization.ParserException;
+import net.thenextlvl.nbt.serialization.TagAdapter;
+import net.thenextlvl.nbt.serialization.TagDeserializationContext;
+import net.thenextlvl.nbt.serialization.TagSerializationContext;
+import net.thenextlvl.nbt.tag.Tag;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;

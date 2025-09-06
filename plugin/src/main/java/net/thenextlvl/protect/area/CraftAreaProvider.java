@@ -1,10 +1,10 @@
 package net.thenextlvl.protect.area;
 
 import core.io.IO;
-import core.nbt.NBTInputStream;
-import core.nbt.NBTOutputStream;
-import core.nbt.serialization.ParserException;
 import net.kyori.adventure.key.Key;
+import net.thenextlvl.nbt.NBTInputStream;
+import net.thenextlvl.nbt.NBTOutputStream;
+import net.thenextlvl.nbt.serialization.ParserException;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.AreaLoadEvent;
 import org.bukkit.Location;
@@ -151,7 +151,7 @@ public class CraftAreaProvider implements AreaProvider {
         var entry = inputStream.readNamedTag();
         var root = entry.getKey().getAsCompound();
         var name = entry.getValue().orElseThrow(() -> new ParserException("Area misses root name"));
-        var type = plugin.nbt.fromTag(root.get("type"), Key.class);
+        var type = plugin.nbt.deserialize(root.get("type"), Key.class);
         return plugin.areaService().getAdapter(type).construct(world, name, root);
     }
 
