@@ -40,7 +40,7 @@ dependencies {
 
     implementation(project(":api"))
     implementation("net.thenextlvl.core:i18n:3.2.1")
-    implementation("net.thenextlvl.core:paper:2.3.0-pre4")
+    implementation("net.thenextlvl.core:paper:2.3.1")
 }
 
 tasks.shadowJar {
