@@ -31,7 +31,7 @@ dependencies {
 
     api("net.thenextlvl:nbt:3.0.1")
     api("net.thenextlvl.core:files:3.0.1")
-    api(platform("com.intellectualsites.bom:bom-newest:1.55"))
+    api(platform("com.intellectualsites.bom:bom-newest:1.56-SNAPSHOT"))
 }
 
 publishing {
