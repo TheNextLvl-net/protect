@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
 
     api("net.thenextlvl:nbt:3.0.1")
     api("net.thenextlvl.core:files:3.0.1")
