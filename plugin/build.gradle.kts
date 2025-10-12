@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.nexomc:nexo:1.13.0-dev.4")
+    compileOnly("com.nexomc:nexo:1.14.0-dev.1")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
 
