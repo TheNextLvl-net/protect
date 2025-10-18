@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import static org.bukkit.entity.EntityType.ARMOR_STAND;
 import static org.bukkit.entity.EntityType.PLAYER;
 
 @NullMarked
@@ -57,8 +58,8 @@ public class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canInteract(@Nullable Entity entity, Entity interacted) {
-        return canPerformAction(entity, plugin.areaProvider().getArea(interacted),
-                plugin.flags.entityInteract, "protect.bypass.entity-interact");
+        var flag = interacted.getType().equals(ARMOR_STAND) ? plugin.flags.armorStandManipulate : plugin.flags.entityInteract;
+        return canPerformAction(entity, plugin.areaProvider().getArea(interacted), flag, "protect.bypass.entity-interact");
     }
 
     @Override
@@ -78,11 +79,11 @@ public class CraftProtectionService implements ProtectionService {
         var second = plugin.areaProvider().getArea(victim);
 
         if ((first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-            && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
+                && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
 
         if (first.canInteract(second)
-            && (first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-            || (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))
+                && (first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
+                || (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))
         ) return true;
 
         if (!attacker.hasPermission("protect.bypass.attack")) return false;
@@ -113,9 +114,8 @@ public class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canPerformAction(@Nullable Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission) {
-        return area.getFlag(flag) || entity != null && (area.isPermitted(entity.getUniqueId()) || (
-                permission != null && entity.hasPermission(permission)
-                && (!(entity instanceof Player player) || player.getGameMode().isInvulnerable())
-        ));
+        return area.getFlag(flag) || entity != null && (area.isPermitted(entity.getUniqueId())
+                || (permission != null && entity.hasPermission(permission)
+                && (!(entity instanceof Player player) || player.getGameMode().isInvulnerable())));
     }
 }

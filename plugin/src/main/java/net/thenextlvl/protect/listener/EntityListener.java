@@ -1,8 +1,6 @@
 package net.thenextlvl.protect.listener;
 
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.flag.Flag;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,11 +62,7 @@ public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.getTarget() == null) return;
-        var area = plugin.areaProvider().getArea(event.getEntity());
-        var flag = event.getTarget() instanceof Player
-                ? plugin.flags.entityAttackPlayer
-                : plugin.flags.entityAttackEntity;
-        event.setCancelled(isInteractionRestricted(event.getEntity(), event.getTarget(), flag));
+        event.setCancelled(!plugin.protectionService().canAttack(event.getEntity(), event.getTarget()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -113,13 +107,8 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        event.setCancelled(isInteractionRestricted(
-                event.getPlayer(), event.getRightClicked(),
-                plugin.flags.armorStandManipulate
-        ));
-        if (!event.isCancelled()) return;
-        var area = plugin.areaProvider().getArea(event.getRightClicked());
-        plugin.failed(event.getPlayer(), area, "area.failed.interact");
+        event.setCancelled(!plugin.protectionService().canInteract(event.getPlayer(), event.getRightClicked()));
+        plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getRightClicked()), "area.failed.interact");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -157,13 +146,5 @@ public class EntityListener implements Listener {
         var area = plugin.areaProvider().getArea(event.getEntity());
         if (from != null && from.canInteract(area)) return;
         event.setCancelled(true);
-    }
-
-    private boolean isInteractionRestricted(Entity source, Entity target, Flag<Boolean> flag) {
-        var first = plugin.areaProvider().getArea(source);
-        if (first.getFlag(flag) && first.isPermitted(source.getUniqueId())) return false;
-        var second = plugin.areaProvider().getArea(target);
-        if (second.getFlag(flag) && second.isPermitted(source.getUniqueId())) return false;
-        return !first.canInteract(second);
     }
 }
