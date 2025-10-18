@@ -28,18 +28,14 @@ public class AreaListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAreaEnter(PlayerAreaEnterEvent event) {
-        if (plugin.protectionService().canEnter(event.getPlayer(), event.getArea())) return;
-        plugin.failed(event.getPlayer(), event.getArea(), "area.failed.enter");
-        event.setCancelled(true);
+        plugin.failed(event.getPlayer(), event, event.getArea(), "area.failed.enter");
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAreaLeave(PlayerAreaLeaveEvent event) {
-        if (plugin.protectionService().canLeave(event.getPlayer(), event.getArea())) return;
-        plugin.failed(event.getPlayer(), event.getArea(), "area.failed.leave");
-        event.setCancelled(true);
+        plugin.failed(event.getPlayer(), event, event.getArea(), "area.failed.leave");
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

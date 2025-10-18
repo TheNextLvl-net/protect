@@ -17,8 +17,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-import java.util.stream.Stream;
-
 public class MovementListener implements Listener {
     private final ProtectPlugin plugin;
 
@@ -63,35 +61,36 @@ public class MovementListener implements Listener {
     }
 
     private boolean canMove(Entity entity, Location from, Location to) {
-        return Stream.concat(
-                plugin.areaProvider().getAreas(from),
-                plugin.areaProvider().getAreas(to)
-        ).distinct().allMatch(area -> {
-            if (!area.contains(from) && area.contains(to)) return canEnter(entity, from, to, area);
-            if (area.contains(from) && !area.contains(to)) return canLeave(entity, from, to, area);
-            return true;
+        return plugin.areaProvider().getAreas(from).allMatch(area -> {
+            return area.contains(to) || canLeave(entity, from, to, area);
+        }) && plugin.areaProvider().getAreas(to).allMatch(area -> {
+            return area.contains(from) || canEnter(entity, from, to, area);
         });
-
     }
 
     private boolean canEnter(Entity entity, Location from, Location to, Area area) {
-        return (entity instanceof Player player
-                && new PlayerAreaEnterEvent(player, area).callEvent()
-                && canTransition(player, from, to))
-               || plugin.protectionService().canEnter(entity, area);
+        var enter = plugin.protectionService().canEnter(entity, area);
+        if (!(entity instanceof Player player)) return enter;
+        var event = new PlayerAreaEnterEvent(player, area);
+        event.setCancelled(!canTransition(player, from, to, !enter));
+        return event.callEvent();
     }
 
     private boolean canLeave(Entity entity, Location from, Location to, Area area) {
-        return (entity instanceof Player player
-                && new PlayerAreaLeaveEvent(player, area).callEvent()
-                && canTransition(player, from, to))
-               || plugin.protectionService().canLeave(entity, area);
+        var leave = plugin.protectionService().canLeave(entity, area);
+        if (!(entity instanceof Player player)) return leave;
+        var event = new PlayerAreaLeaveEvent(player, area);
+        event.setCancelled(!canTransition(player, from, to, !leave));
+        return event.callEvent();
     }
 
-    private boolean canTransition(Player player, Location from, Location to) {
+    private boolean canTransition(Player player, Location from, Location to, boolean cancel) {
         var areaFrom = plugin.areaProvider().getArea(from);
         var areaTo = plugin.areaProvider().getArea(to);
+        if (areaFrom.equals(areaTo)) return true;
 
-        return areaFrom.equals(areaTo) || new PlayerAreaTransitionEvent(player, areaFrom, areaTo).callEvent();
+        var event = new PlayerAreaTransitionEvent(player, areaFrom, areaTo);
+        event.setCancelled(cancel);
+        return event.callEvent();
     }
 }
