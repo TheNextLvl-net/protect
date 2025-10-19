@@ -32,10 +32,10 @@ final class AreaParentCommand {
     }
 
     private static int set(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
+        var area = context.getArgument("area", RegionizedArea.class);
+        var parent = context.getArgument("parent", Area.class);
         try {
             var sender = context.getSource().getSender();
-            var area = context.getArgument("area", RegionizedArea.class);
-            var parent = context.getArgument("parent", Area.class);
             var success = area.setParent(parent);
             var message = success ? "area.parent.set" : "nothing.changed";
             plugin.bundle().sendMessage(sender, message,
@@ -44,7 +44,10 @@ final class AreaParentCommand {
             return Command.SINGLE_SUCCESS;
         } catch (CircularInheritanceException e) {
             var sender = context.getSource().getSender();
-            plugin.bundle().sendMessage(sender, "area.parent.circular-inheritance");
+            plugin.bundle().sendMessage(sender, "area.parent.circular-inheritance",
+                    Placeholder.parsed("area", area.getName()),
+                    Placeholder.parsed("parent", parent.getName()));
+            plugin.getComponentLogger().warn(e.getMessage());
             return 0;
         }
     }
