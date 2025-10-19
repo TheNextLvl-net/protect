@@ -158,10 +158,14 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     public void checkCircularInheritance(Area parent) throws CircularInheritanceException {
         var path = new LinkedList<Area>();
-        while (parent != null) {
-            if (parent == this) throw new CircularInheritanceException("Circular inheritance detected: ");
+        path.add(this);
+        path.add(parent);
+        do {
+            if (parent == this) throw new CircularInheritanceException("Circular inheritance detected: " +
+                    path.stream().map(Area::getName).collect(Collectors.joining(" -> ")));
             parent = parent.getParent().orElse(null);
-        }
+            if (parent != null) path.add(parent);
+        } while (parent != null);
     }
 
     @Override
