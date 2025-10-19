@@ -119,7 +119,7 @@ final class AreaFlagCommand {
                 .then(Commands.argument("flag", new FlagArgumentType(plugin, flag ->
                                 plugin.areaProvider().getAreas().anyMatch(area -> area.hasFlag(flag))))
                         .then(Commands.argument("area", new AreaArgumentType(plugin, (context, area) -> {
-                            var flag = (Flag<?>) context.getChild().getArgument("flag", Flag.class);
+                            var flag = (Flag<?>) context.getLastChild().getArgument("flag", Flag.class);
                             return area.hasFlag(flag);
                         })).executes(context -> {
                             var area = context.getArgument("area", Area.class);
