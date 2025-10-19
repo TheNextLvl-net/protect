@@ -66,6 +66,16 @@ public final class CraftGlobalArea extends CraftArea implements GlobalArea {
     }
 
     @Override
+    public List<Entity> getHighestEntities() {
+        return getEntities();
+    }
+
+    @Override
+    public List<Player> getHighestPlayers() {
+        return getPlayers();
+    }
+
+    @Override
     public boolean contains(Location location) {
         return getWorld().equals(location.getWorld());
     }

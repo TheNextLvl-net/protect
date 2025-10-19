@@ -14,14 +14,19 @@ import net.thenextlvl.protect.area.event.member.AreaOwnerChangeEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -193,20 +198,6 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public List<Entity> getHighestEntities() {
-        return getEntities().stream()
-                .filter(player -> plugin.areaProvider().getArea(player).equals(this))
-                .toList();
-    }
-
-    @Override
-    public List<Player> getHighestPlayers() {
-        return getPlayers().stream()
-                .filter(player -> plugin.areaProvider().getArea(player).equals(this))
-                .toList();
-    }
-
-    @Override
     public int compareTo(Area area) {
         return Integer.compare(getPriority(), area.getPriority());
     }
@@ -334,9 +325,9 @@ public abstract class CraftArea implements Area {
     @Override
     public String toString() {
         return "CraftArea{" +
-               "name='" + name + '\'' +
-               ", world=" + world +
-               '}';
+                "name='" + name + '\'' +
+                ", world=" + world +
+                '}';
     }
 
     @Override

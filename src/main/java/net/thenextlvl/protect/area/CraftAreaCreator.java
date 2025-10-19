@@ -77,7 +77,7 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
 
     @Override
     public Map<Flag<?>, @Nullable Object> flags() {
-        return flags;
+        return Map.copyOf(flags);
     }
 
     @Override

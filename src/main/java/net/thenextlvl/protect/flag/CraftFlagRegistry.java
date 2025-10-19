@@ -22,7 +22,7 @@ public final class CraftFlagRegistry implements FlagRegistry {
     public Set<Flag<?>> getFlags() {
         return registry.values().stream()
                 .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override

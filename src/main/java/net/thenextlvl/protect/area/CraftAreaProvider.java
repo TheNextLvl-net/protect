@@ -46,8 +46,7 @@ public final class CraftAreaProvider implements AreaProvider {
 
     @Override
     public Stream<Area> getAreas() {
-        return areas.values().stream()
-                .flatMap(Collection::stream);
+        return areas.values().stream().flatMap(Collection::stream);
     }
 
     @Override
