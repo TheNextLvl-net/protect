@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.*;
 
 @NullMarked
-public class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
+public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> {
     private final ProtectPlugin plugin;
 
     private String name;

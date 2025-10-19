@@ -17,7 +17,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.HashMap;
 
 @NullMarked
-public class GroupedRegionAdapter implements TagAdapter<GroupedRegion> {
+public final class GroupedRegionAdapter implements TagAdapter<GroupedRegion> {
     @Override
     public GroupedRegion deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
         var compound = tag.getAsCompound();

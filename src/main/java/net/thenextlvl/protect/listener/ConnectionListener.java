@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class ConnectionListener implements Listener {
+public final class ConnectionListener implements Listener {
     private final ProtectPlugin plugin;
 
     public ConnectionListener(ProtectPlugin plugin) {

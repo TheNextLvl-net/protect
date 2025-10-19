@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-public class MovementListener implements Listener {
+public final class MovementListener implements Listener {
     private final ProtectPlugin plugin;
 
     public MovementListener(ProtectPlugin plugin) {

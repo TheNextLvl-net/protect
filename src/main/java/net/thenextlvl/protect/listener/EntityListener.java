@@ -25,7 +25,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
-public class EntityListener implements Listener {
+public final class EntityListener implements Listener {
     private final ProtectPlugin plugin;
 
     public EntityListener(ProtectPlugin plugin) {

@@ -13,7 +13,7 @@ import static org.bukkit.entity.EntityType.ARMOR_STAND;
 import static org.bukkit.entity.EntityType.PLAYER;
 
 @NullMarked
-public class CraftProtectionService implements ProtectionService {
+public final class CraftProtectionService implements ProtectionService {
     private final ProtectPlugin plugin;
 
     public CraftProtectionService(ProtectPlugin plugin) {

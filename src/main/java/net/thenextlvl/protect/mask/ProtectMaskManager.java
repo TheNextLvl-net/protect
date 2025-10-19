@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @NullMarked
-public class ProtectMaskManager extends BukkitMaskManager {
+public final class ProtectMaskManager extends BukkitMaskManager {
     private static final CuboidRegion GLOBAL = new CuboidRegion(
             BlockVector3.at(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE),
             BlockVector3.at(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE)

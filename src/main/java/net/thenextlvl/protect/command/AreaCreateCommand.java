@@ -13,8 +13,10 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-class AreaCreateCommand {
+@NullMarked
+final class AreaCreateCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("create")
                 .requires(stack -> stack.getSender() instanceof Player player

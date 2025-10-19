@@ -18,7 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.jspecify.annotations.Nullable;
 
-public class PhysicsListener implements Listener {
+public final class PhysicsListener implements Listener {
     private final ProtectPlugin plugin;
 
     public PhysicsListener(ProtectPlugin plugin) {

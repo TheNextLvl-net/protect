@@ -4,8 +4,10 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.thenextlvl.protect.ProtectPlugin;
+import org.jspecify.annotations.NullMarked;
 
-public class AreaCommand {
+@NullMarked
+public final class AreaCommand {
     public static LiteralCommandNode<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("area")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area"))

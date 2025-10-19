@@ -34,7 +34,7 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
 
 @NullMarked
-public class CraftAreaProvider implements AreaProvider {
+public final class CraftAreaProvider implements AreaProvider {
     private static final String ISSUES = "https://github.com/TheNextLvl-net/protect/issues/new";
 
     private final Map<World, Set<Area>> areas = new HashMap<>();

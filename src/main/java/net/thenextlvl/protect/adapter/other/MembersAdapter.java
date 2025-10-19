@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @NullMarked
-public class MembersAdapter implements TagAdapter<Set<UUID>> {
+public final class MembersAdapter implements TagAdapter<Set<UUID>> {
     @Override
     public Set<UUID> deserialize(Tag tag, TagDeserializationContext context) {
         return tag.<CompoundTag>getAsList().stream()

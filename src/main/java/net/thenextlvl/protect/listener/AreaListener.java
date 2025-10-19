@@ -21,7 +21,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public class AreaListener implements Listener {
+public final class AreaListener implements Listener {
     private final ProtectPlugin plugin;
 
     public AreaListener(ProtectPlugin plugin) {

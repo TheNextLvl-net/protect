@@ -11,7 +11,7 @@ import net.thenextlvl.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class CylinderRegionAdapter implements TagAdapter<CylinderRegion> {
+public final class CylinderRegionAdapter implements TagAdapter<CylinderRegion> {
     @Override
     public CylinderRegion deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();

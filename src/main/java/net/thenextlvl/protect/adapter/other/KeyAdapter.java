@@ -10,7 +10,7 @@ import net.thenextlvl.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class KeyAdapter implements TagAdapter<Key> {
+public final class KeyAdapter implements TagAdapter<Key> {
     @Override
     @SuppressWarnings("PatternValidation")
     public Key deserialize(Tag tag, TagDeserializationContext context) throws ParserException {

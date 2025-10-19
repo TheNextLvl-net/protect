@@ -10,8 +10,10 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.GlobalArea;
+import org.jspecify.annotations.NullMarked;
 
-class AreaListCommand {
+@NullMarked
+final class AreaListCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("list")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.list"))

@@ -24,10 +24,12 @@ import net.thenextlvl.protect.region.GroupedRegion;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
 
-public class AreaGroupCommand {
+@NullMarked
+final class AreaGroupCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("group")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.group"))

@@ -29,11 +29,13 @@ import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
-class AreaFlagCommand {
+@NullMarked
+final class AreaFlagCommand {
     private static final Map<Class<?>, Converter> argumentTypes = Map.of(
             Boolean.class, new Converter(BoolArgumentType::bool),
             Double.class, new Converter(DoubleArgumentType::doubleArg),

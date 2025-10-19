@@ -9,7 +9,7 @@ import net.thenextlvl.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class Vector3Adapter implements TagAdapter<Vector3> {
+public final class Vector3Adapter implements TagAdapter<Vector3> {
     @Override
     public Vector3 deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();

@@ -8,7 +8,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implements CuboidArea {
+public final class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implements CuboidArea {
     public CraftCuboidArea(ProtectPlugin plugin, AreaCreator<CuboidRegion> creator) throws CircularInheritanceException {
         super(plugin, creator);
     }

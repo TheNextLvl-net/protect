@@ -13,8 +13,10 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
 import org.bukkit.OfflinePlayer;
+import org.jspecify.annotations.NullMarked;
 
-class AreaInfoCommand {
+@NullMarked
+final class AreaInfoCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("info")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.info"))

@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Optional;
 
 @NullMarked
-public class CollisionController {
+public final class CollisionController {
     private static final String TEAM_NAME = "collision_protection";
     private @Nullable Team collisionTeam;
     

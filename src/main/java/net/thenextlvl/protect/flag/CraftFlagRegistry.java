@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CraftFlagRegistry implements FlagRegistry {
+public final class CraftFlagRegistry implements FlagRegistry {
     private final Map<Plugin, Set<Flag<?>>> registry = new HashMap<>();
 
     public Map<Plugin, Set<Flag<?>>> getRegistry() {

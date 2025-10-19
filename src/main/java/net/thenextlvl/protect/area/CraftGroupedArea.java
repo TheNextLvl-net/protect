@@ -8,7 +8,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class CraftGroupedArea extends CraftRegionizedArea<GroupedRegion> implements GroupedArea {
+public final class CraftGroupedArea extends CraftRegionizedArea<GroupedRegion> implements GroupedArea {
     public CraftGroupedArea(ProtectPlugin plugin, AreaCreator<GroupedRegion> creator) throws CircularInheritanceException {
         super(plugin, creator);
     }
