@@ -2,7 +2,8 @@ package net.thenextlvl.protect.area.event;
 
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -12,28 +13,21 @@ import org.jspecify.annotations.NullMarked;
  */
 @NullMarked
 public abstract class AreaEvent<T extends Area> extends Event {
-    private static final HandlerList handlerList = new HandlerList();
     private final T area;
 
+    @ApiStatus.Internal
     protected AreaEvent(T area) {
         this(!area.getServer().isPrimaryThread(), area);
     }
 
+    @ApiStatus.Internal
     protected AreaEvent(boolean async, T area) {
         super(async);
         this.area = area;
     }
 
+    @Contract(pure = true)
     public T getArea() {
         return area;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
     }
 }
