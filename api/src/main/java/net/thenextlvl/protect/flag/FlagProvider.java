@@ -1,5 +1,7 @@
 package net.thenextlvl.protect.flag;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -15,6 +17,8 @@ public interface FlagProvider {
      * @return an unmodifiable map containing the flags as keys and their states as values.
      * The map may include null values for certain flags.
      */
+    @Unmodifiable
+    @Contract(pure = true)
     @NonNull Map<@NonNull Flag<?>, @Nullable Object> getFlags();
 
     /**
@@ -24,6 +28,7 @@ public interface FlagProvider {
      *
      * @param flags A map of flags and their associated states.
      */
+    @Contract(mutates = "this")
     void setFlags(@NonNull Map<@NonNull Flag<?>, @Nullable Object> flags);
 
     /**
@@ -34,6 +39,7 @@ public interface FlagProvider {
      * @param <T>   The type of the flag state.
      * @return whether the flag was changed.
      */
+    @Contract(mutates = "this")
     <T> boolean setFlag(@NonNull Flag<T> flag, T state);
 
     /**
@@ -46,6 +52,7 @@ public interface FlagProvider {
      * @param <T>  The type of the flag value.
      * @return The value of the specified flag. Nullability is defined by the flag's type.
      */
+    @Contract(pure = true)
     <T> T getFlag(@NonNull Flag<T> flag);
 
     /**
@@ -55,6 +62,7 @@ public interface FlagProvider {
      * @param <T>  The type of the flag.
      * @return true if a state is defined, true otherwise.
      */
+    @Contract(pure = true)
     <T> boolean hasFlag(@NonNull Flag<T> flag);
 
     /**
@@ -64,5 +72,6 @@ public interface FlagProvider {
      * @param <T>  The type of the flag value.
      * @return true if the flag was successfully removed, false otherwise.
      */
+    @Contract(mutates = "this")
     <T> boolean removeFlag(@NonNull Flag<T> flag);
 }

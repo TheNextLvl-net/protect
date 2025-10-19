@@ -4,6 +4,8 @@ import com.sk89q.worldedit.regions.Region;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.World;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
@@ -25,11 +27,8 @@ public interface AreaService {
      * @param <T>    The type of the region.
      * @return The AreaCreator object.
      */
-    <T extends Region> AreaCreator<T> creator(
-            String name,
-            World world,
-            T region
-    );
+    @Contract(value = "_, _, _ -> new", pure = true)
+    <T extends Region> AreaCreator<T> creator(String name, World world, T region);
 
     /**
      * Creates an AreaCreator for the given RegionizedArea.
@@ -37,6 +36,7 @@ public interface AreaService {
      * @param area The RegionizedArea for which the AreaCreator will be created.
      * @return The AreaCreator object for the specified RegionizedArea.
      */
+    @Contract(value = "_ -> new", pure = true)
     <T extends Region> AreaCreator<T> creator(RegionizedArea<T> area);
 
     /**
@@ -46,6 +46,7 @@ public interface AreaService {
      * @param <T>  The type of the region.
      * @return True, if the deletion is successful, false otherwise.
      */
+    @Contract(mutates = "io")
     <T extends Region> boolean delete(RegionizedArea<T> area);
 
     /**
@@ -55,6 +56,7 @@ public interface AreaService {
      * @param type The class object representing the type of the region.
      * @return An Optional containing the RegionWrapper of the specified type if it exists, otherwise an empty Optional.
      */
+    @Contract(pure = true)
     <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(Class<T> type);
 
     /**
@@ -64,6 +66,7 @@ public interface AreaService {
      * @param type The class object representing the type of the region.
      * @return true if the unregistration is successful, false otherwise.
      */
+    @Contract(mutates = "this")
     <T extends Region> boolean unregisterWrapper(Class<T> type);
 
     /**
@@ -74,6 +77,7 @@ public interface AreaService {
      * @param creator The function to create a RegionizedArea from an AreaCreator.
      * @throws IllegalStateException if a region wrapper for the same type already exists.
      */
+    @Contract(mutates = "this")
     <T extends Region> void registerWrapper(
             Class<T> type,
             Function<AreaCreator<T>, RegionizedArea<T>> creator
@@ -84,6 +88,8 @@ public interface AreaService {
      *
      * @return an unmodifiable set of classes representing region wrappers.
      */
+    @Unmodifiable
+    @Contract(pure = true)
     Set<Class<? extends Region>> getRegionWrappers();
 
     /**
@@ -91,6 +97,8 @@ public interface AreaService {
      *
      * @return The registered adapter functions for serializing and deserializing Area objects.
      */
+    @Unmodifiable
+    @Contract(pure = true)
     Map<Class<? extends Area>, AreaAdapter<?>> getAdapters();
 
     /**
@@ -101,6 +109,7 @@ public interface AreaService {
      * @param <T>     The type parameter representing the area object.
      * @throws IllegalStateException if an adapter for the specified area type is already registered.
      */
+    @Contract(mutates = "this")
     <T extends Area> void registerAdapter(
             Class<T> type,
             AreaAdapter<T> adapter
@@ -113,6 +122,7 @@ public interface AreaService {
      * @param <T>  The type parameter representing the area object.
      * @return true if the unregistration is successful, false otherwise.
      */
+    @Contract(mutates = "this")
     <T extends Area> boolean unregisterAdapter(Class<T> type);
 
     /**
@@ -123,6 +133,7 @@ public interface AreaService {
      * @return The adapter for the specified area type.
      * @throws NullPointerException if no adapter was registered for the given type.
      */
+    @Contract(pure = true)
     <T extends Area> AreaAdapter<T> getAdapter(Class<T> type) throws NullPointerException;
 
     /**
@@ -133,5 +144,6 @@ public interface AreaService {
      * @return The adapter for the specified area type.
      * @throws IllegalArgumentException thrown if no adapter for the specified key was registered.
      */
+    @Contract(pure = true)
     <T extends Area> AreaAdapter<T> getAdapter(Key key) throws IllegalArgumentException;
 }

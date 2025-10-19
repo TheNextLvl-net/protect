@@ -2,6 +2,8 @@ package net.thenextlvl.protect.area;
 
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.nbt.tag.Tag;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
@@ -21,6 +23,7 @@ public interface DataContainer {
      * @param key the key whose associated value is to be returned
      * @return an {@code Optional} containing the value if present, or an empty {@code Optional} if not
      */
+    @Contract(pure = true)
     <T extends Tag> Optional<T> get(Key key);
 
     /**
@@ -30,6 +33,7 @@ public interface DataContainer {
      * @param key the key whose associated value is to be removed
      * @return an {@link Optional} containing the removed value, or {@link Optional#empty()}
      */
+    @Contract(mutates = "this")
     <T extends Tag> Optional<T> remove(Key key);
 
     /**
@@ -40,6 +44,7 @@ public interface DataContainer {
      * @param defaultValue the default value to return if the key is not present
      * @return the value associated with the specified key, or the default value if the key is not present
      */
+    @Contract(pure = true)
     <T extends Tag> T getOrDefault(Key key, T defaultValue);
 
     /**
@@ -49,6 +54,7 @@ public interface DataContainer {
      * @param key   the key with which the specified value is to be associated
      * @param value the value to be associated with the specified key
      */
+    @Contract(mutates = "this")
     <T extends Tag> void set(Key key, T value);
 
     /**
@@ -57,6 +63,8 @@ public interface DataContainer {
      *
      * @return an unmodifiable map containing all entries.
      */
+    @Unmodifiable
+    @Contract(pure = true)
     Map<Key, Tag> getTags();
 
     /**
@@ -64,6 +72,8 @@ public interface DataContainer {
      *
      * @return an unmodifiable set of keys contained in the data container
      */
+    @Unmodifiable
+    @Contract(pure = true)
     Set<Key> getKeys();
 
     /**
@@ -71,6 +81,8 @@ public interface DataContainer {
      *
      * @return an unmodifiable set of all entries
      */
+    @Unmodifiable
+    @Contract(pure = true)
     Set<Map.Entry<Key, Tag>> entrySet();
 
     /**
@@ -79,6 +91,7 @@ public interface DataContainer {
      * @param key the key to check for presence
      * @return {@code true} if the key is present, {@code false} otherwise
      */
+    @Contract(pure = true)
     boolean has(Key key);
 
     /**
@@ -86,11 +99,13 @@ public interface DataContainer {
      *
      * @return {@code true} if the container is empty, {@code false} otherwise
      */
+    @Contract(pure = true)
     boolean isEmpty();
 
     /**
      * Removes all entries from the data container, erasing all stored data.
      */
+    @Contract(mutates = "this")
     void clear();
 
     /**
@@ -98,6 +113,7 @@ public interface DataContainer {
      *
      * @param dataContainer the target data container to which the entries are copied
      */
+    @Contract(mutates = "param")
     void copyTo(DataContainer dataContainer);
 
     /**
@@ -106,6 +122,7 @@ public interface DataContainer {
      * @param dataContainer the target data container to which the entries are copied
      * @param replace       whether the target data container will be cleared before copying the entries
      */
+    @Contract(mutates = "param")
     void copyTo(DataContainer dataContainer, boolean replace);
 
     /**
