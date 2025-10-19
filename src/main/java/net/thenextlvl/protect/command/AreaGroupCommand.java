@@ -111,7 +111,7 @@ final class AreaGroupCommand {
 
     private static SuggestionProvider<CommandSourceStack> suggestGroups(ProtectPlugin plugin) {
         return (context, builder) -> {
-            var group = context.getChild().getArgument("group", GroupedArea.class);
+            var group = context.getLastChild().getArgument("group", GroupedArea.class);
             group.getRegion().getRegions().keySet().forEach(builder::suggest);
             return builder.buildFuture();
         };

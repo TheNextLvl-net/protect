@@ -48,7 +48,7 @@ final class AreaMembersCommand {
                                         !area.getMembers().isEmpty()))
                                 .then(Commands.argument("player", StringArgumentType.word())
                                         .suggests((context, builder) -> {
-                                            var area = context.getChild().getArgument("area", Area.class);
+                                            var area = context.getLastChild().getArgument("area", Area.class);
                                             return CompletableFuture.runAsync(() -> area.getMembers().stream()
                                                             .map(plugin.getServer()::getOfflinePlayer)
                                                             .map(OfflinePlayer::getName)
