@@ -4,8 +4,8 @@ plugins {
     id("maven-publish")
 }
 
-group = "net.thenextlvl.protect"
-version = "3.1.2"
+group = rootProject.group
+version = rootProject.version
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(21)

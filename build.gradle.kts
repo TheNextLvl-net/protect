@@ -18,8 +18,8 @@ tasks.compileJava {
     options.release.set(21)
 }
 
-group = project(":api").group
-version = project(":api").version
+group = "net.thenextlvl.protect"
+version = "3.1.2"
 
 repositories {
     mavenCentral()
