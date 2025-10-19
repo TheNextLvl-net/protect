@@ -19,7 +19,7 @@ tasks.compileJava {
 }
 
 group = "net.thenextlvl.protect"
-version = "3.1.2"
+version = "3.1.3"
 
 repositories {
     mavenCentral()
