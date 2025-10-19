@@ -175,7 +175,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public boolean canInteract(Area area) {
         return equals(area) || area.getParent().map(this::equals).orElse(false)
-               || (area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner()));
+                || (area instanceof RegionizedArea<?> regionized && Objects.equals(regionized.getOwner(), getOwner()))
+                || getPriority() > area.getPriority();
     }
 
     @Override
