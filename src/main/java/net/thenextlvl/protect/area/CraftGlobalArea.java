@@ -52,7 +52,7 @@ public final class CraftGlobalArea extends CraftArea implements GlobalArea {
 
     @Override
     public boolean canInteract(Area area) {
-        return equals(area);
+        return equals(area) || getPriority() > area.getPriority();
     }
 
     @Override
