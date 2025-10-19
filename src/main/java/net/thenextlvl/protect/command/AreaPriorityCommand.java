@@ -11,8 +11,10 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
+import org.jspecify.annotations.NullMarked;
 
-class AreaPriorityCommand {
+@NullMarked
+final class AreaPriorityCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("priority")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.priority"))

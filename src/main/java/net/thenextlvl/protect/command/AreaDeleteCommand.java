@@ -12,7 +12,7 @@ import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-class AreaDeleteCommand {
+final class AreaDeleteCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("delete")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.delete"))

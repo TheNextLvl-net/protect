@@ -4,16 +4,17 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.event.AreaEvent;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.event.Cancellable;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents an abstract event bound to an area and flag
  *
  * @param <T> The type of the flag value.
  */
-@NullMarked
-public abstract class AreaFlagEvent<T> extends AreaEvent<Area> implements Cancellable {
-    private final Flag<T> flag;
+public abstract class AreaFlagEvent<T> extends AreaEvent<@NonNull Area> implements Cancellable {
+    private final @NonNull Flag<T> flag;
     private boolean cancelled;
 
     /**
@@ -22,21 +23,25 @@ public abstract class AreaFlagEvent<T> extends AreaEvent<Area> implements Cancel
      * @param area the area associated with this event
      * @param flag the flag associated with this event
      */
-    protected AreaFlagEvent(Area area, Flag<T> flag) {
+    @ApiStatus.Internal
+    protected AreaFlagEvent(@NonNull Area area, @NonNull Flag<T> flag) {
         super(area);
         this.flag = flag;
     }
 
-    public Flag<T> getFlag() {
+    @Contract(pure = true)
+    public @NonNull Flag<T> getFlag() {
         return flag;
     }
 
     @Override
+    @Contract(pure = true)
     public boolean isCancelled() {
         return cancelled;
     }
 
     @Override
+    @Contract(mutates = "this")
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }

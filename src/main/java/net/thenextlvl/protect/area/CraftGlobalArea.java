@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @NullMarked
-public class CraftGlobalArea extends CraftArea implements GlobalArea {
+public final class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
     private final File fallbackFile = new File(getDataFolder(), getName() + ".dat_old");
     private final File file = new File(getDataFolder(), getName() + ".dat");
@@ -63,6 +63,16 @@ public class CraftGlobalArea extends CraftArea implements GlobalArea {
     @Override
     public List<Player> getPlayers() {
         return getWorld().getPlayers();
+    }
+
+    @Override
+    public List<Entity> getHighestEntities() {
+        return getEntities();
+    }
+
+    @Override
+    public List<Player> getHighestPlayers() {
+        return getPlayers();
     }
 
     @Override

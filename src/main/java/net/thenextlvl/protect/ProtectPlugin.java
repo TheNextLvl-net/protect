@@ -83,13 +83,13 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @NullMarked
-public class ProtectPlugin extends JavaPlugin {
+public final class ProtectPlugin extends JavaPlugin {
     private final Metrics metrics = new Metrics(this, 21712);
     private final File schematicFolder = new File(getDataFolder(), "schematics");
     private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
     private final CollisionController collisionController = new CollisionController();
-    
+
     private final CraftProtectionService protectionService = new CraftProtectionService(this);
     private final CraftFlagRegistry flagRegistry = new CraftFlagRegistry();
     private final CraftAreaProvider areaProvider = new CraftAreaProvider(this);

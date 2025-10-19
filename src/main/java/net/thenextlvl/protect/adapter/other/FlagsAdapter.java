@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NullMarked
-public class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> {
+public final class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> {
     private final ProtectPlugin plugin;
 
     public FlagsAdapter(ProtectPlugin plugin) {

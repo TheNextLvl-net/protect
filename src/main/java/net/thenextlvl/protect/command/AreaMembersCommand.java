@@ -16,11 +16,13 @@ import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.command.argument.AreaArgumentType;
 import org.bukkit.OfflinePlayer;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-class AreaMembersCommand {
+@NullMarked
+final class AreaMembersCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("members")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.members"))

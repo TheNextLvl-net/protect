@@ -11,7 +11,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class LocationAdapter implements TagAdapter<Location> {
+public final class LocationAdapter implements TagAdapter<Location> {
     @Override
     public Location deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
         var compound = tag.getAsCompound();

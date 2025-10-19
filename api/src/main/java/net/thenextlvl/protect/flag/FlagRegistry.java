@@ -3,6 +3,8 @@ package net.thenextlvl.protect.flag;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.KeyPattern;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 
@@ -13,14 +15,15 @@ import java.util.Set;
  * FlagRegistry is an interface that provides methods for managing registered flags.
  */
 public interface FlagRegistry {
-
     /**
      * Retrieves the set of flags associated with this FlagRegistry.
      *
      * @return a Set of flags associated with the FlagRegistry
      */
-    @NullMarked
-    Set<Flag<?>> getFlags();
+    @NonNull
+    @Unmodifiable
+    @Contract(pure = true)
+    Set<@NonNull Flag<?>> getFlags();
 
     /**
      * Retrieves the set of flags associated with the given plugin.
@@ -28,8 +31,9 @@ public interface FlagRegistry {
      * @param plugin the plugin for which to retrieve the flags
      * @return a set of flags associated with the plugin
      */
-    @NullMarked
-    Set<Flag<?>> getFlags(Plugin plugin);
+    @NonNull
+    @Contract(pure = true)
+    Set<@NonNull Flag<?>> getFlags(@NonNull Plugin plugin);
 
     /**
      * Retrieves the flag associated with the given Key.
@@ -38,8 +42,9 @@ public interface FlagRegistry {
      * @param <T> the type of the flag value
      * @return an Optional containing the flag, or an empty Optional if no flag was found
      */
-    @NullMarked
-    <T> Optional<Flag<T>> getFlag(Key key);
+    @NonNull
+    @Contract(pure = true)
+    <T> Optional<@NonNull Flag<T>> getFlag(@NonNull Key key);
 
     /**
      * Registers a new flag with the specified plugin, name, and default value.
@@ -54,6 +59,7 @@ public interface FlagRegistry {
      */
     @NullMarked
     @SuppressWarnings("unchecked")
+    @Contract(mutates = "this")
     default <T> Flag<T> register(Plugin plugin, @KeyPattern.Value String name, T defaultValue) throws IllegalStateException {
         return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue);
     }
@@ -69,6 +75,7 @@ public interface FlagRegistry {
      * @return the registered flag
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      */
+    @Contract(mutates = "this")
     <T> @NonNull Flag<T> register(@NonNull Plugin plugin, @NonNull Class<? extends T> type,
                                   @KeyPattern.Value String name, T defaultValue
     ) throws IllegalStateException;
@@ -87,6 +94,7 @@ public interface FlagRegistry {
      */
     @NullMarked
     @SuppressWarnings("unchecked")
+    @Contract(mutates = "this")
     default <T> ProtectionFlag<T> register(Plugin plugin, @KeyPattern.Value String name, T defaultValue, T protectedValue) throws IllegalStateException {
         return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue, protectedValue);
     }
@@ -108,6 +116,7 @@ public interface FlagRegistry {
      * @return the registered protection flag
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      */
+    @Contract(mutates = "this")
     <T> @NonNull ProtectionFlag<T> register(@NonNull Plugin plugin, @NonNull Class<? extends T> type,
                                             @KeyPattern.Value @NonNull String name, T defaultValue, T protectedValue
     ) throws IllegalStateException;
@@ -118,6 +127,7 @@ public interface FlagRegistry {
      * @param flag the Key of the flag to unregister
      * @return true if the flag was unregistered, false otherwise
      */
+    @Contract(mutates = "this")
     boolean unregister(@NonNull Key flag);
 
     /**
@@ -126,5 +136,6 @@ public interface FlagRegistry {
      * @param plugin the plugin for which to unregister flags
      * @return true if any flag was unregistered, false otherwise
      */
+    @Contract(mutates = "this")
     boolean unregisterAll(@NonNull Plugin plugin);
 }

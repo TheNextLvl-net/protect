@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @NullMarked
-public class CraftAreaService implements AreaService {
+public final class CraftAreaService implements AreaService {
     private final Map<Class<? extends Area>, AreaAdapter<?>> adapters = new HashMap<>();
     private final Set<RegionWrapper<?>> wrappers = new HashSet<>();
     private final ProtectPlugin plugin;

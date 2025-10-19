@@ -9,7 +9,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class CraftCylinderArea extends CraftRegionizedArea<CylinderRegion> implements CylinderArea {
+public final class CraftCylinderArea extends CraftRegionizedArea<CylinderRegion> implements CylinderArea {
     public CraftCylinderArea(ProtectPlugin plugin, AreaCreator<CylinderRegion> creator) throws CircularInheritanceException {
         super(plugin, creator);
     }

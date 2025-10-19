@@ -12,8 +12,10 @@ import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-class AreaSelectCommand {
+@NullMarked
+final class AreaSelectCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("select")
                 .requires(stack -> stack.getSender() instanceof Player player

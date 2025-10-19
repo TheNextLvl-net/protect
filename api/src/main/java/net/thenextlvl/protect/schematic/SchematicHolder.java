@@ -1,6 +1,7 @@
 package net.thenextlvl.protect.schematic;
 
 import com.sk89q.worldedit.WorldEditException;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.File;
@@ -11,12 +12,12 @@ import java.io.IOException;
  */
 @NullMarked
 public interface SchematicHolder {
-
     /**
      * Retrieves the schematic file associated with this object.
      *
      * @return The schematic file.
      */
+    @Contract(pure = true)
     File getSchematic();
 
     /**
@@ -25,6 +26,7 @@ public interface SchematicHolder {
      *
      * @return True if the schematic file was successfully deleted, false otherwise.
      */
+    @Contract(mutates = "io")
     boolean deleteSchematic();
 
     /**
@@ -33,6 +35,7 @@ public interface SchematicHolder {
      * @throws IOException        if an I/O error occurs while saving the schematic file.
      * @throws WorldEditException if an error occurs while using WorldEdit API to save the schematic.
      */
+    @Contract(mutates = "io")
     void saveSchematic() throws IOException, WorldEditException;
 
     /**

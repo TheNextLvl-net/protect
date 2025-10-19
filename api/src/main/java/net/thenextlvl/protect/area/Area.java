@@ -4,6 +4,8 @@ import net.thenextlvl.nbt.serialization.TagSerializable;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -23,6 +25,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return a LinkedHashSet of parent areas.
      */
+    @Contract(value = " -> new")
     LinkedHashSet<Area> getParents();
 
     /**
@@ -31,6 +34,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return an Optional containing the parent area if it exists, otherwise an empty Optional
      */
+    @Contract(pure = true)
     Optional<Area> getParent();
 
     /**
@@ -38,6 +42,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return an Optional containing the UUID of the owner, or empty
      */
+    @Contract(pure = true)
     Optional<UUID> getOwner();
 
     /**
@@ -45,6 +50,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return the server associated with this area
      */
+    @Contract(pure = true)
     Server getServer();
 
     /**
@@ -52,6 +58,8 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return a set of UUIDs representing the members.
      */
+    @Unmodifiable
+    @Contract(pure = true)
     Set<UUID> getMembers();
 
     /**
@@ -59,6 +67,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return the name of the area
      */
+    @Contract(pure = true)
     String getName();
 
     /**
@@ -66,6 +75,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return the world associated with this Area
      */
+    @Contract(pure = true)
     World getWorld();
 
     /**
@@ -73,6 +83,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return the data folder associated with this object
      */
+    @Contract(pure = true)
     File getDataFolder();
 
     /**
@@ -80,6 +91,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return the File associated with this object
      */
+    @Contract(pure = true)
     File getFile();
 
     /**
@@ -87,6 +99,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return the fallback file associated with this area
      */
+    @Contract(pure = true)
     File getFallbackFile();
 
     /**
@@ -95,6 +108,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @param uuid the UUID of the member to add
      * @return whether the member was added
      */
+    @Contract(mutates = "this")
     boolean addMember(UUID uuid);
 
     /**
@@ -103,6 +117,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @param area the area to check interaction capability with
      * @return true if this area can interact with the specified area, false otherwise
      */
+    @Contract(pure = true)
     boolean canInteract(Area area);
 
     /**
@@ -111,6 +126,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @param uuid the UUID to check
      * @return true if the UUID is a member, false otherwise
      */
+    @Contract(pure = true)
     boolean isMember(UUID uuid);
 
     /**
@@ -119,6 +135,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @param uuid the UUID to check
      * @return true if the UUID is either the owner or a member, false otherwise
      */
+    @Contract(pure = true)
     boolean isPermitted(UUID uuid);
 
     /**
@@ -127,6 +144,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @param uuid the UUID of the member to remove
      * @return whether the member was removed
      */
+    @Contract(mutates = "this")
     boolean removeMember(UUID uuid);
 
     /**
@@ -135,6 +153,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @param owner the UUID of the owner to set
      * @return whether the owner was changed
      */
+    @Contract(mutates = "this")
     boolean setOwner(@Nullable UUID owner);
 
     /**
@@ -145,6 +164,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @param priority the priority value to set
      * @return whether the priority was changed
      */
+    @Contract(mutates = "this")
     boolean setPriority(int priority);
 
     /**
@@ -155,6 +175,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @return the priority of the area
      */
+    @Contract(pure = true)
     int getPriority();
 
     /**
@@ -162,5 +183,6 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      *
      * @param members a set of UUIDs representing the new members to set
      */
+    @Contract(mutates = "this")
     void setMembers(Set<UUID> members);
 }

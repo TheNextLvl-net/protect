@@ -5,6 +5,7 @@ import net.kyori.adventure.key.Keyed;
 import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.World;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -20,6 +21,7 @@ public interface AreaAdapter<T extends Area> extends Keyed {
      *
      * @return The key associated with the adapter.
      */
+    @Contract(pure = true)
     Key key();
 
     /**
@@ -30,5 +32,6 @@ public interface AreaAdapter<T extends Area> extends Keyed {
      * @param tag   the CompoundTag containing the serialized data of the Area
      * @return the constructed Area object
      */
+    @Contract(value = "_, _, _ -> new")
     Area construct(World world, String name, CompoundTag tag);
 }

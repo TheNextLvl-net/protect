@@ -10,7 +10,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
+public final class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
     private final Key key;
     private final ProtectPlugin plugin;
 

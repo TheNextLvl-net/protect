@@ -5,6 +5,7 @@ import com.sk89q.worldedit.regions.RegionSelector;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.bukkit.Location;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -17,10 +18,11 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
     /**
-     * Retrieves the location of this area.
+     * Calculates the location of this area.
      *
      * @return the location of this area.
      */
+    @Contract(value = " -> new", pure = true)
     Location getLocation();
 
     /**
@@ -28,6 +30,7 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      *
      * @return The RegionSelector associated with this RegionizedArea.
      */
+    @Contract(value = " -> new", pure = true)
     RegionSelector getRegionSelector();
 
     /**
@@ -35,6 +38,7 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      *
      * @return The region associated with this area.
      */
+    @Contract(pure = true)
     T getRegion();
 
     /**
@@ -45,6 +49,7 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @return true if the parent area was successfully set, false otherwise
      * @throws CircularInheritanceException if the parent is this area or contained in its inherited parents
      */
+    @Contract(mutates = "this")
     boolean setParent(@Nullable Area parent) throws CircularInheritanceException;
 
     /**
@@ -53,6 +58,7 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      * @param region the region to set
      * @return true if the region was successfully set, false otherwise
      */
+    @Contract(mutates = "this")
     boolean setRegion(T region);
 
     /**
@@ -60,5 +66,6 @@ public interface RegionizedArea<T extends Region> extends Area, SchematicHolder 
      *
      * @return true if the area is too big, false otherwise
      */
+    @Contract(pure = true)
     boolean isTooBig();
 }

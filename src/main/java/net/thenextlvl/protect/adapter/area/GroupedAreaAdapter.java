@@ -9,7 +9,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class GroupedAreaAdapter extends RegionizedAreaAdapter<GroupedRegion, CraftGroupedArea> {
+public final class GroupedAreaAdapter extends RegionizedAreaAdapter<GroupedRegion, CraftGroupedArea> {
     public GroupedAreaAdapter(ProtectPlugin plugin) {
         super(plugin, "grouped");
     }

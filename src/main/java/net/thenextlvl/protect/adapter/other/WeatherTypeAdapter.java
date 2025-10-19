@@ -10,7 +10,7 @@ import org.bukkit.WeatherType;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class WeatherTypeAdapter implements TagAdapter<WeatherType> {
+public final class WeatherTypeAdapter implements TagAdapter<WeatherType> {
     @Override
     public WeatherType deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
         return WeatherType.valueOf(tag.getAsString());

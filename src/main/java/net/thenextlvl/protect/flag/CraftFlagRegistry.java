@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CraftFlagRegistry implements FlagRegistry {
+public final class CraftFlagRegistry implements FlagRegistry {
     private final Map<Plugin, Set<Flag<?>>> registry = new HashMap<>();
 
     public Map<Plugin, Set<Flag<?>>> getRegistry() {
@@ -22,7 +22,7 @@ public class CraftFlagRegistry implements FlagRegistry {
     public Set<Flag<?>> getFlags() {
         return registry.values().stream()
                 .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override

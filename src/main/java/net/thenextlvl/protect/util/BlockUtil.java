@@ -2,7 +2,7 @@ package net.thenextlvl.protect.util;
 
 import org.bukkit.Material;
 
-public class BlockUtil {
+public final class BlockUtil {
     @SuppressWarnings("deprecation")
     public static boolean isInteractable(Material type, Material item) {
         return switch (item) {

@@ -13,8 +13,10 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NullMarked;
 
-class AreaRedefineCommand {
+@NullMarked
+final class AreaRedefineCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("redefine")
                 .requires(stack -> stack.getSender() instanceof Player player

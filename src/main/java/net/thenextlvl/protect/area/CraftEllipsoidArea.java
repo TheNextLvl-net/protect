@@ -9,7 +9,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class CraftEllipsoidArea extends CraftRegionizedArea<EllipsoidRegion> implements EllipsoidArea {
+public final class CraftEllipsoidArea extends CraftRegionizedArea<EllipsoidRegion> implements EllipsoidArea {
     public CraftEllipsoidArea(ProtectPlugin plugin, AreaCreator<EllipsoidRegion> creator) throws CircularInheritanceException {
         super(plugin, creator);
     }

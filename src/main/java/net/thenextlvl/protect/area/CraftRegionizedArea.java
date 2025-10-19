@@ -34,11 +34,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
@@ -184,7 +186,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public boolean contains(Location location) {
         return getWorld().equals(location.getWorld())
-               && getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                && getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     @Override
@@ -234,14 +236,28 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     public List<Entity> getEntities() {
         return getWorld().getEntities().stream()
                 .filter(this::contains)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<Player> getPlayers() {
         return getWorld().getPlayers().stream()
                 .filter(this::contains)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public List<Entity> getHighestEntities() {
+        return getWorld().getEntities().stream()
+                .filter(player -> plugin.areaProvider().getArea(player).equals(this))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public List<Player> getHighestPlayers() {
+        return getWorld().getPlayers().stream()
+                .filter(player -> plugin.areaProvider().getArea(player).equals(this))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

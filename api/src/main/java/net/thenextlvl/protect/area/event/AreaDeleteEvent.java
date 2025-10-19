@@ -3,6 +3,9 @@ package net.thenextlvl.protect.area.event;
 import net.thenextlvl.protect.area.AreaService;
 import net.thenextlvl.protect.area.RegionizedArea;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -12,7 +15,8 @@ import org.jspecify.annotations.NullMarked;
  * Note: Calling {@link AreaService#delete(RegionizedArea)} within this event can lead to an infinite loop.
  */
 @NullMarked
-public class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
+public final class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
+    private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;
 
     /**
@@ -20,6 +24,7 @@ public class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Can
      *
      * @param area the RegionizedArea that is requested to be deleted
      */
+    @ApiStatus.Internal
     public AreaDeleteEvent(RegionizedArea<?> area) {
         super(area);
     }
@@ -32,5 +37,16 @@ public class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Can
     @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
+    }
+
+    @Override
+    @Contract(pure = true)
+    public HandlerList getHandlers() {
+        return handlerList;
+    }
+
+    @Contract(pure = true)
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 }

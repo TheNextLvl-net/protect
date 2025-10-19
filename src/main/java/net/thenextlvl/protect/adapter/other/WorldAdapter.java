@@ -11,7 +11,7 @@ import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class WorldAdapter implements TagAdapter<World> {
+public final class WorldAdapter implements TagAdapter<World> {
     private final Server server;
 
     public WorldAdapter(Server server) {

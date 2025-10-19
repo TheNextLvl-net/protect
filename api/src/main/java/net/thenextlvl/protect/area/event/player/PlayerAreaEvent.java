@@ -2,8 +2,9 @@ package net.thenextlvl.protect.area.event.player;
 
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 /**
@@ -11,7 +12,6 @@ import org.jspecify.annotations.NullMarked;
  */
 @NullMarked
 public abstract class PlayerAreaEvent extends PlayerEvent {
-    private static final HandlerList handlerList = new HandlerList();
     private final Area area;
 
     /**
@@ -20,21 +20,14 @@ public abstract class PlayerAreaEvent extends PlayerEvent {
      * @param player the player associated with this event
      * @param area   the area associated with this event
      */
+    @ApiStatus.Internal
     protected PlayerAreaEvent(Player player, Area area) {
         super(player);
         this.area = area;
     }
 
+    @Contract(pure = true)
     public Area getArea() {
         return area;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
     }
 }

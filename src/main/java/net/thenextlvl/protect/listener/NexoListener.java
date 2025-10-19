@@ -10,7 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-public class NexoListener implements Listener {
+public final class NexoListener implements Listener {
     private final ProtectPlugin plugin;
     private final ProtectionFlag<Boolean> furnitureBreak;
     private final ProtectionFlag<Boolean> furniturePlace;

@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.exception;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -25,6 +26,7 @@ public class UnsupportedRegionException extends IllegalArgumentException {
         this.type = type;
     }
 
+    @Contract(pure = true)
     public Class<?> getType() {
         return type;
     }

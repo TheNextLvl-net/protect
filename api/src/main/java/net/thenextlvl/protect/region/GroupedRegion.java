@@ -13,6 +13,8 @@ import com.sk89q.worldedit.regions.AbstractRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionOperationException;
 import com.sk89q.worldedit.world.World;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -31,7 +33,7 @@ import java.util.stream.Collectors;
  * The GroupedRegion class allows for managing a collection of regions identified by unique names.
  */
 @NullMarked
-public class GroupedRegion extends AbstractRegion {
+public final class GroupedRegion extends AbstractRegion {
     private final Map<String, Region> regions = new HashMap<>();
 
     /**
@@ -62,6 +64,8 @@ public class GroupedRegion extends AbstractRegion {
      *
      * @return an unmodifiable map of regions where the key is the region name and the value is the Region instance.
      */
+    @Unmodifiable
+    @Contract(pure = true)
     public Map<String, Region> getRegions() {
         return Map.copyOf(regions);
     }
@@ -72,6 +76,7 @@ public class GroupedRegion extends AbstractRegion {
      * @param name The name of the region to retrieve.
      * @return The region associated with the specified name, or null if no such region exists.
      */
+    @Contract(pure = true)
     public @Nullable Region getRegion(String name) {
         return regions.get(name);
     }
@@ -83,6 +88,7 @@ public class GroupedRegion extends AbstractRegion {
      * @param region The region instance to be added.
      * @return true if the region was added successfully, false if a region with the same name already exists.
      */
+    @Contract(mutates = "this")
     public boolean addRegion(String name, Region region) {
         return regions.putIfAbsent(name, region.clone()) == null;
     }
@@ -93,6 +99,7 @@ public class GroupedRegion extends AbstractRegion {
      * @param name The name of the region to check for existence.
      * @return true if a region with the specified name exists, false otherwise.
      */
+    @Contract(pure = true)
     public boolean hasRegion(String name) {
         return regions.containsKey(name);
     }
@@ -103,6 +110,7 @@ public class GroupedRegion extends AbstractRegion {
      * @param region The region to check for existence.
      * @return true if the region exists in the map, false otherwise.
      */
+    @Contract(pure = true)
     public boolean hasRegion(Region region) {
         return regions.containsValue(region);
     }
@@ -113,6 +121,7 @@ public class GroupedRegion extends AbstractRegion {
      * @param name The name of the region to remove.
      * @return true if the region was successfully removed, false otherwise.
      */
+    @Contract(mutates = "this")
     public boolean removeRegion(String name) {
         return regions.size() > 1 && regions.remove(name) != null;
     }
@@ -123,11 +132,13 @@ public class GroupedRegion extends AbstractRegion {
      * @param name   The name of the region to set or update.
      * @param region The Region instance to be associated with the specified name.
      */
+    @Contract(mutates = "this")
     public void setRegion(String name, Region region) {
         regions.put(name, region.clone());
     }
 
     @Override
+    @Contract(pure = true)
     public BlockVector3 getMinimumPoint() {
         var regions = this.regions.values().toArray(new Region[0]);
         var maximum = regions[0].getMinimumPoint();
@@ -137,6 +148,7 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     @Override
+    @Contract(pure = true)
     public BlockVector3 getMaximumPoint() {
         var regions = this.regions.values().toArray(new Region[0]);
         var maximum = regions[0].getMaximumPoint();
@@ -146,27 +158,32 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     @Override
+    @Contract(value = "_ -> fail")
     public void expand(BlockVector3... changes) throws RegionOperationException {
         throw new RegionOperationException(Caption.of("worldedit.selection.intersection.error.cannot-expand"));
     }
 
     @Override
+    @Contract(value = "_ -> fail")
     public void contract(BlockVector3... changes) throws RegionOperationException {
         throw new RegionOperationException(Caption.of("worldedit.selection.intersection.error.cannot-contract"));
     }
 
     @Override
+    @Contract(pure = true)
     public boolean contains(BlockVector3 position) {
         return regions.values().stream().anyMatch(region -> region.contains(position));
     }
 
     @Override
+    @Contract(pure = true)
     public Iterator<BlockVector3> iterator() {
         return Iterators.concat(Iterators.transform(regions.values().iterator(), Iterable::iterator));
 
     }
 
     @Override
+    @Contract(pure = true)
     public boolean containsEntireCuboid(int bx, int tx, int by, int ty, int bz, int tz) {
         return regions.values().stream().anyMatch(region -> region.containsEntireCuboid(bx, tx, by, ty, bz, tz));
     }
@@ -229,6 +246,7 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     @Override
+    @Contract(pure = true)
     public Set<BlockVector2> getChunks() {
         return regions.values().stream()
                 .flatMap(region -> region.getChunks().stream())
@@ -236,6 +254,7 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     @Override
+    @Contract(pure = true)
     public Set<BlockVector3> getChunkCubes() {
         return regions.values().stream()
                 .flatMap(region -> region.getChunkCubes().stream())
@@ -243,21 +262,25 @@ public class GroupedRegion extends AbstractRegion {
     }
 
     @Override
+    @Contract(pure = true)
     public boolean containsChunk(int chunkX, int chunkZ) {
         return regions.values().stream().anyMatch(region -> region.containsChunk(chunkX, chunkZ));
     }
 
     @Override
+    @Contract(pure = true)
     public boolean contains(int x, int z) {
         return regions.values().stream().anyMatch(region -> region.contains(x, z));
     }
 
     @Override
+    @Contract(pure = true)
     public boolean contains(int x, int y, int z) {
         return regions.values().stream().anyMatch(region -> region.contains(x, y, z));
     }
 
     @Override
+    @Contract(value = " -> new", pure = true)
     public GroupedRegion clone() {
         var clone = (GroupedRegion) super.clone();
         clone.regions.putAll(regions);

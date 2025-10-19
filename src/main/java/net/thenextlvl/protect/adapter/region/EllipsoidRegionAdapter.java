@@ -11,7 +11,7 @@ import net.thenextlvl.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class EllipsoidRegionAdapter implements TagAdapter<EllipsoidRegion> {
+public final class EllipsoidRegionAdapter implements TagAdapter<EllipsoidRegion> {
     @Override
     public EllipsoidRegion deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();

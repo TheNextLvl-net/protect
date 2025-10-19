@@ -10,7 +10,7 @@ import net.thenextlvl.nbt.tag.Tag;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class CuboidRegionAdapter implements TagAdapter<CuboidRegion> {
+public final class CuboidRegionAdapter implements TagAdapter<CuboidRegion> {
     @Override
     public CuboidRegion deserialize(Tag tag, TagDeserializationContext context) {
         var compound = tag.getAsCompound();

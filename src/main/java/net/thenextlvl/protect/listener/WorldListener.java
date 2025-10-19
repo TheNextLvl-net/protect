@@ -51,7 +51,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
-public class WorldListener implements Listener {
+public final class WorldListener implements Listener {
     private final ProtectPlugin plugin;
 
     public WorldListener(ProtectPlugin plugin) {

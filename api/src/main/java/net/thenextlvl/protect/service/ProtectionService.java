@@ -4,6 +4,7 @@ import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -20,6 +21,7 @@ public interface ProtectionService {
      * @param area   the area where the entity intends to use worldedit
      * @return true if the entity can use worldedit in the area, false otherwise
      */
+    @Contract(pure = true)
     boolean canEdit(@Nullable Entity entity, Area area);
 
     /**
@@ -29,6 +31,7 @@ public interface ProtectionService {
      * @param location location where the entity intends to use worldedit
      * @return true if the entity can use worldedit in the area, false otherwise
      */
+    @Contract(pure = true)
     boolean canEdit(@Nullable Entity entity, Location location);
 
     /**
@@ -38,6 +41,7 @@ public interface ProtectionService {
      * @param area   the area where the entity intends to place something
      * @return true if the entity can place in this area, false otherwise
      */
+    @Contract(pure = true)
     boolean canPlace(@Nullable Entity entity, Area area);
 
     /**
@@ -47,6 +51,7 @@ public interface ProtectionService {
      * @param location the location where the entity intends to place something
      * @return true if the entity can place in this area, false otherwise
      */
+    @Contract(pure = true)
     boolean canPlace(@Nullable Entity entity, Location location);
 
     /**
@@ -56,6 +61,7 @@ public interface ProtectionService {
      * @param area   the area of the object the entity intends to destroy
      * @return true if the entity can destroy the object in this area, false otherwise
      */
+    @Contract(pure = true)
     boolean canDestroy(@Nullable Entity entity, Area area);
 
     /**
@@ -65,6 +71,7 @@ public interface ProtectionService {
      * @param location the location of the object the entity intends to destroy
      * @return true if the entity can destroy the object at the location, false otherwise
      */
+    @Contract(pure = true)
     boolean canDestroy(@Nullable Entity entity, Location location);
 
     /**
@@ -74,6 +81,7 @@ public interface ProtectionService {
      * @param location the location of the object the entity intends to interact with
      * @return true if the entity can interact with the object at the location, false otherwise
      */
+    @Contract(pure = true)
     boolean canInteract(@Nullable Entity entity, Location location);
 
     /**
@@ -83,6 +91,7 @@ public interface ProtectionService {
      * @param interacted the entity that is intended to be interacted with
      * @return true if the entity can interact with the object at the location, false otherwise
      */
+    @Contract(pure = true)
     boolean canInteract(@Nullable Entity entity, Entity interacted);
 
     /**
@@ -92,6 +101,7 @@ public interface ProtectionService {
      * @param location the location of the object the entity intends to interact with
      * @return true if the entity can physically interact with the object at the location, false otherwise
      */
+    @Contract(pure = true)
     boolean canInteractPhysical(@Nullable Entity entity, Location location);
 
     /**
@@ -101,6 +111,7 @@ public interface ProtectionService {
      * @param victim   the entity that is the target of the attack
      * @return true if the attack is permissible, false otherwise
      */
+    @Contract(pure = true)
     boolean canAttack(Entity attacker, Entity victim);
 
     /**
@@ -110,6 +121,7 @@ public interface ProtectionService {
      * @param sheared the entity that is intended to be sheared
      * @return true if the entity can shear the entity, false otherwise
      */
+    @Contract(pure = true)
     boolean canShear(@Nullable Entity entity, Entity sheared);
 
     /**
@@ -119,6 +131,7 @@ public interface ProtectionService {
      * @param location the location of the block to trample
      * @return true if the entity can trample the block at the location, false otherwise
      */
+    @Contract(pure = true)
     boolean canTrample(@Nullable Entity entity, Location location);
 
     /**
@@ -128,6 +141,7 @@ public interface ProtectionService {
      * @param area   the area to enter
      * @return true if the entity can enter the area, false otherwise
      */
+    @Contract(pure = true)
     boolean canEnter(@Nullable Entity entity, Area area);
 
     /**
@@ -137,6 +151,7 @@ public interface ProtectionService {
      * @param area   the area to leave
      * @return true if the entity can leave the area, false otherwise
      */
+    @Contract(pure = true)
     boolean canLeave(@Nullable Entity entity, Area area);
 
     /**
@@ -148,5 +163,6 @@ public interface ProtectionService {
      * @param permission an optional permission string required to perform the action
      * @return true if the entity can perform the action in the area, false otherwise
      */
+    @Contract(pure = true)
     boolean canPerformAction(@Nullable Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission);
 }

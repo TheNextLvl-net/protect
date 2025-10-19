@@ -12,10 +12,12 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
+import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
 
-class AreaSchematicCommand {
+@NullMarked
+final class AreaSchematicCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("schematic")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.schematic"))

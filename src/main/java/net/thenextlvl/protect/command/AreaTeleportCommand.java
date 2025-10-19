@@ -11,8 +11,10 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.jspecify.annotations.NullMarked;
 
-class AreaTeleportCommand {
+@NullMarked
+final class AreaTeleportCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
         return Commands.literal("teleport")
                 .requires(stack -> stack.getSender() instanceof Player player

@@ -1,6 +1,7 @@
 package net.thenextlvl.protect.flag;
 
 import net.kyori.adventure.key.Key;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -15,6 +16,7 @@ public interface Flag<T> extends Comparable<@NonNull Flag<?>> {
      * @return the Key of the flag
      */
     @NonNull
+    @Contract(pure = true)
     Key key();
 
     /**
@@ -23,6 +25,7 @@ public interface Flag<T> extends Comparable<@NonNull Flag<?>> {
      * @return the type of the flag value
      */
     @NonNull
+    @Contract(pure = true)
     Class<? extends T> type();
 
     /**
@@ -30,5 +33,6 @@ public interface Flag<T> extends Comparable<@NonNull Flag<?>> {
      *
      * @return The default value for the flag.
      */
+    @Contract(pure = true)
     T defaultValue();
 }
