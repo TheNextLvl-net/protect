@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -135,6 +136,19 @@ public final class EntityListener implements Listener {
         var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!area.getFlag(plugin.flags.shoot));
         plugin.failed(event.getEntity(), event, area, "area.failed.shoot");
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityBreakDoor(EntityBreakDoorEvent event) {
+        var area = plugin.areaProvider().getArea(event.getEntity());
+        event.setCancelled(!area.getFlag(plugin.flags.entityBreakDoor));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onSheepEatGrass(EntityChangeBlockEvent event) {
+        if (!event.getEntityType().equals(EntityType.SHEEP)) return;
+        var area = plugin.areaProvider().getArea(event.getEntity());
+        event.setCancelled(!area.getFlag(plugin.flags.sheepEatGrass));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
