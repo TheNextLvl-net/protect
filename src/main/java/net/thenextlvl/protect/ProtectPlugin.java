@@ -278,6 +278,7 @@ public final class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> destroy = flagRegistry().register(ProtectPlugin.this, "destroy", true, false);
         public final ProtectionFlag<Boolean> entityAttackEntity = flagRegistry().register(ProtectPlugin.this, "entity_attack_entity", true, false);
         public final ProtectionFlag<Boolean> entityAttackPlayer = flagRegistry().register(ProtectPlugin.this, "entity_attack_player", true, false);
+        public final ProtectionFlag<Boolean> entityBreakDoor = flagRegistry().register(ProtectPlugin.this, "entity_break_door", true, false);
         public final ProtectionFlag<Boolean> entityInteract = flagRegistry().register(ProtectPlugin.this, "entity_interact", true, false);
         public final ProtectionFlag<Boolean> entityShear = flagRegistry().register(ProtectPlugin.this, "entity_shear", true, false);
         public final ProtectionFlag<Boolean> explosions = flagRegistry().register(ProtectPlugin.this, "explosions", true, false);
@@ -289,5 +290,6 @@ public final class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> playerAttackEntity = flagRegistry().register(ProtectPlugin.this, "player_attack_entity", true, false);
         public final ProtectionFlag<Boolean> playerAttackPlayer = flagRegistry().register(ProtectPlugin.this, "player_attack_player", true, false);
         public final ProtectionFlag<Boolean> playerItemDrop = flagRegistry().register(ProtectPlugin.this, "player_item_drop", true, false);
+        public final ProtectionFlag<Boolean> sheepEatGrass = flagRegistry().register(ProtectPlugin.this, "sheep_eat_grass", true, false);
     }
 }
