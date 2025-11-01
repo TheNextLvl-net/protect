@@ -28,26 +28,24 @@ public final class PhysicsListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPhysics(BlockPhysicsEvent event) {
 
-        if ((event.getSourceBlock().isEmpty() && event.getChangedType().isAir()) || (
-                event.getSourceBlock().getType().equals(Material.SNOW)
+        if ((event.getSourceBlock().isEmpty() && event.getChangedType().isAir())
+                || (event.getSourceBlock().getType().equals(Material.SNOW)
                 || event.getSourceBlock().getType().equals(Material.POWDER_SNOW)
-                || event.getSourceBlock().getType().equals(Material.SNOW_BLOCK))) {
-            if (event.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.GRASS_BLOCK)) {
-                return;
-            }
-        }
-
-        if (event.getChangedType().equals(Material.IRON_BARS)
-            || event.getChangedBlockData() instanceof Stairs
-            || event.getChangedBlockData() instanceof Chest
-            || event.getChangedBlockData() instanceof Fence
-            || event.getChangedBlockData() instanceof GlassPane
-            || event.getChangedBlockData() instanceof Wall
-            || event.getChangedBlockData() instanceof Door) {
+                || event.getSourceBlock().getType().equals(Material.SNOW_BLOCK))
+        ) if (event.getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.GRASS_BLOCK)) {
             return;
         }
 
-        if (event.getChangedBlockData() instanceof Powerable && !event.getBlock().isEmpty()) return;
+        var blockData = event.getChangedBlockData();
+        if (event.getChangedType().equals(Material.IRON_BARS)
+                || blockData instanceof Stairs
+                || blockData instanceof Chest
+                || blockData instanceof Fence
+                || blockData instanceof GlassPane
+                || blockData instanceof Wall
+                || blockData instanceof Door) return;
+
+        if (blockData instanceof Powerable && !event.getBlock().isEmpty()) return;
 
         event.setCancelled(isInteractionRestricted(event.getSourceBlock(), event.getBlock(),
                 event.getChangedType().hasGravity() ? plugin.flags.gravity : plugin.flags.physics));
