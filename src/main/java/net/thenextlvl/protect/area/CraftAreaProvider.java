@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,7 +50,8 @@ public final class CraftAreaProvider implements AreaProvider {
 
     @Override
     public Stream<Area> getAreas(World world) {
-        return areas.getOrDefault(world, Collections.emptySet()).stream();
+        var areas = this.areas.get(world);
+        return areas != null ? areas.stream() : Stream.empty();
     }
 
     @Override
