@@ -10,6 +10,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -82,25 +83,64 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * Retrieves the data folder associated with this object.
      *
      * @return the data folder associated with this object
+     * @deprecated use {@link #getDataPath()} instead
+     */
+    @Deprecated
+    @Contract(pure = true)
+    default File getDataFolder() {
+        return getDataPath().toFile();
+    }
+    
+    /**
+     * Retrieves the path associated with this object.
+     *
+     * @return the path associated with this object
+     * @since 3.3.0
      */
     @Contract(pure = true)
-    File getDataFolder();
+    Path getDataPath();
 
     /**
      * Retrieves the File associated with this object.
      *
      * @return the File associated with this object
+     * @deprecated use {@link #getDataFile()} instead
+     */
+    @Deprecated
+    @Contract(pure = true)
+    default File getFile() {
+        return getDataFile().toFile();
+    }
+
+    /**
+     * Retrieves the Path associated with this object.
+     *
+     * @return the Path associated with this object
+     * @since 3.3.0
      */
     @Contract(pure = true)
-    File getFile();
+    Path getDataFile();
 
     /**
      * Retrieves the fallback file associated with this area.
      *
      * @return the fallback file associated with this area
+     * @deprecated use {@link #getBackupFile()} instead
+     */
+    @Deprecated
+    @Contract(pure = true)
+    default File getFallbackFile() {
+        return getBackupFile().toFile();
+    }
+
+    /**
+     * Retrieves the backup file associated with this area.
+     *
+     * @return the backup file associated with this area
+     * @since 3.3.0
      */
     @Contract(pure = true)
-    File getFallbackFile();
+    Path getBackupFile();
 
     /**
      * Adds a member to the regionized area.

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,9 +18,9 @@ import java.util.Set;
 
 @NullMarked
 public final class CraftGlobalArea extends CraftArea implements GlobalArea {
-    private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
-    private final File fallbackFile = new File(getDataFolder(), getName() + ".dat_old");
-    private final File file = new File(getDataFolder(), getName() + ".dat");
+    private final Path dataFolder = getWorld().getWorldFolder().toPath().resolve("areas");
+    private final Path fallbackFile = dataFolder.resolve(getName() + ".dat_old");
+    private final Path file = dataFolder.resolve(getName() + ".dat");
 
     public CraftGlobalArea(ProtectPlugin plugin, World world) {
         super(plugin, "@" + world.getName(), world, Set.of(), null, Map.of(), -1);
@@ -36,17 +36,17 @@ public final class CraftGlobalArea extends CraftArea implements GlobalArea {
     }
 
     @Override
-    public File getDataFolder() {
+    public Path getDataPath() {
         return dataFolder;
     }
 
     @Override
-    public File getFile() {
+    public Path getDataFile() {
         return file;
     }
 
     @Override
-    public File getFallbackFile() {
+    public Path getBackupFile() {
         return fallbackFile;
     }
 

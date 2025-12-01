@@ -74,7 +74,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Map;
@@ -85,7 +84,7 @@ import java.util.concurrent.TimeUnit;
 @NullMarked
 public final class ProtectPlugin extends JavaPlugin {
     private final Metrics metrics = new Metrics(this, 21712);
-    private final File schematicFolder = new File(getDataFolder(), "schematics");
+    private final Path schematicFolder = getDataPath().resolve("schematics");
     private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
     private final CollisionController collisionController = new CollisionController();
@@ -189,7 +188,7 @@ public final class ProtectPlugin extends JavaPlugin {
         if (cancellable.isCancelled()) failed(audience, area, message);
     }
 
-    public File schematicFolder() {
+    public Path schematicFolder() {
         return schematicFolder;
     }
 

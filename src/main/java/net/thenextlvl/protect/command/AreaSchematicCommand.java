@@ -15,6 +15,7 @@ import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
+import java.nio.file.Files;
 
 @NullMarked
 final class AreaSchematicCommand {
@@ -30,7 +31,7 @@ final class AreaSchematicCommand {
         return Commands.literal("delete")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.schematic.delete"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin,
-                                area -> area.getSchematic().exists()))
+                                area -> Files.isRegularFile(area.getSchematicFile())))
                         .executes(context -> delete(context, plugin)));
     }
 
@@ -38,7 +39,7 @@ final class AreaSchematicCommand {
         return Commands.literal("load")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.schematic.load"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin,
-                                area -> area.getSchematic().exists()))
+                                area -> Files.isRegularFile(area.getSchematicFile())))
                         .executes(context -> load(context, plugin)));
     }
 
@@ -53,7 +54,7 @@ final class AreaSchematicCommand {
         var sender = context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
         var message = area.deleteSchematic() ? "area.schematic.delete.success" : "area.schematic.delete.failed";
-        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getSchematic().getName()));
+        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getSchematicFile().getFileName().toString()));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -68,7 +69,7 @@ final class AreaSchematicCommand {
             plugin.getComponentLogger().error("Failed to load area schematic", e);
         }
         var message = load ? "area.schematic.load.success" : "area.schematic.load.failed";
-        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getSchematic().getName()));
+        plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getSchematicFile().getFileName().toString()));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -78,13 +79,19 @@ final class AreaSchematicCommand {
         if (area.isTooBig()) plugin.bundle().sendMessage(sender, "area.warning.size");
         try {
             area.saveSchematic();
+            var size = 0L;
+            try {
+                size = Files.size(area.getSchematicFile()) / 1024;
+            } catch (IOException e) {
+                plugin.getComponentLogger().warn("Failed to get file size of area {}", area.getName(), e);
+            }
             plugin.bundle().sendMessage(sender, "area.schematic.save.success",
-                    Placeholder.parsed("schematic", area.getSchematic().getName()),
-                    Formatter.number("size", area.getSchematic().length() / 1024));
+                    Placeholder.parsed("schematic", area.getSchematicFile().getFileName().toString()),
+                    Formatter.number("size", size));
         } catch (IOException | WorldEditException e) {
             plugin.bundle().sendMessage(sender, "area.schematic.save.failed",
-                    Placeholder.parsed("schematic", area.getSchematic().getName()));
-            plugin.getComponentLogger().error("Failed dto save area schematic", e);
+                    Placeholder.parsed("schematic", area.getSchematicFile().getFileName().toString()));
+            plugin.getComponentLogger().error("Failed to save area schematic", e);
         }
         return Command.SINGLE_SUCCESS;
     }

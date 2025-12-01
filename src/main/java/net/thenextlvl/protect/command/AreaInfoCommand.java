@@ -15,6 +15,9 @@ import net.thenextlvl.protect.command.argument.AreaArgumentType;
 import org.bukkit.OfflinePlayer;
 import org.jspecify.annotations.NullMarked;
 
+import java.io.IOException;
+import java.nio.file.Files;
+
 @NullMarked
 final class AreaInfoCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
@@ -47,12 +50,19 @@ final class AreaInfoCommand {
                 .map(Component::text)
                 .orElseGet(Component::empty);
 
+        var size = 0L;
+        try {
+            size = Files.size(area.getDataFile()) / 1024;
+        } catch (IOException e) {
+            plugin.getComponentLogger().warn("Failed to get file size of area {}", area.getName(), e);
+        }
+
         plugin.bundle().sendMessage(sender, "area.info",
                 Formatter.joining("flags", flags),
                 Placeholder.parsed("area", area.getName()),
-                Placeholder.parsed("file", area.getFile().getPath()),
+                Placeholder.parsed("file", area.getDataFile().toString()),
                 Formatter.number("priority", area.getPriority()),
-                Formatter.number("size", area.getFile().length() / 1024),
+                Formatter.number("size", size),
                 Placeholder.component("owner", owner),
                 Placeholder.parsed("type", type),
                 Placeholder.parsed("world", area.getWorld().key().asString()));
@@ -62,7 +72,7 @@ final class AreaInfoCommand {
 
         plugin.bundle().sendMessage(sender, "area.info.bounds",
                 Placeholder.parsed("bounds", regionizedArea.getRegion().getMinimumPoint().toParserString()
-                                             + " - " + regionizedArea.getRegion().getMaximumPoint().toParserString()));
+                        + " - " + regionizedArea.getRegion().getMaximumPoint().toParserString()));
 
         return Command.SINGLE_SUCCESS;
     }

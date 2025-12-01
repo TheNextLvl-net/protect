@@ -30,10 +30,9 @@ import org.bukkit.util.BoundingBox;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -42,12 +41,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.WRITE;
+
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
-    private final File dataFolder = new File(getWorld().getWorldFolder(), "areas");
-    private final File fallbackFile = new File(getDataFolder(), getName() + ".dat_old");
-    private final File file = new File(getDataFolder(), getName() + ".dat");
-    private final File schematic = new File(plugin.schematicFolder(), getName() + ".schem");
+    private final Path dataPath = getWorld().getWorldFolder().toPath().resolve("areas");
+    private final Path backupFile = getDataPath().resolve(getName() + ".dat_old");
+    private final Path dataFile = getDataPath().resolve(getName() + ".dat");
+    private final Path schematic = plugin.schematicFolder().resolve(getName() + ".schem");
     private @Nullable String parent;
     private T region;
 
@@ -112,18 +115,18 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     }
 
     @Override
-    public File getDataFolder() {
-        return dataFolder;
+    public Path getDataPath() {
+        return dataPath;
     }
 
     @Override
-    public File getFile() {
-        return file;
+    public Path getDataFile() {
+        return dataFile;
     }
 
     @Override
-    public File getFallbackFile() {
-        return fallbackFile;
+    public Path getBackupFile() {
+        return backupFile;
     }
 
     public Optional<String> parent() {
@@ -195,23 +198,27 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     }
 
     @Override
-    public File getSchematic() {
+    public Path getSchematicFile() {
         return schematic;
     }
 
     @Override
     public boolean deleteSchematic() {
-        return getSchematic().exists() && (new AreaSchematicDeleteEvent(this).callEvent() && getSchematic().delete());
+        try {
+            return Files.isRegularFile(getSchematicFile())
+                    && (new AreaSchematicDeleteEvent(this).callEvent()
+                    && Files.deleteIfExists(getSchematicFile()));
+        } catch (IOException e) {
+            plugin.getComponentLogger().warn("Failed to delete schematic for area {}", getName(), e);
+            return false;
+        }
     }
 
     @Override
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void saveSchematic() throws IOException, WorldEditException {
-        var file = getSchematic().getAbsoluteFile();
-        file.getParentFile().mkdirs();
-        file.createNewFile();
+        Files.createDirectories(schematic.toAbsolutePath().getParent());
         try (var editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(getWorld()));
-             var writer = BuiltInClipboardFormat.FAST_V3.getWriter(new FileOutputStream(getSchematic()))) {
+             var writer = BuiltInClipboardFormat.FAST_V3.getWriter(Files.newOutputStream(schematic, WRITE, CREATE, TRUNCATE_EXISTING))) {
             var clipboard = new BlockArrayClipboard(getRegion());
             var extent = new ForwardExtentCopy(editSession, getRegion(), clipboard, getRegion().getMinimumPoint());
             extent.setCopyingBiomes(getRegion() instanceof FlatRegion);
@@ -223,12 +230,12 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public boolean loadSchematic() throws IOException, WorldEditException {
-        if (!getSchematic().isFile()) return false;
+        if (!Files.isRegularFile(getSchematicFile())) return false;
         var event = new AreaSchematicLoadEvent(this);
         if (!event.callEvent()) return false;
         var world = BukkitAdapter.adapt(getWorld());
         try (var editSession = WorldEdit.getInstance().newEditSession(world)) {
-            var clipboard = BuiltInClipboardFormat.FAST_V3.getReader(new FileInputStream(getSchematic())).read();
+            var clipboard = BuiltInClipboardFormat.FAST_V3.getReader(Files.newInputStream(getSchematicFile())).read();
             world.getEntities(getRegion()).forEach(com.sk89q.worldedit.entity.Entity::remove);
             var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
                     copyBiomes(true).copyEntities(true).ignoreAirBlocks(false).build();

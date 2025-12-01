@@ -11,6 +11,8 @@ import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.command.argument.RegionizedAreaArgumentType;
 import org.jspecify.annotations.NullMarked;
 
+import java.nio.file.Files;
+
 @NullMarked
 final class AreaDeleteCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
@@ -24,7 +26,7 @@ final class AreaDeleteCommand {
         var sender = context.getSource().getSender();
         var area = (RegionizedArea<?>) context.getArgument("area", RegionizedArea.class);
 
-        var message = area.getSchematic().exists()
+        var message = Files.isRegularFile(area.getSchematicFile())
                 ? "area.schematic.delete" : plugin.areaService().delete(area)
                 ? "area.delete.success" : "area.delete.failed";
 

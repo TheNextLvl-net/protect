@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 
+import java.nio.file.Files;
+
 @NullMarked
 final class AreaRedefineCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
@@ -29,7 +31,7 @@ final class AreaRedefineCommand {
     private static int redefine(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var area = context.getArgument("area", RegionizedArea.class);
-        if (area.getSchematic().exists()) {
+        if (Files.isRegularFile(area.getSchematicFile())) {
             plugin.bundle().sendMessage(player, "area.schematic.delete");
             return 0;
         }

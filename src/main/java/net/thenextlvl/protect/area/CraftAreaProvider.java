@@ -1,6 +1,5 @@
 package net.thenextlvl.protect.area;
 
-import core.io.IO;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.nbt.NBTInputStream;
 import net.thenextlvl.nbt.NBTOutputStream;
@@ -13,10 +12,10 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Comparator;
@@ -81,10 +80,9 @@ public final class CraftAreaProvider implements AreaProvider {
     }
 
     public void load(World world) {
-        try {
-            var areaFolder = new File(world.getWorldFolder(), "areas");
-            var files = areaFolder.listFiles((file, name) -> name.endsWith(".dat"));
-            if (files != null) for (var file : files) load(world, file);
+        var areaFolder = world.getWorldFolder().toPath().resolve("areas");
+        try (var files = Files.list(areaFolder).filter(path -> path.getFileName().toString().endsWith(".dat"))) {
+            files.forEach(file -> load(world, file));
             if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
             persist(new CraftGlobalArea(plugin, world));
         } catch (Exception e) {
@@ -92,21 +90,21 @@ public final class CraftAreaProvider implements AreaProvider {
         }
     }
 
-    private void load(World world, File file) {
+    private void load(World world, Path file) {
         try {
             var loaded = read(world, null, file);
             new AreaLoadEvent(loaded).callEvent();
             memoize(world, loaded);
         } catch (EOFException e) {
-            plugin.getComponentLogger().error("The area file {} is irrecoverably broken", file.getPath());
+            plugin.getComponentLogger().error("The area file {} is irrecoverably broken", file);
         } catch (Exception e) {
-            plugin.getComponentLogger().error("Failed to load area from {}", file.getPath(), e);
+            plugin.getComponentLogger().error("Failed to load area from {}", file, e);
             plugin.getComponentLogger().error("Please report this issue on GitHub: {}", ISSUES);
         }
     }
 
     public void persist(Area area) throws IOException {
-        memoize(area.getWorld(), read(area.getWorld(), area, area.getFile()));
+        memoize(area.getWorld(), read(area.getWorld(), area, area.getDataFile()));
     }
 
     private void memoize(World world, Area area) {
@@ -114,31 +112,31 @@ public final class CraftAreaProvider implements AreaProvider {
         areas.stream().filter(area::equals).findAny()
                 .ifPresentOrElse(io -> plugin.getComponentLogger().warn(
                         "Ignoring duplicate area {}: {}",
-                        area.getName(), area.getFile().getPath()
+                        area.getName(), area.getDataFile()
                 ), () -> areas.add(area));
     }
 
-    private Area read(World world, @Nullable Area area, File file) throws IOException {
+    private Area read(World world, @Nullable Area area, Path file) throws IOException {
         if (area == null) return read(file, world);
-        if (file.exists()) return read(file, area);
+        if (Files.isRegularFile(file)) return read(file, area);
         save(area);
         return area;
     }
 
-    private NBTInputStream stream(IO file) throws IOException {
+    private NBTInputStream stream(Path file) throws IOException {
         return new NBTInputStream(
-                file.inputStream(READ),
+                Files.newInputStream(file, READ),
                 StandardCharsets.UTF_8
         );
     }
 
-    private Area read(File file, World world) throws IOException {
-        try (var inputStream = stream(IO.of(file))) {
+    private Area read(Path file, World world) throws IOException {
+        try (var inputStream = stream(file)) {
             return read(world, inputStream);
         } catch (Exception e) {
-            var io = IO.of(file.getPath() + "_old");
-            if (!io.exists()) throw e;
-            plugin.getComponentLogger().warn("Failed to load area from {}", file.getPath());
+            var io = file.resolveSibling(file.getFileName() + "_old");
+            if (!Files.isRegularFile(io)) throw e;
+            plugin.getComponentLogger().warn("Failed to load area from {}", file);
             plugin.getComponentLogger().warn("Falling back to {}", io);
             try (var inputStream = stream(io)) {
                 return read(world, inputStream);
@@ -154,8 +152,8 @@ public final class CraftAreaProvider implements AreaProvider {
         return plugin.areaService().getAdapter(type).construct(world, name, root);
     }
 
-    private Area read(File file, Area area) throws IOException {
-        try (var inputStream = stream(IO.of(file))) {
+    private Area read(Path file, Area area) throws IOException {
+        try (var inputStream = stream(file)) {
             var tag = inputStream.readNamedTag().getKey();
             area.deserialize(tag);
             return area;
@@ -169,13 +167,13 @@ public final class CraftAreaProvider implements AreaProvider {
 
     private void save(Area area) {
         try {
-            var io = IO.of(area.getFile());
-            if (io.exists()) Files.move(area.getFile().toPath(),
-                    area.getFallbackFile().toPath(),
+            var file = area.getDataFile();
+            if (Files.isRegularFile(file)) Files.move(file,
+                    area.getBackupFile(),
                     StandardCopyOption.REPLACE_EXISTING);
-            else io.createParents();
+            else Files.createDirectories(file.toAbsolutePath().getParent());
             try (var outputStream = new NBTOutputStream(
-                    io.outputStream(WRITE, CREATE, TRUNCATE_EXISTING),
+                    Files.newOutputStream(file, WRITE, CREATE, TRUNCATE_EXISTING),
                     StandardCharsets.UTF_8
             )) {
                 outputStream.writeTag(area.getName(), area.serialize());
@@ -191,12 +189,15 @@ public final class CraftAreaProvider implements AreaProvider {
     }
 
     public boolean delete(Area area) {
-        areas.computeIfPresent(area.getWorld(), (world, areas) -> {
-            areas.remove(area);
-            return areas.isEmpty() ? null : areas;
-        });
-        var d1 = area.getFile().delete();
-        var d2 = area.getFallbackFile().delete();
-        return d1 || d2;
+        try {
+            if (!(Files.deleteIfExists(area.getDataFile()) | Files.deleteIfExists(area.getBackupFile()))) return false;
+            areas.computeIfPresent(area.getWorld(), (world, areas) -> {
+                areas.remove(area);
+                return areas.isEmpty() ? null : areas;
+            });
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

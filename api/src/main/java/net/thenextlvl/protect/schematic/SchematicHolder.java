@@ -6,6 +6,7 @@ import org.jspecify.annotations.NullMarked;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * The SchematicHolder interface represents an object that holds and manages a schematic file.
@@ -16,9 +17,22 @@ public interface SchematicHolder {
      * Retrieves the schematic file associated with this object.
      *
      * @return The schematic file.
+     * @deprecated use {@link #getSchematicFile()} instead
+     */
+    @Deprecated
+    @Contract(pure = true)
+    default File getSchematic() {
+        return getSchematicFile().toFile();
+    }
+
+    /**
+     * Retrieves the Path associated with this object.
+     *
+     * @return the Path associated with this object
+     * @since 3.3.0
      */
     @Contract(pure = true)
-    File getSchematic();
+    Path getSchematicFile();
 
     /**
      * Deletes the schematic file associated with this object.
