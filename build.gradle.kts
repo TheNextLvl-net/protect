@@ -41,7 +41,7 @@ dependencies {
     implementation(project(":api"))
     implementation("net.thenextlvl.core:paper:3.0.0-pre1")
     implementation("net.thenextlvl.version-checker:modrinth-paper:1.0.0")
-    implementation("net.thenextlvl:i18n:1.0.0")
+    implementation("net.thenextlvl:i18n:1.1.0")
 }
 
 tasks.shadowJar {
