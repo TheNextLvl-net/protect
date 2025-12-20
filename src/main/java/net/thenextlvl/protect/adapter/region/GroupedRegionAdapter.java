@@ -32,12 +32,12 @@ public final class GroupedRegionAdapter implements TagAdapter<GroupedRegion> {
 
     @Override
     public Tag serialize(GroupedRegion group, TagSerializationContext context) throws ParserException {
-        var tag = CompoundTag.empty();
-        tag.add("type", type(group.getRegions().values().iterator().next().getClass()));
-        var regions = CompoundTag.empty();
-        group.getRegions().forEach((name, region) -> regions.add(name, context.serialize(region)));
-        tag.add("regions", regions);
-        return tag;
+        var tag = CompoundTag.builder();
+        tag.put("type", type(group.getRegions().values().iterator().next().getClass()));
+        var regions = CompoundTag.builder();
+        group.getRegions().forEach((name, region) -> regions.put(name, context.serialize(region)));
+        tag.put("regions", regions.build());
+        return tag.build();
     }
 
     public String type(Class<? extends Region> type) {

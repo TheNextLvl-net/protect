@@ -38,12 +38,12 @@ public final class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Obj
 
     @Override
     public Tag serialize(Map<Flag<?>, @Nullable Object> flags, TagSerializationContext context) {
-        var tag = CompoundTag.empty();
+        var tag = CompoundTag.builder();
         flags.forEach((flag, value) -> {
             if (value == null) return;
             var serialized = context.serialize(value, flag.type());
-            tag.add(flag.key().asString(), serialized);
+            tag.put(flag.key().asString(), serialized);
         });
-        return tag;
+        return tag.build();
     }
 }

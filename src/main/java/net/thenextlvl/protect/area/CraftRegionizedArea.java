@@ -69,10 +69,6 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     protected abstract T readRegion(CompoundTag tag);
 
-    private void writeRegion(CompoundTag tag) {
-        tag.add("region", plugin.nbt.serialize(region));
-    }
-
     @Override
     public Location getLocation() {
         var center = getRegion().getCenter();
@@ -274,14 +270,10 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public CompoundTag serialize() {
-        var tag = super.serialize();
-        writeParent(tag);
-        writeRegion(tag);
-        return tag;
-    }
-
-    private void writeParent(CompoundTag tag) {
-        if (parent != null) tag.add("parent", parent);
+        var tag = super.serialize().toBuilder();
+        if (parent != null) tag.put("parent", parent);
+        tag.put("region", plugin.nbt.serialize(region));
+        return tag.build();
     }
 
     private @Nullable String readParent(CompoundTag tag) {

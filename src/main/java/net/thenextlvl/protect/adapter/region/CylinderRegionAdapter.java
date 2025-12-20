@@ -24,11 +24,11 @@ public final class CylinderRegionAdapter implements TagAdapter<CylinderRegion> {
 
     @Override
     public Tag serialize(CylinderRegion vector, TagSerializationContext context) {
-        var tag = CompoundTag.empty();
-        tag.add("center", context.serialize(vector.getCenter().toBlockPoint()));
-        tag.add("radius", context.serialize(vector.getRadius()));
-        tag.add("max", vector.getMaximumY());
-        tag.add("min", vector.getMinimumY());
-        return tag;
+        return CompoundTag.builder()
+                .put("center", context.serialize(vector.getCenter().toBlockPoint()))
+                .put("radius", context.serialize(vector.getRadius()))
+                .put("max", vector.getMaximumY())
+                .put("min", vector.getMinimumY())
+                .build();
     }
 }

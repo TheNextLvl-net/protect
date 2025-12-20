@@ -22,9 +22,9 @@ public final class EllipsoidRegionAdapter implements TagAdapter<EllipsoidRegion>
 
     @Override
     public Tag serialize(EllipsoidRegion region, TagSerializationContext context) {
-        var tag = CompoundTag.empty();
-        tag.add("center", context.serialize(region.getCenter().toBlockPoint()));
-        tag.add("radius", context.serialize(region.getRadius()));
-        return tag;
+        return CompoundTag.builder()
+                .put("center", context.serialize(region.getCenter().toBlockPoint()))
+                .put("radius", context.serialize(region.getRadius()))
+                .build();
     }
 }
