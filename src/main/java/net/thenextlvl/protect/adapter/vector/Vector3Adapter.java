@@ -21,10 +21,10 @@ public final class Vector3Adapter implements TagAdapter<Vector3> {
 
     @Override
     public Tag serialize(Vector3 vector, TagSerializationContext context) {
-        var tag = CompoundTag.empty();
-        tag.add("x", vector.x());
-        tag.add("y", vector.y());
-        tag.add("z", vector.z());
-        return tag;
+        return CompoundTag.builder()
+                .put("x", vector.x())
+                .put("y", vector.y())
+                .put("z", vector.z())
+                .build();
     }
 }

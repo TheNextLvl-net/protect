@@ -21,9 +21,9 @@ public final class CuboidRegionAdapter implements TagAdapter<CuboidRegion> {
 
     @Override
     public Tag serialize(CuboidRegion region, TagSerializationContext context) {
-        var tag = CompoundTag.empty();
-        tag.add("pos1", context.serialize(region.getPos1()));
-        tag.add("pos2", context.serialize(region.getPos2()));
-        return tag;
+        return CompoundTag.builder()
+                .put("pos1", context.serialize(region.getPos1()))
+                .put("pos2", context.serialize(region.getPos2()))
+                .build();
     }
 }

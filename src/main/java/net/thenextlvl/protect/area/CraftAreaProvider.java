@@ -3,7 +3,6 @@ package net.thenextlvl.protect.area;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.nbt.NBTInputStream;
 import net.thenextlvl.nbt.NBTOutputStream;
-import net.thenextlvl.nbt.serialization.ParserException;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.event.AreaLoadEvent;
 import org.bukkit.Location;
@@ -13,7 +12,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -25,11 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static java.nio.file.StandardOpenOption.CREATE;
-import static java.nio.file.StandardOpenOption.READ;
-import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
-import static java.nio.file.StandardOpenOption.WRITE;
 
 @NullMarked
 public final class CraftAreaProvider implements AreaProvider {
@@ -123,22 +116,15 @@ public final class CraftAreaProvider implements AreaProvider {
         return area;
     }
 
-    private NBTInputStream stream(Path file) throws IOException {
-        return new NBTInputStream(
-                Files.newInputStream(file, READ),
-                StandardCharsets.UTF_8
-        );
-    }
-
     private Area read(Path file, World world) throws IOException {
-        try (var inputStream = stream(file)) {
+        try (var inputStream = NBTInputStream.create(file)) {
             return read(world, inputStream);
         } catch (Exception e) {
-            var io = file.resolveSibling(file.getFileName() + "_old");
-            if (!Files.isRegularFile(io)) throw e;
+            var backup = file.resolveSibling(file.getFileName() + "_old");
+            if (!Files.isRegularFile(backup)) throw e;
             plugin.getComponentLogger().warn("Failed to load area from {}", file);
-            plugin.getComponentLogger().warn("Falling back to {}", io);
-            try (var inputStream = stream(io)) {
+            plugin.getComponentLogger().warn("Falling back to {}", backup);
+            try (var inputStream = NBTInputStream.create(backup)) {
                 return read(world, inputStream);
             }
         }
@@ -146,16 +132,15 @@ public final class CraftAreaProvider implements AreaProvider {
 
     private Area read(World world, NBTInputStream inputStream) throws IOException {
         var entry = inputStream.readNamedTag();
-        var root = entry.getKey().getAsCompound();
-        var name = entry.getValue().orElseThrow(() -> new ParserException("Area misses root name"));
-        var type = plugin.nbt.deserialize(root.get("type"), Key.class);
-        return plugin.areaService().getAdapter(type).construct(world, name, root);
+        var tag = entry.getValue();
+        var name = entry.getKey();
+        var type = plugin.nbt.deserialize(tag.get("type"), Key.class);
+        return plugin.areaService().getAdapter(type).construct(world, name, tag);
     }
 
     private Area read(Path file, Area area) throws IOException {
-        try (var inputStream = stream(file)) {
-            var tag = inputStream.readNamedTag().getKey();
-            area.deserialize(tag);
+        try (var inputStream = NBTInputStream.create(file)) {
+            area.deserialize(inputStream.readTag());
             return area;
         }
     }
@@ -172,10 +157,7 @@ public final class CraftAreaProvider implements AreaProvider {
                     area.getBackupFile(),
                     StandardCopyOption.REPLACE_EXISTING);
             else Files.createDirectories(file.toAbsolutePath().getParent());
-            try (var outputStream = new NBTOutputStream(
-                    Files.newOutputStream(file, WRITE, CREATE, TRUNCATE_EXISTING),
-                    StandardCharsets.UTF_8
-            )) {
+            try (var outputStream = NBTOutputStream.create(file)) {
                 outputStream.writeTag(area.getName(), area.serialize());
             }
         } catch (Exception e) {

@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -43,7 +44,7 @@ public abstract class CraftArea implements Area {
     private final Map<Flag<?>, @Nullable Object> flags;
     private int priority;
 
-    private final CompoundTag dataContainer = CompoundTag.empty();
+    private final Map<String, Tag> dataContainer = new LinkedHashMap<>();
 
     protected CraftArea(ProtectPlugin plugin,
                         String name,
@@ -204,27 +205,26 @@ public abstract class CraftArea implements Area {
 
     @Override
     public CompoundTag serialize() {
-        var tag = CompoundTag.empty();
-        if (!flags.isEmpty()) tag.add("flags", plugin.nbt.serialize(flags, new TypeToken<Map<Flag<?>, Object>>() {
+        var tag = CompoundTag.builder();
+        if (!flags.isEmpty()) tag.put("flags", plugin.nbt.serialize(flags, new TypeToken<Map<Flag<?>, Object>>() {
         }.getType()));
-        if (!members.isEmpty()) tag.add("members", plugin.nbt.serialize(members, new TypeToken<Set<UUID>>() {
+        if (!members.isEmpty()) tag.put("members", plugin.nbt.serialize(members, new TypeToken<Set<UUID>>() {
         }.getType()));
-        if (!dataContainer.isEmpty()) tag.add("data", dataContainer);
-        if (owner != null) tag.add("owner", plugin.nbt.serialize(owner));
-        tag.add("priority", priority);
+        if (!dataContainer.isEmpty()) tag.put("data", CompoundTag.of(dataContainer));
+        if (owner != null) tag.put("owner", plugin.nbt.serialize(owner));
+        tag.put("priority", priority);
         var adapter = plugin.areaService().getAdapter(getClass());
-        tag.add("type", adapter.key().asString());
-        return tag;
+        tag.put("type", adapter.key().asString());
+        return tag.build();
     }
 
     @Override
-    public void deserialize(Tag tag) {
-        var compound = tag.getAsCompound();
-        readFlags(compound).ifPresent(flags::putAll);
-        readMembers(compound).ifPresent(members::addAll);
-        readOwner(compound).ifPresent(owner -> this.owner = owner);
-        readPriority(compound).ifPresent(priority -> this.priority = priority);
-        compound.<CompoundTag>optional("data").ifPresent(dataContainer::addAll);
+    public void deserialize(CompoundTag tag) {
+        readFlags(tag).ifPresent(flags::putAll);
+        readMembers(tag).ifPresent(members::addAll);
+        readOwner(tag).ifPresent(owner -> this.owner = owner);
+        readPriority(tag).ifPresent(priority -> this.priority = priority);
+        tag.<CompoundTag>optional("data").ifPresent(data -> data.forEach(dataContainer::put));
     }
 
     private Optional<Map<Flag<?>, Object>> readFlags(CompoundTag tag) {
@@ -252,7 +252,7 @@ public abstract class CraftArea implements Area {
 
     @Override
     public <T extends Tag> Optional<T> get(Key key) {
-        return dataContainer.optional(key.asString());
+        return Optional.ofNullable((T) dataContainer.get(key.asString()));
     }
 
     @Override
@@ -263,12 +263,12 @@ public abstract class CraftArea implements Area {
 
     @Override
     public <T extends Tag> T getOrDefault(Key key, T defaultValue) {
-        return dataContainer.getOrDefault(key.asString(), defaultValue);
+        return (T) dataContainer.getOrDefault(key.asString(), defaultValue);
     }
 
     @Override
     public <T extends Tag> void set(Key key, T value) {
-        dataContainer.add(key.asString(), value);
+        dataContainer.put(key.asString(), value);
     }
 
     @Override
@@ -303,7 +303,7 @@ public abstract class CraftArea implements Area {
 
     @Override
     public void clear() {
-        dataContainer.entrySet().clear();
+        dataContainer.clear();
     }
 
     @Override

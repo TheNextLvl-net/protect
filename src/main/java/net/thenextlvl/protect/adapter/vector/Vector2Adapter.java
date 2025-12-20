@@ -20,9 +20,9 @@ public final class Vector2Adapter implements TagAdapter<Vector2> {
 
     @Override
     public Tag serialize(Vector2 vector, TagSerializationContext context) {
-        var tag = CompoundTag.empty();
-        tag.add("x", vector.x());
-        tag.add("z", vector.z());
-        return tag;
+        return CompoundTag.builder()
+                .put("x", vector.x())
+                .put("z", vector.z())
+                .build();
     }
 }

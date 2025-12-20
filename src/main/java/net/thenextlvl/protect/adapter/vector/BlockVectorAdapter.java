@@ -21,10 +21,10 @@ public final class BlockVectorAdapter implements TagAdapter<BlockVector3> {
 
     @Override
     public Tag serialize(BlockVector3 vector, TagSerializationContext context) {
-        var tag = CompoundTag.empty();
-        tag.add("x", vector.x());
-        tag.add("y", vector.y());
-        tag.add("z", vector.z());
-        return tag;
+        return CompoundTag.builder()
+                .put("x", vector.x())
+                .put("y", vector.y())
+                .put("z", vector.z())
+                .build();
     }
 }
