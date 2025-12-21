@@ -10,6 +10,7 @@ import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
+import dev.faststats.bukkit.BukkitMetrics;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -84,6 +85,10 @@ import java.util.concurrent.TimeUnit;
 @NullMarked
 public final class ProtectPlugin extends JavaPlugin {
     private final Metrics metrics = new Metrics(this, 21712);
+    private final dev.faststats.core.Metrics fastStats = BukkitMetrics.factory()
+            .token("cd7652fc1125d61815e23070696e4a3f")
+            .create(this);
+    
     private final Path schematicFolder = getDataPath().resolve("schematics");
     private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
