@@ -1,4 +1,4 @@
-package net.thenextlvl.protect.adapters.other;
+package net.thenextlvl.protect.adapters;
 
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.nbt.serialization.ParserException;
