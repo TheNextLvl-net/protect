@@ -29,7 +29,7 @@ dependencies {
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
-    api("net.thenextlvl:nbt:4.0.2")
+    api("net.thenextlvl:nbt:4.0.3")
     api(platform("com.intellectualsites.bom:bom-newest:1.56-SNAPSHOT"))
 }
 
