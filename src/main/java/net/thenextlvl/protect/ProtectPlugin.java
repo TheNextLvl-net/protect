@@ -86,7 +86,7 @@ import java.util.concurrent.TimeUnit;
 public final class ProtectPlugin extends JavaPlugin {
     private final Metrics metrics = new Metrics(this, 21712);
     private final dev.faststats.core.Metrics fastStats = BukkitMetrics.factory()
-            .token("cd7652fc1125d61815e23070696e4a3f")
+            .token("702e90699ba58f71536c54256557454e")
             .create(this);
     
     private final Path schematicFolder = getDataPath().resolve("schematics");
