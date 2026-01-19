@@ -84,7 +84,7 @@ final class AreaGroupCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> redefine(ProtectPlugin plugin) {
         return Commands.literal("redefine")
                 .requires(stack -> stack.getSender() instanceof Player player
-                                   && player.hasPermission("protect.command.area.group.redefine"))
+                        && player.hasPermission("protect.command.area.group.redefine"))
                 .then(Commands.argument("group", new GroupedAreaArgumentType(plugin))
                         .then(Commands.argument("region", StringArgumentType.string())
                                 .suggests(suggestGroups(plugin))
@@ -170,7 +170,7 @@ final class AreaGroupCommand {
                     Placeholder.parsed("region", name),
                     Placeholder.parsed("type", region.getClass().getSimpleName()));
             return redefine ? Command.SINGLE_SUCCESS : 0;
-        } catch (IncompleteRegionException e) {
+        } catch (IncompleteRegionException ignored) {
             plugin.bundle().sendMessage(player, "region.select");
             return 0;
         }
@@ -191,7 +191,7 @@ final class AreaGroupCommand {
             }
 
             var success = !group.getRegion().hasRegion(region)
-                          && group.getRegion().addRegion(name, region);
+                    && group.getRegion().addRegion(name, region);
 
             var message = success ? "area.group.add" : "nothing.changed";
             plugin.bundle().sendMessage(player, message,

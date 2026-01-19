@@ -17,6 +17,8 @@ import org.jspecify.annotations.NullMarked;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import static net.thenextlvl.protect.ProtectPlugin.ISSUES;
+
 @NullMarked
 final class AreaSchematicCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
@@ -67,6 +69,8 @@ final class AreaSchematicCommand {
             load = area.loadSchematic();
         } catch (IOException | WorldEditException e) {
             plugin.getComponentLogger().error("Failed to load area schematic", e);
+            plugin.getComponentLogger().error("Please look for similar issues or report this on GitHub: {}", ISSUES);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
         }
         var message = load ? "area.schematic.load.success" : "area.schematic.load.failed";
         plugin.bundle().sendMessage(sender, message, Placeholder.parsed("schematic", area.getSchematicFile().getFileName().toString()));
@@ -92,6 +96,8 @@ final class AreaSchematicCommand {
             plugin.bundle().sendMessage(sender, "area.schematic.save.failed",
                     Placeholder.parsed("schematic", area.getSchematicFile().getFileName().toString()));
             plugin.getComponentLogger().error("Failed to save area schematic", e);
+            plugin.getComponentLogger().error("Please look for similar issues or report this on GitHub: {}", ISSUES);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
         }
         return Command.SINGLE_SUCCESS;
     }

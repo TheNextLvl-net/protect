@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
+import static net.thenextlvl.protect.ProtectPlugin.ISSUES;
 
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
@@ -206,6 +207,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
                     && Files.deleteIfExists(getSchematicFile()));
         } catch (IOException e) {
             plugin.getComponentLogger().warn("Failed to delete schematic for area {}", getName(), e);
+            plugin.getComponentLogger().warn("Please look for similar issues or report this on GitHub: {}", ISSUES);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
             return false;
         }
     }

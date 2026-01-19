@@ -11,23 +11,24 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import dev.faststats.bukkit.BukkitMetrics;
+import dev.faststats.core.ErrorTracker;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.i18n.ComponentBundle;
 import net.thenextlvl.nbt.serialization.NBT;
-import net.thenextlvl.protect.adapters.area.CuboidAreaAdapter;
-import net.thenextlvl.protect.adapters.area.CylinderAreaAdapter;
-import net.thenextlvl.protect.adapters.area.EllipsoidAreaAdapter;
-import net.thenextlvl.protect.adapters.area.GlobalAreaAdapter;
-import net.thenextlvl.protect.adapters.area.GroupedAreaAdapter;
 import net.thenextlvl.protect.adapters.FlagsAdapter;
 import net.thenextlvl.protect.adapters.KeyAdapter;
 import net.thenextlvl.protect.adapters.LocationAdapter;
 import net.thenextlvl.protect.adapters.MembersAdapter;
 import net.thenextlvl.protect.adapters.WeatherTypeAdapter;
 import net.thenextlvl.protect.adapters.WorldAdapter;
+import net.thenextlvl.protect.adapters.area.CuboidAreaAdapter;
+import net.thenextlvl.protect.adapters.area.CylinderAreaAdapter;
+import net.thenextlvl.protect.adapters.area.EllipsoidAreaAdapter;
+import net.thenextlvl.protect.adapters.area.GlobalAreaAdapter;
+import net.thenextlvl.protect.adapters.area.GroupedAreaAdapter;
 import net.thenextlvl.protect.adapters.region.CuboidRegionAdapter;
 import net.thenextlvl.protect.adapters.region.CylinderRegionAdapter;
 import net.thenextlvl.protect.adapters.region.EllipsoidRegionAdapter;
@@ -84,11 +85,15 @@ import java.util.concurrent.TimeUnit;
 
 @NullMarked
 public final class ProtectPlugin extends JavaPlugin {
+    public static final String ISSUES = "https://github.com/TheNextLvl-net/protect/issues/new?template=bug_report.yml";
+    public static final ErrorTracker ERROR_TRACKER = ErrorTracker.contextAware();
+
     private final Metrics metrics = new Metrics(this, 21712);
     private final dev.faststats.core.Metrics fastStats = BukkitMetrics.factory()
             .token("702e90699ba58f71536c54256557454e")
+            .errorTracker(ERROR_TRACKER)
             .create(this);
-    
+
     private final Path schematicFolder = getDataPath().resolve("schematics");
     private final PluginVersionChecker versionChecker = new PluginVersionChecker(this);
 
