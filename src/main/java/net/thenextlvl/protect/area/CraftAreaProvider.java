@@ -24,10 +24,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static net.thenextlvl.protect.ProtectPlugin.ISSUES;
+
 @NullMarked
 public final class CraftAreaProvider implements AreaProvider {
-    private static final String ISSUES = "https://github.com/TheNextLvl-net/protect/issues/new";
-
     private final Map<World, Set<Area>> areas = new HashMap<>();
     private final ProtectPlugin plugin;
 
@@ -80,6 +80,8 @@ public final class CraftAreaProvider implements AreaProvider {
             persist(new CraftGlobalArea(plugin, world));
         } catch (Exception e) {
             plugin.getComponentLogger().error("Failed to load areas for {}", world.key().asString(), e);
+            plugin.getComponentLogger().error("Please look for similar issues or report this on GitHub: {}", ISSUES);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
         }
     }
 
@@ -92,7 +94,8 @@ public final class CraftAreaProvider implements AreaProvider {
             plugin.getComponentLogger().error("The area file {} is irrecoverably broken", file);
         } catch (Exception e) {
             plugin.getComponentLogger().error("Failed to load area from {}", file, e);
-            plugin.getComponentLogger().error("Please report this issue on GitHub: {}", ISSUES);
+            plugin.getComponentLogger().error("Please look for similar issues or report this on GitHub: {}", ISSUES);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
         }
     }
 
@@ -162,7 +165,8 @@ public final class CraftAreaProvider implements AreaProvider {
             }
         } catch (Exception e) {
             plugin.getComponentLogger().error("Failed to save area {}", area.getName(), e);
-            plugin.getComponentLogger().error("Please report this issue on GitHub: {}", ISSUES);
+            plugin.getComponentLogger().error("Please look for similar issues or report this on GitHub: {}", ISSUES);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
         }
     }
 
@@ -179,6 +183,9 @@ public final class CraftAreaProvider implements AreaProvider {
             });
             return true;
         } catch (IOException e) {
+            plugin.getComponentLogger().warn("Failed to delete area {}", area.getName());
+            plugin.getComponentLogger().warn("Please look for similar issues or report this on GitHub: {}", ISSUES);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
             return false;
         }
     }

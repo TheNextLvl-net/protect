@@ -56,6 +56,8 @@ final class AreaCreateCommand {
             return 0;
         } catch (Exception e) {
             plugin.bundle().sendMessage(player, "command.error");
+            plugin.getComponentLogger().error("Failed to create area {}", name, e);
+            ProtectPlugin.ERROR_TRACKER.trackError(e);
             return 0;
         }
     }
