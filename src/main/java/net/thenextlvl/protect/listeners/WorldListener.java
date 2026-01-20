@@ -41,7 +41,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.jspecify.annotations.Nullable;
@@ -58,8 +58,8 @@ public final class WorldListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onWorldInit(WorldInitEvent event) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onWorldLoad(WorldLoadEvent event) {
         plugin.areaProvider().load(event.getWorld());
     }
 
