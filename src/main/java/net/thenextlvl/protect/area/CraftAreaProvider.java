@@ -74,7 +74,8 @@ public final class CraftAreaProvider implements AreaProvider {
 
     public void load(World world) {
         var areaFolder = world.getWorldFolder().toPath().resolve("areas");
-        try (var files = Files.list(areaFolder).filter(path -> path.getFileName().toString().endsWith(".dat"))) {
+        try (var files = !Files.isDirectory(areaFolder) ? Stream.<Path>empty() : Files.list(areaFolder)
+                .filter(path -> path.getFileName().toString().endsWith(".dat"))) {
             files.forEach(file -> load(world, file));
             if (getAreas(world).anyMatch(area -> area instanceof GlobalArea)) return;
             persist(new CraftGlobalArea(plugin, world));
