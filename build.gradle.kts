@@ -35,7 +35,7 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
-    implementation("dev.faststats.metrics:bukkit:0.11.0")
+    implementation("dev.faststats.metrics:bukkit:0.11.1")
     implementation("net.thenextlvl.version-checker:modrinth-paper:1.0.1")
     implementation("net.thenextlvl:i18n:1.1.0")
     implementation("org.bstats:bstats-bukkit:3.1.0")
