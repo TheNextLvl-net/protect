@@ -15,7 +15,6 @@ and global areas), a service API, and powerful flag-based protection rules.
 - Built-in quality-of-life commands for members, owners, parents, schematics,
   and automatic protection presets.
 
-
 [Download now](https://modrinth.com/project/MNPyHOe7#download)  
 [Check the docs](https://thenextlvl.net/docs/protect)
 
