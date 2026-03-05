@@ -20,4 +20,4 @@ and global areas), a service API, and powerful flag-based protection rules.
 
 ---
 
-[![Usage](https://faststats.dev/embed/ba0fb223-7b5e-4f2d-95da-32b05e2957a0?w=1012)](https://faststats.dev/project/protect)
+[![Usage](https://faststats.dev/embed/default:e83e80f8-a7bf-48f9-9fc6-ad6db96caa84:servers-and-players?w=1012)](https://faststats.dev/project/protect)
