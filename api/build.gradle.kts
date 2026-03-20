@@ -30,7 +30,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
     api("net.thenextlvl:nbt:4.3.4")
-    api(platform("com.intellectualsites.bom:bom-newest:1.56-SNAPSHOT"))
+    api(platform("com.intellectualsites.bom:bom-newest:1.57-SNAPSHOT"))
 }
 
 publishing {
