@@ -13,13 +13,13 @@ import org.jspecify.annotations.NullMarked;
 public final class KeyAdapter implements TagAdapter<Key> {
     @Override
     @SuppressWarnings("PatternValidation")
-    public Key deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
-        var split = tag.getAsString().split(":", 2);
+    public Key deserialize(final Tag tag, final TagDeserializationContext context) throws ParserException {
+        final var split = tag.getAsString().split(":", 2);
         return Key.key(split[0], split[1]);
     }
 
     @Override
-    public Tag serialize(Key key, TagSerializationContext context) throws ParserException {
+    public Tag serialize(final Key key, final TagSerializationContext context) throws ParserException {
         return StringTag.of(key.toString());
     }
 }

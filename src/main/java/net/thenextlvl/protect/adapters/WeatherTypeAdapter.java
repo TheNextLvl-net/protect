@@ -12,12 +12,12 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class WeatherTypeAdapter implements TagAdapter<WeatherType> {
     @Override
-    public WeatherType deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
+    public WeatherType deserialize(final Tag tag, final TagDeserializationContext context) throws ParserException {
         return WeatherType.valueOf(tag.getAsString());
     }
 
     @Override
-    public Tag serialize(WeatherType type, TagSerializationContext context) throws ParserException {
+    public Tag serialize(final WeatherType type, final TagSerializationContext context) throws ParserException {
         return StringTag.of(type.name());
     }
 }

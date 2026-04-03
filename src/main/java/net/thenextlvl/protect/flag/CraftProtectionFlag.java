@@ -12,14 +12,14 @@ public record CraftProtectionFlag<T>(
 ) implements ProtectionFlag<T> {
 
     @Override
-    public int compareTo(@NonNull Flag<?> flag) {
+    public int compareTo(@NonNull final Flag<?> flag) {
         return key().compareTo(flag.key());
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof CraftProtectionFlag<?> craftFlag)) return false;
+        if (!(o instanceof final CraftProtectionFlag<?> craftFlag)) return false;
         return Objects.equals(key, craftFlag.key);
     }
 

@@ -9,16 +9,16 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class CraftCuboidArea extends CraftRegionizedArea<CuboidRegion> implements CuboidArea {
-    public CraftCuboidArea(ProtectPlugin plugin, AreaCreator<CuboidRegion> creator) throws CircularInheritanceException {
+    public CraftCuboidArea(final ProtectPlugin plugin, final AreaCreator<CuboidRegion> creator) throws CircularInheritanceException {
         super(plugin, creator);
     }
 
-    public CraftCuboidArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
+    public CraftCuboidArea(final ProtectPlugin plugin, final World world, final String name, final CompoundTag tag) {
         super(plugin, world, name, tag);
     }
 
     @Override
-    protected CuboidRegion readRegion(CompoundTag tag) {
+    protected CuboidRegion readRegion(final CompoundTag tag) {
         return plugin.nbt.deserialize(tag.getAsCompound("region"), CuboidRegion.class);
     }
 }

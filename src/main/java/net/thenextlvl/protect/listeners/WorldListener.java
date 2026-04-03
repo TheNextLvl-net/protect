@@ -54,43 +54,43 @@ import java.util.function.Function;
 public final class WorldListener implements Listener {
     private final ProtectPlugin plugin;
 
-    public WorldListener(ProtectPlugin plugin) {
+    public WorldListener(final ProtectPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onWorldLoad(WorldLoadEvent event) {
+    public void onWorldLoad(final WorldLoadEvent event) {
         plugin.areaProvider().load(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onWorldUnload(WorldUnloadEvent event) {
+    public void onWorldUnload(final WorldUnloadEvent event) {
         plugin.areaProvider().save(event.getWorld());
         plugin.areaProvider().unload(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onWorldSave(WorldSaveEvent event) {
+    public void onWorldSave(final WorldSaveEvent event) {
         plugin.areaProvider().save(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockBreak(final BlockBreakEvent event) {
         event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockPlace(BlockPlaceEvent event) {
+    public void onBlockPlace(final BlockPlaceEvent event) {
         event.setCancelled(!plugin.protectionService().canPlace(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPhysicalInteract(PlayerInteractEvent event) {
+    public void onPhysicalInteract(final PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.PHYSICAL)) return;
         if (event.getClickedBlock() == null) return;
-        var location = event.getClickedBlock().getLocation();
+        final var location = event.getClickedBlock().getLocation();
         event.setCancelled(event.getClickedBlock().getType().equals(Material.FARMLAND)
                 ? !plugin.protectionService().canTrample(event.getPlayer(), location)
                 : !plugin.protectionService().canInteractPhysical(event.getPlayer(), location));
@@ -99,7 +99,7 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(final PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         if (event.getClickedBlock() == null) return;
         if (event.getPlayer().isSneaking() && event.hasItem() && event.getMaterial().isBlock()) return;
@@ -109,14 +109,14 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
+    public void onBlockMultiPlace(final BlockMultiPlaceEvent event) {
         event.setCancelled(!event.getReplacedBlockStates().stream().allMatch(blockState ->
                 plugin.protectionService().canPlace(event.getPlayer(), blockState.getLocation())));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockReceiveGameEvent(BlockReceiveGameEvent event) {
+    public void onBlockReceiveGameEvent(final BlockReceiveGameEvent event) {
         event.setCancelled(isInteractionRestricted(
                 event.getBlock().getLocation(),
                 event.getEntity() != null ? event.getEntity().getLocation() : null,
@@ -125,13 +125,13 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockFade(BlockFadeEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
+    public void onBlockFade(final BlockFadeEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.blockFading));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockForm(BlockFormEvent event) {
+    public void onBlockForm(final BlockFormEvent event) {
         event.setCancelled(isInteractionRestricted(
                 event.getBlock().getLocation(),
                 event.getNewState().getLocation(),
@@ -140,7 +140,7 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockBurn(BlockBurnEvent event) {
+    public void onBlockBurn(final BlockBurnEvent event) {
         event.setCancelled(isInteractionRestricted(
                 Objects.requireNonNullElse(
                         event.getIgnitingBlock(),
@@ -152,7 +152,7 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockIgnite(BlockIgniteEvent event) {
+    public void onBlockIgnite(final BlockIgniteEvent event) {
         event.setCancelled(isInteractionRestricted(
                 event.getIgnitingBlock() != null ? event.getIgnitingBlock().getLocation()
                         : event.getIgnitingEntity() != null ? event.getIgnitingEntity().getLocation()
@@ -163,16 +163,16 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onMoistureChange(MoistureChangeEvent event) {
-        if (!(event.getBlock().getBlockData() instanceof Farmland current)) return;
-        if (!(event.getNewState().getBlockData() instanceof Farmland future)) return;
-        var area = plugin.areaProvider().getArea(event.getBlock());
+    public void onMoistureChange(final MoistureChangeEvent event) {
+        if (!(event.getBlock().getBlockData() instanceof final Farmland current)) return;
+        if (!(event.getNewState().getBlockData() instanceof final Farmland future)) return;
+        final var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(current.getMoisture() > future.getMoisture()
                 ? plugin.flags.blockDrying : plugin.flags.blockMoisturising));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onLiquidFlow(BlockFromToEvent event) {
+    public void onLiquidFlow(final BlockFromToEvent event) {
         if (!event.getBlock().isLiquid()) return;
         event.setCancelled(isInteractionRestricted(
                 event.getBlock().getLocation(),
@@ -182,56 +182,56 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockGrow(BlockGrowEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
+    public void onBlockGrow(final BlockGrowEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.blockGrowth));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onSpongeAbsorb(SpongeAbsorbEvent event) {
+    public void onSpongeAbsorb(final SpongeAbsorbEvent event) {
         filterStates(event.getBlock().getLocation(), event.getBlocks(), null, plugin.flags.blockAbsorb);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onStructureGrow(StructureGrowEvent event) {
+    public void onStructureGrow(final StructureGrowEvent event) {
         filterStates(event.getLocation(), event.getBlocks(), event.getPlayer(), plugin.flags.blockGrowth);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockFertilize(BlockFertilizeEvent event) {
+    public void onBlockFertilize(final BlockFertilizeEvent event) {
         filterStates(event.getBlock().getLocation(), event.getBlocks(), event.getPlayer(), plugin.flags.blockFertilize);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockExplode(BlockExplodeEvent event) {
+    public void onBlockExplode(final BlockExplodeEvent event) {
         filterBlocks(event.getBlock().getLocation(), event.blockList(), plugin.flags.explosions);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityExplode(EntityExplodeEvent event) {
+    public void onEntityExplode(final EntityExplodeEvent event) {
         filterBlocks(event.getLocation(), event.blockList(), plugin.flags.explosions);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockRedstone(BlockRedstoneEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
+    public void onBlockRedstone(final BlockRedstoneEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBlock());
         if (!area.getFlag(plugin.flags.redstone)) event.setNewCurrent(event.getOldCurrent());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerBucketFill(PlayerBucketFillEvent event) {
+    public void onPlayerBucketFill(final PlayerBucketFillEvent event) {
         event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+    public void onPlayerBucketEmpty(final PlayerBucketEmptyEvent event) {
         event.setCancelled(!plugin.protectionService().canDestroy(event.getPlayer(), event.getBlock().getLocation()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getBlock()), "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockSpread(BlockSpreadEvent event) {
+    public void onBlockSpread(final BlockSpreadEvent event) {
         event.setCancelled(isInteractionRestricted(
                 event.getSource().getLocation(),
                 event.getBlock().getLocation(),
@@ -240,15 +240,15 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onLeavesDecay(LeavesDecayEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
+    public void onLeavesDecay(final LeavesDecayEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBlock());
         event.setCancelled(!area.getFlag(plugin.flags.leavesDecay));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
-        var flag = switch (event.getReason()) {
+    public void onCauldronLevelChange(final CauldronLevelChangeEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBlock());
+        final var flag = switch (event.getReason()) {
             case EXTINGUISH -> plugin.flags.cauldronExtinguishEntity;
             case EVAPORATE -> plugin.flags.cauldronEvaporation;
             case NATURAL_FILL -> plugin.flags.naturalCauldronFill;
@@ -258,45 +258,45 @@ public final class WorldListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+    public void onBlockPistonExtend(final BlockPistonExtendEvent event) {
         handlePistonMovement(event, event.getDirection(), event.getBlocks(), 1);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+    public void onBlockPistonRetract(final BlockPistonRetractEvent event) {
         handlePistonMovement(event, event.getDirection(), event.getBlocks(), 0);
     }
 
-    private void handlePistonMovement(BlockPistonEvent event, BlockFace direction, List<Block> blocks, int offset) {
-        var area = plugin.areaProvider().getArea(event.getBlock());
-        var relative = plugin.areaProvider().getArea(event.getBlock().getRelative(direction));
+    private void handlePistonMovement(final BlockPistonEvent event, final BlockFace direction, final List<Block> blocks, final int offset) {
+        final var area = plugin.areaProvider().getArea(event.getBlock());
+        final var relative = plugin.areaProvider().getArea(event.getBlock().getRelative(direction));
         event.setCancelled(!area.canInteract(relative) || !blocks.stream().allMatch(block ->
                 area.canInteract(plugin.areaProvider().getArea(block.getRelative(direction, offset)))));
     }
 
-    private boolean isInteractionRestricted(Location source, @Nullable Location target, Flag<Boolean> flag) {
-        var area = plugin.areaProvider().getArea(source);
+    private boolean isInteractionRestricted(final Location source, @Nullable final Location target, final Flag<Boolean> flag) {
+        final var area = plugin.areaProvider().getArea(source);
         if (!area.getFlag(flag)) return true;
         return target != null && !source.equals(target) && !area.canInteract(plugin.areaProvider().getArea(target));
     }
 
-    private void filterStates(Location source, List<BlockState> blocks, @Nullable Player player, Flag<Boolean> flag) {
+    private void filterStates(final Location source, final List<BlockState> blocks, @Nullable final Player player, final Flag<Boolean> flag) {
         filter(source, blocks, BlockState::getLocation, player, flag);
     }
 
-    private void filterBlocks(Location source, List<Block> blocks, Flag<Boolean> flag) {
+    private void filterBlocks(final Location source, final List<Block> blocks, final Flag<Boolean> flag) {
         filter(source, blocks, Block::getLocation, null, flag);
     }
 
-    private <T> void filter(Location source, List<T> list, Function<T, Location> function, @Nullable Player player, Flag<Boolean> flag) {
+    private <T> void filter(final Location source, final List<T> list, final Function<T, Location> function, @Nullable final Player player, final Flag<Boolean> flag) {
         filter(source, list, function, (area, target) -> {
             if (player == null) return area.canInteract(target) && target.getFlag(flag);
             return target.isPermitted(player.getUniqueId()) || target.getFlag(flag);
         });
     }
 
-    private <T> void filter(Location source, List<T> list, Function<T, Location> function, BiPredicate<Area, Area> filter) {
-        var area = plugin.areaProvider().getArea(source);
+    private <T> void filter(final Location source, final List<T> list, final Function<T, Location> function, final BiPredicate<Area, Area> filter) {
+        final var area = plugin.areaProvider().getArea(source);
         list.removeIf(object -> !filter.test(area, plugin.areaProvider().getArea(function.apply(object))));
     }
 }

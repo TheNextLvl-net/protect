@@ -19,27 +19,27 @@ public final class GroupedAreaArgumentType implements CustomArgumentType.Convert
     private final ProtectPlugin plugin;
     private final Predicate<? super GroupedArea> filter;
 
-    public GroupedAreaArgumentType(ProtectPlugin plugin) {
+    public GroupedAreaArgumentType(final ProtectPlugin plugin) {
         this(plugin, area -> true);
     }
 
-    public GroupedAreaArgumentType(ProtectPlugin plugin, Predicate<? super GroupedArea> filter) {
+    public GroupedAreaArgumentType(final ProtectPlugin plugin, final Predicate<? super GroupedArea> filter) {
         this.plugin = plugin;
         this.filter = filter;
     }
 
     @Override
-    public GroupedArea convert(String nativeType) {
-        var area = plugin.areaProvider().getArea(nativeType).orElseThrow(() ->
+    public GroupedArea convert(final String nativeType) {
+        final var area = plugin.areaProvider().getArea(nativeType).orElseThrow(() ->
                 new IllegalArgumentException("Unknown area: " + nativeType));
-        if (area instanceof GroupedArea grouped) return grouped;
+        if (area instanceof final GroupedArea grouped) return grouped;
         throw new IllegalStateException("Not a grouped area: " + area.getName());
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         plugin.areaProvider().getAreas()
-                .filter(area -> area instanceof GroupedArea grouped && filter.test(grouped))
+                .filter(area -> area instanceof final GroupedArea grouped && filter.test(grouped))
                 .map(Area::getName)
                 .filter(s -> s.contains(builder.getRemaining()))
                 .map(StringArgumentType::escapeIfRequired)

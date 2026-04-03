@@ -14,13 +14,13 @@ public final class GlobalAreaAdapter implements AreaAdapter<CraftGlobalArea> {
     private final Key key;
     private final ProtectPlugin plugin;
 
-    public GlobalAreaAdapter(ProtectPlugin plugin) {
+    public GlobalAreaAdapter(final ProtectPlugin plugin) {
         this.key = Key.key("protect:global");
         this.plugin = plugin;
     }
 
     @Override
-    public Area construct(World world, String name, CompoundTag tag) {
+    public Area construct(final World world, final String name, final CompoundTag tag) {
         return new CraftGlobalArea(plugin, world, tag);
     }
 

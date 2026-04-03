@@ -12,25 +12,25 @@ public final class CollisionController {
     private static final String TEAM_NAME = "collision_protection";
     private @Nullable Team collisionTeam;
     
-    private Team getOrCreateCollisionTeam(Player player) {
+    private Team getOrCreateCollisionTeam(final Player player) {
         return getCollisionTeam(player).orElseGet(() -> {
-            var team = player.getScoreboard().registerNewTeam(TEAM_NAME);
+            final var team = player.getScoreboard().registerNewTeam(TEAM_NAME);
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             return team;
         });
     }
 
-    private Optional<Team> getCollisionTeam(Player player) {
+    private Optional<Team> getCollisionTeam(final Player player) {
         return Optional.ofNullable(player.getScoreboard().getTeam(TEAM_NAME));
     }
 
-    public void setCollidable(Player player, boolean collides) {
-        var team = getOrCreateCollisionTeam(player);
+    public void setCollidable(final Player player, final boolean collides) {
+        final var team = getOrCreateCollisionTeam(player);
         if (collides) team.removePlayer(player);
         else team.addPlayer(player);
     }
 
-    public void remove(Player player) {
+    public void remove(final Player player) {
         getCollisionTeam(player).ifPresent(Team::unregister);
     }
 }

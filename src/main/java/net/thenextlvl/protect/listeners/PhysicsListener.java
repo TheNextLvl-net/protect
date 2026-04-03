@@ -21,12 +21,12 @@ import org.jspecify.annotations.Nullable;
 public final class PhysicsListener implements Listener {
     private final ProtectPlugin plugin;
 
-    public PhysicsListener(ProtectPlugin plugin) {
+    public PhysicsListener(final ProtectPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPhysics(BlockPhysicsEvent event) {
+    public void onPhysics(final BlockPhysicsEvent event) {
 
         if ((event.getSourceBlock().isEmpty() && event.getChangedType().isAir())
                 || (event.getSourceBlock().getType().equals(Material.SNOW)
@@ -36,7 +36,7 @@ public final class PhysicsListener implements Listener {
             return;
         }
 
-        var blockData = event.getChangedBlockData();
+        final var blockData = event.getChangedBlockData();
         if (event.getChangedType().equals(Material.IRON_BARS)
                 || blockData instanceof Stairs
                 || blockData instanceof Chest
@@ -51,8 +51,8 @@ public final class PhysicsListener implements Listener {
                 event.getChangedType().hasGravity() ? plugin.flags.gravity : plugin.flags.physics));
     }
 
-    private boolean isInteractionRestricted(Block source, @Nullable Block target, Flag<Boolean> flag) {
-        var area = plugin.areaProvider().getArea(source);
+    private boolean isInteractionRestricted(final Block source, @Nullable final Block target, final Flag<Boolean> flag) {
+        final var area = plugin.areaProvider().getArea(source);
         if (!area.getFlag(flag)) return true;
         return target != null && !source.equals(target) && !area.canInteract(plugin.areaProvider().getArea(target));
     }

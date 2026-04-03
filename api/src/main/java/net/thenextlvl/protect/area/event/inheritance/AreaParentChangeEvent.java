@@ -30,7 +30,7 @@ public final class AreaParentChangeEvent extends AreaEvent<Area> implements Canc
      * @param parent the new parent area, or null if the parent is being removed
      */
     @ApiStatus.Internal
-    public AreaParentChangeEvent(Area area, @Nullable Area parent) {
+    public AreaParentChangeEvent(final Area area, @Nullable final Area parent) {
         super(area);
         this.parent = parent;
     }
@@ -41,7 +41,7 @@ public final class AreaParentChangeEvent extends AreaEvent<Area> implements Canc
     }
 
     @Contract(mutates = "this")
-    public void setParent(@Nullable Area parent) {
+    public void setParent(@Nullable final Area parent) {
         this.parent = parent;
     }
 
@@ -53,7 +53,7 @@ public final class AreaParentChangeEvent extends AreaEvent<Area> implements Canc
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

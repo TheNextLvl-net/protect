@@ -18,18 +18,18 @@ import java.util.Map;
 public final class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> {
     private final ProtectPlugin plugin;
 
-    public FlagsAdapter(ProtectPlugin plugin) {
+    public FlagsAdapter(final ProtectPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     @SuppressWarnings("PatternValidation")
-    public Map<Flag<?>, @Nullable Object> deserialize(Tag tag, TagDeserializationContext context) {
-        var compound = tag.getAsCompound();
-        var flags = new HashMap<Flag<?>, @Nullable Object>();
+    public Map<Flag<?>, @Nullable Object> deserialize(final Tag tag, final TagDeserializationContext context) {
+        final var compound = tag.getAsCompound();
+        final var flags = new HashMap<Flag<?>, @Nullable Object>();
         compound.forEach((key, value) -> {
-            var namespace = Key.key(key);
-            var flag = plugin.flagRegistry().getFlag(namespace).orElse(null);
+            final var namespace = Key.key(key);
+            final var flag = plugin.flagRegistry().getFlag(namespace).orElse(null);
             if (flag != null) flags.put(flag, context.deserialize(value, flag.type()));
             else plugin.getComponentLogger().error("Unknown flag: {}", key);
         });
@@ -37,11 +37,11 @@ public final class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Obj
     }
 
     @Override
-    public Tag serialize(Map<Flag<?>, @Nullable Object> flags, TagSerializationContext context) {
-        var tag = CompoundTag.builder();
+    public Tag serialize(final Map<Flag<?>, @Nullable Object> flags, final TagSerializationContext context) {
+        final var tag = CompoundTag.builder();
         flags.forEach((flag, value) -> {
             if (value == null) return;
-            var serialized = context.serialize(value, flag.type());
+            final var serialized = context.serialize(value, flag.type());
             tag.put(flag.key().asString(), serialized);
         });
         return tag.build();

@@ -25,7 +25,7 @@ public final class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implemen
      * @param area the RegionizedArea that is requested to be deleted
      */
     @ApiStatus.Internal
-    public AreaDeleteEvent(RegionizedArea<?> area) {
+    public AreaDeleteEvent(final RegionizedArea<?> area) {
         super(area);
     }
 
@@ -35,7 +35,7 @@ public final class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implemen
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

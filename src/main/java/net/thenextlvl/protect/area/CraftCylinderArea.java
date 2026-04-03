@@ -10,16 +10,16 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class CraftCylinderArea extends CraftRegionizedArea<CylinderRegion> implements CylinderArea {
-    public CraftCylinderArea(ProtectPlugin plugin, AreaCreator<CylinderRegion> creator) throws CircularInheritanceException {
+    public CraftCylinderArea(final ProtectPlugin plugin, final AreaCreator<CylinderRegion> creator) throws CircularInheritanceException {
         super(plugin, creator);
     }
 
-    public CraftCylinderArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
+    public CraftCylinderArea(final ProtectPlugin plugin, final World world, final String name, final CompoundTag tag) {
         super(plugin, world, name, tag);
     }
 
     @Override
-    protected CylinderRegion readRegion(CompoundTag tag) {
+    protected CylinderRegion readRegion(final CompoundTag tag) {
         return plugin.nbt.deserialize(tag.getAsCompound("region"), CylinderRegion.class);
     }
 

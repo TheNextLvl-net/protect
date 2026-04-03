@@ -27,7 +27,7 @@ public final class PlayerAreaLeaveEvent extends PlayerAreaEvent implements Cance
      * @param area   the area that the player is leaving
      */
     @ApiStatus.Internal
-    public PlayerAreaLeaveEvent(Player player, Area area) {
+    public PlayerAreaLeaveEvent(final Player player, final Area area) {
         super(player, area);
     }
 
@@ -39,7 +39,7 @@ public final class PlayerAreaLeaveEvent extends PlayerAreaEvent implements Cance
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

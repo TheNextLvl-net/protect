@@ -10,12 +10,12 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class GroupedAreaAdapter extends RegionizedAreaAdapter<GroupedRegion, CraftGroupedArea> {
-    public GroupedAreaAdapter(ProtectPlugin plugin) {
+    public GroupedAreaAdapter(final ProtectPlugin plugin) {
         super(plugin, "grouped");
     }
 
     @Override
-    public Area construct(World world, String name, CompoundTag tag) {
+    public Area construct(final World world, final String name, final CompoundTag tag) {
         return new CraftGroupedArea(plugin, world, name, tag);
     }
 }

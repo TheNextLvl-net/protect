@@ -50,7 +50,7 @@ final class AreaFlagCommand {
             WeatherType.class, new Converter(() -> new EnumArgumentType<>(WeatherType.class))
     );
 
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("flag")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag"))
                 .then(info(plugin))
@@ -59,28 +59,28 @@ final class AreaFlagCommand {
                 .then(reset(plugin));
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> info(ProtectPlugin plugin) {
+    private static ArgumentBuilder<CommandSourceStack, ?> info(final ProtectPlugin plugin) {
         return Commands.literal("info")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag.info"))
                 .then(Commands.argument("flag", new FlagArgumentType(plugin))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .executes(context -> {
-                                    var area = context.getArgument("area", Area.class);
+                                    final var area = context.getArgument("area", Area.class);
                                     return info(context, area, plugin);
                                 }))
                         .executes(context -> {
-                            var location = context.getSource().getLocation();
-                            var area = plugin.areaProvider().getArea(location);
+                            final var location = context.getSource().getLocation();
+                            final var area = plugin.areaProvider().getArea(location);
                             return info(context, area, plugin);
                         }));
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> list(ProtectPlugin plugin) {
+    private static ArgumentBuilder<CommandSourceStack, ?> list(final ProtectPlugin plugin) {
         return Commands.literal("list")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag.list"))
                 .then(Commands.argument("provider", new FlagProviderArgumentType(plugin))
                         .executes(context -> {
-                            var provider = context.getArgument("provider", Plugin.class);
+                            final var provider = context.getArgument("provider", Plugin.class);
                             return list(context, provider, plugin);
                         }))
                 .executes(context -> {
@@ -90,48 +90,48 @@ final class AreaFlagCommand {
                 });
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> set( ProtectPlugin plugin) {
-        var command = Commands.literal("set")
+    private static ArgumentBuilder<CommandSourceStack, ?> set(final ProtectPlugin plugin) {
+        final var command = Commands.literal("set")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag.set"));
         plugin.flagRegistry().getRegistry().values().forEach(flags -> flags.forEach(flag -> {
-            var converter = argumentTypes.get(flag.type());
+            final var converter = argumentTypes.get(flag.type());
             if (converter == null) {
                 plugin.getComponentLogger().error("No argument type for flag type: {}", flag.type().getName());
             } else command.then(Commands.literal(flag.key().asString())
                     .then(Commands.argument("value", converter.type().get())
                             .then(Commands.argument("area", new AreaArgumentType(plugin))
                                     .executes(context -> {
-                                        var area = context.getArgument("area", Area.class);
+                                        final var area = context.getArgument("area", Area.class);
                                         return set(context, converter.resolver(), flag, area, plugin);
                                     }))
                             .executes(context -> {
-                                var location = context.getSource().getLocation();
+                                final var location = context.getSource().getLocation();
                                 return set(context, converter.resolver(), flag, plugin.areaProvider().getArea(location), plugin);
                             })));
         }));
         return command;
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> reset(ProtectPlugin plugin) {
+    private static ArgumentBuilder<CommandSourceStack, ?> reset(final ProtectPlugin plugin) {
         return Commands.literal("reset")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.flag.reset"))
                 .then(Commands.argument("flag", new FlagArgumentType(plugin, flag ->
                                 plugin.areaProvider().getAreas().anyMatch(area -> area.hasFlag(flag))))
                         .then(Commands.argument("area", new AreaArgumentType(plugin, (context, area) -> {
-                            var flag = (Flag<?>) context.getLastChild().getArgument("flag", Flag.class);
+                            final var flag = (Flag<?>) context.getLastChild().getArgument("flag", Flag.class);
                             return area.hasFlag(flag);
                         })).executes(context -> {
-                            var area = context.getArgument("area", Area.class);
+                            final var area = context.getArgument("area", Area.class);
                             return reset(context, area, plugin);
                         })).executes(context -> {
-                            var location = context.getSource().getLocation();
+                            final var location = context.getSource().getLocation();
                             return reset(context, plugin.areaProvider().getArea(location), plugin);
                         }));
     }
 
-    private static int info(CommandContext<CommandSourceStack> context, Area area, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var flag = (Flag<?>) context.getArgument("flag", Flag.class);
+    private static int info(final CommandContext<CommandSourceStack> context, final Area area, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var flag = (Flag<?>) context.getArgument("flag", Flag.class);
         plugin.bundle().sendMessage(sender, "area.flag.info",
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("flag", flag.key().asString()),
@@ -139,10 +139,10 @@ final class AreaFlagCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int list(CommandContext<CommandSourceStack> context, Plugin provider, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var flags = plugin.flagRegistry().getFlags(provider);
-        var components = flags.stream()
+    private static int list(final CommandContext<CommandSourceStack> context, final Plugin provider, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var flags = plugin.flagRegistry().getFlags(provider);
+        final var components = flags.stream()
                 .map(flag -> plugin.bundle().component("area.flag.list.format", sender,
                         Placeholder.parsed("flag", flag.key().asString())))
                 .toList();
@@ -154,9 +154,9 @@ final class AreaFlagCommand {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static int set(CommandContext<CommandSourceStack> context, Resolver<?> resolver, Flag flag, Area area, ProtectPlugin plugin) throws CommandSyntaxException {
-        var value = resolver.resolve(flag.type(), context);
-        var message = area.setFlag(flag, value) ? "area.flag.set" : "nothing.changed";
+    private static int set(final CommandContext<CommandSourceStack> context, final Resolver<?> resolver, final Flag flag, final Area area, final ProtectPlugin plugin) throws CommandSyntaxException {
+        final var value = resolver.resolve(flag.type(), context);
+        final var message = area.setFlag(flag, value) ? "area.flag.set" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("flag", flag.key().asString()),
@@ -164,9 +164,9 @@ final class AreaFlagCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int reset(CommandContext<CommandSourceStack> context, Area area, ProtectPlugin plugin) {
-        var flag = (Flag<?>) context.getArgument("flag", Flag.class);
-        var message = area.removeFlag(flag) ? "area.flag.reset" : "nothing.changed";
+    private static int reset(final CommandContext<CommandSourceStack> context, final Area area, final ProtectPlugin plugin) {
+        final var flag = (Flag<?>) context.getArgument("flag", Flag.class);
+        final var message = area.removeFlag(flag) ? "area.flag.reset" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Placeholder.parsed("area", area.getName()),
                 Placeholder.parsed("flag", flag.key().asString()));
@@ -177,7 +177,7 @@ final class AreaFlagCommand {
             Supplier<ArgumentType<?>> type,
             Resolver<?> resolver
     ) {
-        public Converter(Supplier<ArgumentType<?>> supplier) {
+        public Converter(final Supplier<ArgumentType<?>> supplier) {
             this(supplier, (type, context) -> context.getArgument("value", type));
         }
     }

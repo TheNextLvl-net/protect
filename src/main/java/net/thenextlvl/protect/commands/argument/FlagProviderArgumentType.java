@@ -16,19 +16,19 @@ import java.util.concurrent.CompletableFuture;
 public final class FlagProviderArgumentType implements CustomArgumentType.Converted<Plugin, String> {
     private final ProtectPlugin plugin;
 
-    public FlagProviderArgumentType(ProtectPlugin plugin) {
+    public FlagProviderArgumentType(final ProtectPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public Plugin convert(String nativeType) {
-        var provider = plugin.getServer().getPluginManager().getPlugin(nativeType);
+    public Plugin convert(final String nativeType) {
+        final var provider = plugin.getServer().getPluginManager().getPlugin(nativeType);
         if (provider != null) return provider;
         throw new IllegalArgumentException("Unknown provider: " + nativeType);
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         plugin.flagRegistry().getRegistry().keySet().stream()
                 .map(Plugin::getName)
                 .filter(s -> s.contains(builder.getRemaining()))

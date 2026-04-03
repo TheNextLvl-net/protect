@@ -22,7 +22,7 @@ public final class AreaLoadEvent extends AreaEvent<Area> {
      * @param area the area that has been loaded
      */
     @ApiStatus.Internal
-    public AreaLoadEvent(Area area) {
+    public AreaLoadEvent(final Area area) {
         super(area);
     }
 

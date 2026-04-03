@@ -11,16 +11,16 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class Vector3Adapter implements TagAdapter<Vector3> {
     @Override
-    public Vector3 deserialize(Tag tag, TagDeserializationContext context) {
-        var compound = tag.getAsCompound();
-        var x = compound.get("x").getAsDouble();
-        var y = compound.get("y").getAsDouble();
-        var z = compound.get("z").getAsDouble();
+    public Vector3 deserialize(final Tag tag, final TagDeserializationContext context) {
+        final var compound = tag.getAsCompound();
+        final var x = compound.get("x").getAsDouble();
+        final var y = compound.get("y").getAsDouble();
+        final var z = compound.get("z").getAsDouble();
         return Vector3.at(x, y, z);
     }
 
     @Override
-    public Tag serialize(Vector3 vector, TagSerializationContext context) {
+    public Tag serialize(final Vector3 vector, final TagSerializationContext context) {
         return CompoundTag.builder()
                 .put("x", vector.x())
                 .put("y", vector.y())

@@ -13,15 +13,15 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class EllipsoidRegionAdapter implements TagAdapter<EllipsoidRegion> {
     @Override
-    public EllipsoidRegion deserialize(Tag tag, TagDeserializationContext context) {
-        var compound = tag.getAsCompound();
-        var center = context.deserialize(compound.get("center"), BlockVector3.class);
-        var radius = context.deserialize(compound.get("radius"), Vector3.class);
+    public EllipsoidRegion deserialize(final Tag tag, final TagDeserializationContext context) {
+        final var compound = tag.getAsCompound();
+        final var center = context.deserialize(compound.get("center"), BlockVector3.class);
+        final var radius = context.deserialize(compound.get("radius"), Vector3.class);
         return new EllipsoidRegion(center, radius);
     }
 
     @Override
-    public Tag serialize(EllipsoidRegion region, TagSerializationContext context) {
+    public Tag serialize(final EllipsoidRegion region, final TagSerializationContext context) {
         return CompoundTag.builder()
                 .put("center", context.serialize(region.getCenter().toBlockPoint()))
                 .put("radius", context.serialize(region.getRadius()))

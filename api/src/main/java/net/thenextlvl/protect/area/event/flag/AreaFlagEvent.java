@@ -24,7 +24,7 @@ public abstract class AreaFlagEvent<T> extends AreaEvent<@NonNull Area> implemen
      * @param flag the flag associated with this event
      */
     @ApiStatus.Internal
-    protected AreaFlagEvent(@NonNull Area area, @NonNull Flag<T> flag) {
+    protected AreaFlagEvent(@NonNull final Area area, @NonNull final Flag<T> flag) {
         super(area);
         this.flag = flag;
     }
@@ -42,7 +42,7 @@ public abstract class AreaFlagEvent<T> extends AreaEvent<@NonNull Area> implemen
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancelled) {
+    public void setCancelled(final boolean cancelled) {
         this.cancelled = cancelled;
     }
 }

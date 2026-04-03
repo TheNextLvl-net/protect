@@ -16,12 +16,12 @@ public abstract class AreaEvent<T extends Area> extends Event {
     private final T area;
 
     @ApiStatus.Internal
-    protected AreaEvent(T area) {
+    protected AreaEvent(final T area) {
         this(!area.getServer().isPrimaryThread(), area);
     }
 
     @ApiStatus.Internal
-    protected AreaEvent(boolean async, T area) {
+    protected AreaEvent(final boolean async, final T area) {
         super(async);
         this.area = area;
     }

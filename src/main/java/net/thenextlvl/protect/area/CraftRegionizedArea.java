@@ -55,14 +55,14 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     private @Nullable String parent;
     private T region;
 
-    public CraftRegionizedArea(ProtectPlugin plugin, AreaCreator<T> creator) throws CircularInheritanceException {
+    public CraftRegionizedArea(final ProtectPlugin plugin, final AreaCreator<T> creator) throws CircularInheritanceException {
         super(plugin, creator.name(), creator.world(), creator.members(),
                 creator.owner(), creator.flags(), creator.priority());
         this.parent = creator.parent();
         this.region = creator.region();
     }
 
-    public CraftRegionizedArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
+    public CraftRegionizedArea(final ProtectPlugin plugin, final World world, final String name, final CompoundTag tag) {
         super(plugin, world, name, tag);
         this.parent = readParent(tag);
         this.region = readRegion(tag);
@@ -72,8 +72,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public Location getLocation() {
-        var center = getRegion().getCenter();
-        var location = new Location(getWorld(), center.x() + 0.5, getRegion().getMinimumY(), center.z() + 0.5);
+        final var center = getRegion().getCenter();
+        final var location = new Location(getWorld(), center.x() + 0.5, getRegion().getMinimumY(), center.z() + 0.5);
         if (getRegion().getLength() < getRegion().getWidth()) {
             location.setZ(location.getZ() - (getRegion().getLength() / 2d) - 0.5);
         } else {
@@ -83,15 +83,15 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
         location.setY(getSafeHeight(location.getBlock()));
 
-        var block = location.getBlock();
-        var box = block.getCollisionShape().getBoundingBoxes().stream()
+        final var block = location.getBlock();
+        final var box = block.getCollisionShape().getBoundingBoxes().stream()
                 .max(Comparator.comparingDouble(BoundingBox::getMaxY))
                 .orElse(null);
         location.setY(box != null ? block.getY() + box.getMaxY() : block.getY());
         return location;
     }
 
-    private int getSafeHeight(Block block) {
+    private int getSafeHeight(final Block block) {
         if (block.isPassable()) {
             for (var y = block.getY(); y >= block.getWorld().getMinHeight(); y--) {
                 if (block.getWorld().getBlockAt(block.getX(), y, block.getZ()).isPassable()) continue;
@@ -145,10 +145,10 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     }
 
     @Override
-    public boolean setParent(@Nullable Area parent) throws CircularInheritanceException {
+    public boolean setParent(@Nullable final Area parent) throws CircularInheritanceException {
         if (parent != null && parent.getName().equals(this.parent)) return false;
         if (parent != null) checkCircularInheritance(parent);
-        var event = new AreaParentChangeEvent(this, parent);
+        final var event = new AreaParentChangeEvent(this, parent);
         if (!event.callEvent()) return false;
         if (!Objects.equals(parent, event.getParent()) && event.getParent() != null)
             checkCircularInheritance(event.getParent());
@@ -157,7 +157,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     }
 
     public void checkCircularInheritance(Area parent) throws CircularInheritanceException {
-        var path = new LinkedList<Area>();
+        final var path = new LinkedList<Area>();
         path.add(this);
         path.add(parent);
         do {
@@ -170,16 +170,16 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean setRegion(T region) {
-        var event = new AreaRedefineEvent<>(this, (T) region.clone());
+    public boolean setRegion(final T region) {
+        final var event = new AreaRedefineEvent<>(this, (T) region.clone());
         if (event.callEvent()) this.region = event.getRegion();
         return !event.isCancelled();
     }
 
     @Override
-    public boolean canInteract(Area area) {
+    public boolean canInteract(final Area area) {
         return equals(area) || area.getParent().map(this::equals).orElse(false)
-                || (getOwner().map(owner -> area instanceof RegionizedArea<?> regionized
+                || (getOwner().map(owner -> area instanceof final RegionizedArea<?> regionized
                 && regionized.getOwner().map(owner::equals).orElse(false)).orElse(false));
     }
 
@@ -189,7 +189,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     }
 
     @Override
-    public boolean contains(Location location) {
+    public boolean contains(final Location location) {
         return getWorld().equals(location.getWorld())
                 && getRegion().contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
@@ -205,7 +205,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
             return Files.isRegularFile(getSchematicFile())
                     && (new AreaSchematicDeleteEvent(this).callEvent()
                     && Files.deleteIfExists(getSchematicFile()));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             plugin.getComponentLogger().warn("Failed to delete schematic for area {}", getName(), e);
             plugin.getComponentLogger().warn("Please look for similar issues or report this on GitHub: {}", ISSUES);
             ProtectPlugin.ERROR_TRACKER.trackError(e);
@@ -216,10 +216,10 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public void saveSchematic() throws IOException, WorldEditException {
         Files.createDirectories(schematic.toAbsolutePath().getParent());
-        try (var editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(getWorld()));
-             var writer = BuiltInClipboardFormat.FAST_V3.getWriter(Files.newOutputStream(schematic, WRITE, CREATE, TRUNCATE_EXISTING))) {
-            var clipboard = new BlockArrayClipboard(getRegion());
-            var extent = new ForwardExtentCopy(editSession, getRegion(), clipboard, getRegion().getMinimumPoint());
+        try (final var editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(getWorld()));
+             final var writer = BuiltInClipboardFormat.FAST_V3.getWriter(Files.newOutputStream(schematic, WRITE, CREATE, TRUNCATE_EXISTING))) {
+            final var clipboard = new BlockArrayClipboard(getRegion());
+            final var extent = new ForwardExtentCopy(editSession, getRegion(), clipboard, getRegion().getMinimumPoint());
             extent.setCopyingBiomes(getRegion() instanceof FlatRegion);
             extent.setCopyingEntities(true);
             Operations.complete(extent);
@@ -230,13 +230,13 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public boolean loadSchematic() throws IOException, WorldEditException {
         if (!Files.isRegularFile(getSchematicFile())) return false;
-        var event = new AreaSchematicLoadEvent(this);
+        final var event = new AreaSchematicLoadEvent(this);
         if (!event.callEvent()) return false;
-        var world = BukkitAdapter.adapt(getWorld());
-        try (var editSession = WorldEdit.getInstance().newEditSession(world)) {
-            var clipboard = BuiltInClipboardFormat.FAST_V3.getReader(Files.newInputStream(getSchematicFile())).read();
+        final var world = BukkitAdapter.adapt(getWorld());
+        try (final var editSession = WorldEdit.getInstance().newEditSession(world)) {
+            final var clipboard = BuiltInClipboardFormat.FAST_V3.getReader(Files.newInputStream(getSchematicFile())).read();
             world.getEntities(getRegion()).forEach(com.sk89q.worldedit.entity.Entity::remove);
-            var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
+            final var operation = new ClipboardHolder(clipboard).createPaste(editSession).to(getRegion().getMinimumPoint()).
                     copyBiomes(true).copyEntities(true).ignoreAirBlocks(false).build();
             Operations.complete(operation);
             return new AreaSchematicLoadedEvent(this).callEvent();
@@ -273,13 +273,13 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
 
     @Override
     public CompoundTag serialize() {
-        var tag = super.serialize().toBuilder();
+        final var tag = super.serialize().toBuilder();
         if (parent != null) tag.put("parent", parent);
         tag.put("region", plugin.nbt.serialize(region));
         return tag.build();
     }
 
-    private @Nullable String readParent(CompoundTag tag) {
+    private @Nullable String readParent(final CompoundTag tag) {
         return tag.optional("parent").map(Tag::getAsString).orElse(null);
     }
 }

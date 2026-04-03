@@ -7,21 +7,21 @@ import org.jspecify.annotations.NullMarked;
 public class UnsupportedRegionException extends IllegalArgumentException {
     private final Class<?> type;
 
-    public UnsupportedRegionException(Class<?> type) {
+    public UnsupportedRegionException(final Class<?> type) {
         this(type, "Unsupported region type: " + type.getName());
     }
 
-    public UnsupportedRegionException(Class<?> type, String message) {
+    public UnsupportedRegionException(final Class<?> type, final String message) {
         super(message);
         this.type = type;
     }
 
-    public UnsupportedRegionException(Class<?> type, String message, Throwable cause) {
+    public UnsupportedRegionException(final Class<?> type, final String message, final Throwable cause) {
         super(message, cause);
         this.type = type;
     }
 
-    public UnsupportedRegionException(Class<?> type, Throwable cause) {
+    public UnsupportedRegionException(final Class<?> type, final Throwable cause) {
         super(cause);
         this.type = type;
     }

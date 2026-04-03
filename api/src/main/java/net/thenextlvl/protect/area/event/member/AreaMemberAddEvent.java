@@ -30,7 +30,7 @@ public final class AreaMemberAddEvent extends AreaEvent<Area> implements Cancell
      * @param member the UUID of the member to be added to the area
      */
     @ApiStatus.Internal
-    public AreaMemberAddEvent(Area area, UUID member) {
+    public AreaMemberAddEvent(final Area area, final UUID member) {
         super(area);
         this.member = member;
     }
@@ -41,7 +41,7 @@ public final class AreaMemberAddEvent extends AreaEvent<Area> implements Cancell
     }
 
     @Contract(mutates = "this")
-    public void setMember(UUID member) {
+    public void setMember(final UUID member) {
         this.member = member;
     }
 
@@ -53,7 +53,7 @@ public final class AreaMemberAddEvent extends AreaEvent<Area> implements Cancell
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

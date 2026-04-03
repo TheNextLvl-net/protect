@@ -28,30 +28,30 @@ public final class ProtectMaskManager extends BukkitMaskManager {
     );
     private final ProtectPlugin plugin;
 
-    public ProtectMaskManager(ProtectPlugin plugin) {
+    public ProtectMaskManager(final ProtectPlugin plugin) {
         super(plugin.getName());
         this.plugin = plugin;
     }
 
     @Override
-    public @Nullable FaweMask getMask(Player player, MaskType type, boolean whitelist) {
+    public @Nullable FaweMask getMask(final Player player, final MaskType type, final boolean whitelist) {
         return getMask(player, type, whitelist, true);
     }
 
     @Override
-    public @Nullable FaweMask getMask(Player player, MaskType type, boolean whitelist, boolean notify) {
+    public @Nullable FaweMask getMask(final Player player, final MaskType type, final boolean whitelist, final boolean notify) {
         if (whitelist && Settings.settings().REGION_RESTRICTIONS_OPTIONS.WORLDGUARD_REGION_BLACKLIST)
             return new FaweMask(GLOBAL);
 
-        var bukkit = plugin.getServer().getPlayer(player.getUniqueId());
+        final var bukkit = plugin.getServer().getPlayer(player.getUniqueId());
         if (bukkit == null) return null;
 
-        var areas = getAreas(bukkit, whitelist);
+        final var areas = getAreas(bukkit, whitelist);
         if (areas.isEmpty()) return null;
 
-        var regions = new ArrayList<Region>();
-        for (var area : areas) {
-            if (area instanceof RegionizedArea<?> regionized) regions.add(regionized.getRegion());
+        final var regions = new ArrayList<Region>();
+        for (final var area : areas) {
+            if (area instanceof final RegionizedArea<?> regionized) regions.add(regionized.getRegion());
             else if (area instanceof GlobalArea) regions.add(GLOBAL);
         }
 
@@ -63,10 +63,10 @@ public final class ProtectMaskManager extends BukkitMaskManager {
         private final Collection<Area> areas;
 
         public RegionMask(
-                org.bukkit.entity.Player player,
-                Collection<Region> regions,
-                Collection<Area> areas,
-                World world
+                final org.bukkit.entity.Player player,
+                final Collection<Region> regions,
+                final Collection<Area> areas,
+                final World world
         ) {
             super(new RegionIntersection(world, regions));
             this.player = player;
@@ -74,12 +74,12 @@ public final class ProtectMaskManager extends BukkitMaskManager {
         }
 
         @Override
-        public boolean isValid(Player ignored, MaskType type) {
+        public boolean isValid(final Player ignored, final MaskType type) {
             return areas.stream().allMatch(area -> plugin.protectionService().canEdit(player, area));
         }
     }
 
-    public List<Area> getAreas(org.bukkit.entity.Player player, boolean whitelist) {
+    public List<Area> getAreas(final org.bukkit.entity.Player player, final boolean whitelist) {
         return plugin.areaProvider().getAreas(player.getWorld())
                 .filter(area -> whitelist == plugin.protectionService().canEdit(player, area))
                 .toList();

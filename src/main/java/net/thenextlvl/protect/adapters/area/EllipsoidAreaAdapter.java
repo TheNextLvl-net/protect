@@ -10,12 +10,12 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class EllipsoidAreaAdapter extends RegionizedAreaAdapter<EllipsoidRegion, CraftEllipsoidArea> {
-    public EllipsoidAreaAdapter(ProtectPlugin plugin) {
+    public EllipsoidAreaAdapter(final ProtectPlugin plugin) {
         super(plugin, "ellipsoid");
     }
 
     @Override
-    public Area construct(World world, String name, CompoundTag tag) {
+    public Area construct(final World world, final String name, final CompoundTag tag) {
         return new CraftEllipsoidArea(plugin, world, name, tag);
     }
 }

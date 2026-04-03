@@ -31,7 +31,7 @@ public final class AreaOwnerChangeEvent extends AreaEvent<Area> implements Cance
      * @param owner The new owner's UUID. Can be null to indicate no owner
      */
     @ApiStatus.Internal
-    public AreaOwnerChangeEvent(Area area, @Nullable UUID owner) {
+    public AreaOwnerChangeEvent(final Area area, @Nullable final UUID owner) {
         super(area);
         this.owner = owner;
     }
@@ -42,7 +42,7 @@ public final class AreaOwnerChangeEvent extends AreaEvent<Area> implements Cance
     }
 
     @Contract(mutates = "this")
-    public void setOwner(@Nullable UUID owner) {
+    public void setOwner(@Nullable final UUID owner) {
         this.owner = owner;
     }
 
@@ -54,7 +54,7 @@ public final class AreaOwnerChangeEvent extends AreaEvent<Area> implements Cance
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

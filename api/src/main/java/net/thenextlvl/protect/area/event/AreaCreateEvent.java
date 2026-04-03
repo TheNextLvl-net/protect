@@ -24,7 +24,7 @@ public final class AreaCreateEvent extends AreaEvent<Area> {
      * @param area the area that has been created
      */
     @ApiStatus.Internal
-    public AreaCreateEvent(Area area) {
+    public AreaCreateEvent(final Area area) {
         super(area);
     }
 

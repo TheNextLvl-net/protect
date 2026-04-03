@@ -21,7 +21,7 @@ public final class AreaSchematicLoadedEvent extends AreaEvent<RegionizedArea<?>>
      * @param area The regionized area whose schematic has been loaded.
      */
     @ApiStatus.Internal
-    public AreaSchematicLoadedEvent(RegionizedArea<?> area) {
+    public AreaSchematicLoadedEvent(final RegionizedArea<?> area) {
         super(area);
     }
 

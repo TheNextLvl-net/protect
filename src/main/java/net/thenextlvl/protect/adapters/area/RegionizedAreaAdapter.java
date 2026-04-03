@@ -13,7 +13,7 @@ public abstract class RegionizedAreaAdapter<C extends Region, T extends CraftReg
     private final Key key;
     protected final ProtectPlugin plugin;
 
-    public RegionizedAreaAdapter(ProtectPlugin plugin, @KeyPattern.Value String name) {
+    public RegionizedAreaAdapter(final ProtectPlugin plugin, @KeyPattern.Value final String name) {
         this.key = Key.key("protect", name);
         this.plugin = plugin;
     }

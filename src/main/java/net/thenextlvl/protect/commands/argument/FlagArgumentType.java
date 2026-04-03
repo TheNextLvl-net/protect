@@ -19,23 +19,23 @@ public final class FlagArgumentType implements CustomArgumentType.Converted<Flag
     private final ProtectPlugin plugin;
     private final Predicate<? super Flag<?>> filter;
 
-    public FlagArgumentType(ProtectPlugin plugin) {
+    public FlagArgumentType(final ProtectPlugin plugin) {
         this(plugin, flag -> true);
     }
 
-    public FlagArgumentType(ProtectPlugin plugin, Predicate<? super Flag<?>> filter) {
+    public FlagArgumentType(final ProtectPlugin plugin, final Predicate<? super Flag<?>> filter) {
         this.plugin = plugin;
         this.filter = filter;
     }
 
     @Override
-    public Flag<?> convert(Key nativeType) {
+    public Flag<?> convert(final Key nativeType) {
         return plugin.flagRegistry().getFlag(nativeType).filter(filter).orElseThrow(() ->
                 new IllegalArgumentException("Unknown flag: " + nativeType));
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         plugin.flagRegistry().getFlags().stream()
                 .filter(filter)
                 .map(Flag::key)

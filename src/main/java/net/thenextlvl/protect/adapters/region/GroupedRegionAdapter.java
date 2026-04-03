@@ -19,35 +19,35 @@ import java.util.HashMap;
 @NullMarked
 public final class GroupedRegionAdapter implements TagAdapter<GroupedRegion> {
     @Override
-    public GroupedRegion deserialize(Tag tag, TagDeserializationContext context) throws ParserException {
-        var compound = tag.getAsCompound();
-        var type = type(compound.get("type").getAsString());
-        var regions = compound.getAsCompound("regions");
+    public GroupedRegion deserialize(final Tag tag, final TagDeserializationContext context) throws ParserException {
+        final var compound = tag.getAsCompound();
+        final var type = type(compound.get("type").getAsString());
+        final var regions = compound.getAsCompound("regions");
 
-        var map = new HashMap<String, Region>();
+        final var map = new HashMap<String, Region>();
         regions.forEach((name, value) -> map.put(name, context.deserialize(value, type)));
 
         return new GroupedRegion(map);
     }
 
     @Override
-    public Tag serialize(GroupedRegion group, TagSerializationContext context) throws ParserException {
-        var tag = CompoundTag.builder();
+    public Tag serialize(final GroupedRegion group, final TagSerializationContext context) throws ParserException {
+        final var tag = CompoundTag.builder();
         tag.put("type", type(group.getRegions().values().iterator().next().getClass()));
-        var regions = CompoundTag.builder();
+        final var regions = CompoundTag.builder();
         group.getRegions().forEach((name, region) -> regions.put(name, context.serialize(region)));
         tag.put("regions", regions.build());
         return tag.build();
     }
 
-    public String type(Class<? extends Region> type) {
+    public String type(final Class<? extends Region> type) {
         if (type == CuboidRegion.class) return "cuboid";
         if (type == CylinderRegion.class) return "cylinder";
         if (type == EllipsoidRegion.class) return "ellipsoid";
         throw new UnsupportedRegionException(type);
     }
 
-    public Class<? extends Region> type(String type) {
+    public Class<? extends Region> type(final String type) {
         return switch (type) {
             case "cuboid" -> CuboidRegion.class;
             case "ellipsoid" -> EllipsoidRegion.class;

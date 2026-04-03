@@ -16,18 +16,18 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class AreaSelectCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("select")
-                .requires(stack -> stack.getSender() instanceof Player player
+                .requires(stack -> stack.getSender() instanceof final Player player
                                    && player.hasPermission("worldedit.selection.pos"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
                         .executes(context -> select(context, plugin)));
     }
 
-    private static int select(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var player = (Player) context.getSource().getSender();
-        var area = context.getArgument("area", RegionizedArea.class);
-        var session = WorldEditPlugin.getInstance().getSession(player);
+    private static int select(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var player = (Player) context.getSource().getSender();
+        final var area = context.getArgument("area", RegionizedArea.class);
+        final var session = WorldEditPlugin.getInstance().getSession(player);
         session.setRegionSelector(BukkitAdapter.adapt(area.getWorld()), area.getRegionSelector());
         session.updateServerCUI(BukkitAdapter.adapt(player));
         plugin.bundle().sendMessage(player, "area.select", Placeholder.parsed("area", area.getName()));

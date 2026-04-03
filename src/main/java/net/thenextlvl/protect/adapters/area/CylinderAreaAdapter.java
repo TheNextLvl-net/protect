@@ -10,12 +10,12 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class CylinderAreaAdapter extends RegionizedAreaAdapter<CylinderRegion, CraftCylinderArea> {
-    public CylinderAreaAdapter(ProtectPlugin plugin) {
+    public CylinderAreaAdapter(final ProtectPlugin plugin) {
         super(plugin, "cylinder");
     }
 
     @Override
-    public Area construct(World world, String name, CompoundTag tag) {
+    public Area construct(final World world, final String name, final CompoundTag tag) {
         return new CraftCylinderArea(plugin, world, name, tag);
     }
 }

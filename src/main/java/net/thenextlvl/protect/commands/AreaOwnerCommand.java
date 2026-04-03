@@ -16,7 +16,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class AreaOwnerCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("owner")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.owner"))
                 .then(Commands.literal("set")
@@ -31,24 +31,24 @@ final class AreaOwnerCommand {
                                 .executes(context -> remove(context, plugin))));
     }
 
-    private static int set(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) throws CommandSyntaxException {
-        var sender = context.getSource().getSender();
-        var area = context.getArgument("area", Area.class);
-        var resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
-        var player = resolver.resolve(context.getSource()).getFirst();
-        var success = area.setOwner(player.getUniqueId());
-        var message = success ? "area.owner.set" : "nothing.changed";
+    private static int set(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) throws CommandSyntaxException {
+        final var sender = context.getSource().getSender();
+        final var area = context.getArgument("area", Area.class);
+        final var resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
+        final var player = resolver.resolve(context.getSource()).getFirst();
+        final var success = area.setOwner(player.getUniqueId());
+        final var message = success ? "area.owner.set" : "nothing.changed";
         plugin.bundle().sendMessage(sender, message,
                 Placeholder.component("player", player.name().hoverEvent(player.asHoverEvent())),
                 Placeholder.parsed("area", area.getName()));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int remove(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var area = context.getArgument("area", Area.class);
-        var success = area.setOwner(null);
-        var message = success ? "area.owner.remove" : "nothing.changed";
+    private static int remove(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var area = context.getArgument("area", Area.class);
+        final var success = area.setOwner(null);
+        final var message = success ? "area.owner.remove" : "nothing.changed";
         plugin.bundle().sendMessage(sender, message, Placeholder.parsed("area", area.getName()));
         return Command.SINGLE_SUCCESS;
     }

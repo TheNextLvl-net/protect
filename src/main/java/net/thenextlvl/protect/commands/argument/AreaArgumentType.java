@@ -18,23 +18,23 @@ public final class AreaArgumentType implements CustomArgumentType.Converted<Area
     private final ProtectPlugin plugin;
     private final BiPredicate<? super CommandContext<?>, ? super Area> filter;
 
-    public AreaArgumentType(ProtectPlugin plugin) {
+    public AreaArgumentType(final ProtectPlugin plugin) {
         this(plugin, (context, area) -> true);
     }
 
-    public AreaArgumentType(ProtectPlugin plugin, BiPredicate<CommandContext<?>, ? super Area> filter) {
+    public AreaArgumentType(final ProtectPlugin plugin, final BiPredicate<CommandContext<?>, ? super Area> filter) {
         this.plugin = plugin;
         this.filter = filter;
     }
 
     @Override
-    public Area convert(String nativeType) {
+    public Area convert(final String nativeType) {
         return plugin.areaProvider().getArea(nativeType).orElseThrow(() ->
                 new IllegalArgumentException("Unknown area: " + nativeType));
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         plugin.areaProvider().getAreas()
                 .filter(area -> filter.test(context, area))
                 .map(Area::getName)

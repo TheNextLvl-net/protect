@@ -23,7 +23,7 @@ public final class AreaSchematicDeleteEvent extends AreaEvent<RegionizedArea<?>>
      * @param area The regionized area associated with the schematic being deleted.
      */
     @ApiStatus.Internal
-    public AreaSchematicDeleteEvent(RegionizedArea<?> area) {
+    public AreaSchematicDeleteEvent(final RegionizedArea<?> area) {
         super(area);
     }
 
@@ -35,7 +35,7 @@ public final class AreaSchematicDeleteEvent extends AreaEvent<RegionizedArea<?>>
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

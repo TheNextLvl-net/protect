@@ -26,7 +26,7 @@ public final class CraftAreaService implements AreaService {
     private final Set<RegionWrapper<?>> wrappers = new HashSet<>();
     private final ProtectPlugin plugin;
 
-    public CraftAreaService(ProtectPlugin plugin) {
+    public CraftAreaService(final ProtectPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -37,12 +37,12 @@ public final class CraftAreaService implements AreaService {
     }
 
     @Override
-    public <T extends Region> AreaCreator<T> creator(String name, World world, T region) {
+    public <T extends Region> AreaCreator<T> creator(final String name, final World world, final T region) {
         return new CraftAreaCreator<>(plugin, name, world, region);
     }
 
     @Override
-    public <T extends Region> AreaCreator<T> creator(RegionizedArea<T> area) {
+    public <T extends Region> AreaCreator<T> creator(final RegionizedArea<T> area) {
         return new CraftAreaCreator<>(plugin,
                 area.getName(), area.getWorld(), area.getRegion(),
                 area.getParent().map(Area::getName).orElse(null),
@@ -52,16 +52,16 @@ public final class CraftAreaService implements AreaService {
     }
 
     @Override
-    public <T extends Region> boolean delete(RegionizedArea<T> area) {
+    public <T extends Region> boolean delete(final RegionizedArea<T> area) {
         if (!new AreaDeleteEvent(area).callEvent()) return false;
-        var remove = plugin.areaProvider().delete(area);
+        final var remove = plugin.areaProvider().delete(area);
         if (remove) handlePostRemove(area);
         return remove;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(Class<T> type) {
+    public <T extends Region> Optional<Function<AreaCreator<T>, RegionizedArea<T>>> getWrapper(final Class<T> type) {
         return wrappers.stream()
                 .filter(wrapper -> wrapper.type().isAssignableFrom(type))
                 .map(wrapper -> (RegionWrapper<T>) wrapper)
@@ -70,13 +70,13 @@ public final class CraftAreaService implements AreaService {
     }
 
     @Override
-    public <T extends Region> boolean unregisterWrapper(Class<T> type) {
+    public <T extends Region> boolean unregisterWrapper(final Class<T> type) {
         return wrappers.removeIf(wrapper -> wrapper.type().isAssignableFrom(type));
     }
 
     @Override
-    public <T extends Region> void registerWrapper(Class<T> type, Function<AreaCreator<T>, RegionizedArea<T>> creator) throws IllegalStateException {
-        var wrapper = new RegionWrapper<>(type, creator);
+    public <T extends Region> void registerWrapper(final Class<T> type, final Function<AreaCreator<T>, RegionizedArea<T>> creator) throws IllegalStateException {
+        final var wrapper = new RegionWrapper<>(type, creator);
         Preconditions.checkState(wrappers.add(wrapper), "Duplicate wrapper for type: " + type.getName());
     }
 
@@ -92,7 +92,7 @@ public final class CraftAreaService implements AreaService {
     }
 
     @Override
-    public <T extends Area> void registerAdapter(Class<T> type, AreaAdapter<T> adapter) throws IllegalStateException {
+    public <T extends Area> void registerAdapter(final Class<T> type, final AreaAdapter<T> adapter) throws IllegalStateException {
         Preconditions.checkState(!adapters.containsKey(type), "Duplicate adapter for type: " + type.getName());
         Preconditions.checkState(adapters.values().stream()
                 .filter(value -> value.key().equals(adapter.key()))
@@ -102,28 +102,28 @@ public final class CraftAreaService implements AreaService {
     }
 
     @Override
-    public <T extends Area> boolean unregisterAdapter(Class<T> type) {
+    public <T extends Area> boolean unregisterAdapter(final Class<T> type) {
         return adapters.remove(type) != null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Area> AreaAdapter<T> getAdapter(Class<T> type) throws NullPointerException {
+    public <T extends Area> AreaAdapter<T> getAdapter(final Class<T> type) throws NullPointerException {
         return (AreaAdapter<T>) Objects.requireNonNull(adapters.get(type), "No adapter for type: " + type.getName());
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Area> AreaAdapter<T> getAdapter(Key key) throws IllegalArgumentException {
+    public <T extends Area> AreaAdapter<T> getAdapter(final Key key) throws IllegalArgumentException {
         return (AreaAdapter<T>) adapters.values().stream()
                 .filter(adapter -> adapter.key().equals(key))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("No adapter for key: " + key));
     }
 
-    private void handlePostRemove(Area removed) {
+    private void handlePostRemove(final Area removed) {
         removed.getPlayers().forEach(player -> {
             new PlayerAreaLeaveEvent(player, removed).callEvent();
-            var target = plugin.areaProvider().getArea(player);
+            final var target = plugin.areaProvider().getArea(player);
             if (removed.getPriority() < target.getPriority()) return;
             new PlayerAreaTransitionEvent(player, removed, target).callEvent();
         });

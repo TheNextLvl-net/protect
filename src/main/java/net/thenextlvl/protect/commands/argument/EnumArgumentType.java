@@ -20,16 +20,16 @@ import java.util.concurrent.CompletableFuture;
 public final class EnumArgumentType<E extends Enum<E>> implements CustomArgumentType<E, String> {
     private final Class<E> enumClass;
 
-    public EnumArgumentType(Class<E> enumClass) {
+    public EnumArgumentType(final Class<E> enumClass) {
         this.enumClass = enumClass;
     }
 
     @Override
-    public E parse(StringReader reader) throws CommandSyntaxException {
-        var type = getNativeType().parse(reader);
+    public E parse(final StringReader reader) throws CommandSyntaxException {
+        final var type = getNativeType().parse(reader);
         try {
             return Enum.valueOf(enumClass, type.toUpperCase(Locale.ROOT).replace('-', '_'));
-        } catch (IllegalArgumentException ignore) {
+        } catch (final IllegalArgumentException ignore) {
             throw new ComponentCommandExceptionType(
                     Component.text("No such enum constant: " + type)
             ).createWithContext(reader);
@@ -37,7 +37,7 @@ public final class EnumArgumentType<E extends Enum<E>> implements CustomArgument
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         Arrays.stream(enumClass.getEnumConstants())
                 .map(e -> e.name().toLowerCase(Locale.ROOT).replace('_', '-'))
                 .map(StringArgumentType::escapeIfRequired)

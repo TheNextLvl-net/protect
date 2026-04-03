@@ -30,7 +30,7 @@ public interface Container {
      * @return true if the block is contained within the container, false otherwise
      */
     @Contract(pure = true)
-    default boolean contains(Block block) {
+    default boolean contains(final Block block) {
         return contains(block.getLocation());
     }
 
@@ -41,7 +41,7 @@ public interface Container {
      * @return true if the entity is contained within the container, false otherwise
      */
     @Contract(pure = true)
-    default boolean contains(Entity entity) {
+    default boolean contains(final Entity entity) {
         return contains(entity.getLocation());
     }
 

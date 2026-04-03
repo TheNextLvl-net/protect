@@ -49,7 +49,7 @@ public interface AreaProvider {
      * @return a stream of areas containing the given block
      */
     @Contract(pure = true)
-    default Stream<Area> getAreas(Block block) {
+    default Stream<Area> getAreas(final Block block) {
         return getAreas(block.getLocation());
     }
 
@@ -60,7 +60,7 @@ public interface AreaProvider {
      * @return a stream of areas containing the given entity
      */
     @Contract(pure = true)
-    default Stream<Area> getAreas(Entity entity) {
+    default Stream<Area> getAreas(final Entity entity) {
         return getAreas(entity.getLocation());
     }
 
@@ -89,7 +89,7 @@ public interface AreaProvider {
      * @return the area that contains the given block
      */
     @Contract(pure = true)
-    default Area getArea(Block block) {
+    default Area getArea(final Block block) {
         return getArea(block.getLocation());
     }
 
@@ -100,7 +100,7 @@ public interface AreaProvider {
      * @return the area that contains the given entity
      */
     @Contract(pure = true)
-    default Area getArea(Entity entity) {
+    default Area getArea(final Entity entity) {
         return getArea(entity.getLocation());
     }
 

@@ -8,7 +8,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class AreaCommand {
-    public static LiteralCommandNode<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralCommandNode<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("area")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area"))
                 .then(AreaCreateCommand.create(plugin))

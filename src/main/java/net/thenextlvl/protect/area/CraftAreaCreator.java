@@ -28,8 +28,8 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     private int priority = 0;
 
     @SuppressWarnings("unchecked")
-    public CraftAreaCreator(ProtectPlugin plugin, String name, World world, T region, @Nullable String parent,
-                            @Nullable UUID owner, Map<Flag<?>, @Nullable Object> flags, Set<UUID> members, int priority) {
+    public CraftAreaCreator(final ProtectPlugin plugin, final String name, final World world, final T region, @Nullable final String parent,
+                            @Nullable final UUID owner, final Map<Flag<?>, @Nullable Object> flags, final Set<UUID> members, final int priority) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
@@ -42,7 +42,7 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     }
 
     @SuppressWarnings("unchecked")
-    public CraftAreaCreator(ProtectPlugin plugin, String name, World world, T region) {
+    public CraftAreaCreator(final ProtectPlugin plugin, final String name, final World world, final T region) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
@@ -65,12 +65,12 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     }
 
     @Override
-    public <V extends Region> AreaCreator<V> region(V region) {
+    public <V extends Region> AreaCreator<V> region(final V region) {
         return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, priority);
     }
 
     @Override
-    public AreaCreator<T> world(World world) {
+    public AreaCreator<T> world(final World world) {
         this.world = world;
         return this;
     }
@@ -81,42 +81,42 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     }
 
     @Override
-    public AreaCreator<T> flags(Map<Flag<?>, @Nullable Object> flags) {
+    public AreaCreator<T> flags(final Map<Flag<?>, @Nullable Object> flags) {
         this.flags = new HashMap<>(flags);
         return this;
     }
 
     @Override
-    public AreaCreator<T> members(Set<UUID> members) {
+    public AreaCreator<T> members(final Set<UUID> members) {
         this.members = new HashSet<>(members);
         return this;
     }
 
     @Override
-    public AreaCreator<T> name(String name) {
+    public AreaCreator<T> name(final String name) {
         this.name = name;
         return this;
     }
 
     @Override
-    public AreaCreator<T> owner(@Nullable UUID owner) {
+    public AreaCreator<T> owner(@Nullable final UUID owner) {
         this.owner = owner;
         return this;
     }
 
     @Override
-    public AreaCreator<T> parent(@Nullable String parent) {
+    public AreaCreator<T> parent(@Nullable final String parent) {
         this.parent = parent;
         return this;
     }
 
     @Override
-    public AreaCreator<T> parent(@Nullable Area area) {
+    public AreaCreator<T> parent(@Nullable final Area area) {
         return parent(area == null ? null : area.getName());
     }
 
     @Override
-    public AreaCreator<T> priority(int priority) {
+    public AreaCreator<T> priority(final int priority) {
         this.priority = priority;
         return this;
     }
@@ -124,7 +124,7 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     @Override
     @SuppressWarnings("unchecked")
     public RegionizedArea<T> create() throws UnsupportedRegionException, CircularInheritanceException, IOException {
-        var area = plugin.areaService().getWrapper((Class<T>) region().getClass())
+        final var area = plugin.areaService().getWrapper((Class<T>) region().getClass())
                 .orElseThrow(() -> new UnsupportedRegionException(region().getClass()))
                 .apply(this);
         plugin.areaProvider().persist(area);

@@ -46,13 +46,13 @@ public abstract class CraftArea implements Area {
 
     private final Map<String, Tag> dataContainer = new LinkedHashMap<>();
 
-    protected CraftArea(ProtectPlugin plugin,
-                        String name,
-                        World world,
-                        Set<UUID> members,
-                        @Nullable UUID owner,
-                        Map<Flag<?>, @Nullable Object> flags,
-                        int priority) {
+    protected CraftArea(final ProtectPlugin plugin,
+                        final String name,
+                        final World world,
+                        final Set<UUID> members,
+                        @Nullable final UUID owner,
+                        final Map<Flag<?>, @Nullable Object> flags,
+                        final int priority) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
@@ -62,7 +62,7 @@ public abstract class CraftArea implements Area {
         this.priority = priority;
     }
 
-    public CraftArea(ProtectPlugin plugin, World world, String name, CompoundTag tag) {
+    public CraftArea(final ProtectPlugin plugin, final World world, final String name, final CompoundTag tag) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
@@ -78,7 +78,7 @@ public abstract class CraftArea implements Area {
 
     @Override
     public LinkedHashSet<Area> getParents() {
-        var parents = new LinkedHashSet<Area>();
+        final var parents = new LinkedHashSet<Area>();
         var parent = getParent().orElse(null);
         while (parent != null && parent != this && parents.add(parent))
             parent = parent.getParent().orElse(null);
@@ -96,24 +96,24 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public boolean isMember(UUID uuid) {
+    public boolean isMember(final UUID uuid) {
         return members.contains(uuid);
     }
 
     @Override
-    public boolean isPermitted(UUID uuid) {
+    public boolean isPermitted(final UUID uuid) {
         return (owner != null && owner.equals(uuid)) || members.contains(uuid);
     }
 
     @Override
-    public boolean removeMember(UUID uuid) {
-        var event = new AreaMemberRemoveEvent(this, uuid);
+    public boolean removeMember(final UUID uuid) {
+        final var event = new AreaMemberRemoveEvent(this, uuid);
         return event.callEvent() && members.remove(event.getMember());
     }
 
     @Override
-    public boolean addMember(UUID uuid) {
-        var event = new AreaMemberAddEvent(this, uuid);
+    public boolean addMember(final UUID uuid) {
+        final var event = new AreaMemberAddEvent(this, uuid);
         return event.callEvent() && members.add(event.getMember());
     }
 
@@ -123,10 +123,10 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public void setMembers(Set<UUID> members) {
+    public void setMembers(final Set<UUID> members) {
         if (Objects.equals(members, this.members)) return;
-        for (var member : this.members) if (!members.contains(member)) removeMember(member);
-        for (var member : members) if (!this.members.contains(member)) addMember(member);
+        for (final var member : this.members) if (!members.contains(member)) removeMember(member);
+        for (final var member : members) if (!this.members.contains(member)) addMember(member);
     }
 
     @Override
@@ -145,16 +145,16 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public boolean setOwner(@Nullable UUID owner) {
+    public boolean setOwner(@Nullable final UUID owner) {
         if (Objects.equals(owner, this.owner)) return false;
-        var event = new AreaOwnerChangeEvent(this, owner);
+        final var event = new AreaOwnerChangeEvent(this, owner);
         if (event.callEvent()) this.owner = event.getOwner();
         return !event.isCancelled();
     }
 
-    public boolean setPriority(int priority) {
+    public boolean setPriority(final int priority) {
         if (this.priority == priority) return false;
-        var event = new AreaPriorityChangeEvent(this, priority);
+        final var event = new AreaPriorityChangeEvent(this, priority);
         if (!event.callEvent()) return false;
         this.priority = priority;
         return true;
@@ -162,7 +162,7 @@ public abstract class CraftArea implements Area {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void setFlags(Map<Flag<?>, @Nullable Object> flags) {
+    public void setFlags(final Map<Flag<?>, @Nullable Object> flags) {
         if (Objects.equals(this.flags, flags)) return;
         flags.forEach((flag, o) -> setFlag((Flag<Object>) flag, o));
     }
@@ -170,8 +170,8 @@ public abstract class CraftArea implements Area {
     @Override
     @NullUnmarked
     @SuppressWarnings("unchecked")
-    public <T> T getFlag(@NonNull Flag<T> flag) {
-        var value = (T) getFlags().get(flag);
+    public <T> T getFlag(@NonNull final Flag<T> flag) {
+        final var value = (T) getFlags().get(flag);
         if (value != null) return value;
         return getParent().map(area -> area.getFlag(flag))
                 .orElseGet(flag::defaultValue);
@@ -179,33 +179,33 @@ public abstract class CraftArea implements Area {
 
     @Override
     @NullUnmarked
-    public <T> boolean setFlag(@NonNull Flag<T> flag, T state) {
+    public <T> boolean setFlag(@NonNull final Flag<T> flag, final T state) {
         if (Objects.equals(getFlag(flag), state)) return false;
-        var event = new AreaFlagChangeEvent<>(this, flag, state);
+        final var event = new AreaFlagChangeEvent<>(this, flag, state);
         return event.callEvent() && !Objects.equals(flags.put(flag, event.getNewState()), event.getNewState());
     }
 
     @Override
-    public <T> boolean removeFlag(Flag<T> flag) {
+    public <T> boolean removeFlag(final Flag<T> flag) {
         if (!flags.containsKey(flag)) return false;
-        var event = new AreaFlagResetEvent<>(this, flag);
+        final var event = new AreaFlagResetEvent<>(this, flag);
         if (event.callEvent()) flags.remove(flag);
         return !event.isCancelled();
     }
 
     @Override
-    public <T> boolean hasFlag(Flag<T> flag) {
+    public <T> boolean hasFlag(final Flag<T> flag) {
         return flags.containsKey(flag);
     }
 
     @Override
-    public int compareTo(Area area) {
+    public int compareTo(final Area area) {
         return Integer.compare(getPriority(), area.getPriority());
     }
 
     @Override
     public CompoundTag serialize() {
-        var tag = CompoundTag.builder();
+        final var tag = CompoundTag.builder();
         if (!flags.isEmpty()) tag.put("flags", plugin.nbt.serialize(flags, new TypeToken<Map<Flag<?>, Object>>() {
         }.getType()));
         if (!members.isEmpty()) tag.put("members", plugin.nbt.serialize(members, new TypeToken<Set<UUID>>() {
@@ -213,13 +213,13 @@ public abstract class CraftArea implements Area {
         if (!dataContainer.isEmpty()) tag.put("data", CompoundTag.of(dataContainer));
         if (owner != null) tag.put("owner", plugin.nbt.serialize(owner));
         tag.put("priority", priority);
-        var adapter = plugin.areaService().getAdapter(getClass());
+        final var adapter = plugin.areaService().getAdapter(getClass());
         tag.put("type", adapter.key().asString());
         return tag.build();
     }
 
     @Override
-    public void deserialize(CompoundTag tag) {
+    public void deserialize(final CompoundTag tag) {
         readFlags(tag).ifPresent(flags::putAll);
         readMembers(tag).ifPresent(members::addAll);
         readOwner(tag).ifPresent(owner -> this.owner = owner);
@@ -227,47 +227,47 @@ public abstract class CraftArea implements Area {
         tag.<CompoundTag>optional("data").ifPresent(data -> data.forEach(dataContainer::put));
     }
 
-    private Optional<Map<Flag<?>, Object>> readFlags(CompoundTag tag) {
+    private Optional<Map<Flag<?>, Object>> readFlags(final CompoundTag tag) {
         return tag.optional("flags").map(flags -> {
-            var type = new TypeToken<Map<Flag<?>, Object>>() {
+            final var type = new TypeToken<Map<Flag<?>, Object>>() {
             }.getType();
             return plugin.nbt.deserialize(flags, type);
         });
     }
 
-    private Optional<Set<UUID>> readMembers(CompoundTag tag) {
+    private Optional<Set<UUID>> readMembers(final CompoundTag tag) {
         return tag.optional("members").map(members ->
                 plugin.nbt.deserialize(members, new TypeToken<Set<UUID>>() {
                 }.getType()));
     }
 
-    private Optional<UUID> readOwner(CompoundTag tag) {
+    private Optional<UUID> readOwner(final CompoundTag tag) {
         return tag.optional("owner").map(owner ->
                 plugin.nbt.deserialize(owner, UUID.class));
     }
 
-    private Optional<Integer> readPriority(CompoundTag tag) {
+    private Optional<Integer> readPriority(final CompoundTag tag) {
         return tag.optional("priority").map(Tag::getAsInt);
     }
 
     @Override
-    public <T extends Tag> Optional<T> get(Key key) {
+    public <T extends Tag> Optional<T> get(final Key key) {
         return Optional.ofNullable((T) dataContainer.get(key.asString()));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Tag> Optional<T> remove(Key key) {
+    public <T extends Tag> Optional<T> remove(final Key key) {
         return Optional.ofNullable((T) dataContainer.remove(key.asString()));
     }
 
     @Override
-    public <T extends Tag> T getOrDefault(Key key, T defaultValue) {
+    public <T extends Tag> T getOrDefault(final Key key, final T defaultValue) {
         return (T) dataContainer.getOrDefault(key.asString(), defaultValue);
     }
 
     @Override
-    public <T extends Tag> void set(Key key, T value) {
+    public <T extends Tag> void set(final Key key, final T value) {
         dataContainer.put(key.asString(), value);
     }
 
@@ -292,7 +292,7 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public boolean has(Key key) {
+    public boolean has(final Key key) {
         return dataContainer.containsKey(key.asString());
     }
 
@@ -307,18 +307,18 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public void copyTo(DataContainer dataContainer) {
+    public void copyTo(final DataContainer dataContainer) {
         copyTo(dataContainer, false);
     }
 
     @Override
-    public void copyTo(DataContainer dataContainer, boolean replace) {
+    public void copyTo(final DataContainer dataContainer, final boolean replace) {
         if (replace) dataContainer.clear();
         forEach(dataContainer::set);
     }
 
     @Override
-    public void forEach(BiConsumer<Key, Tag> action) {
+    public void forEach(final BiConsumer<Key, Tag> action) {
         entrySet().forEach(entry -> action.accept(entry.getKey(), entry.getValue()));
     }
 
@@ -331,10 +331,10 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CraftArea craftArea = (CraftArea) o;
+        final CraftArea craftArea = (CraftArea) o;
         return Objects.equals(name, craftArea.name) && Objects.equals(world, craftArea.world);
     }
 

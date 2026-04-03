@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 @NullMarked
 public final class MembersAdapter implements TagAdapter<Set<UUID>> {
     @Override
-    public Set<UUID> deserialize(Tag tag, TagDeserializationContext context) {
+    public Set<UUID> deserialize(final Tag tag, final TagDeserializationContext context) {
         return tag.<CompoundTag>getAsList().stream()
                 .map(compound -> context.deserialize(compound, UUID.class))
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Tag serialize(Set<UUID> object, TagSerializationContext context) {
+    public Tag serialize(final Set<UUID> object, final TagSerializationContext context) {
         return ListTag.of(CompoundTag.ID, object.stream()
                 .map(context::serialize)
                 .toList());

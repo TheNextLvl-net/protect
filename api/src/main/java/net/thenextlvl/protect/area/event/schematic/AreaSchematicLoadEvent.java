@@ -23,7 +23,7 @@ public final class AreaSchematicLoadEvent extends AreaEvent<RegionizedArea<?>> i
      * @param area The regionized area whose schematic is being loaded.
      */
     @ApiStatus.Internal
-    public AreaSchematicLoadEvent(RegionizedArea<?> area) {
+    public AreaSchematicLoadEvent(final RegionizedArea<?> area) {
         super(area);
     }
 
@@ -35,7 +35,7 @@ public final class AreaSchematicLoadEvent extends AreaEvent<RegionizedArea<?>> i
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

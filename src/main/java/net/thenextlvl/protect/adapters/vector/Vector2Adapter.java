@@ -11,15 +11,15 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class Vector2Adapter implements TagAdapter<Vector2> {
     @Override
-    public Vector2 deserialize(Tag tag, TagDeserializationContext context) {
-        var compound = tag.getAsCompound();
-        var x = compound.get("x").getAsInt();
-        var z = compound.get("z").getAsInt();
+    public Vector2 deserialize(final Tag tag, final TagDeserializationContext context) {
+        final var compound = tag.getAsCompound();
+        final var x = compound.get("x").getAsInt();
+        final var z = compound.get("z").getAsInt();
         return Vector2.at(x, z);
     }
 
     @Override
-    public Tag serialize(Vector2 vector, TagSerializationContext context) {
+    public Tag serialize(final Vector2 vector, final TagSerializationContext context) {
         return CompoundTag.builder()
                 .put("x", vector.x())
                 .put("z", vector.z())

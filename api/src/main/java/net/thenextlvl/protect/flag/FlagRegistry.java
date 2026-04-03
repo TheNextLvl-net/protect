@@ -60,7 +60,7 @@ public interface FlagRegistry {
     @NullMarked
     @SuppressWarnings("unchecked")
     @Contract(mutates = "this")
-    default <T> Flag<T> register(Plugin plugin, @KeyPattern.Value String name, T defaultValue) throws IllegalStateException {
+    default <T> Flag<T> register(final Plugin plugin, @KeyPattern.Value final String name, final T defaultValue) throws IllegalStateException {
         return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue);
     }
 
@@ -95,7 +95,7 @@ public interface FlagRegistry {
     @NullMarked
     @SuppressWarnings("unchecked")
     @Contract(mutates = "this")
-    default <T> ProtectionFlag<T> register(Plugin plugin, @KeyPattern.Value String name, T defaultValue, T protectedValue) throws IllegalStateException {
+    default <T> ProtectionFlag<T> register(final Plugin plugin, @KeyPattern.Value final String name, final T defaultValue, final T protectedValue) throws IllegalStateException {
         return register(plugin, (Class<T>) defaultValue.getClass(), name, defaultValue, protectedValue);
     }
 

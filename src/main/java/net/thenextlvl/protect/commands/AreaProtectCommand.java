@@ -15,7 +15,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class AreaProtectCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("protect")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.protect"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
@@ -24,13 +24,13 @@ final class AreaProtectCommand {
                         .executes(context -> protect(context, plugin)));
     }
 
-    private static int unprotect(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var area = context.getArgument("area", Area.class);
-        var changes = plugin.flagRegistry().getFlags().stream()
+    private static int unprotect(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var area = context.getArgument("area", Area.class);
+        final var changes = plugin.flagRegistry().getFlags().stream()
                 .filter(flag -> flag instanceof ProtectionFlag<?>)
                 .filter(area::removeFlag)
                 .count();
-        var message = changes > 0 ? "area.unprotected" : "nothing.changed";
+        final var message = changes > 0 ? "area.unprotected" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Formatter.number("amount", changes),
                 Placeholder.parsed("area", area.getName()));
@@ -38,14 +38,14 @@ final class AreaProtectCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private static int protect(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var area = context.getArgument("area", Area.class);
-        var changes = plugin.flagRegistry().getFlags().stream()
+    private static int protect(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var area = context.getArgument("area", Area.class);
+        final var changes = plugin.flagRegistry().getFlags().stream()
                 .filter(flag -> flag instanceof ProtectionFlag<?>)
                 .map(flag -> (ProtectionFlag<Object>) flag)
                 .filter(flag -> area.setFlag(flag, flag.protectedValue()))
                 .count();
-        var message = changes > 0 ? "area.protected" : "nothing.changed";
+        final var message = changes > 0 ? "area.protected" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
                 Formatter.number("amount", changes),
                 Placeholder.parsed("area", area.getName()));

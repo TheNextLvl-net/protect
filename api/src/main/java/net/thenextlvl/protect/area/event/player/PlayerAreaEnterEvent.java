@@ -26,7 +26,7 @@ public final class PlayerAreaEnterEvent extends PlayerAreaEvent implements Cance
      * @param area   the area associated with this event
      */
     @ApiStatus.Internal
-    public PlayerAreaEnterEvent(Player player, Area area) {
+    public PlayerAreaEnterEvent(final Player player, final Area area) {
         super(player, area);
     }
 
@@ -38,7 +38,7 @@ public final class PlayerAreaEnterEvent extends PlayerAreaEvent implements Cance
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

@@ -25,7 +25,7 @@ public final class AreaProtectEvent extends AreaEvent<Area> implements Cancellab
      * @param area The Area to be protected
      */
     @ApiStatus.Internal
-    public AreaProtectEvent(Area area) {
+    public AreaProtectEvent(final Area area) {
         super(area);
     }
 
@@ -37,7 +37,7 @@ public final class AreaProtectEvent extends AreaEvent<Area> implements Cancellab
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

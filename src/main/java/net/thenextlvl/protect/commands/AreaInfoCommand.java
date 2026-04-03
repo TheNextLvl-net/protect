@@ -20,31 +20,31 @@ import java.nio.file.Files;
 
 @NullMarked
 final class AreaInfoCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("info")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.info"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
                         .executes(context -> {
-                            var area = context.getArgument("area", Area.class);
+                            final var area = context.getArgument("area", Area.class);
                             return info(context, area, plugin);
                         }))
                 .executes(context -> {
-                    var location = context.getSource().getLocation();
-                    var area = plugin.areaProvider().getArea(location);
+                    final var location = context.getSource().getLocation();
+                    final var area = plugin.areaProvider().getArea(location);
                     return info(context, area, plugin);
                 });
     }
 
-    private static int info(CommandContext<CommandSourceStack> context, Area area, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
-        var flags = area.getFlags().entrySet().stream()
+    private static int info(final CommandContext<CommandSourceStack> context, final Area area, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
+        final var flags = area.getFlags().entrySet().stream()
                 .map(entry -> plugin.bundle().component("area.flag.format", sender,
                         Placeholder.parsed("flag", entry.getKey().key().asString()),
                         Placeholder.unparsed("value", String.valueOf(entry.getValue()))))
                 .toList();
 
-        var owner = area.getOwner()
+        final var owner = area.getOwner()
                 .map(plugin.getServer()::getOfflinePlayer)
                 .map(OfflinePlayer::getName)
                 .map(Component::text)
@@ -53,7 +53,7 @@ final class AreaInfoCommand {
         var size = 0L;
         try {
             size = Files.size(area.getDataFile()) / 1024;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             plugin.getComponentLogger().warn("Failed to get file size of area {}", area.getName(), e);
         }
 
@@ -67,7 +67,7 @@ final class AreaInfoCommand {
                 Placeholder.parsed("type", type),
                 Placeholder.parsed("world", area.getWorld().key().asString()));
 
-        if (!(area instanceof RegionizedArea<?> regionizedArea))
+        if (!(area instanceof final RegionizedArea<?> regionizedArea))
             return Command.SINGLE_SUCCESS;
 
         plugin.bundle().sendMessage(sender, "area.info.bounds",

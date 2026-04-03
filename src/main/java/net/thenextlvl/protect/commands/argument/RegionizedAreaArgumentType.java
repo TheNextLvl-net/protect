@@ -19,27 +19,27 @@ public final class RegionizedAreaArgumentType implements CustomArgumentType.Conv
     private final ProtectPlugin plugin;
     private final Predicate<? super RegionizedArea<?>> filter;
 
-    public RegionizedAreaArgumentType(ProtectPlugin plugin) {
+    public RegionizedAreaArgumentType(final ProtectPlugin plugin) {
         this(plugin, area -> true);
     }
 
-    public RegionizedAreaArgumentType(ProtectPlugin plugin, Predicate<? super RegionizedArea<?>> filter) {
+    public RegionizedAreaArgumentType(final ProtectPlugin plugin, final Predicate<? super RegionizedArea<?>> filter) {
         this.plugin = plugin;
         this.filter = filter;
     }
 
     @Override
-    public RegionizedArea<?> convert(String nativeType) {
-        var area = plugin.areaProvider().getArea(nativeType).orElseThrow(() ->
+    public RegionizedArea<?> convert(final String nativeType) {
+        final var area = plugin.areaProvider().getArea(nativeType).orElseThrow(() ->
                 new IllegalArgumentException("Unknown area: " + nativeType));
-        if (area instanceof RegionizedArea<?> regionized) return regionized;
+        if (area instanceof final RegionizedArea<?> regionized) return regionized;
         throw new IllegalStateException("Not a regionized area: " + area.getName());
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         plugin.areaProvider().getAreas()
-                .filter(area -> area instanceof RegionizedArea<?> regionized && filter.test(regionized))
+                .filter(area -> area instanceof final RegionizedArea<?> regionized && filter.test(regionized))
                 .map(Area::getName)
                 .filter(s -> s.contains(builder.getRemaining()))
                 .map(StringArgumentType::escapeIfRequired)

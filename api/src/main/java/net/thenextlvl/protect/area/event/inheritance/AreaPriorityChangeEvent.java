@@ -27,7 +27,7 @@ public final class AreaPriorityChangeEvent extends AreaEvent<Area> implements Ca
      * @param priority The new priority value
      */
     @ApiStatus.Internal
-    public AreaPriorityChangeEvent(Area area, int priority) {
+    public AreaPriorityChangeEvent(final Area area, final int priority) {
         super(area);
         this.priority = priority;
     }
@@ -38,7 +38,7 @@ public final class AreaPriorityChangeEvent extends AreaEvent<Area> implements Ca
     }
 
     @Contract(mutates = "this")
-    public void setPriority(int priority) {
+    public void setPriority(final int priority) {
         this.priority = priority;
     }
 
@@ -50,7 +50,7 @@ public final class AreaPriorityChangeEvent extends AreaEvent<Area> implements Ca
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

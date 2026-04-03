@@ -16,7 +16,7 @@ public final class NexoListener implements Listener {
     private final ProtectionFlag<Boolean> furniturePlace;
     private final ProtectionFlag<Boolean> furnitureInteract;
 
-    public NexoListener(ProtectPlugin plugin, Plugin nexo) {
+    public NexoListener(final ProtectPlugin plugin, final Plugin nexo) {
         this.furnitureBreak = plugin.flagRegistry().register(nexo, "furniture_break", true, false);
         this.furniturePlace = plugin.flagRegistry().register(nexo, "furniture_place", true, false);
         this.furnitureInteract = plugin.flagRegistry().register(nexo, "furniture_interact", true, false);
@@ -24,22 +24,22 @@ public final class NexoListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onNexoFurnitureBreakEvent(NexoFurnitureBreakEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBaseEntity());
+    public void onNexoFurnitureBreakEvent(final NexoFurnitureBreakEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBaseEntity());
         event.setCancelled(!plugin.protectionService().canPerformAction(event.getPlayer(), area, furnitureBreak, "protect.bypass.destroy"));
         plugin.failed(event.getPlayer(), event, area, "area.failed.break");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onNexoFurniturePlace(NexoFurniturePlaceEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBaseEntity());
+    public void onNexoFurniturePlace(final NexoFurniturePlaceEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBaseEntity());
         event.setCancelled(!plugin.protectionService().canPerformAction(event.getPlayer(), area, furniturePlace, "protect.bypass.place"));
         plugin.failed(event.getPlayer(), event, area, "area.failed.place");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onNexoFurnitureInteract(NexoFurnitureInteractEvent event) {
-        var area = plugin.areaProvider().getArea(event.getBaseEntity());
+    public void onNexoFurnitureInteract(final NexoFurnitureInteractEvent event) {
+        final var area = plugin.areaProvider().getArea(event.getBaseEntity());
         event.setCancelled(!plugin.protectionService().canPerformAction(event.getPlayer(), area, furnitureInteract, "protect.bypass.interact"));
         plugin.failed(event.getPlayer(), event, area, "area.failed.interact");
     }

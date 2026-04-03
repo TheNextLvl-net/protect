@@ -42,7 +42,7 @@ public final class GroupedRegion extends AbstractRegion {
      * @param regions A map of regions where the key is the region name and the value is the Region instance.
      *                The map mustn't be empty.
      */
-    public GroupedRegion(Map<String, Region> regions) {
+    public GroupedRegion(final Map<String, Region> regions) {
         this(null, regions);
     }
 
@@ -53,7 +53,7 @@ public final class GroupedRegion extends AbstractRegion {
      * @param regions A map of regions where the key is the region name and the value is the Region instance.
      *                The map mustn't be empty.
      */
-    public GroupedRegion(@Nullable World world, Map<String, Region> regions) {
+    public GroupedRegion(@Nullable final World world, final Map<String, Region> regions) {
         super(world);
         Preconditions.checkArgument(!regions.isEmpty(), "empty region map is not supported");
         this.regions.putAll(regions);
@@ -77,7 +77,7 @@ public final class GroupedRegion extends AbstractRegion {
      * @return The region associated with the specified name, or null if no such region exists.
      */
     @Contract(pure = true)
-    public @Nullable Region getRegion(String name) {
+    public @Nullable Region getRegion(final String name) {
         return regions.get(name);
     }
 
@@ -89,7 +89,7 @@ public final class GroupedRegion extends AbstractRegion {
      * @return true if the region was added successfully, false if a region with the same name already exists.
      */
     @Contract(mutates = "this")
-    public boolean addRegion(String name, Region region) {
+    public boolean addRegion(final String name, final Region region) {
         return regions.putIfAbsent(name, region.clone()) == null;
     }
 
@@ -100,7 +100,7 @@ public final class GroupedRegion extends AbstractRegion {
      * @return true if a region with the specified name exists, false otherwise.
      */
     @Contract(pure = true)
-    public boolean hasRegion(String name) {
+    public boolean hasRegion(final String name) {
         return regions.containsKey(name);
     }
 
@@ -111,7 +111,7 @@ public final class GroupedRegion extends AbstractRegion {
      * @return true if the region exists in the map, false otherwise.
      */
     @Contract(pure = true)
-    public boolean hasRegion(Region region) {
+    public boolean hasRegion(final Region region) {
         return regions.containsValue(region);
     }
 
@@ -122,7 +122,7 @@ public final class GroupedRegion extends AbstractRegion {
      * @return true if the region was successfully removed, false otherwise.
      */
     @Contract(mutates = "this")
-    public boolean removeRegion(String name) {
+    public boolean removeRegion(final String name) {
         return regions.size() > 1 && regions.remove(name) != null;
     }
 
@@ -133,14 +133,14 @@ public final class GroupedRegion extends AbstractRegion {
      * @param region The Region instance to be associated with the specified name.
      */
     @Contract(mutates = "this")
-    public void setRegion(String name, Region region) {
+    public void setRegion(final String name, final Region region) {
         regions.put(name, region.clone());
     }
 
     @Override
     @Contract(pure = true)
     public BlockVector3 getMinimumPoint() {
-        var regions = this.regions.values().toArray(new Region[0]);
+        final var regions = this.regions.values().toArray(new Region[0]);
         var maximum = regions[0].getMinimumPoint();
         for (var i = 1; i < regions.length; i++)
             maximum = regions[i].getMinimumPoint().getMinimum(maximum);
@@ -150,7 +150,7 @@ public final class GroupedRegion extends AbstractRegion {
     @Override
     @Contract(pure = true)
     public BlockVector3 getMaximumPoint() {
-        var regions = this.regions.values().toArray(new Region[0]);
+        final var regions = this.regions.values().toArray(new Region[0]);
         var maximum = regions[0].getMaximumPoint();
         for (var i = 1; i < regions.length; i++)
             maximum = regions[i].getMaximumPoint().getMaximum(maximum);
@@ -159,19 +159,19 @@ public final class GroupedRegion extends AbstractRegion {
 
     @Override
     @Contract(value = "_ -> fail")
-    public void expand(BlockVector3... changes) throws RegionOperationException {
+    public void expand(final BlockVector3... changes) throws RegionOperationException {
         throw new RegionOperationException(Caption.of("worldedit.selection.intersection.error.cannot-expand"));
     }
 
     @Override
     @Contract(value = "_ -> fail")
-    public void contract(BlockVector3... changes) throws RegionOperationException {
+    public void contract(final BlockVector3... changes) throws RegionOperationException {
         throw new RegionOperationException(Caption.of("worldedit.selection.intersection.error.cannot-contract"));
     }
 
     @Override
     @Contract(pure = true)
-    public boolean contains(BlockVector3 position) {
+    public boolean contains(final BlockVector3 position) {
         return regions.values().stream().anyMatch(region -> region.contains(position));
     }
 
@@ -184,7 +184,7 @@ public final class GroupedRegion extends AbstractRegion {
 
     @Override
     @Contract(pure = true)
-    public boolean containsEntireCuboid(int bx, int tx, int by, int ty, int bz, int tz) {
+    public boolean containsEntireCuboid(final int bx, final int tx, final int by, final int ty, final int bz, final int tz) {
         return regions.values().stream().anyMatch(region -> region.containsEntireCuboid(bx, tx, by, ty, bz, tz));
     }
 
@@ -193,15 +193,15 @@ public final class GroupedRegion extends AbstractRegion {
      * RegionIntersection#processSet(IChunk, IChunkGet, IChunkSet)
      */
     @Override
-    public @Nullable IChunkSet processSet(IChunk chunk, IChunkGet get, IChunkSet set) {
-        int bx = chunk.getX() << 4;
-        int bz = chunk.getZ() << 4;
-        int tx = bx + 15;
-        int tz = bz + 15;
-        List<Region> intersecting = new ArrayList<>(2);
-        for (Region region : regions.values()) {
-            BlockVector3 regMin = region.getMinimumPoint();
-            BlockVector3 regMax = region.getMaximumPoint();
+    public @Nullable IChunkSet processSet(final IChunk chunk, final IChunkGet get, final IChunkSet set) {
+        final int bx = chunk.getX() << 4;
+        final int bz = chunk.getZ() << 4;
+        final int tx = bx + 15;
+        final int tz = bz + 15;
+        final List<Region> intersecting = new ArrayList<>(2);
+        for (final Region region : regions.values()) {
+            final BlockVector3 regMin = region.getMinimumPoint();
+            final BlockVector3 regMax = region.getMaximumPoint();
             if (tx >= regMin.x() && bx <= regMax.x() && tz >= regMin.z() && bz <= regMax.z()) {
                 intersecting.add(region);
             }
@@ -216,7 +216,7 @@ public final class GroupedRegion extends AbstractRegion {
     }
 
     @Override
-    public Future<?> postProcessSet(IChunk chunk, IChunkGet get, IChunkSet set) {
+    public Future<?> postProcessSet(final IChunk chunk, final IChunkGet get, final IChunkSet set) {
         return new MultiFuture(regions.values().stream()
                 .<Future<?>>map(region -> region.postProcessSet(chunk, get, set))
                 .toList());
@@ -227,17 +227,17 @@ public final class GroupedRegion extends AbstractRegion {
      * RegionIntersection#processSet(IChunk, IChunkGet, IChunkSet, boolean)
      */
     @Override
-    public @Nullable IChunkSet processSet(IChunk chunk, IChunkGet get, IChunkSet set, boolean asBlacklist) {
+    public @Nullable IChunkSet processSet(final IChunk chunk, final IChunkGet get, IChunkSet set, final boolean asBlacklist) {
         if (!asBlacklist) {
             return processSet(chunk, get, set);
         }
-        int bx = chunk.getX() << 4;
-        int bz = chunk.getZ() << 4;
-        int tx = bx + 15;
-        int tz = bz + 15;
-        for (Region region : regions.values()) {
-            BlockVector3 regMin = region.getMinimumPoint();
-            BlockVector3 regMax = region.getMaximumPoint();
+        final int bx = chunk.getX() << 4;
+        final int bz = chunk.getZ() << 4;
+        final int tx = bx + 15;
+        final int tz = bz + 15;
+        for (final Region region : regions.values()) {
+            final BlockVector3 regMin = region.getMinimumPoint();
+            final BlockVector3 regMax = region.getMaximumPoint();
             if (tx >= regMin.x() && bx <= regMax.x() && tz >= regMin.z() && bz <= regMax.z()) {
                 set = region.processSet(chunk, get, set, true);
             }
@@ -263,26 +263,26 @@ public final class GroupedRegion extends AbstractRegion {
 
     @Override
     @Contract(pure = true)
-    public boolean containsChunk(int chunkX, int chunkZ) {
+    public boolean containsChunk(final int chunkX, final int chunkZ) {
         return regions.values().stream().anyMatch(region -> region.containsChunk(chunkX, chunkZ));
     }
 
     @Override
     @Contract(pure = true)
-    public boolean contains(int x, int z) {
+    public boolean contains(final int x, final int z) {
         return regions.values().stream().anyMatch(region -> region.contains(x, z));
     }
 
     @Override
     @Contract(pure = true)
-    public boolean contains(int x, int y, int z) {
+    public boolean contains(final int x, final int y, final int z) {
         return regions.values().stream().anyMatch(region -> region.contains(x, y, z));
     }
 
     @Override
     @Contract(value = " -> new", pure = true)
     public GroupedRegion clone() {
-        var clone = (GroupedRegion) super.clone();
+        final var clone = (GroupedRegion) super.clone();
         clone.regions.putAll(regions);
         return clone;
     }

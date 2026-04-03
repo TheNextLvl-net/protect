@@ -23,7 +23,7 @@ public final class AreaFlagResetEvent<T> extends AreaFlagEvent<T> {
      * @param flag the flag associated with this event
      */
     @ApiStatus.Internal
-    public AreaFlagResetEvent(@NonNull Area area, @NonNull Flag<T> flag) {
+    public AreaFlagResetEvent(@NonNull final Area area, @NonNull final Flag<T> flag) {
         super(area, flag);
     }
 

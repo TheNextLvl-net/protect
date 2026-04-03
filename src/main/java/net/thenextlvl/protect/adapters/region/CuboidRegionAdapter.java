@@ -12,15 +12,15 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class CuboidRegionAdapter implements TagAdapter<CuboidRegion> {
     @Override
-    public CuboidRegion deserialize(Tag tag, TagDeserializationContext context) {
-        var compound = tag.getAsCompound();
-        var pos1 = context.deserialize(compound.get("pos1"), BlockVector3.class);
-        var pos2 = context.deserialize(compound.get("pos2"), BlockVector3.class);
+    public CuboidRegion deserialize(final Tag tag, final TagDeserializationContext context) {
+        final var compound = tag.getAsCompound();
+        final var pos1 = context.deserialize(compound.get("pos1"), BlockVector3.class);
+        final var pos2 = context.deserialize(compound.get("pos2"), BlockVector3.class);
         return new CuboidRegion(pos1, pos2);
     }
 
     @Override
-    public Tag serialize(CuboidRegion region, TagSerializationContext context) {
+    public Tag serialize(final CuboidRegion region, final TagSerializationContext context) {
         return CompoundTag.builder()
                 .put("pos1", context.serialize(region.getPos1()))
                 .put("pos2", context.serialize(region.getPos2()))

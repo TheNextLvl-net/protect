@@ -4,7 +4,7 @@ import org.bukkit.Material;
 
 public final class BlockUtil {
     @SuppressWarnings("deprecation")
-    public static boolean isInteractable(Material type, Material item) {
+    public static boolean isInteractable(final Material type, final Material item) {
         return switch (item) {
             case BRUSH -> switch (type) {
                 case SUSPICIOUS_GRAVEL, SUSPICIOUS_SAND -> true;

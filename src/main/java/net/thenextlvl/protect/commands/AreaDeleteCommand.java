@@ -15,18 +15,18 @@ import java.nio.file.Files;
 
 @NullMarked
 final class AreaDeleteCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("delete")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.delete"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
                         .executes(context -> execute(context, plugin)));
     }
 
-    private static int execute(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var area = (RegionizedArea<?>) context.getArgument("area", RegionizedArea.class);
+    private static int execute(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var area = (RegionizedArea<?>) context.getArgument("area", RegionizedArea.class);
 
-        var message = Files.isRegularFile(area.getSchematicFile())
+        final var message = Files.isRegularFile(area.getSchematicFile())
                 ? "area.schematic.delete" : plugin.areaService().delete(area)
                 ? "area.delete.success" : "area.delete.failed";
 

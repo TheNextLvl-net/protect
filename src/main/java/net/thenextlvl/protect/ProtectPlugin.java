@@ -170,11 +170,11 @@ public final class ProtectPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
         getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldListener(this), this);
-        var nexo = getServer().getPluginManager().getPlugin("Nexo");
+        final var nexo = getServer().getPluginManager().getPlugin("Nexo");
         if (nexo != null) registerNexoEvents(nexo);
     }
 
-    private void registerNexoEvents(Plugin nexo) {
+    private void registerNexoEvents(final Plugin nexo) {
         getServer().getPluginManager().registerEvents(new NexoListener(this, nexo), this);
     }
 
@@ -187,14 +187,14 @@ public final class ProtectPlugin extends JavaPlugin {
             .expireAfterAccess(5, TimeUnit.SECONDS)
             .build();
 
-    public void failed(@Nullable Audience audience, Area area, String message) {
+    public void failed(@Nullable final Audience audience, final Area area, final String message) {
         if (audience == null || !area.getFlag(flags.notifyFailedInteractions)) return;
         if (message.equals(cooldown.getIfPresent(audience))) return;
         bundle().sendMessage(audience, message, Placeholder.parsed("area", area.getName()));
         cooldown.put(audience, message);
     }
 
-    public void failed(@Nullable Audience audience, Cancellable cancellable, Area area, String message) {
+    public void failed(@Nullable final Audience audience, final Cancellable cancellable, final Area area, final String message) {
         if (cancellable.isCancelled()) failed(audience, area, message);
     }
 

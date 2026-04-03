@@ -25,7 +25,7 @@ public final class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
      * @param newState The new state of the flag.
      */
     @ApiStatus.Internal
-    public AreaFlagChangeEvent(@NonNull Area area, @NonNull Flag<T> flag, T newState) {
+    public AreaFlagChangeEvent(@NonNull final Area area, @NonNull final Flag<T> flag, final T newState) {
         super(area, flag);
         this.newState = newState;
     }
@@ -36,7 +36,7 @@ public final class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
     }
 
     @Contract(mutates = "this")
-    public void setNewState(T newState) {
+    public void setNewState(final T newState) {
         this.newState = newState;
     }
 

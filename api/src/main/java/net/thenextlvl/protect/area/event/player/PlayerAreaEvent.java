@@ -21,7 +21,7 @@ public abstract class PlayerAreaEvent extends PlayerEvent {
      * @param area   the area associated with this event
      */
     @ApiStatus.Internal
-    protected PlayerAreaEvent(Player player, Area area) {
+    protected PlayerAreaEvent(final Player player, final Area area) {
         super(player);
         this.area = area;
     }

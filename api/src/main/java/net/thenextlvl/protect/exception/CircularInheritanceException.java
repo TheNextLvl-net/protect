@@ -4,15 +4,15 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class CircularInheritanceException extends IllegalStateException {
-    public CircularInheritanceException(Throwable cause) {
+    public CircularInheritanceException(final Throwable cause) {
         super(cause);
     }
 
-    public CircularInheritanceException(String message, Throwable cause) {
+    public CircularInheritanceException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public CircularInheritanceException(String message) {
+    public CircularInheritanceException(final String message) {
         super(message);
     }
 

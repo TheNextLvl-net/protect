@@ -20,17 +20,17 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 public final class MovementListener implements Listener {
     private final ProtectPlugin plugin;
 
-    public MovementListener(ProtectPlugin plugin) {
+    public MovementListener(final ProtectPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
+    public void onPlayerTeleport(final PlayerTeleportEvent event) {
         onPlayerMove(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(final PlayerMoveEvent event) {
         if (!event.hasChangedBlock()) return;
         if (canMove(event.getPlayer(), event.getFrom(), event.getTo())) return;
         event.getFrom().setPitch(event.getTo().getPitch());
@@ -39,7 +39,7 @@ public final class MovementListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityMove(EntityMoveEvent event) {
+    public void onEntityMove(final EntityMoveEvent event) {
         if (!event.hasChangedBlock()) return;
         if (canMove(event.getEntity(), event.getFrom(), event.getTo())) return;
         event.getFrom().setPitch(event.getTo().getPitch());
@@ -48,19 +48,19 @@ public final class MovementListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onVehicleEnter(VehicleEnterEvent event) {
-        if (!(event.getEntered() instanceof Player player)) return;
+    public void onVehicleEnter(final VehicleEnterEvent event) {
+        if (!(event.getEntered() instanceof final Player player)) return;
         if (canMove(player, player.getLocation(), event.getVehicle().getLocation())) return;
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onVehicleMove(VehicleMoveEvent event) {
+    public void onVehicleMove(final VehicleMoveEvent event) {
         if (canMove(event.getVehicle(), event.getFrom(), event.getTo())) return;
         event.getVehicle().teleportAsync(event.getFrom());
     }
 
-    private boolean canMove(Entity entity, Location from, Location to) {
+    private boolean canMove(final Entity entity, final Location from, final Location to) {
         return plugin.areaProvider().getAreas(from).allMatch(area -> {
             return area.contains(to) || canLeave(entity, from, to, area);
         }) && plugin.areaProvider().getAreas(to).allMatch(area -> {
@@ -68,28 +68,28 @@ public final class MovementListener implements Listener {
         });
     }
 
-    private boolean canEnter(Entity entity, Location from, Location to, Area area) {
-        var enter = plugin.protectionService().canEnter(entity, area);
-        if (!(entity instanceof Player player)) return enter;
-        var event = new PlayerAreaEnterEvent(player, area);
+    private boolean canEnter(final Entity entity, final Location from, final Location to, final Area area) {
+        final var enter = plugin.protectionService().canEnter(entity, area);
+        if (!(entity instanceof final Player player)) return enter;
+        final var event = new PlayerAreaEnterEvent(player, area);
         event.setCancelled(!canTransition(player, from, to, !enter));
         return event.callEvent();
     }
 
-    private boolean canLeave(Entity entity, Location from, Location to, Area area) {
-        var leave = plugin.protectionService().canLeave(entity, area);
-        if (!(entity instanceof Player player)) return leave;
-        var event = new PlayerAreaLeaveEvent(player, area);
+    private boolean canLeave(final Entity entity, final Location from, final Location to, final Area area) {
+        final var leave = plugin.protectionService().canLeave(entity, area);
+        if (!(entity instanceof final Player player)) return leave;
+        final var event = new PlayerAreaLeaveEvent(player, area);
         event.setCancelled(!canTransition(player, from, to, !leave));
         return event.callEvent();
     }
 
-    private boolean canTransition(Player player, Location from, Location to, boolean cancel) {
-        var areaFrom = plugin.areaProvider().getArea(from);
-        var areaTo = plugin.areaProvider().getArea(to);
+    private boolean canTransition(final Player player, final Location from, final Location to, final boolean cancel) {
+        final var areaFrom = plugin.areaProvider().getArea(from);
+        final var areaTo = plugin.areaProvider().getArea(to);
         if (areaFrom.equals(areaTo)) return true;
 
-        var event = new PlayerAreaTransitionEvent(player, areaFrom, areaTo);
+        final var event = new PlayerAreaTransitionEvent(player, areaFrom, areaTo);
         event.setCancelled(cancel);
         return event.callEvent();
     }

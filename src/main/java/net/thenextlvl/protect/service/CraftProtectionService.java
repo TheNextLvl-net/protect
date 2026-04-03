@@ -16,67 +16,67 @@ import static org.bukkit.entity.EntityType.PLAYER;
 public final class CraftProtectionService implements ProtectionService {
     private final ProtectPlugin plugin;
 
-    public CraftProtectionService(ProtectPlugin plugin) {
+    public CraftProtectionService(final ProtectPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public boolean canEdit(@Nullable Entity entity, Area area) {
+    public boolean canEdit(@Nullable final Entity entity, final Area area) {
         return canPlace(entity, area) && canDestroy(entity, area);
     }
 
     @Override
-    public boolean canEdit(@Nullable Entity entity, Location location) {
+    public boolean canEdit(@Nullable final Entity entity, final Location location) {
         return canEdit(entity, plugin.areaProvider().getArea(location));
     }
 
     @Override
-    public boolean canPlace(@Nullable Entity entity, Area area) {
+    public boolean canPlace(@Nullable final Entity entity, final Area area) {
         return canPerformAction(entity, area, plugin.flags.place, "protect.bypass.place");
     }
 
     @Override
-    public boolean canPlace(@Nullable Entity entity, Location location) {
+    public boolean canPlace(@Nullable final Entity entity, final Location location) {
         return canPlace(entity, plugin.areaProvider().getArea(location));
     }
 
     @Override
-    public boolean canDestroy(@Nullable Entity entity, Area area) {
+    public boolean canDestroy(@Nullable final Entity entity, final Area area) {
         return canPerformAction(entity, area, plugin.flags.destroy, "protect.bypass.destroy");
     }
 
     @Override
-    public boolean canDestroy(@Nullable Entity entity, Location location) {
+    public boolean canDestroy(@Nullable final Entity entity, final Location location) {
         return canDestroy(entity, plugin.areaProvider().getArea(location));
     }
 
     @Override
-    public boolean canInteract(@Nullable Entity entity, Location location) {
+    public boolean canInteract(@Nullable final Entity entity, final Location location) {
         return canPerformAction(entity, plugin.areaProvider().getArea(location),
                 plugin.flags.interact, "protect.bypass.interact");
     }
 
     @Override
-    public boolean canInteract(@Nullable Entity entity, Entity interacted) {
-        var flag = interacted.getType().equals(ARMOR_STAND) ? plugin.flags.armorStandManipulate : plugin.flags.entityInteract;
+    public boolean canInteract(@Nullable final Entity entity, final Entity interacted) {
+        final var flag = interacted.getType().equals(ARMOR_STAND) ? plugin.flags.armorStandManipulate : plugin.flags.entityInteract;
         return canPerformAction(entity, plugin.areaProvider().getArea(interacted), flag, "protect.bypass.entity-interact");
     }
 
     @Override
-    public boolean canInteractPhysical(@Nullable Entity entity, Location location) {
+    public boolean canInteractPhysical(@Nullable final Entity entity, final Location location) {
         return canPerformAction(entity, plugin.areaProvider().getArea(location),
                 plugin.flags.physicalInteract, "protect.bypass.physical-interact");
     }
 
     @Override
-    public boolean canAttack(Entity attacker, Entity victim) {
-        var flag = attacker.getType().equals(PLAYER) && victim.getType().equals(PLAYER)
+    public boolean canAttack(final Entity attacker, final Entity victim) {
+        final var flag = attacker.getType().equals(PLAYER) && victim.getType().equals(PLAYER)
                 ? plugin.flags.playerAttackPlayer : attacker.getType().equals(PLAYER)
                 ? plugin.flags.playerAttackEntity : victim.getType().equals(PLAYER)
                 ? plugin.flags.entityAttackPlayer : plugin.flags.entityAttackEntity;
 
-        var first = plugin.areaProvider().getArea(attacker);
-        var second = plugin.areaProvider().getArea(victim);
+        final var first = plugin.areaProvider().getArea(attacker);
+        final var second = plugin.areaProvider().getArea(victim);
 
         if ((first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
                 && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
@@ -87,35 +87,35 @@ public final class CraftProtectionService implements ProtectionService {
         ) return true;
 
         if (!attacker.hasPermission("protect.bypass.attack")) return false;
-        return attacker instanceof Player player && player.getGameMode().isInvulnerable();
+        return attacker instanceof final Player player && player.getGameMode().isInvulnerable();
     }
 
     @Override
-    public boolean canShear(@Nullable Entity entity, Entity sheared) {
+    public boolean canShear(@Nullable final Entity entity, final Entity sheared) {
         return canPerformAction(entity, plugin.areaProvider().getArea(sheared),
                 plugin.flags.entityShear, "protect.bypass.entity-shear");
     }
 
     @Override
-    public boolean canTrample(@Nullable Entity entity, Location location) {
+    public boolean canTrample(@Nullable final Entity entity, final Location location) {
         return canPerformAction(entity, plugin.areaProvider().getArea(location),
                 plugin.flags.cropTrample, "protect.bypass.trample");
     }
 
     @Override
-    public boolean canEnter(@Nullable Entity entity, Area area) {
+    public boolean canEnter(@Nullable final Entity entity, final Area area) {
         return canPerformAction(entity, area, plugin.flags.areaEnter, "protect.bypass.enter");
     }
 
     @Override
-    public boolean canLeave(@Nullable Entity entity, Area area) {
+    public boolean canLeave(@Nullable final Entity entity, final Area area) {
         return canPerformAction(entity, area, plugin.flags.areaLeave, "protect.bypass.leave");
     }
 
     @Override
-    public boolean canPerformAction(@Nullable Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission) {
+    public boolean canPerformAction(@Nullable final Entity entity, final Area area, final Flag<Boolean> flag, @Nullable final String permission) {
         return area.getFlag(flag) || entity != null && (area.isPermitted(entity.getUniqueId())
                 || (permission != null && entity.hasPermission(permission)
-                && (!(entity instanceof Player player) || player.getGameMode().isInvulnerable())));
+                && (!(entity instanceof final Player player) || player.getGameMode().isInvulnerable())));
     }
 }

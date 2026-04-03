@@ -14,20 +14,20 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class AreaListCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("list")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.list"))
                 .executes(context -> list(context, plugin));
     }
 
-    private static int list(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var globalAreas = plugin.areaProvider().getAreas()
+    private static int list(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var globalAreas = plugin.areaProvider().getAreas()
                 .filter(GlobalArea.class::isInstance)
                 .map(Area::getName)
                 .map(Component::text)
                 .toList();
-        var userAreas = plugin.areaProvider().getAreas()
+        final var userAreas = plugin.areaProvider().getAreas()
                 .filter(area -> !(area instanceof GlobalArea))
                 .map(Area::getName)
                 .map(Component::text)

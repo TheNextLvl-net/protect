@@ -16,7 +16,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class AreaParentCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("parent")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.parent"))
                 .then(Commands.literal("set")
@@ -31,19 +31,19 @@ final class AreaParentCommand {
                                 .executes(context -> remove(context, plugin))));
     }
 
-    private static int set(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var area = context.getArgument("area", RegionizedArea.class);
-        var parent = context.getArgument("parent", Area.class);
+    private static int set(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var area = context.getArgument("area", RegionizedArea.class);
+        final var parent = context.getArgument("parent", Area.class);
         try {
-            var sender = context.getSource().getSender();
-            var success = area.setParent(parent);
-            var message = success ? "area.parent.set" : "nothing.changed";
+            final var sender = context.getSource().getSender();
+            final var success = area.setParent(parent);
+            final var message = success ? "area.parent.set" : "nothing.changed";
             plugin.bundle().sendMessage(sender, message,
                     Placeholder.parsed("area", area.getName()),
                     Placeholder.parsed("parent", parent.getName()));
             return Command.SINGLE_SUCCESS;
-        } catch (CircularInheritanceException e) {
-            var sender = context.getSource().getSender();
+        } catch (final CircularInheritanceException e) {
+            final var sender = context.getSource().getSender();
             plugin.bundle().sendMessage(sender, "area.parent.circular-inheritance",
                     Placeholder.parsed("area", area.getName()),
                     Placeholder.parsed("parent", parent.getName()));
@@ -52,11 +52,11 @@ final class AreaParentCommand {
         }
     }
 
-    private static int remove(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var area = context.getArgument("area", RegionizedArea.class);
-        var success = area.setParent(null);
-        var message = success ? "area.parent.remove" : "nothing.changed";
+    private static int remove(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var area = context.getArgument("area", RegionizedArea.class);
+        final var success = area.setParent(null);
+        final var message = success ? "area.parent.remove" : "nothing.changed";
         plugin.bundle().sendMessage(sender, message, Placeholder.parsed("area", area.getName()));
         return Command.SINGLE_SUCCESS;
     }

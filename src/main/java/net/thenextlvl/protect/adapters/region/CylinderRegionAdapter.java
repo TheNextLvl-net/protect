@@ -13,17 +13,17 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class CylinderRegionAdapter implements TagAdapter<CylinderRegion> {
     @Override
-    public CylinderRegion deserialize(Tag tag, TagDeserializationContext context) {
-        var compound = tag.getAsCompound();
-        var center = context.deserialize(compound.get("center"), BlockVector3.class);
-        var radius = context.deserialize(compound.get("radius"), Vector2.class);
-        var max = compound.get("max").getAsInt();
-        var min = compound.get("min").getAsInt();
+    public CylinderRegion deserialize(final Tag tag, final TagDeserializationContext context) {
+        final var compound = tag.getAsCompound();
+        final var center = context.deserialize(compound.get("center"), BlockVector3.class);
+        final var radius = context.deserialize(compound.get("radius"), Vector2.class);
+        final var max = compound.get("max").getAsInt();
+        final var min = compound.get("min").getAsInt();
         return new CylinderRegion(center, radius, min, max);
     }
 
     @Override
-    public Tag serialize(CylinderRegion vector, TagSerializationContext context) {
+    public Tag serialize(final CylinderRegion vector, final TagSerializationContext context) {
         return CompoundTag.builder()
                 .put("center", context.serialize(vector.getCenter().toBlockPoint()))
                 .put("radius", context.serialize(vector.getRadius()))

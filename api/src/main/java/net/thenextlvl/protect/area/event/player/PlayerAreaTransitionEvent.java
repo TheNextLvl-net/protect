@@ -26,7 +26,7 @@ public final class PlayerAreaTransitionEvent extends PlayerAreaEvent implements 
      * @param to     the area the player is transitioning to
      */
     @ApiStatus.Internal
-    public PlayerAreaTransitionEvent(Player player, Area from, Area to) {
+    public PlayerAreaTransitionEvent(final Player player, final Area from, final Area to) {
         super(player, to);
         this.previous = from;
     }
@@ -44,7 +44,7 @@ public final class PlayerAreaTransitionEvent extends PlayerAreaEvent implements 
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

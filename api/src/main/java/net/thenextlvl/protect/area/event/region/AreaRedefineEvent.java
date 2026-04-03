@@ -28,7 +28,7 @@ public final class AreaRedefineEvent<T extends Region> extends AreaEvent<Regioni
      * @param region The region that is to be redefined
      */
     @ApiStatus.Internal
-    public AreaRedefineEvent(RegionizedArea<T> area, T region) {
+    public AreaRedefineEvent(final RegionizedArea<T> area, final T region) {
         super(area);
         this.region = region;
     }
@@ -39,7 +39,7 @@ public final class AreaRedefineEvent<T extends Region> extends AreaEvent<Regioni
     }
 
     @Contract(mutates = "this")
-    public void setRegion(T region) {
+    public void setRegion(final T region) {
         this.region = region;
     }
 
@@ -51,7 +51,7 @@ public final class AreaRedefineEvent<T extends Region> extends AreaEvent<Regioni
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

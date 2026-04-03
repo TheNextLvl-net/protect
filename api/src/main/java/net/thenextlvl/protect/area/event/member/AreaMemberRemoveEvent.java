@@ -31,7 +31,7 @@ public final class AreaMemberRemoveEvent extends AreaEvent<Area> implements Canc
      * @param member The UUID of the member being removed.
      */
     @ApiStatus.Internal
-    public AreaMemberRemoveEvent(Area area, UUID member) {
+    public AreaMemberRemoveEvent(final Area area, final UUID member) {
         super(area);
         this.member = member;
     }
@@ -42,7 +42,7 @@ public final class AreaMemberRemoveEvent extends AreaEvent<Area> implements Canc
     }
 
     @Contract(mutates = "this")
-    public void setMember(UUID member) {
+    public void setMember(final UUID member) {
         this.member = member;
     }
 
@@ -54,7 +54,7 @@ public final class AreaMemberRemoveEvent extends AreaEvent<Area> implements Canc
 
     @Override
     @Contract(mutates = "this")
-    public void setCancelled(boolean cancel) {
+    public void setCancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 

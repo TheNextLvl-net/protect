@@ -15,7 +15,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class AreaPriorityCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("priority")
                 .requires(stack -> stack.getSender().hasPermission("protect.command.area.priority"))
                 .then(Commands.argument("area", new AreaArgumentType(plugin))
@@ -24,20 +24,20 @@ final class AreaPriorityCommand {
                         .executes(context -> get(context, plugin)));
     }
 
-    private static int set(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var area = context.getArgument("area", Area.class);
-        var priority = context.getArgument("priority", int.class);
-        var message = area.setPriority(priority) ? "area.priority.set" : "nothing.changed";
+    private static int set(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var area = context.getArgument("area", Area.class);
+        final var priority = context.getArgument("priority", int.class);
+        final var message = area.setPriority(priority) ? "area.priority.set" : "nothing.changed";
         plugin.bundle().sendMessage(sender, message,
                 Placeholder.parsed("area", area.getName()),
                 Formatter.number("priority", area.getPriority()));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int get(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var sender = context.getSource().getSender();
-        var area = context.getArgument("area", Area.class);
+    private static int get(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var area = context.getArgument("area", Area.class);
         plugin.bundle().sendMessage(sender, "area.priority",
                 Placeholder.parsed("area", area.getName()),
                 Formatter.number("priority", area.getPriority()));

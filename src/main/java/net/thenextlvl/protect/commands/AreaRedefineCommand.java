@@ -19,34 +19,34 @@ import java.nio.file.Files;
 
 @NullMarked
 final class AreaRedefineCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(ProtectPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final ProtectPlugin plugin) {
         return Commands.literal("redefine")
-                .requires(stack -> stack.getSender() instanceof Player player
+                .requires(stack -> stack.getSender() instanceof final Player player
                                    && player.hasPermission("protect.command.area.redefine"))
                 .then(Commands.argument("area", new RegionizedAreaArgumentType(plugin))
                         .executes(context -> redefine(context, plugin)));
     }
 
     @SuppressWarnings("unchecked")
-    private static int redefine(CommandContext<CommandSourceStack> context, ProtectPlugin plugin) {
-        var player = (Player) context.getSource().getSender();
-        var area = context.getArgument("area", RegionizedArea.class);
+    private static int redefine(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var player = (Player) context.getSource().getSender();
+        final var area = context.getArgument("area", RegionizedArea.class);
         if (Files.isRegularFile(area.getSchematicFile())) {
             plugin.bundle().sendMessage(player, "area.schematic.delete");
             return 0;
         }
         try {
-            var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
-            var region = worldEdit.getSession(player).getSelection();
-            var redefine = region.getClass().isInstance(area.getRegion())
+            final var worldEdit = JavaPlugin.getPlugin(WorldEditPlugin.class);
+            final var region = worldEdit.getSession(player).getSelection();
+            final var redefine = region.getClass().isInstance(area.getRegion())
                     ? area.setRegion(region) : null;
-            var message = redefine == null ? "area.redefine.unsupported"
+            final var message = redefine == null ? "area.redefine.unsupported"
                     : redefine ? "area.redefine.success" : "area.redefine.fail";
             plugin.bundle().sendMessage(player, message,
                     Placeholder.parsed("area", area.getName()),
                     Placeholder.parsed("type", region.getClass().getSimpleName()));
             return Boolean.TRUE.equals(redefine) ? Command.SINGLE_SUCCESS : 0;
-        } catch (IncompleteRegionException e) {
+        } catch (final IncompleteRegionException e) {
             plugin.bundle().sendMessage(player, "region.select");
             return 0;
         }

@@ -10,12 +10,12 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class CuboidAreaAdapter extends RegionizedAreaAdapter<CuboidRegion, CraftCuboidArea> {
-    public CuboidAreaAdapter(ProtectPlugin plugin) {
+    public CuboidAreaAdapter(final ProtectPlugin plugin) {
         super(plugin, "cuboid");
     }
 
     @Override
-    public Area construct(World world, String name, CompoundTag tag) {
+    public Area construct(final World world, final String name, final CompoundTag tag) {
         return new CraftCuboidArea(plugin, world, name, tag);
     }
 }
