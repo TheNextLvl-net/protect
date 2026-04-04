@@ -11,11 +11,11 @@ plugins {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
 }
 
 tasks.compileJava {
-    options.release.set(21)
+    options.release.set(25)
 }
 
 group = "net.thenextlvl.protect"
@@ -33,7 +33,7 @@ repositories {
 dependencies {
     compileOnly("com.nexomc:nexo:1.22.0-dev.7")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
 
     implementation("dev.faststats.metrics:bukkit:0.20.1")
     implementation("net.thenextlvl.version-checker:modrinth-paper:1.0.1")
