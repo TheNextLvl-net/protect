@@ -73,7 +73,7 @@ public final class CraftAreaProvider implements AreaProvider {
     }
 
     public void load(final World world) {
-        final var areaFolder = world.getWorldFolder().toPath().resolve("areas");
+        final var areaFolder = ProtectPlugin.getDataFolder(world);
         try (final var files = !Files.isDirectory(areaFolder) ? Stream.<Path>empty() : Files.list(areaFolder)
                 .filter(path -> path.getFileName().toString().endsWith(".dat"))) {
             files.forEach(file -> load(world, file));

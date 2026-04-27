@@ -12,6 +12,7 @@ import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import dev.faststats.bukkit.BukkitMetrics;
 import dev.faststats.core.ErrorTracker;
+import io.papermc.paper.ServerBuildInfo;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -181,6 +182,18 @@ public final class ProtectPlugin extends JavaPlugin {
     private void registerCommands() {
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->
                 event.registrar().register(AreaCommand.create(this))));
+    }
+
+
+    private static final Set<String> oldVersions = Set.of(
+            "1.21.4", "1.21.5", "1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10", "1.21.11"
+    );
+
+    public static Path getDataFolder(final World world) {
+        final var version = ServerBuildInfo.buildInfo().minecraftVersionId();
+        final var path = world.getWorldFolder().toPath();
+        if (oldVersions.contains(version)) return path.resolve("areas");
+        return path.resolve("data").resolve("areas");
     }
 
     private final Cache<Audience, String> cooldown = CacheBuilder.newBuilder()

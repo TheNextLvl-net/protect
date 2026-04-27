@@ -18,7 +18,7 @@ import java.util.Set;
 
 @NullMarked
 public final class CraftGlobalArea extends CraftArea implements GlobalArea {
-    private final Path dataFolder = getWorld().getWorldFolder().toPath().resolve("areas");
+    private final Path dataFolder = ProtectPlugin.getDataFolder(getWorld());
     private final Path fallbackFile = dataFolder.resolve(getName() + ".dat_old");
     private final Path file = dataFolder.resolve(getName() + ".dat");
 

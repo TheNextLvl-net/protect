@@ -55,7 +55,7 @@ paper {
     name = "Protect"
     main = "net.thenextlvl.protect.ProtectPlugin"
     description = "Protect certain areas or entire worlds"
-    apiVersion = "1.21"
+    apiVersion = "1.21.4"
     foliaSupported = true
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     authors = listOf("NonSwag")

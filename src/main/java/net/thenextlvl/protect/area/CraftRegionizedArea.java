@@ -48,7 +48,7 @@ import static net.thenextlvl.protect.ProtectPlugin.ISSUES;
 
 @NullMarked
 public abstract class CraftRegionizedArea<T extends Region> extends CraftArea implements RegionizedArea<T> {
-    private final Path dataPath = getWorld().getWorldFolder().toPath().resolve("areas");
+    private final Path dataPath = ProtectPlugin.getDataFolder(getWorld());
     private final Path backupFile = getDataPath().resolve(getName() + ".dat_old");
     private final Path dataFile = getDataPath().resolve(getName() + ".dat");
     private final Path schematic = plugin.schematicFolder().resolve(getName() + ".schem");
