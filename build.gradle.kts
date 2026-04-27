@@ -14,8 +14,12 @@ java {
     toolchain.languageVersion = JavaLanguageVersion.of(25)
 }
 
+configurations.compileClasspath {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+}
+
 tasks.compileJava {
-    options.release.set(25)
+    options.release.set(21)
 }
 
 group = "net.thenextlvl.protect"
