@@ -281,6 +281,7 @@ public final class ProtectPlugin extends JavaPlugin {
         public final Flag<Boolean> liquidFlow = flagRegistry().register(ProtectPlugin.this, "liquid_flow", true);
         public final Flag<Boolean> naturalEntitySpawn = flagRegistry().register(ProtectPlugin.this, "natural_entity_spawn", true);
         public final Flag<Boolean> notifyFailedInteractions = flagRegistry().register(ProtectPlugin.this, "notify_failed_interactions", false);
+        public final Flag<Boolean> knockback = flagRegistry().register(ProtectPlugin.this, "knockback", true);
         public final Flag<Boolean> physics = flagRegistry().register(ProtectPlugin.this, "physics", true);
         public final Flag<Boolean> redstone = flagRegistry().register(ProtectPlugin.this, "redstone", true);
         public final Flag<Boolean> shoot = flagRegistry().register(ProtectPlugin.this, "shoot", true);
