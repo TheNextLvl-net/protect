@@ -151,15 +151,15 @@ final class AreaMembersCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-        private static int removePermission(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
-                final var sender = context.getSource().getSender();
-                final var area = context.getArgument("area", Area.class);
-                final var permission = context.getArgument("permission", String.class);
-                final var success = area.removePermission(permission);
-                final var message = success ? "area.members.remove.permission" : "nothing.changed";
-                plugin.bundle().sendMessage(sender, message,
-                                Placeholder.parsed("area", area.getName()),
-                                Placeholder.parsed("permission", permission));
-                return Command.SINGLE_SUCCESS;
-        }
+    private static int removePermission(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var area = context.getArgument("area", Area.class);
+        final var permission = context.getArgument("permission", String.class);
+        final var success = area.removePermission(permission);
+        final var message = success ? "area.members.remove.permission" : "nothing.changed";
+        plugin.bundle().sendMessage(sender, message,
+                Placeholder.parsed("area", area.getName()),
+                Placeholder.parsed("permission", permission));
+        return Command.SINGLE_SUCCESS;
+    }
 }

@@ -150,9 +150,13 @@ final class AreaFlagCommand {
         if (type == Long.class) return LongArgumentType.longArg().parse(new StringReader(rawValue));
         if (type == String.class) return rawValue;
         if (type == Location.class) {
-            final var split = rawValue.trim().split("\\s+");
-            if (split.length != 3) throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherParseException().create("Expected 3 coordinates");
-            return new Location(area.getWorld(), Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
+            try {
+                final var split = rawValue.trim().split("\\s+");
+                if (split.length != 3) throw new NumberFormatException("Expected 3 coordinates");
+                return new Location(area.getWorld(), Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
+            } catch (final NumberFormatException exception) {
+                throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerInvalidDouble().createWithContext(new StringReader(rawValue), rawValue);
+            }
         }
         if (type == WeatherType.class) return WeatherType.valueOf(rawValue.toUpperCase());
         throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherParseException().create("Unsupported flag type: " + type.getName());
@@ -169,7 +173,7 @@ final class AreaFlagCommand {
                 suggest(builder, remaining, weather.name().toLowerCase());
             }
         } else if (flag.type() == Location.class) {
-            suggest(builder, remaining, "x y z");
+            suggest(builder, remaining, "\"x y z\"");
         }
 
         return builder.buildFuture();

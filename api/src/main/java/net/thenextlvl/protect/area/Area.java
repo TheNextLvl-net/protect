@@ -198,7 +198,11 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
     @Contract(pure = true)
     default boolean isPermitted(@Nullable final Entity entity) {
         if (entity == null) return false;
-        return isPermitted(entity.getUniqueId()) || getPermissions().stream().anyMatch(entity::hasPermission);
+        if (isPermitted(entity.getUniqueId())) return true;
+        for (final var permission : getPermissions()) {
+            if (entity.hasPermission(permission)) return true;
+        }
+        return false;
     }
 
     /**
