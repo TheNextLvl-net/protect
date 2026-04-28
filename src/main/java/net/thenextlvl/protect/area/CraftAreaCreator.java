@@ -25,11 +25,13 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     private @Nullable UUID owner = null;
     private Map<Flag<?>, @Nullable Object> flags = new HashMap<>();
     private Set<UUID> members = new HashSet<>();
+    private Set<String> permissions = new HashSet<>();
     private int priority = 0;
 
     @SuppressWarnings("unchecked")
     public CraftAreaCreator(final ProtectPlugin plugin, final String name, final World world, final T region, @Nullable final String parent,
-                            @Nullable final UUID owner, final Map<Flag<?>, @Nullable Object> flags, final Set<UUID> members, final int priority) {
+                            @Nullable final UUID owner, final Map<Flag<?>, @Nullable Object> flags, final Set<UUID> members,
+                            final Set<String> permissions, final int priority) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
@@ -38,6 +40,7 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
         this.owner = owner;
         this.flags = new HashMap<>(flags);
         this.members = new HashSet<>(members);
+        this.permissions = new HashSet<>(permissions);
         this.priority = priority;
     }
 
@@ -61,12 +64,12 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
 
     @Override
     public AreaCreator<T> copy() {
-        return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, priority);
+        return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, permissions, priority);
     }
 
     @Override
     public <V extends Region> AreaCreator<V> region(final V region) {
-        return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, priority);
+        return new CraftAreaCreator<>(plugin, name, world, region, parent, owner, flags, members, permissions, priority);
     }
 
     @Override
@@ -89,6 +92,12 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     @Override
     public AreaCreator<T> members(final Set<UUID> members) {
         this.members = new HashSet<>(members);
+        return this;
+    }
+
+    @Override
+    public AreaCreator<T> permissions(final Set<String> permissions) {
+        this.permissions = new HashSet<>(permissions);
         return this;
     }
 
@@ -135,6 +144,11 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     @Override
     public Set<UUID> members() {
         return members;
+    }
+
+    @Override
+    public Set<String> permissions() {
+        return permissions;
     }
 
     @Override

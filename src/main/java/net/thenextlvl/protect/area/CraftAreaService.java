@@ -47,7 +47,7 @@ public final class CraftAreaService implements AreaService {
                 area.getName(), area.getWorld(), area.getRegion(),
                 area.getParent().map(Area::getName).orElse(null),
                 area.getOwner().orElse(null),
-                area.getFlags(), area.getMembers(), area.getPriority()
+                area.getFlags(), area.getMembers(), area.getPermissions(), area.getPriority()
         );
     }
 

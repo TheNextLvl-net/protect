@@ -23,6 +23,7 @@ import net.thenextlvl.protect.adapters.FlagsAdapter;
 import net.thenextlvl.protect.adapters.KeyAdapter;
 import net.thenextlvl.protect.adapters.LocationAdapter;
 import net.thenextlvl.protect.adapters.MembersAdapter;
+import net.thenextlvl.protect.adapters.PermissionsAdapter;
 import net.thenextlvl.protect.adapters.WeatherTypeAdapter;
 import net.thenextlvl.protect.adapters.WorldAdapter;
 import net.thenextlvl.protect.adapters.area.CuboidAreaAdapter;
@@ -244,6 +245,8 @@ public final class ProtectPlugin extends JavaPlugin {
             }.getType(), new FlagsAdapter(this))
             .registerTypeAdapter(new TypeToken<Set<UUID>>() {
             }.getType(), new MembersAdapter())
+            .registerTypeAdapter(new TypeToken<Set<String>>() {
+            }.getType(), new PermissionsAdapter())
             .registerTypeHierarchyAdapter(Location.class, new LocationAdapter())
             .registerTypeHierarchyAdapter(Key.class, new KeyAdapter())
             .registerTypeHierarchyAdapter(WeatherType.class, new WeatherTypeAdapter())
