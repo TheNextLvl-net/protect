@@ -5,6 +5,7 @@ import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
@@ -63,6 +64,15 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
     @Unmodifiable
     @Contract(pure = true)
     Set<UUID> getMembers();
+
+    /**
+     * Retrieves the set of permission nodes that may access this area.
+     *
+     * @return a set of permission nodes.
+     */
+    @Unmodifiable
+    @Contract(pure = true)
+    Set<String> getPermissions();
 
     /**
      * Retrieves the name of the area.
@@ -180,6 +190,22 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
     boolean isPermitted(UUID uuid);
 
     /**
+     * Checks if a given entity is either the owner, a member, or holds an allowed permission node.
+     *
+     * @param entity the entity to check
+     * @return true if the entity is permitted, false otherwise
+     */
+    @Contract(pure = true)
+    default boolean isPermitted(@Nullable final Entity entity) {
+        if (entity == null) return false;
+        if (isPermitted(entity.getUniqueId())) return true;
+        for (final var permission : getPermissions()) {
+            if (entity.hasPermission(permission)) return true;
+        }
+        return false;
+    }
+
+    /**
      * Removes a member from the regionized area.
      *
      * @param uuid the UUID of the member to remove
@@ -187,6 +213,15 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      */
     @Contract(mutates = "this")
     boolean removeMember(UUID uuid);
+
+    /**
+     * Adds a permission node to the area.
+     *
+     * @param permission the permission node to add
+     * @return whether the permission node was added
+     */
+    @Contract(mutates = "this")
+    boolean addPermission(String permission);
 
     /**
      * Sets the owner of the Area object.
@@ -226,4 +261,21 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      */
     @Contract(mutates = "this")
     void setMembers(Set<UUID> members);
+
+    /**
+     * Removes a permission node from the area.
+     *
+     * @param permission the permission node to remove
+     * @return whether the permission node was removed
+     */
+    @Contract(mutates = "this")
+    boolean removePermission(String permission);
+
+    /**
+     * Sets the permission nodes of the area.
+     *
+     * @param permissions a set of permission nodes
+     */
+    @Contract(mutates = "this")
+    void setPermissions(Set<String> permissions);
 }

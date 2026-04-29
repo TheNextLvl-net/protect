@@ -72,6 +72,15 @@ public interface AreaCreator<T extends Region> {
     AreaCreator<T> members(Set<UUID> members);
 
     /**
+     * Sets the permission nodes for the area being created.
+     *
+     * @param permissions a set of permission nodes associated with the area
+     * @return the AreaCreator instance with the specified permissions set
+     */
+    @Contract(mutates = "this")
+    AreaCreator<T> permissions(Set<String> permissions);
+
+    /**
      * Sets the name for the area being created.
      *
      * @param name the name of the area.
@@ -175,6 +184,15 @@ public interface AreaCreator<T extends Region> {
     @Unmodifiable
     @Contract(pure = true)
     Set<UUID> members();
+
+    /**
+     * Retrieves the permission nodes associated with the area.
+     *
+     * @return a set of permission nodes of the area
+     */
+    @Unmodifiable
+    @Contract(pure = true)
+    Set<String> permissions();
 
     /**
      * Retrieves the identifier of the parent area, if any.

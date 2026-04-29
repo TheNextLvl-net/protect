@@ -78,16 +78,22 @@ public final class CraftProtectionService implements ProtectionService {
         final var first = plugin.areaProvider().getArea(attacker);
         final var second = plugin.areaProvider().getArea(victim);
 
-        if ((first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
+        if ((first.getFlag(flag) || first.isPermitted(attacker))
+            && (second.getFlag(flag) || second.isPermitted(attacker))) return true;
 
         if (first.canInteract(second)
-                && (first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                || (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))
+            && (first.getFlag(flag) || first.isPermitted(attacker))
+            || (second.getFlag(flag) || second.isPermitted(attacker))
         ) return true;
 
         if (!attacker.hasPermission("protect.bypass.attack")) return false;
         return attacker instanceof final Player player && player.getGameMode().isInvulnerable();
+    }
+
+    @Override
+    public boolean canKnockback(@Nullable final Entity source, final Entity target) {
+        if (source != null && source.getUniqueId().equals(target.getUniqueId())) return true;
+        return canPerformAction(source, plugin.areaProvider().getArea(target), plugin.flags.knockback, null);
     }
 
     @Override
@@ -114,7 +120,7 @@ public final class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canPerformAction(@Nullable final Entity entity, final Area area, final Flag<Boolean> flag, @Nullable final String permission) {
-        return area.getFlag(flag) || entity != null && (area.isPermitted(entity.getUniqueId())
+        return area.getFlag(flag) || entity != null && (area.isPermitted(entity)
                 || (permission != null && entity.hasPermission(permission)
                 && (!(entity instanceof final Player player) || player.getGameMode().isInvulnerable())));
     }

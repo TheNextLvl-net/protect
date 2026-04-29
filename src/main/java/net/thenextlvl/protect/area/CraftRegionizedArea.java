@@ -56,8 +56,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     private T region;
 
     public CraftRegionizedArea(final ProtectPlugin plugin, final AreaCreator<T> creator) throws CircularInheritanceException {
-        super(plugin, creator.name(), creator.world(), creator.members(),
-                creator.owner(), creator.flags(), creator.priority());
+        super(plugin, creator.name(), creator.world(), creator.members(), creator.permissions(), creator.owner(), creator.flags(), creator.priority());
         this.parent = creator.parent();
         this.region = creator.region();
     }

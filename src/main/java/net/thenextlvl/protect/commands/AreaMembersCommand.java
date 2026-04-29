@@ -30,7 +30,15 @@ final class AreaMembersCommand {
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.add"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
                                 .then(Commands.argument("players", ArgumentTypes.players())
-                                        .executes(context -> add(context, plugin)))))
+                                        .executes(context -> addPlayers(context, plugin)))
+                                .then(Commands.literal("permission")
+                                        .then(Commands.argument("permission", StringArgumentType.word())
+                                                .suggests((context, builder) -> {
+                                                    final var area = context.getLastChild().getArgument("area", Area.class);
+                                                    area.getPermissions().forEach(builder::suggest);
+                                                    return builder.buildFuture();
+                                                })
+                                                .executes(context -> addPermission(context, plugin))))))
                 .then(Commands.literal("list")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.list"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin))
@@ -45,7 +53,7 @@ final class AreaMembersCommand {
                 .then(Commands.literal("remove")
                         .requires(stack -> stack.getSender().hasPermission("protect.command.area.members.remove"))
                         .then(Commands.argument("area", new AreaArgumentType(plugin, (commandContext, area) ->
-                                        !area.getMembers().isEmpty()))
+                                        !area.getMembers().isEmpty() || !area.getPermissions().isEmpty()))
                                 .then(Commands.argument("player", StringArgumentType.word())
                                         .suggests((context, builder) -> {
                                             final var area = context.getLastChild().getArgument("area", Area.class);
@@ -55,7 +63,15 @@ final class AreaMembersCommand {
                                                             .filter(Objects::nonNull)
                                                             .forEach(builder::suggest))
                                                     .thenApply(unused -> builder.build());
-                                        }).executes(context -> remove(context, plugin)))));
+                                        }).executes(context -> removePlayer(context, plugin)))
+                                .then(Commands.literal("permission")
+                                        .then(Commands.argument("permission", StringArgumentType.word())
+                                                .suggests((context, builder) -> {
+                                                    final var area = context.getLastChild().getArgument("area", Area.class);
+                                                    area.getPermissions().forEach(builder::suggest);
+                                                    return builder.buildFuture();
+                                                })
+                                                .executes(context -> removePermission(context, plugin))))));
     }
 
     private static int list(final CommandContext<CommandSourceStack> context, final Area area, final ProtectPlugin plugin) {
@@ -67,16 +83,30 @@ final class AreaMembersCommand {
                     .filter(Objects::nonNull)
                     .map(Component::text)
                     .toList();
-            final var message = members.isEmpty() ? "area.members.none" : "area.members";
-            plugin.bundle().sendMessage(sender, message,
+            final var permissions = area.getPermissions().stream()
+                    .map(Component::text)
+                    .toList();
+
+            if (members.isEmpty() && permissions.isEmpty()) {
+                plugin.bundle().sendMessage(sender, "area.members.none",
+                        Placeholder.parsed("area", area.getName()));
+                return;
+            }
+
+            if (!members.isEmpty()) plugin.bundle().sendMessage(sender, "area.members",
                     Placeholder.parsed("area", area.getName()),
                     Formatter.number("amount", members.size()),
                     Formatter.joining("members", members));
+
+            if (!permissions.isEmpty()) plugin.bundle().sendMessage(sender, "area.members.permissions",
+                    Placeholder.parsed("area", area.getName()),
+                    Formatter.number("amount", permissions.size()),
+                    Formatter.joining("permissions", permissions));
         });
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int add(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) throws CommandSyntaxException {
+    private static int addPlayers(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) throws CommandSyntaxException {
         final var sender = context.getSource().getSender();
         final var area = context.getArgument("area", Area.class);
         final var resolver = context.getArgument("players", PlayerSelectorArgumentResolver.class);
@@ -91,7 +121,22 @@ final class AreaMembersCommand {
         return added.size();
     }
 
-    private static int remove(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        private static int addPermission(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+                final var sender = context.getSource().getSender();
+                final var area = context.getArgument("area", Area.class);
+                final var permission = context.getArgument("permission", String.class);
+                if (!area.addPermission(permission)) {
+                        plugin.bundle().sendMessage(sender, "nothing.changed");
+                        return 0;
+                }
+
+                plugin.bundle().sendMessage(sender, "area.members.add.permission",
+                                Placeholder.parsed("area", area.getName()),
+                                Placeholder.parsed("permission", permission));
+                return 1;
+        }
+
+        private static int removePlayer(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
         plugin.getServer().getAsyncScheduler().runNow(plugin, task -> {
             final var sender = context.getSource().getSender();
             final var area = context.getArgument("area", Area.class);
@@ -103,6 +148,18 @@ final class AreaMembersCommand {
                     Placeholder.parsed("area", area.getName()),
                     Placeholder.parsed("player", player.getName() != null ? player.getName() : name));
         });
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int removePermission(final CommandContext<CommandSourceStack> context, final ProtectPlugin plugin) {
+        final var sender = context.getSource().getSender();
+        final var area = context.getArgument("area", Area.class);
+        final var permission = context.getArgument("permission", String.class);
+        final var success = area.removePermission(permission);
+        final var message = success ? "area.members.remove.permission" : "nothing.changed";
+        plugin.bundle().sendMessage(sender, message,
+                Placeholder.parsed("area", area.getName()),
+                Placeholder.parsed("permission", permission));
         return Command.SINGLE_SUCCESS;
     }
 }

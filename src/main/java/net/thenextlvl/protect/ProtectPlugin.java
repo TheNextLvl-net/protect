@@ -23,6 +23,7 @@ import net.thenextlvl.protect.adapters.FlagsAdapter;
 import net.thenextlvl.protect.adapters.KeyAdapter;
 import net.thenextlvl.protect.adapters.LocationAdapter;
 import net.thenextlvl.protect.adapters.MembersAdapter;
+import net.thenextlvl.protect.adapters.PermissionsAdapter;
 import net.thenextlvl.protect.adapters.WeatherTypeAdapter;
 import net.thenextlvl.protect.adapters.WorldAdapter;
 import net.thenextlvl.protect.adapters.area.CuboidAreaAdapter;
@@ -244,6 +245,8 @@ public final class ProtectPlugin extends JavaPlugin {
             }.getType(), new FlagsAdapter(this))
             .registerTypeAdapter(new TypeToken<Set<UUID>>() {
             }.getType(), new MembersAdapter())
+            .registerTypeAdapter(new TypeToken<Set<String>>() {
+            }.getType(), new PermissionsAdapter())
             .registerTypeHierarchyAdapter(Location.class, new LocationAdapter())
             .registerTypeHierarchyAdapter(Key.class, new KeyAdapter())
             .registerTypeHierarchyAdapter(WeatherType.class, new WeatherTypeAdapter())
@@ -278,6 +281,7 @@ public final class ProtectPlugin extends JavaPlugin {
         public final Flag<Boolean> liquidFlow = flagRegistry().register(ProtectPlugin.this, "liquid_flow", true);
         public final Flag<Boolean> naturalEntitySpawn = flagRegistry().register(ProtectPlugin.this, "natural_entity_spawn", true);
         public final Flag<Boolean> notifyFailedInteractions = flagRegistry().register(ProtectPlugin.this, "notify_failed_interactions", false);
+        public final Flag<Boolean> knockback = flagRegistry().register(ProtectPlugin.this, "knockback", true);
         public final Flag<Boolean> physics = flagRegistry().register(ProtectPlugin.this, "physics", true);
         public final Flag<Boolean> redstone = flagRegistry().register(ProtectPlugin.this, "redstone", true);
         public final Flag<Boolean> shoot = flagRegistry().register(ProtectPlugin.this, "shoot", true);

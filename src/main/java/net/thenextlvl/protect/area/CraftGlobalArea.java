@@ -23,7 +23,7 @@ public final class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final Path file = dataFolder.resolve(getName() + ".dat");
 
     public CraftGlobalArea(final ProtectPlugin plugin, final World world) {
-        super(plugin, "@" + world.getName(), world, Set.of(), null, Map.of(), -1);
+        super(plugin, "@" + world.getName(), world, Set.of(), Set.of(), null, Map.of(), -1);
     }
 
     public CraftGlobalArea(final ProtectPlugin plugin, final World world, final CompoundTag tag) {

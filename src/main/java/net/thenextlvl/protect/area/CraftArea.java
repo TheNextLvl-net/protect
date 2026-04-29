@@ -39,6 +39,7 @@ public abstract class CraftArea implements Area {
     private final World world;
 
     private final Set<UUID> members;
+    private final Set<String> permissions;
     private @Nullable UUID owner;
 
     private final Map<Flag<?>, @Nullable Object> flags;
@@ -50,6 +51,7 @@ public abstract class CraftArea implements Area {
                         final String name,
                         final World world,
                         final Set<UUID> members,
+                        final Set<String> permissions,
                         @Nullable final UUID owner,
                         final Map<Flag<?>, @Nullable Object> flags,
                         final int priority) {
@@ -57,6 +59,7 @@ public abstract class CraftArea implements Area {
         this.name = name;
         this.world = world;
         this.members = new HashSet<>(members);
+        this.permissions = new HashSet<>(permissions);
         this.owner = owner;
         this.flags = new HashMap<>(flags);
         this.priority = priority;
@@ -67,6 +70,7 @@ public abstract class CraftArea implements Area {
         this.name = name;
         this.world = world;
         this.members = new HashSet<>();
+        this.permissions = new HashSet<>();
         this.flags = new HashMap<>();
         deserialize(tag);
     }
@@ -118,6 +122,11 @@ public abstract class CraftArea implements Area {
     }
 
     @Override
+    public boolean addPermission(final String permission) {
+        return permissions.add(permission);
+    }
+
+    @Override
     public int getPriority() {
         return priority;
     }
@@ -127,6 +136,18 @@ public abstract class CraftArea implements Area {
         if (Objects.equals(members, this.members)) return;
         for (final var member : this.members) if (!members.contains(member)) removeMember(member);
         for (final var member : members) if (!this.members.contains(member)) addMember(member);
+    }
+
+    @Override
+    public boolean removePermission(final String permission) {
+        return permissions.remove(permission);
+    }
+
+    @Override
+    public void setPermissions(final Set<String> permissions) {
+        if (Objects.equals(permissions, this.permissions)) return;
+        this.permissions.clear();
+        this.permissions.addAll(permissions);
     }
 
     @Override
@@ -142,6 +163,11 @@ public abstract class CraftArea implements Area {
     @Override
     public Set<UUID> getMembers() {
         return Set.copyOf(members);
+    }
+
+    @Override
+    public Set<String> getPermissions() {
+        return Set.copyOf(permissions);
     }
 
     @Override
@@ -210,6 +236,8 @@ public abstract class CraftArea implements Area {
         }.getType()));
         if (!members.isEmpty()) tag.put("members", plugin.nbt.serialize(members, new TypeToken<Set<UUID>>() {
         }.getType()));
+        if (!permissions.isEmpty()) tag.put("permissions", plugin.nbt.serialize(permissions, new TypeToken<Set<String>>() {
+        }.getType()));
         if (!dataContainer.isEmpty()) tag.put("data", CompoundTag.of(dataContainer));
         if (owner != null) tag.put("owner", plugin.nbt.serialize(owner));
         tag.put("priority", priority);
@@ -222,6 +250,7 @@ public abstract class CraftArea implements Area {
     public void deserialize(final CompoundTag tag) {
         readFlags(tag).ifPresent(flags::putAll);
         readMembers(tag).ifPresent(members::addAll);
+        readPermissions(tag).ifPresent(permissions::addAll);
         readOwner(tag).ifPresent(owner -> this.owner = owner);
         readPriority(tag).ifPresent(priority -> this.priority = priority);
         tag.<CompoundTag>optional("data").ifPresent(data -> data.forEach(dataContainer::put));
@@ -238,6 +267,12 @@ public abstract class CraftArea implements Area {
     private Optional<Set<UUID>> readMembers(final CompoundTag tag) {
         return tag.optional("members").map(members ->
                 plugin.nbt.deserialize(members, new TypeToken<Set<UUID>>() {
+                }.getType()));
+    }
+
+    private Optional<Set<String>> readPermissions(final CompoundTag tag) {
+        return tag.optional("permissions").map(permissions ->
+                plugin.nbt.deserialize(permissions, new TypeToken<Set<String>>() {
                 }.getType()));
     }
 

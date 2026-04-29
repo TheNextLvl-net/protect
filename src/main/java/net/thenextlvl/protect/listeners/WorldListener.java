@@ -291,7 +291,7 @@ public final class WorldListener implements Listener {
     private <T> void filter(final Location source, final List<T> list, final Function<T, Location> function, @Nullable final Player player, final Flag<Boolean> flag) {
         filter(source, list, function, (area, target) -> {
             if (player == null) return area.canInteract(target) && target.getFlag(flag);
-            return target.isPermitted(player.getUniqueId()) || target.getFlag(flag);
+            return target.isPermitted(player) || target.getFlag(flag);
         });
     }
 
