@@ -25,7 +25,10 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
+import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
+import org.bukkit.entity.Entity;
 
 public final class EntityListener implements Listener {
     private final ProtectPlugin plugin;
@@ -76,8 +79,13 @@ public final class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityKnockback(final EntityKnockbackEvent event) {
-        final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.knockback));
+        Entity source = null;
+        if (event instanceof final EntityKnockbackByEntityEvent byEntity) {
+            source = byEntity.getHitBy();
+        } else if (event instanceof final EntityPushedByEntityAttackEvent pushedBy) {
+            source = pushedBy.getPushedBy();
+        }
+        event.setCancelled(!plugin.protectionService().canKnockback(source, event.getEntity()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
