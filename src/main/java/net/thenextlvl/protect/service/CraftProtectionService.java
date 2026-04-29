@@ -91,6 +91,12 @@ public final class CraftProtectionService implements ProtectionService {
     }
 
     @Override
+    public boolean canKnockback(@Nullable final Entity source, final Entity target) {
+        if (source != null && source.getUniqueId().equals(target.getUniqueId())) return true;
+        return canPerformAction(source, plugin.areaProvider().getArea(target), plugin.flags.knockback, null);
+    }
+
+    @Override
     public boolean canShear(@Nullable final Entity entity, final Entity sheared) {
         return canPerformAction(entity, plugin.areaProvider().getArea(sheared),
                 plugin.flags.entityShear, "protect.bypass.entity-shear");
