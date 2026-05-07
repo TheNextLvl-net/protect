@@ -14,6 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
@@ -26,7 +27,9 @@ public final class MovementListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerTeleport(final PlayerTeleportEvent event) {
-        onPlayerMove(event);
+        if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN) return;
+        if (canMove(event.getPlayer(), event.getFrom(), event.getTo())) return;
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -61,6 +64,7 @@ public final class MovementListener implements Listener {
     }
 
     private boolean canMove(final Entity entity, final Location from, final Location to) {
+        if (entity instanceof Player && !plugin.protectionService().canEnter(entity, plugin.areaProvider().getArea(to))) return false;
         return plugin.areaProvider().getAreas(from).allMatch(area -> {
             return area.contains(to) || canLeave(entity, from, to, area);
         }) && plugin.areaProvider().getAreas(to).allMatch(area -> {
