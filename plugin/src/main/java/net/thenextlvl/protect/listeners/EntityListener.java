@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
@@ -71,6 +72,14 @@ public final class EntityListener implements Listener {
         final var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!plugin.protectionService().canAttack(event.getDamager(), event.getEntity()));
         plugin.failed(event.getDamager(), event, area, "area.failed.attack");
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityKnockback(final EntityKnockbackByEntityEvent event) {
+        event.setCancelled(!plugin.protectionService().canKnockback(event.getHitBy(), event.getEntity()));
+        if (event.isCancelled()) {
+            plugin.failed(event.getHitBy(), event, plugin.areaProvider().getArea(event.getEntity()), "area.failed.attack");
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

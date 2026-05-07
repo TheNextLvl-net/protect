@@ -91,6 +91,26 @@ public final class CraftProtectionService implements ProtectionService {
     }
 
     @Override
+    public boolean canKnockback(final Entity attacker, final Entity victim) {
+        if (attacker.equals(victim)) return true;
+
+        final var flag = plugin.flags.knockback;
+        final var first = plugin.areaProvider().getArea(attacker);
+        final var second = plugin.areaProvider().getArea(victim);
+
+        if ((first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
+                && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
+
+        if (first.canInteract(second)
+                && (first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
+                || (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))
+        ) return true;
+
+        if (!attacker.hasPermission("protect.bypass.attack")) return false;
+        return attacker instanceof final Player player && player.getGameMode().isInvulnerable();
+    }
+
+    @Override
     public boolean canShear(@Nullable final Entity entity, final Entity sheared) {
         return canPerformAction(entity, plugin.areaProvider().getArea(sheared),
                 plugin.flags.entityShear, "protect.bypass.entity-shear");
