@@ -131,6 +131,11 @@ public final class CraftProtectionService implements ProtectionService {
     public boolean canPerformAction(@Nullable final Entity entity, final Area area, final Flag<Boolean> flag, @Nullable final String permission) {
         if (area.getFlag(flag)) return true;
         if (entity == null) return false;
+
+        String flagName = flag.key().value();
+        String areaFlagPermission = "protect.area." + area.getName() + "." + flagName;
+        if (entity.hasPermission(areaFlagPermission)) return true;
+
         if (isAreaMember(entity, area)) return true;
         if (permission != null && entity.hasPermission(permission)) {
             return !(entity instanceof final Player player) || player.getGameMode().isInvulnerable();
