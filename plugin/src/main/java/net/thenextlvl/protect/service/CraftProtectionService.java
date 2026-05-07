@@ -78,13 +78,8 @@ public final class CraftProtectionService implements ProtectionService {
         final var first = plugin.areaProvider().getArea(attacker);
         final var second = plugin.areaProvider().getArea(victim);
 
-        if ((first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
-
-        if (first.canInteract(second)
-                && (first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                || (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))
-        ) return true;
+        if ((first.getFlag(flag) || isAreaMember(attacker, first)) && (second.getFlag(flag) || isAreaMember(attacker, second))) return true;
+        if (first.canInteract(second) && (first.getFlag(flag) || isAreaMember(attacker, first)) || (second.getFlag(flag) || isAreaMember(attacker, second))) return true;
 
         if (!attacker.hasPermission("protect.bypass.attack")) return false;
         return attacker instanceof final Player player && player.getGameMode().isInvulnerable();
@@ -134,8 +129,22 @@ public final class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canPerformAction(@Nullable final Entity entity, final Area area, final Flag<Boolean> flag, @Nullable final String permission) {
-        return area.getFlag(flag) || entity != null && (area.isPermitted(entity.getUniqueId())
-                || (permission != null && entity.hasPermission(permission)
-                && (!(entity instanceof final Player player) || player.getGameMode().isInvulnerable())));
+        if (area.getFlag(flag)) return true;
+        if (entity == null) return false;
+        if (isAreaMember(entity, area)) return true;
+        if (permission != null && entity.hasPermission(permission)) {
+            return !(entity instanceof final Player player) || player.getGameMode().isInvulnerable();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isAreaMember(@Nullable final Entity entity, final Area area) {
+        if (entity == null) return false;
+        return area.isPermitted(entity.getUniqueId()) || entity.hasPermission(memberPermission(area));
+    }
+
+    private String memberPermission(final Area area) {
+        return "protect.member." + area.getName();
     }
 }

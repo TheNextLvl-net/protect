@@ -175,4 +175,14 @@ public interface ProtectionService {
      */
     @Contract(pure = true)
     boolean canPerformAction(@Nullable Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission);
+
+    /**
+     * Determines whether an entity is a member of a specific area.
+     *
+     * @param entity the entity to check
+     * @param area   the area to check
+     * @return true if the entity is a member of the area, false otherwise
+     */
+    @Contract(pure = true)
+    boolean isAreaMember(@Nullable Entity entity, Area area);
 }
