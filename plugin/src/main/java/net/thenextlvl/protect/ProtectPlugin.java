@@ -305,6 +305,7 @@ public final class ProtectPlugin extends JavaPlugin {
         public final ProtectionFlag<Boolean> entityShear = flagRegistry().register(ProtectPlugin.this, "entity_shear", true, false);
         public final ProtectionFlag<Boolean> explosions = flagRegistry().register(ProtectPlugin.this, "explosions", true, false);
         public final ProtectionFlag<Boolean> interact = flagRegistry().register(ProtectPlugin.this, "interact", true, false);
+        public final ProtectionFlag<Boolean> knockback = flagRegistry().register(ProtectPlugin.this, "knockback", true, false);
         public final ProtectionFlag<Boolean> leavesDecay = flagRegistry().register(ProtectPlugin.this, "leaves_decay", true, false);
         public final ProtectionFlag<Boolean> naturalCauldronFill = flagRegistry().register(ProtectPlugin.this, "natural_cauldron_fill", true, false);
         public final ProtectionFlag<Boolean> physicalInteract = flagRegistry().register(ProtectPlugin.this, "physical_interact", true, false);

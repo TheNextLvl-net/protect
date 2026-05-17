@@ -81,6 +81,7 @@ paper {
                 "protect.bypass.entity-interact",
                 "protect.bypass.entity-shear",
                 "protect.bypass.interact",
+                "protect.bypass.knockback",
                 "protect.bypass.leave",
                 "protect.bypass.physical-interact",
                 "protect.bypass.place",

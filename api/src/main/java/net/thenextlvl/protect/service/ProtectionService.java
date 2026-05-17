@@ -115,6 +115,16 @@ public interface ProtectionService {
     boolean canAttack(Entity attacker, Entity victim);
 
     /**
+     * Determines whether an entity can knockback another entity.
+     *
+     * @param source the entity attempting to cause knockback
+     * @param target the entity that is the target of the knockback
+     * @return true if the knockback is permissible, false otherwise
+     */
+    @Contract(pure = true)
+    boolean canKnockback(Entity source, Entity target);
+
+    /**
      * Determines whether an entity can shear an entity.
      *
      * @param entity  the entity that wants to shear

@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.listeners;
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -71,6 +72,14 @@ public final class EntityListener implements Listener {
         final var area = plugin.areaProvider().getArea(event.getEntity());
         event.setCancelled(!plugin.protectionService().canAttack(event.getDamager(), event.getEntity()));
         plugin.failed(event.getDamager(), event, area, "area.failed.attack");
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityKnockback(final EntityKnockbackByEntityEvent event) {
+        event.setCancelled(!plugin.protectionService().canKnockback(event.getHitBy(), event.getEntity()));
+        if (event.isCancelled()) {
+            plugin.failed(event.getHitBy(), event, plugin.areaProvider().getArea(event.getEntity()), "area.failed.attack");
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
