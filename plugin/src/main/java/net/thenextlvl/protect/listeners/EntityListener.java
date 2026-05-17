@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.listeners;
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import net.thenextlvl.protect.ProtectPlugin;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -11,7 +12,6 @@ import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
