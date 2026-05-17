@@ -11,12 +11,11 @@ plugins {
 
 repositories {
     maven("https://repo.nexomc.com/releases")
-    maven("https://repo.nexomc.com/snapshots")
 }
 
 dependencies {
-    compileOnly("com.nexomc:nexo:1.24.0-dev.0")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
+    compileOnly("com.nexomc:nexo:1.23")
 
     implementation("dev.faststats.metrics:bukkit:0.22.0")
     implementation("org.bstats:bstats-bukkit:3.2.1")
