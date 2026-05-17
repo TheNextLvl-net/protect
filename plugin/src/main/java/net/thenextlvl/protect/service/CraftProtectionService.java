@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.service;
 
+import net.kyori.adventure.util.TriState;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
@@ -78,13 +79,10 @@ public final class CraftProtectionService implements ProtectionService {
         final var first = plugin.areaProvider().getArea(attacker);
         final var second = plugin.areaProvider().getArea(victim);
 
-        if ((first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
-
-        if (first.canInteract(second)
-                && (first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                || (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))
-        ) return true;
+        final var areasCanInteract = first.canInteract(second);
+        final var canAttackFromFirst = canPerformAction(attacker, first, flag, null);
+        if (canAttackFromFirst && (areasCanInteract || canPerformAction(attacker, second, flag, null))) return true;
+        if (areasCanInteract && canPerformAction(attacker, second, flag, null)) return true;
 
         if (!attacker.hasPermission("protect.bypass.attack")) return false;
         return attacker instanceof final Player player && player.getGameMode().isInvulnerable();
@@ -134,8 +132,17 @@ public final class CraftProtectionService implements ProtectionService {
 
     @Override
     public boolean canPerformAction(@Nullable final Entity entity, final Area area, final Flag<Boolean> flag, @Nullable final String permission) {
-        return area.getFlag(flag) || entity != null && (area.isPermitted(entity.getUniqueId())
-                || (permission != null && entity.hasPermission(permission)
-                && (!(entity instanceof final Player player) || player.getGameMode().isInvulnerable())));
+        if (area.getFlag(flag)) return true;
+        if (entity == null) return false;
+
+        if (area.isPermitted(entity.getUniqueId())) return true;
+
+        final var areaFlagPermission = "protect.area." + area.getName() + "." + flag.key().asString();
+        if (entity.permissionValue(areaFlagPermission).equals(TriState.TRUE)) return true;
+
+        if (permission != null && entity.hasPermission(permission)) {
+            return !(entity instanceof final Player player) || player.getGameMode().isInvulnerable();
+        }
+        return false;
     }
 }
