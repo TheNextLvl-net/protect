@@ -84,8 +84,8 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @return the data folder associated with this object
      * @deprecated use {@link #getDataPath()} instead
      */
-    @Deprecated
     @Contract(pure = true)
+    @Deprecated(forRemoval = true, since = "3.4.0")
     default File getDataFolder() {
         return getDataPath().toFile();
     }
@@ -105,8 +105,8 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @return the File associated with this object
      * @deprecated use {@link #getDataFile()} instead
      */
-    @Deprecated
     @Contract(pure = true)
+    @Deprecated(forRemoval = true, since = "3.4.0")
     default File getFile() {
         return getDataFile().toFile();
     }
@@ -126,8 +126,8 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      * @return the fallback file associated with this area
      * @deprecated use {@link #getBackupFile()} instead
      */
-    @Deprecated
     @Contract(pure = true)
+    @Deprecated(forRemoval = true, since = "3.4.0")
     default File getFallbackFile() {
         return getBackupFile().toFile();
     }

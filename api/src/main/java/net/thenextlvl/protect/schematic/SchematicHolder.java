@@ -17,8 +17,8 @@ public interface SchematicHolder {
      * @return The schematic file.
      * @deprecated use {@link #getSchematicFile()} instead
      */
-    @Deprecated
     @Contract(pure = true)
+    @Deprecated(forRemoval = true, since = "3.4.0")
     default File getSchematic() {
         return getSchematicFile().toFile();
     }
