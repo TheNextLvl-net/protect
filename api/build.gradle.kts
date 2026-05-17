@@ -1,36 +1,9 @@
 plugins {
-    id("java")
-    id("java-library")
     id("maven-publish")
-}
-
-group = rootProject.group
-version = rootProject.version
-
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
-    withSourcesJar()
-    withJavadocJar()
-}
-
-tasks.compileJava {
-    options.release.set(21)
-}
-
-repositories {
-    mavenCentral()
-    maven("https://maven.enginehub.org/repo/")
-    maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.thenextlvl.net/releases")
-    maven("https://repo.thenextlvl.net/snapshots")
 }
 
 dependencies {
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
-
-    api("net.thenextlvl:nbt:4.3.4")
-    api(platform("com.intellectualsites.bom:bom-newest:1.57-SNAPSHOT"))
 }
 
 publishing {
