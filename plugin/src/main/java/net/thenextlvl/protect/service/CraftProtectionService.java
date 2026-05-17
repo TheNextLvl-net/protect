@@ -91,23 +91,23 @@ public final class CraftProtectionService implements ProtectionService {
     }
 
     @Override
-    public boolean canKnockback(final Entity attacker, final Entity victim) {
-        if (attacker.equals(victim)) return true;
+    public boolean canKnockback(final Entity source, final Entity target) {
+        if (source.equals(target)) return true;
 
         final var flag = plugin.flags.knockback;
-        final var first = plugin.areaProvider().getArea(attacker);
-        final var second = plugin.areaProvider().getArea(victim);
+        final var first = plugin.areaProvider().getArea(source);
+        final var second = plugin.areaProvider().getArea(target);
 
-        if ((first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                && (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))) return true;
+        if ((first.getFlag(flag) || first.isPermitted(source.getUniqueId()))
+                && (second.getFlag(flag) || second.isPermitted(source.getUniqueId()))) return true;
 
         if (first.canInteract(second)
-                && (first.getFlag(flag) || first.isPermitted(attacker.getUniqueId()))
-                || (second.getFlag(flag) || second.isPermitted(attacker.getUniqueId()))
+                && (first.getFlag(flag) || first.isPermitted(source.getUniqueId()))
+                || (second.getFlag(flag) || second.isPermitted(source.getUniqueId()))
         ) return true;
 
-        if (!attacker.hasPermission("protect.bypass.attack")) return false;
-        return attacker instanceof final Player player && player.getGameMode().isInvulnerable();
+        if (!source.hasPermission("protect.bypass.attack")) return false;
+        return source instanceof final Player player && player.getGameMode().isInvulnerable();
     }
 
     @Override
