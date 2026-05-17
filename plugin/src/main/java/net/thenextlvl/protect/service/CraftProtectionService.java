@@ -1,5 +1,6 @@
 package net.thenextlvl.protect.service;
 
+import net.kyori.adventure.util.TriState;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.flag.Flag;
@@ -133,9 +134,12 @@ public final class CraftProtectionService implements ProtectionService {
     public boolean canPerformAction(@Nullable final Entity entity, final Area area, final Flag<Boolean> flag, @Nullable final String permission) {
         if (area.getFlag(flag)) return true;
         if (entity == null) return false;
-        String areaFlagPermission = "protect.area." + area.getName() + "." + flag.key().value();
-        if (entity.hasPermission(areaFlagPermission)) return true;
+
         if (area.isPermitted(entity.getUniqueId())) return true;
+
+        final var areaFlagPermission = "protect.area." + area.getName() + "." + flag.key().asString();
+        if (entity.permissionValue(areaFlagPermission).equals(TriState.TRUE)) return true;
+
         if (permission != null && entity.hasPermission(permission)) {
             return !(entity instanceof final Player player) || player.getGameMode().isInvulnerable();
         }
