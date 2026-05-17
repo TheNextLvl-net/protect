@@ -128,6 +128,7 @@ public final class ProtectPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        fastStats.ready();
         registerEvents();
         registerCommands();
     }
@@ -139,6 +140,7 @@ public final class ProtectPlugin extends JavaPlugin {
             areaProvider().save(world);
             areaProvider().unload(world);
         });
+        fastStats.shutdown();
         metrics.shutdown();
     }
 
