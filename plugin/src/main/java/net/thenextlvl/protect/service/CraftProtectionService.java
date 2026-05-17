@@ -78,8 +78,10 @@ public final class CraftProtectionService implements ProtectionService {
         final var first = plugin.areaProvider().getArea(attacker);
         final var second = plugin.areaProvider().getArea(victim);
 
-        if (canPerformAction(attacker, first, flag, null) && canPerformAction(attacker, second, flag, null)) return true;
-        if (first.canInteract(second) && canPerformAction(attacker, first, flag, null) || canPerformAction(attacker, second, flag, null)) return true;
+        final var areasCanInteract = first.canInteract(second);
+        final var canAttackFromFirst = canPerformAction(attacker, first, flag, null);
+        if (canAttackFromFirst && (areasCanInteract || canPerformAction(attacker, second, flag, null))) return true;
+        if (areasCanInteract && canPerformAction(attacker, second, flag, null)) return true;
 
         if (!attacker.hasPermission("protect.bypass.attack")) return false;
         return attacker instanceof final Player player && player.getGameMode().isInvulnerable();
