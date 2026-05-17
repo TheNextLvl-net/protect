@@ -5,14 +5,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
 /**
  * The Container interface represents a container that can contain entities and blocks.
  */
-@NullMarked
 public interface Container {
     /**
      * Determines if the given location is contained within the container.

@@ -7,7 +7,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -20,7 +19,6 @@ import java.util.UUID;
 /**
  * The Area interface represents an area inside a world.
  */
-@NullMarked
 public interface Area extends Container, FlagProvider, Comparable<Area>, TagSerializable<CompoundTag>, DataContainer {
     /**
      * Retrieves the set of parent areas associated with this area.
@@ -91,7 +89,7 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
     default File getDataFolder() {
         return getDataPath().toFile();
     }
-    
+
     /**
      * Retrieves the path associated with this object.
      *

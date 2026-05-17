@@ -1,8 +1,5 @@
 package net.thenextlvl.protect.exception;
 
-import org.jspecify.annotations.NullMarked;
-
-@NullMarked
 public class CircularInheritanceException extends IllegalStateException {
     public CircularInheritanceException(final Throwable cause) {
         super(cause);

@@ -8,7 +8,6 @@ import net.thenextlvl.protect.flag.FlagProvider;
 import org.bukkit.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -22,7 +21,6 @@ import java.util.UUID;
  *
  * @param <T> The type of the region associated with the area.
  */
-@NullMarked
 public interface AreaCreator<T extends Region> {
     /**
      * Retrieves the name of the area.

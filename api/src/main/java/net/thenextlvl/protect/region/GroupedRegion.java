@@ -15,7 +15,6 @@ import com.sk89q.worldedit.regions.RegionOperationException;
 import com.sk89q.worldedit.world.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
  * <p>
  * The GroupedRegion class allows for managing a collection of regions identified by unique names.
  */
-@NullMarked
 public final class GroupedRegion extends AbstractRegion {
     private final Map<String, Region> regions = new HashMap<>();
 

@@ -5,7 +5,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -14,7 +13,6 @@ import java.util.stream.Stream;
  * The AreaProvider interface provides methods to retrieve areas in a world, at a location, or containing a block or entity.
  * It also allows retrieving the global area of the world and areas by their name.
  */
-@NullMarked
 public interface AreaProvider {
     /**
      * Retrieves a stream of all areas.

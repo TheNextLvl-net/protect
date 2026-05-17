@@ -5,12 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * This class represents an abstract base class for events related to areas and players.
  */
-@NullMarked
 public abstract class PlayerAreaEvent extends PlayerEvent {
     private final Area area;
 

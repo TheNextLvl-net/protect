@@ -6,7 +6,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is triggered when a player enters an area.
@@ -14,7 +13,6 @@ import org.jspecify.annotations.NullMarked;
  * Players entering an area can be intercepted by listening for this event.
  * If the event is cancelled, the player is prevented from entering the area.
  */
-@NullMarked
 public final class PlayerAreaEnterEvent extends PlayerAreaEvent implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

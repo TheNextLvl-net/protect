@@ -6,7 +6,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Optional;
 import java.util.Set;
@@ -57,7 +56,6 @@ public interface FlagRegistry {
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      * @see #register(Plugin, Class, String, Object)
      */
-    @NullMarked
     @SuppressWarnings("unchecked")
     @Contract(mutates = "this")
     default <T> Flag<T> register(final Plugin plugin, @KeyPattern.Value final String name, final T defaultValue) throws IllegalStateException {
@@ -92,7 +90,6 @@ public interface FlagRegistry {
      * @throws IllegalStateException if a flag by the same plugin with the same name is already registered
      * @see #register(Plugin, Class, String, Object, Object)
      */
-    @NullMarked
     @SuppressWarnings("unchecked")
     @Contract(mutates = "this")
     default <T> ProtectionFlag<T> register(final Plugin plugin, @KeyPattern.Value final String name, final T defaultValue, final T protectedValue) throws IllegalStateException {

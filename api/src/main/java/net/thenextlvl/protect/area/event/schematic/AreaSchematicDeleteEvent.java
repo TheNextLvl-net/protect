@@ -6,13 +6,11 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is triggered when a schematic associated with an area is about to be deleted.
  * Cancelling this event results in the schematic not being deleted.
  */
-@NullMarked
 public final class AreaSchematicDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

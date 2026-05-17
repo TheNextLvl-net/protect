@@ -6,14 +6,12 @@ import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.protect.area.Area;
 import org.bukkit.World;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Interface for adapting Area objects for serialization and deserialization.
  *
  * @param <T> the type of Area that this adapter handles
  */
-@NullMarked
 public interface AreaAdapter<T extends Area> extends Keyed {
     /**
      * Retrieves the key associated with the adapter.

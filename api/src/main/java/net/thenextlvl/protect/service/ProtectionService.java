@@ -5,14 +5,12 @@ import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
  * The ProtectionService interface provides methods to determine whether an entity
  * is permitted to perform certain actions in certain locations or areas.
  */
-@NullMarked
 public interface ProtectionService {
     /**
      * Determines whether an entity can use worldedit in a specific area.

@@ -6,7 +6,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents an event that occurs when the priority of an area is changed.
@@ -14,7 +13,6 @@ import org.jspecify.annotations.NullMarked;
  * <p>
  * Note: Calling {@link Area#setPriority(int)} within this event can lead to an infinite loop.
  */
-@NullMarked
 public final class AreaPriorityChangeEvent extends AreaEvent<Area> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

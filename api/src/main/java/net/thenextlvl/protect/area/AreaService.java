@@ -6,7 +6,6 @@ import net.thenextlvl.protect.io.AreaAdapter;
 import org.bukkit.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import java.util.function.Function;
 /**
  * The AreaService interface is used to create or delete instances of {@link Area}.
  */
-@NullMarked
 public interface AreaService {
     /**
      * Creates an AreaCreator with the given name, world, and region.

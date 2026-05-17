@@ -6,13 +6,11 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is triggered whenever a player transitions to a new area.
  * Cancelling this event results in the player not being able to move to the new area.
  */
-@NullMarked
 public final class PlayerAreaTransitionEvent extends PlayerAreaEvent implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private final Area previous;

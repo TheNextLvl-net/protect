@@ -6,7 +6,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is triggered when an Area is requested for deletion.
@@ -14,7 +13,6 @@ import org.jspecify.annotations.NullMarked;
  * <p>
  * Note: Calling {@link AreaService#delete(RegionizedArea)} within this event can lead to an infinite loop.
  */
-@NullMarked
 public final class AreaDeleteEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

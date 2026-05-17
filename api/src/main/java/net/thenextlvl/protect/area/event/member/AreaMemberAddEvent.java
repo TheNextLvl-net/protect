@@ -7,7 +7,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.UUID;
 
@@ -17,7 +16,6 @@ import java.util.UUID;
  * <p>
  * Note: Calling {@link RegionizedArea#addMember(UUID)} within this event can lead to an infinite loop.
  */
-@NullMarked
 public final class AreaMemberAddEvent extends AreaEvent<Area> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private UUID member;

@@ -7,7 +7,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is fired when the region associated with an area is about to be redefined.
@@ -15,7 +14,6 @@ import org.jspecify.annotations.NullMarked;
  *
  * @param <T> The type of region associated with the area of this event
  */
-@NullMarked
 public final class AreaRedefineEvent<T extends Region> extends AreaEvent<RegionizedArea<T>> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

@@ -6,6 +6,25 @@ dependencies {
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
 }
 
+
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.addAll(listOf("--add-reads", "net.thenextlvl.protect=ALL-UNNAMED"))
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("--add-reads", "net.thenextlvl.protect=ALL-UNNAMED")
+}
+
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs("--add-reads", "net.thenextlvl.protect=ALL-UNNAMED")
+}
+
+tasks.javadoc {
+    val options = options as StandardJavadocDocletOptions
+    options.tags("apiNote:a:API Note:", "implSpec:a:Implementation Requirements:")
+    options.addStringOption("-add-reads", "net.thenextlvl.protect=ALL-UNNAMED")
+}
+
 publishing {
     publications.create<MavenPublication>("maven") {
         artifactId = "protect"

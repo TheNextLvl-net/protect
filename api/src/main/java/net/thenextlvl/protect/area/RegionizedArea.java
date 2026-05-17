@@ -6,7 +6,6 @@ import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.schematic.SchematicHolder;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -15,7 +14,6 @@ import org.jspecify.annotations.Nullable;
  *
  * @param <T> The type of region associated with this area.
  */
-@NullMarked
 public interface RegionizedArea<T extends Region> extends Area, SchematicHolder {
     /**
      * Calculates the location of this area.

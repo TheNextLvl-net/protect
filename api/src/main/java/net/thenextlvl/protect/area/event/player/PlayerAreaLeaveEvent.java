@@ -6,7 +6,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 
 /**
@@ -15,7 +14,6 @@ import org.jspecify.annotations.NullMarked;
  * Players leaving an area can be intercepted by listening for this event.
  * If the event is cancelled, the player is prevented from leaving the area.
  */
-@NullMarked
 public final class PlayerAreaLeaveEvent extends PlayerAreaEvent implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

@@ -6,13 +6,11 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * This event is fired when a schematic of a regionized area is loaded.
  * This event is cancellable, meaning it can be prevented from proceeding.
  */
-@NullMarked
 public final class AreaSchematicLoadEvent extends AreaEvent<RegionizedArea<?>> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

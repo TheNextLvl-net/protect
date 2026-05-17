@@ -6,7 +6,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents an event triggered by the /area protect command.
@@ -14,7 +13,6 @@ import org.jspecify.annotations.NullMarked;
  * that a specific area is to be protected. Users can listen to this event
  * to perform actions related to area protection.
  */
-@NullMarked
 public final class AreaProtectEvent extends AreaEvent<Area> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;

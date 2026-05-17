@@ -4,7 +4,6 @@ import net.kyori.adventure.key.Key;
 import net.thenextlvl.nbt.tag.Tag;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +13,6 @@ import java.util.function.BiConsumer;
 /**
  * A data container stores key-value pairs, where keys are of type {@code Key} and values are of type {@code Tag}.
  */
-@NullMarked
 public interface DataContainer {
     /**
      * Retrieves the value associated with the specified key if present.

@@ -7,7 +7,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -16,7 +15,6 @@ import org.jspecify.annotations.Nullable;
  * <p>
  * Note: Calling {@link RegionizedArea#setParent(Area)} within this event can lead to an infinite loop.
  */
-@NullMarked
 public final class AreaParentChangeEvent extends AreaEvent<Area> implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private boolean cancelled;
