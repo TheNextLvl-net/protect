@@ -106,7 +106,7 @@ public final class CraftProtectionService implements ProtectionService {
                 || (second.getFlag(flag) || second.isPermitted(source.getUniqueId()))
         ) return true;
 
-        if (!source.hasPermission("protect.bypass.attack")) return false;
+        if (!source.hasPermission("protect.bypass.knockback")) return false;
         return source instanceof final Player player && player.getGameMode().isInvulnerable();
     }
 
