@@ -17,7 +17,7 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("com.nexomc:nexo:1.23")
 
-    implementation("dev.faststats.metrics:bukkit:0.22.0")
+    implementation("dev.faststats.metrics:bukkit:0.22.1")
     implementation("org.bstats:bstats-bukkit:3.2.1")
 
     implementation("net.thenextlvl.version-checker:modrinth-paper:1.0.1")
