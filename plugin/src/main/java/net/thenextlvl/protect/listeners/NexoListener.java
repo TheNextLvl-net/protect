@@ -3,24 +3,33 @@ package net.thenextlvl.protect.listeners;
 import com.nexomc.nexo.api.events.furniture.NexoFurnitureBreakEvent;
 import com.nexomc.nexo.api.events.furniture.NexoFurnitureInteractEvent;
 import com.nexomc.nexo.api.events.furniture.NexoFurniturePlaceEvent;
+import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
+import net.thenextlvl.protect.flag.FlagHolder;
 import net.thenextlvl.protect.flag.ProtectionFlag;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Locale;
+
 public final class NexoListener implements Listener {
     private final ProtectPlugin plugin;
-    private final ProtectionFlag<Boolean> furnitureBreak;
-    private final ProtectionFlag<Boolean> furniturePlace;
-    private final ProtectionFlag<Boolean> furnitureInteract;
+    private final FlagHolder<ProtectionFlag> furnitureBreak;
+    private final FlagHolder<ProtectionFlag> furniturePlace;
+    private final FlagHolder<ProtectionFlag> furnitureInteract;
 
     public NexoListener(final ProtectPlugin plugin, final Plugin nexo) {
-        this.furnitureBreak = plugin.flagRegistry().register(nexo, "furniture_break", true, false);
-        this.furniturePlace = plugin.flagRegistry().register(nexo, "furniture_place", true, false);
-        this.furnitureInteract = plugin.flagRegistry().register(nexo, "furniture_interact", true, false);
+        this.furnitureBreak = plugin.flagRegistry().register(nexo, ProtectionFlag.create(key(nexo, "furniture_break"), true, false));
+        this.furniturePlace = plugin.flagRegistry().register(nexo, ProtectionFlag.create(key(nexo, "furniture_place"), true, false));
+        this.furnitureInteract = plugin.flagRegistry().register(nexo, ProtectionFlag.create(key(nexo, "furniture_interact"), true, false));
         this.plugin = plugin;
+    }
+
+    @SuppressWarnings("PatternValidation")
+    private static Key key(final Plugin plugin, final String name) {
+        return Key.key(plugin.getName().replace("-", "_").toLowerCase(Locale.ROOT), name);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

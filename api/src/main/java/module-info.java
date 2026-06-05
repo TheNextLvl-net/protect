@@ -4,6 +4,7 @@ import org.jspecify.annotations.NullMarked;
 module net.thenextlvl.protect {
     requires com.google.common;
     requires net.kyori.adventure.key;
+    requires net.kyori.examination.api;
     requires net.thenextlvl.nbt;
     requires org.bukkit;
 

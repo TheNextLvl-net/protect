@@ -6,15 +6,13 @@ import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Represents an abstract event bound to an area and flag
  *
- * @param <T> The type of the flag value.
  */
-public abstract class AreaFlagEvent<T> extends AreaEvent<@NonNull Area> implements Cancellable {
-    private final @NonNull Flag<T> flag;
+public abstract class AreaFlagEvent extends AreaEvent<Area> implements Cancellable {
+    private final Flag flag;
     private boolean cancelled;
 
     /**
@@ -24,13 +22,13 @@ public abstract class AreaFlagEvent<T> extends AreaEvent<@NonNull Area> implemen
      * @param flag the flag associated with this event
      */
     @ApiStatus.Internal
-    protected AreaFlagEvent(@NonNull final Area area, @NonNull final Flag<T> flag) {
+    protected AreaFlagEvent(final Area area, final Flag flag) {
         super(area);
         this.flag = flag;
     }
 
     @Contract(pure = true)
-    public @NonNull Flag<T> getFlag() {
+    public Flag getFlag() {
         return flag;
     }
 

@@ -39,7 +39,7 @@ public final class EntityListener implements Listener {
         if (!(event.getEntity() instanceof final Player player)) return;
         final var area = plugin.areaProvider().getArea(player);
         if (event.getCause().equals(EntityDamageEvent.DamageCause.KILL)) return;
-        event.setCancelled(!area.getFlag(plugin.flags.damage));
+        event.setCancelled(!plugin.flags.damage.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -52,13 +52,13 @@ public final class EntityListener implements Listener {
     public void onEntitySpawn(final EntitySpawnEvent event) {
         if (!event.getEntity().getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)) return;
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.naturalEntitySpawn));
+        event.setCancelled(!plugin.flags.naturalEntitySpawn.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onFoodLevelChange(final FoodLevelChangeEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(event.getItem() == null && !area.getFlag(plugin.flags.hunger));
+        event.setCancelled(event.getItem() == null && !plugin.flags.hunger.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -124,40 +124,40 @@ public final class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDrop(final EntityDropItemEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.entityItemDrop));
+        event.setCancelled(!plugin.flags.entityItemDrop.require(area).value());
         plugin.failed(event.getEntity(), event, area, "area.failed.drop");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDrop(final PlayerDropItemEvent event) {
         final var area = plugin.areaProvider().getArea(event.getPlayer());
-        event.setCancelled(!area.getFlag(plugin.flags.playerItemDrop));
+        event.setCancelled(!plugin.flags.playerItemDrop.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPickup(final EntityPickupItemEvent event) {
         final var area = plugin.areaProvider().getArea(event.getItem());
-        event.setCancelled(!area.getFlag(plugin.flags.entityItemPickup));
+        event.setCancelled(!plugin.flags.entityItemPickup.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onProjectileLaunch(final ProjectileLaunchEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.shoot));
+        event.setCancelled(!plugin.flags.shoot.require(area).value());
         plugin.failed(event.getEntity(), event, area, "area.failed.shoot");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityBreakDoor(final EntityBreakDoorEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.entityBreakDoor));
+        event.setCancelled(!plugin.flags.entityBreakDoor.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSheepEatGrass(final EntityChangeBlockEvent event) {
         if (!event.getEntityType().equals(EntityType.SHEEP)) return;
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.sheepEatGrass));
+        event.setCancelled(!plugin.flags.sheepEatGrass.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

@@ -2,76 +2,59 @@ package net.thenextlvl.protect.flag;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
-import java.util.Map;
+import java.util.Set;
 
 /**
  * The FlagProvider interface represents an object that can store and retrieve flags and their associated states.
  */
 public interface FlagProvider {
     /**
-     * Retrieves a map of all the flags and their associated states.
+     * Retrieves all locally defined flags.
      *
-     * @return an unmodifiable map containing the flags as keys and their states as values.
-     * The map may include null values for certain flags.
+     * @return an unmodifiable set containing locally defined flags.
      */
     @Unmodifiable
     @Contract(pure = true)
-    @NonNull Map<@NonNull Flag<?>, @Nullable Object> getFlags();
+    Set<Flag> getFlags();
 
     /**
      * Sets the flags for the FlagProvider instance.
-     * This method updates only the specified flags in the provided map.
-     * Any flags that were already defined but not included in the new map will remain unchanged.
+     * This method updates only the specified flags in the provided set.
+     * Any flags that were already defined but not included in the new set will remain unchanged.
      *
-     * @param flags A map of flags and their associated states.
+     * @param flags A set of value-bearing flags.
      */
     @Contract(mutates = "this")
-    void setFlags(@NonNull Map<@NonNull Flag<?>, @Nullable Object> flags);
+    void setFlags(Set<Flag> flags);
 
     /**
-     * Sets the state of a flag.
+     * Sets the state carried by a value-bearing flag.
      *
-     * @param flag  The flag to set the state of.
-     * @param state The state to be set for the flag.
-     * @param <T>   The type of the flag state.
-     * @return whether the flag was changed.
+     * @param flag the value-bearing flag to set
+     * @return whether the flag was changed
      */
     @Contract(mutates = "this")
-    <T> boolean setFlag(@NonNull Flag<T> flag, T state);
-
-    /**
-     * Retrieves the value of the specified flag for this area. This method always returns a value.
-     * If the flag is not defined in this area, a value inherited from a parent area will be returned.
-     * If there is no inherited mapping, the default value of the flag will be returned.
-     * To check the presence of a flag, use {@link #hasFlag(Flag)}.
-     *
-     * @param flag The flag to retrieve the value for.
-     * @param <T>  The type of the flag value.
-     * @return The value of the specified flag. Nullability is defined by the flag's type.
-     */
-    @Contract(pure = true)
-    <T> T getFlag(@NonNull Flag<T> flag);
+    boolean setFlag(Flag flag);
 
     /**
      * Checks if the flag has a state defined.
      *
      * @param flag The flag to check the state of.
-     * @param <T>  The type of the flag.
      * @return true if a state is defined, true otherwise.
      */
     @Contract(pure = true)
-    <T> boolean hasFlag(@NonNull Flag<T> flag);
+    boolean hasFlag(Flag flag);
 
     /**
      * Removes a flag from the FlagProvider.
      *
      * @param flag The flag to remove.
-     * @param <T>  The type of the flag value.
      * @return true if the flag was successfully removed, false otherwise.
      */
     @Contract(mutates = "this")
-    <T> boolean removeFlag(@NonNull Flag<T> flag);
+    boolean removeFlag(Flag flag);
+
+    @Contract(pure = true)
+    <T extends Flag> T getFlag(FlagHolder<T> flagHolder);
 }

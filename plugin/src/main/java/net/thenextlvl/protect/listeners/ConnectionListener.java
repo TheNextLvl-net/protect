@@ -17,7 +17,7 @@ public final class ConnectionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(final PlayerJoinEvent event) {
         final var area = plugin.areaProvider().getArea(event.getPlayer());
-        final var collides = area.getFlag(plugin.flags.collisions);
+        final var collides = plugin.flags.collisions.require(area).value();
         plugin.collisionController().setCollidable(event.getPlayer(), collides);
     }
 

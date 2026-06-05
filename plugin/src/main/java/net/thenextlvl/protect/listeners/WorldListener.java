@@ -2,7 +2,7 @@ package net.thenextlvl.protect.listeners;
 
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.ValueFlag;
 import net.thenextlvl.protect.utils.BlockUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -127,7 +127,7 @@ public final class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFade(final BlockFadeEvent event) {
         final var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(plugin.flags.blockFading));
+        event.setCancelled(!plugin.flags.blockFading.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -167,8 +167,8 @@ public final class WorldListener implements Listener {
         if (!(event.getBlock().getBlockData() instanceof final Farmland current)) return;
         if (!(event.getNewState().getBlockData() instanceof final Farmland future)) return;
         final var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(current.getMoisture() > future.getMoisture()
-                ? plugin.flags.blockDrying : plugin.flags.blockMoisturising));
+        event.setCancelled(!(current.getMoisture() > future.getMoisture()
+                ? plugin.flags.blockDrying : plugin.flags.blockMoisturising).require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -184,7 +184,7 @@ public final class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockGrow(final BlockGrowEvent event) {
         final var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(plugin.flags.blockGrowth));
+        event.setCancelled(!plugin.flags.blockGrowth.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -215,7 +215,7 @@ public final class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockRedstone(final BlockRedstoneEvent event) {
         final var area = plugin.areaProvider().getArea(event.getBlock());
-        if (!area.getFlag(plugin.flags.redstone)) event.setNewCurrent(event.getOldCurrent());
+        if (!plugin.flags.redstone.require(area).value()) event.setNewCurrent(event.getOldCurrent());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -242,7 +242,7 @@ public final class WorldListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onLeavesDecay(final LeavesDecayEvent event) {
         final var area = plugin.areaProvider().getArea(event.getBlock());
-        event.setCancelled(!area.getFlag(plugin.flags.leavesDecay));
+        event.setCancelled(!plugin.flags.leavesDecay.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -254,7 +254,7 @@ public final class WorldListener implements Listener {
             case NATURAL_FILL -> plugin.flags.naturalCauldronFill;
             default -> null;
         };
-        if (flag != null) event.setCancelled(!area.getFlag(flag));
+        if (flag != null) event.setCancelled(!flag.require(area).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -274,23 +274,23 @@ public final class WorldListener implements Listener {
                 area.canInteract(plugin.areaProvider().getArea(block.getRelative(direction, offset)))));
     }
 
-    private boolean isInteractionRestricted(final Location source, @Nullable final Location target, final Flag<Boolean> flag) {
+    private boolean isInteractionRestricted(final Location source, @Nullable final Location target, final ValueFlag<Boolean> flag) {
         final var area = plugin.areaProvider().getArea(source);
-        if (!area.getFlag(flag)) return true;
+        if (!flag.require(area).value()) return true;
         return target != null && !source.equals(target) && !area.canInteract(plugin.areaProvider().getArea(target));
     }
 
-    private void filterStates(final Location source, final List<BlockState> blocks, @Nullable final Player player, final Flag<Boolean> flag) {
+    private void filterStates(final Location source, final List<BlockState> blocks, @Nullable final Player player, final ValueFlag<Boolean> flag) {
         filter(source, blocks, BlockState::getLocation, player, flag);
     }
 
-    private void filterBlocks(final Location source, final List<Block> blocks, final Flag<Boolean> flag) {
+    private void filterBlocks(final Location source, final List<Block> blocks, final ValueFlag<Boolean> flag) {
         filter(source, blocks, Block::getLocation, null, flag);
     }
 
-    private <T> void filter(final Location source, final List<T> list, final Function<T, Location> function, @Nullable final Player player, final Flag<Boolean> flag) {
+    private <T> void filter(final Location source, final List<T> list, final Function<T, Location> function, @Nullable final Player player, final ValueFlag<Boolean> flag) {
         filter(source, list, function, (area, target) -> {
-            if (player == null) return area.canInteract(target) && target.getFlag(flag);
+            if (player == null) return area.canInteract(target) && flag.require(target).value();
             return plugin.protectionService().canPerformAction(player, target, flag, null);
         });
     }
