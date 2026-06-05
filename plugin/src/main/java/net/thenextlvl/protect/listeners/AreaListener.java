@@ -40,34 +40,34 @@ public final class AreaListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void greetings(final PlayerAreaEnterEvent event) {
-        final var message = event.getArea().getFlag(plugin.flags.greetings);
+        final var message = plugin.flags.greetings.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null);
         if (message != null) event.getPlayer().sendMessage(deserialize(message, event));
-        final var actionbar = event.getArea().getFlag(plugin.flags.greetingsActionbar);
+        final var actionbar = plugin.flags.greetingsActionbar.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null);
         if (actionbar != null) event.getPlayer().sendActionBar(deserialize(actionbar, event));
-        final var title = parseTitle(event.getArea().getFlag(plugin.flags.greetingsTitle), event);
+        final var title = parseTitle(plugin.flags.greetingsTitle.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null), event);
         if (title != null) event.getPlayer().showTitle(title);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void farewell(final PlayerAreaLeaveEvent event) {
-        final var message = event.getArea().getFlag(plugin.flags.farewell);
+        final var message = plugin.flags.farewell.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null);
         if (message != null) event.getPlayer().sendMessage(deserialize(message, event));
-        final var actionbar = event.getArea().getFlag(plugin.flags.farewellActionbar);
+        final var actionbar = plugin.flags.farewellActionbar.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null);
         if (actionbar != null) event.getPlayer().sendActionBar(deserialize(actionbar, event));
-        final var title = parseTitle(event.getArea().getFlag(plugin.flags.farewellTitle), event);
+        final var title = parseTitle(plugin.flags.farewellTitle.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null), event);
         if (title != null) event.getPlayer().showTitle(title);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerAreaTransition(final PlayerAreaTransitionEvent event) {
-        final var collides = event.getArea().getFlag(plugin.flags.collisions);
+        final var collides = plugin.flags.collisions.require(event.getArea()).value();
         plugin.collisionController().setCollidable(event.getPlayer(), collides);
 
-        final var weather = event.getArea().getFlag(plugin.flags.weather);
+        final var weather = plugin.flags.weather.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null);
         if (weather != null) event.getPlayer().setPlayerWeather(weather);
         else if (event.getPrevious().hasFlag(plugin.flags.weather))
             event.getPlayer().resetPlayerWeather();
-        final var time = event.getArea().getFlag(plugin.flags.time);
+        final var time = plugin.flags.time.getValue(event.getArea()).map(net.thenextlvl.protect.flag.ValueFlag::value).orElse(null);
         if (time != null) event.getPlayer().setPlayerTime(time, false);
         else if (event.getPrevious().hasFlag(plugin.flags.time))
             event.getPlayer().resetPlayerTime();
@@ -76,19 +76,19 @@ public final class AreaListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAreaFlagChange(final AreaFlagChangeEvent<?> event) {
         if (event.getFlag().equals(plugin.flags.weather)) {
-            final var weather = (WeatherType) event.getNewState();
+            final var weather = (WeatherType) event.getNewState().orElse(null);
             event.getArea().getHighestPlayers().forEach(player -> {
                 if (weather != null) player.setPlayerWeather(weather);
                 else player.resetPlayerWeather();
             });
         } else if (event.getFlag().equals(plugin.flags.time)) {
-            final var time = (Long) event.getNewState();
+            final var time = (Long) event.getNewState().orElse(null);
             event.getArea().getHighestPlayers().forEach(player -> {
                 if (time != null) player.setPlayerTime(time, false);
                 else player.resetPlayerTime();
             });
         } else if (event.getFlag().equals(plugin.flags.collisions)) {
-            final var collides = (boolean) event.getNewState();
+            final var collides = (boolean) event.getNewState().orElse(null);
             event.getArea().getHighestPlayers().forEach(player -> {
                 plugin.collisionController().setCollidable(player, collides);
             });
@@ -96,7 +96,7 @@ public final class AreaListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onAreaFlagReset(final AreaFlagResetEvent<?> event) {
+    public void onAreaFlagReset(final AreaFlagResetEvent event) {
         if (event.getFlag().equals(plugin.flags.weather)) {
             event.getArea().getHighestPlayers().forEach(Player::resetPlayerWeather);
         } else if (event.getFlag().equals(plugin.flags.time))

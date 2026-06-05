@@ -3,7 +3,8 @@ package net.thenextlvl.protect.service;
 import net.kyori.adventure.util.TriState;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.BooleanFlag;
+import net.thenextlvl.protect.flag.FlagHolder;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -96,12 +97,12 @@ public final class CraftProtectionService implements ProtectionService {
         final var first = plugin.areaProvider().getArea(source);
         final var second = plugin.areaProvider().getArea(target);
 
-        if ((first.getFlag(flag) || first.isPermitted(source.getUniqueId()))
-                && (second.getFlag(flag) || second.isPermitted(source.getUniqueId()))) return true;
+        if ((first.getFlag(flag).getValue() || first.isPermitted(source.getUniqueId()))
+                && (second.getFlag(flag).getValue() || second.isPermitted(source.getUniqueId()))) return true;
 
         if (first.canInteract(second)
-                && (first.getFlag(flag) || first.isPermitted(source.getUniqueId()))
-                || (second.getFlag(flag) || second.isPermitted(source.getUniqueId()))
+                && (first.getFlag(flag).getValue() || first.isPermitted(source.getUniqueId()))
+                || (second.getFlag(flag).getValue() || second.isPermitted(source.getUniqueId()))
         ) return true;
 
         if (!source.hasPermission("protect.bypass.knockback")) return false;
@@ -131,8 +132,9 @@ public final class CraftProtectionService implements ProtectionService {
     }
 
     @Override
-    public boolean canPerformAction(@Nullable final Entity entity, final Area area, final Flag<Boolean> flag, @Nullable final String permission) {
-        if (area.getFlag(flag)) return true;
+    public boolean canPerformAction(@Nullable final Entity entity, final Area area, final FlagHolder<? extends BooleanFlag> flagHolder, @Nullable final String permission) {
+        final var flag = area.getFlag(flagHolder);
+        if (flag.getValue()) return true;
         if (entity == null) return false;
 
         if (area.isPermitted(entity.getUniqueId())) return true;
