@@ -23,20 +23,20 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
 
     private @Nullable String parent = null;
     private @Nullable UUID owner = null;
-    private Map<Flag<?>, @Nullable Object> flags = new HashMap<>();
+    private Set<Flag> flags = new HashSet<>();
     private Set<UUID> members = new HashSet<>();
     private int priority = 0;
 
     @SuppressWarnings("unchecked")
     public CraftAreaCreator(final ProtectPlugin plugin, final String name, final World world, final T region, @Nullable final String parent,
-                            @Nullable final UUID owner, final Map<Flag<?>, @Nullable Object> flags, final Set<UUID> members, final int priority) {
+                            @Nullable final UUID owner, final Set<Flag> flags, final Set<UUID> members, final int priority) {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
         this.region = (T) region.clone();
         this.parent = parent;
         this.owner = owner;
-        this.flags = new HashMap<>(flags);
+        this.flags = new HashSet<>(flags);
         this.members = new HashSet<>(members);
         this.priority = priority;
     }
@@ -76,13 +76,13 @@ public final class CraftAreaCreator<T extends Region> implements AreaCreator<T> 
     }
 
     @Override
-    public Map<Flag<?>, @Nullable Object> flags() {
-        return Map.copyOf(flags);
+    public Set<Flag> flags() {
+        return Set.copyOf(flags);
     }
 
     @Override
-    public AreaCreator<T> flags(final Map<Flag<?>, @Nullable Object> flags) {
-        this.flags = new HashMap<>(flags);
+    public AreaCreator<T> flags(final Set<Flag> flags) {
+        this.flags = new HashSet<>(flags);
         return this;
     }
 
