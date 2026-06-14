@@ -32,7 +32,7 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+        compileOnly("io.papermc.paper:paper-api:26.2.rc.2.+")
         compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.57-SNAPSHOT"))
 
         api("net.thenextlvl:nbt:4.3.6")
