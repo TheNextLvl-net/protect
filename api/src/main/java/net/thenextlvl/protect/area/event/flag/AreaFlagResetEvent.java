@@ -10,10 +10,8 @@ import org.jspecify.annotations.NonNull;
 /**
  * Represents an event triggered when a flag is reset in an area.
  * Cancelling this event results in the flag not being reset.
- *
- * @param <T> The type of the flag value.
  */
-public final class AreaFlagResetEvent<T> extends AreaFlagEvent<T> {
+public final class AreaFlagResetEvent extends AreaFlagEvent {
     private static final @NonNull HandlerList handlerList = new HandlerList();
 
     /**
@@ -23,7 +21,7 @@ public final class AreaFlagResetEvent<T> extends AreaFlagEvent<T> {
      * @param flag the flag associated with this event
      */
     @ApiStatus.Internal
-    public AreaFlagResetEvent(@NonNull final Area area, @NonNull final Flag<T> flag) {
+    public AreaFlagResetEvent(@NonNull final Area area, @NonNull final Flag flag) {
         super(area, flag);
     }
 

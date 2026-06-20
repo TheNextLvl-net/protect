@@ -5,7 +5,9 @@ import net.thenextlvl.protect.flag.Flag;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * Represents an event that occurs when a flag in an area is changed.
@@ -13,9 +15,9 @@ import org.jspecify.annotations.NonNull;
  *
  * @param <T> The type of the flag value.
  */
-public final class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
-    private static final @NonNull HandlerList handlerList = new HandlerList();
-    private T newState;
+public final class AreaFlagChangeEvent<T> extends AreaFlagEvent {
+    private static final HandlerList handlerList = new HandlerList();
+    private @Nullable T newState;
 
     /**
      * Constructs a new AreaFlagChangeEvent, which represents the change of a flag within an area.
@@ -25,14 +27,14 @@ public final class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
      * @param newState The new state of the flag.
      */
     @ApiStatus.Internal
-    public AreaFlagChangeEvent(@NonNull final Area area, @NonNull final Flag<T> flag, final T newState) {
+    public AreaFlagChangeEvent(final Area area, final Flag flag, @Nullable final T newState) {
         super(area, flag);
         this.newState = newState;
     }
 
     @Contract(pure = true)
-    public T getNewState() {
-        return newState;
+    public Optional<T> getNewState() {
+        return Optional.ofNullable(newState);
     }
 
     @Contract(mutates = "this")
@@ -42,12 +44,12 @@ public final class AreaFlagChangeEvent<T> extends AreaFlagEvent<T> {
 
     @Override
     @Contract(pure = true)
-    public @NonNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return handlerList;
     }
 
     @Contract(pure = true)
-    public static @NonNull HandlerList getHandlerList() {
+    public static HandlerList getHandlerList() {
         return handlerList;
     }
 }

@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -52,13 +51,12 @@ public interface AreaCreator<T extends Region> {
     /**
      * Sets the flags for the area being created.
      *
-     * @param flags a Map where keys are Flag instances and values are associated values for those flags.
-     *              The value can be null.
+     * @param flags a set of value-bearing flags.
      * @return the AreaCreator instance with the specified flags set
-     * @see FlagProvider#setFlags(Map)
+     * @see FlagProvider#setFlags(Set)
      */
     @Contract(mutates = "this")
-    AreaCreator<T> flags(Map<Flag<?>, @Nullable Object> flags);
+    AreaCreator<T> flags(Set<Flag> flags);
 
     /**
      * Sets the members for the area being created.
@@ -142,16 +140,14 @@ public interface AreaCreator<T extends Region> {
     AreaCreator<T> world(World world);
 
     /**
-     * Retrieves a map of flags set for the area being created.
-     * The map contains keys which are instances of Flag and their associated values.
-     * The value can be null.
+     * Retrieves flags set for the area being created.
      *
      * @return a map of flags and their associated values, or an empty map if no flags are set
      * @see FlagProvider#getFlags()
      */
     @Unmodifiable
     @Contract(pure = true)
-    Map<Flag<?>, @Nullable Object> flags();
+    Set<Flag> flags();
 
     /**
      * Creates a new instance of {@link RegionizedArea} that is bound to a region.
