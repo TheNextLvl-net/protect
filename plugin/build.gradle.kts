@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("com.nexomc:nexo:1.24.0")
+    compileOnly("com.nexomc:nexo:1.25.0")
 
     implementation("dev.faststats.metrics:bukkit:0.27.1")
     implementation("org.bstats:bstats-bukkit:3.2.1")
