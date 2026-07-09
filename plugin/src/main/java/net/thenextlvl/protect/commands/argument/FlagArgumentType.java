@@ -15,21 +15,21 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 @NullMarked
-public final class FlagArgumentType implements CustomArgumentType.Converted<Flag<?>, Key> {
+public final class FlagArgumentType implements CustomArgumentType.Converted<Flag, Key> {
     private final ProtectPlugin plugin;
-    private final Predicate<? super Flag<?>> filter;
+    private final Predicate<? super Flag> filter;
 
     public FlagArgumentType(final ProtectPlugin plugin) {
         this(plugin, flag -> true);
     }
 
-    public FlagArgumentType(final ProtectPlugin plugin, final Predicate<? super Flag<?>> filter) {
+    public FlagArgumentType(final ProtectPlugin plugin, final Predicate<? super Flag> filter) {
         this.plugin = plugin;
         this.filter = filter;
     }
 
     @Override
-    public Flag<?> convert(final Key nativeType) {
+    public Flag convert(final Key nativeType) {
         return plugin.flagRegistry().getFlag(nativeType).filter(filter).orElseThrow(() ->
                 new IllegalArgumentException("Unknown flag: " + nativeType));
     }

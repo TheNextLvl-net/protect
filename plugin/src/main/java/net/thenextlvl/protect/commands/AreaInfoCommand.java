@@ -12,6 +12,7 @@ import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.area.Area;
 import net.thenextlvl.protect.area.RegionizedArea;
 import net.thenextlvl.protect.commands.argument.AreaArgumentType;
+import net.thenextlvl.protect.flag.ValueFlag;
 import org.bukkit.OfflinePlayer;
 import org.jspecify.annotations.NullMarked;
 
@@ -38,10 +39,12 @@ final class AreaInfoCommand {
     private static int info(final CommandContext<CommandSourceStack> context, final Area area, final ProtectPlugin plugin) {
         final var sender = context.getSource().getSender();
         final var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
-        final var flags = area.getFlags().entrySet().stream()
-                .map(entry -> plugin.bundle().component("area.flag.format", sender,
-                        Placeholder.parsed("flag", entry.getKey().key().asString()),
-                        Placeholder.unparsed("value", String.valueOf(entry.getValue()))))
+        final var flags = area.getFlags().stream()
+                .map(flag -> plugin.bundle().component("area.flag.format", sender,
+                        Placeholder.parsed("flag", flag.key().asString()),
+                        Placeholder.unparsed("value", flag instanceof final ValueFlag<?> valueFlag && valueFlag.hasValue()
+                                ? format(valueFlag)
+                                : String.valueOf(flag))))
                 .toList();
 
         final var owner = area.getOwner()
@@ -75,5 +78,10 @@ final class AreaInfoCommand {
                         + " - " + regionizedArea.getRegion().getMaximumPoint().toParserString()));
 
         return Command.SINGLE_SUCCESS;
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static String format(final ValueFlag flag) {
+        return flag.format(flag.value());
     }
 }
