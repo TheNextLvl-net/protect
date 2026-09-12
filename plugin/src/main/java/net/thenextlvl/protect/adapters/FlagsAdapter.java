@@ -8,14 +8,14 @@ import net.thenextlvl.nbt.tag.CompoundTag;
 import net.thenextlvl.nbt.tag.Tag;
 import net.thenextlvl.protect.ProtectPlugin;
 import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.ValueFlag;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 @NullMarked
-public final class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Object>> {
+public final class FlagsAdapter implements TagAdapter<Set<Flag>> {
     private final ProtectPlugin plugin;
 
     public FlagsAdapter(final ProtectPlugin plugin) {
@@ -24,26 +24,34 @@ public final class FlagsAdapter implements TagAdapter<Map<Flag<?>, @Nullable Obj
 
     @Override
     @SuppressWarnings("PatternValidation")
-    public Map<Flag<?>, @Nullable Object> deserialize(final Tag tag, final TagDeserializationContext context) {
+    public Set<Flag> deserialize(final Tag tag, final TagDeserializationContext context) {
         final var compound = tag.getAsCompound();
-        final var flags = new HashMap<Flag<?>, @Nullable Object>();
+        final var flags = new HashSet<Flag>();
         compound.forEach((key, value) -> {
             final var namespace = Key.key(key);
             final var flag = plugin.flagRegistry().getFlag(namespace).orElse(null);
-            if (flag != null) flags.put(flag, context.deserialize(value, flag.type()));
+            if (flag instanceof final ValueFlag<?> valueFlag) flags.add(deserialize(valueFlag, value, context));
+            else if (flag != null) plugin.getComponentLogger().error("Flag is not serializable: {}", key);
             else plugin.getComponentLogger().error("Unknown flag: {}", key);
         });
         return flags;
     }
 
     @Override
-    public Tag serialize(final Map<Flag<?>, @Nullable Object> flags, final TagSerializationContext context) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public Tag serialize(final Set<Flag> flags, final TagSerializationContext context) {
         final var tag = CompoundTag.builder();
-        flags.forEach((flag, value) -> {
-            if (value == null) return;
-            final var serialized = context.serialize(value, flag.type());
-            tag.put(flag.key().asString(), serialized);
+        flags.forEach(flag -> {
+            if (!(flag instanceof final ValueFlag valueFlag) || !valueFlag.hasValue()) return;
+            final var serialize = valueFlag.serialize(valueFlag.value(), context);
+            if (serialize == null) return;
+            tag.put(flag.key().asString(), serialize);
         });
         return tag.build();
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static Flag deserialize(final ValueFlag flag, final Tag tag, final TagDeserializationContext context) {
+        return flag.withValue(flag.deserialize(tag, context));
     }
 }

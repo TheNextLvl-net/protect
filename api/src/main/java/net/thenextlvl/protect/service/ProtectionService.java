@@ -1,7 +1,8 @@
 package net.thenextlvl.protect.service;
 
 import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.BooleanFlag;
+import net.thenextlvl.protect.flag.FlagHolder;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
@@ -172,5 +173,5 @@ public interface ProtectionService {
      * @return true if the entity can perform the action in the area, false otherwise
      */
     @Contract(pure = true)
-    boolean canPerformAction(@Nullable Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission);
+    boolean canPerformAction(@Nullable Entity entity, Area area, FlagHolder<? extends BooleanFlag> flagHolder, @Nullable String permission);
 }

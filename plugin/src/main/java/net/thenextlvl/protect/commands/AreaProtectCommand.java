@@ -43,7 +43,7 @@ final class AreaProtectCommand {
         final var changes = plugin.flagRegistry().getFlags().stream()
                 .filter(flag -> flag instanceof ProtectionFlag<?>)
                 .map(flag -> (ProtectionFlag<Object>) flag)
-                .filter(flag -> area.setFlag(flag, flag.protectedValue()))
+                .filter(flag -> area.setFlag(flag.withValue(flag.getProtectedValue())))
                 .count();
         final var message = changes > 0 ? "area.protected" : "nothing.changed";
         plugin.bundle().sendMessage(context.getSource().getSender(), message,
