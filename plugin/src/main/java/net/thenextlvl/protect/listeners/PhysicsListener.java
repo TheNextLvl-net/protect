@@ -1,7 +1,7 @@
 package net.thenextlvl.protect.listeners;
 
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.FlagInstance;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -51,9 +51,9 @@ public final class PhysicsListener implements Listener {
                 event.getChangedType().hasGravity() ? plugin.flags.gravity : plugin.flags.physics));
     }
 
-    private boolean isInteractionRestricted(final Block source, @Nullable final Block target, final Flag<Boolean> flag) {
+    private boolean isInteractionRestricted(final Block source, @Nullable final Block target, final FlagInstance<Boolean> flag) {
         final var area = plugin.areaProvider().getArea(source);
-        if (!area.getFlag(flag)) return true;
+        if (!area.getFlagValue(flag)) return true;
         return target != null && !source.equals(target) && !area.canInteract(plugin.areaProvider().getArea(target));
     }
 }

@@ -274,6 +274,7 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     @Override
     public CompoundTag serialize() {
         final var tag = super.serialize().toBuilder();
+        final var parent = this.parent;
         if (parent != null) tag.put("parent", parent);
         tag.put("region", plugin.nbt.serialize(region));
         return tag.build();
