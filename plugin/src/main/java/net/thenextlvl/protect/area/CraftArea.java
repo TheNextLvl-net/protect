@@ -19,8 +19,6 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -28,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -38,13 +37,13 @@ public abstract class CraftArea implements Area {
     private final String name;
     private final World world;
 
-    private final Set<UUID> members;
-    private @Nullable UUID owner;
+    private final Set<UUID> members = ConcurrentHashMap.newKeySet();
+    private volatile @Nullable UUID owner;
 
-    private final Map<Flag<?>, @Nullable Object> flags;
-    private int priority;
+    private final Map<Flag<?>, Object> flags = new ConcurrentHashMap<>();
+    private volatile int priority;
 
-    private final Map<String, Tag> dataContainer = new LinkedHashMap<>();
+    private final Map<String, Tag> dataContainer = new ConcurrentHashMap<>();
 
     protected CraftArea(final ProtectPlugin plugin,
                         final String name,
@@ -56,9 +55,11 @@ public abstract class CraftArea implements Area {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
-        this.members = new HashSet<>(members);
+        this.members.addAll(members);
         this.owner = owner;
-        this.flags = new HashMap<>(flags);
+        flags.forEach((flag, value) -> {
+            if (value != null) this.flags.put(flag, value);
+        });
         this.priority = priority;
     }
 
@@ -66,8 +67,6 @@ public abstract class CraftArea implements Area {
         this.plugin = plugin;
         this.name = name;
         this.world = world;
-        this.members = new HashSet<>();
-        this.flags = new HashMap<>();
         deserialize(tag);
     }
 
@@ -102,7 +101,7 @@ public abstract class CraftArea implements Area {
 
     @Override
     public boolean isPermitted(final UUID uuid) {
-        return (owner != null && owner.equals(uuid)) || members.contains(uuid);
+        return uuid.equals(owner) || members.contains(uuid);
     }
 
     @Override
@@ -171,7 +170,7 @@ public abstract class CraftArea implements Area {
     @NullUnmarked
     @SuppressWarnings("unchecked")
     public <T> T getFlag(@NonNull final Flag<T> flag) {
-        final var value = (T) getFlags().get(flag);
+        final var value = (T) flags.get(flag);
         if (value != null) return value;
         return getParent().map(area -> area.getFlag(flag))
                 .orElseGet(flag::defaultValue);
@@ -182,15 +181,17 @@ public abstract class CraftArea implements Area {
     public <T> boolean setFlag(@NonNull final Flag<T> flag, final T state) {
         if (Objects.equals(getFlag(flag), state)) return false;
         final var event = new AreaFlagChangeEvent<>(this, flag, state);
-        return event.callEvent() && !Objects.equals(flags.put(flag, event.getNewState()), event.getNewState());
+        if (!event.callEvent()) return false;
+        final var newState = event.getNewState();
+        final var previous = newState != null ? flags.put(flag, newState) : flags.remove(flag);
+        return !Objects.equals(previous, newState);
     }
 
     @Override
     public <T> boolean removeFlag(final Flag<T> flag) {
         if (!flags.containsKey(flag)) return false;
         final var event = new AreaFlagResetEvent<>(this, flag);
-        if (event.callEvent()) flags.remove(flag);
-        return !event.isCancelled();
+        return event.callEvent() && flags.remove(flag) != null;
     }
 
     @Override
@@ -205,12 +206,17 @@ public abstract class CraftArea implements Area {
 
     @Override
     public CompoundTag serialize() {
+        final var flags = Map.copyOf(this.flags);
+        final var members = Set.copyOf(this.members);
+        final var data = new LinkedHashMap<>(dataContainer);
+        final var owner = this.owner;
+
         final var tag = CompoundTag.builder();
         if (!flags.isEmpty()) tag.put("flags", plugin.nbt.serialize(flags, new TypeToken<Map<Flag<?>, Object>>() {
         }.getType()));
         if (!members.isEmpty()) tag.put("members", plugin.nbt.serialize(members, new TypeToken<Set<UUID>>() {
         }.getType()));
-        if (!dataContainer.isEmpty()) tag.put("data", CompoundTag.of(dataContainer));
+        if (!data.isEmpty()) tag.put("data", CompoundTag.of(data));
         if (owner != null) tag.put("owner", plugin.nbt.serialize(owner));
         tag.put("priority", priority);
         final var adapter = plugin.areaService().getAdapter(getClass());
@@ -220,7 +226,9 @@ public abstract class CraftArea implements Area {
 
     @Override
     public void deserialize(final CompoundTag tag) {
-        readFlags(tag).ifPresent(flags::putAll);
+        readFlags(tag).ifPresent(flags -> flags.forEach((flag, value) -> {
+            if (value != null) this.flags.put(flag, value);
+        }));
         readMembers(tag).ifPresent(members::addAll);
         readOwner(tag).ifPresent(owner -> this.owner = owner);
         readPriority(tag).ifPresent(priority -> this.priority = priority);

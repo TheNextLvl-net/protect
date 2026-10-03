@@ -129,6 +129,7 @@ public final class ProtectPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         context.ready();
+        getServer().getWorlds().forEach(areaProvider()::load);
         registerEvents();
         registerCommands();
     }

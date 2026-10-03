@@ -52,8 +52,8 @@ public abstract class CraftRegionizedArea<T extends Region> extends CraftArea im
     private final Path backupFile = getDataPath().resolve(getName() + ".dat_old");
     private final Path dataFile = getDataPath().resolve(getName() + ".dat");
     private final Path schematic = plugin.schematicFolder().resolve(getName() + ".schem");
-    private @Nullable String parent;
-    private T region;
+    private volatile @Nullable String parent;
+    private volatile T region;
 
     public CraftRegionizedArea(final ProtectPlugin plugin, final AreaCreator<T> creator) throws CircularInheritanceException {
         super(plugin, creator.name(), creator.world(), creator.members(),
