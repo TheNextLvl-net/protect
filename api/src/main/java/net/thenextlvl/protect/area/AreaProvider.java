@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 /**
@@ -14,6 +15,13 @@ import java.util.stream.Stream;
  * It also allows retrieving the global area of the world and areas by their name.
  */
 public interface AreaProvider {
+    static AreaProvider instance() {
+        final class Holder {
+            private static final AreaProvider INSTANCE = ServiceLoader.load(AreaProvider.class).findFirst().orElseThrow();
+        }
+        return Holder.INSTANCE;
+    }
+    
     /**
      * Retrieves a stream of all areas.
      *

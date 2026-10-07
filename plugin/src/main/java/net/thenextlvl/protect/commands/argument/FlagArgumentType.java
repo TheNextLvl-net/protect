@@ -8,28 +8,28 @@ import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.protect.ProtectPlugin;
-import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.FlagInstance;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 @NullMarked
-public final class FlagArgumentType implements CustomArgumentType.Converted<Flag<?>, Key> {
+public final class FlagArgumentType implements CustomArgumentType.Converted<FlagInstance<?>, Key> {
     private final ProtectPlugin plugin;
-    private final Predicate<? super Flag<?>> filter;
+    private final Predicate<? super FlagInstance<?>> filter;
 
     public FlagArgumentType(final ProtectPlugin plugin) {
         this(plugin, flag -> true);
     }
 
-    public FlagArgumentType(final ProtectPlugin plugin, final Predicate<? super Flag<?>> filter) {
+    public FlagArgumentType(final ProtectPlugin plugin, final Predicate<? super FlagInstance<?>> filter) {
         this.plugin = plugin;
         this.filter = filter;
     }
 
     @Override
-    public Flag<?> convert(final Key nativeType) {
+    public FlagInstance<?> convert(final Key nativeType) {
         return plugin.flagRegistry().getFlag(nativeType).filter(filter).orElseThrow(() ->
                 new IllegalArgumentException("Unknown flag: " + nativeType));
     }
@@ -38,7 +38,7 @@ public final class FlagArgumentType implements CustomArgumentType.Converted<Flag
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         plugin.flagRegistry().getFlags().stream()
                 .filter(filter)
-                .map(Flag::key)
+                .map(FlagInstance::key)
                 .map(Key::asString)
                 .filter(s -> s.contains(builder.getRemaining()))
                 .forEach(builder::suggest);

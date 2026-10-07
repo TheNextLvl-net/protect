@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -16,6 +17,13 @@ import java.util.function.Function;
  * The AreaService interface is used to create or delete instances of {@link Area}.
  */
 public interface AreaService {
+    static AreaService instance() {
+        final class Holder {
+            private static final AreaService INSTANCE = ServiceLoader.load(AreaService.class).findFirst().orElseThrow();
+        }
+        return Holder.INSTANCE;
+    }
+
     /**
      * Creates an AreaCreator with the given name, world, and region.
      *

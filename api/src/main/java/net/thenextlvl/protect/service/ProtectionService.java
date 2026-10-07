@@ -1,17 +1,26 @@
 package net.thenextlvl.protect.service;
 
 import net.thenextlvl.protect.area.Area;
-import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.FlagInstance;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
+
+import java.util.ServiceLoader;
 
 /**
  * The ProtectionService interface provides methods to determine whether an entity
  * is permitted to perform certain actions in certain locations or areas.
  */
 public interface ProtectionService {
+    static ProtectionService instance() {
+        final class Holder {
+            private static final ProtectionService INSTANCE = ServiceLoader.load(ProtectionService.class).findFirst().orElseThrow();
+        }
+        return Holder.INSTANCE;
+    }
+
     /**
      * Determines whether an entity can use worldedit in a specific area.
      *
@@ -172,5 +181,5 @@ public interface ProtectionService {
      * @return true if the entity can perform the action in the area, false otherwise
      */
     @Contract(pure = true)
-    boolean canPerformAction(@Nullable Entity entity, Area area, Flag<Boolean> flag, @Nullable String permission);
+    boolean canPerformAction(@Nullable Entity entity, Area area, FlagInstance<Boolean> flag, @Nullable String permission);
 }
