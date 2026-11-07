@@ -4,14 +4,14 @@ import com.sk89q.worldedit.regions.Region;
 import net.thenextlvl.protect.exception.CircularInheritanceException;
 import net.thenextlvl.protect.exception.UnsupportedRegionException;
 import net.thenextlvl.protect.flag.Flag;
-import net.thenextlvl.protect.flag.FlagProvider;
+import net.thenextlvl.protect.flag.FlagInstance;
 import org.bukkit.World;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -52,13 +52,12 @@ public interface AreaCreator<T extends Region> {
     /**
      * Sets the flags for the area being created.
      *
-     * @param flags a Map where keys are Flag instances and values are associated values for those flags.
-     *              The value can be null.
+     * @param flags the flags and their values to set on the area
      * @return the AreaCreator instance with the specified flags set
-     * @see FlagProvider#setFlags(Map)
+     * @see Area#setFlag(FlagInstance, Object)
      */
     @Contract(mutates = "this")
-    AreaCreator<T> flags(Map<Flag<?>, @Nullable Object> flags);
+    AreaCreator<T> flags(Collection<Flag<?>> flags);
 
     /**
      * Sets the members for the area being created.
@@ -142,16 +141,14 @@ public interface AreaCreator<T extends Region> {
     AreaCreator<T> world(World world);
 
     /**
-     * Retrieves a map of flags set for the area being created.
-     * The map contains keys which are instances of Flag and their associated values.
-     * The value can be null.
+     * Retrieves the flags set for the area being created.
      *
-     * @return a map of flags and their associated values, or an empty map if no flags are set
-     * @see FlagProvider#getFlags()
+     * @return the flags and their values set for the area, or an empty map if no flags are set
+     * @see Area#getFlags()
      */
     @Unmodifiable
     @Contract(pure = true)
-    Map<Flag<?>, @Nullable Object> flags();
+    Set<Flag<?>> flags();
 
     /**
      * Creates a new instance of {@link RegionizedArea} that is bound to a region.

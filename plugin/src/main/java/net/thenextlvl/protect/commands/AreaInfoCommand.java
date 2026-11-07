@@ -38,10 +38,10 @@ final class AreaInfoCommand {
     private static int info(final CommandContext<CommandSourceStack> context, final Area area, final ProtectPlugin plugin) {
         final var sender = context.getSource().getSender();
         final var type = plugin.areaService().getAdapter(area.getClass()).key().asString();
-        final var flags = area.getFlags().entrySet().stream()
-                .map(entry -> plugin.bundle().component("area.flag.format", sender,
-                        Placeholder.parsed("flag", entry.getKey().key().asString()),
-                        Placeholder.unparsed("value", String.valueOf(entry.getValue()))))
+        final var flags = area.getFlags()
+                .map(flag -> plugin.bundle().component("area.flag.format", sender,
+                        Placeholder.parsed("flag", flag.instance().key().asString()),
+                        Placeholder.unparsed("value", String.valueOf(flag.value()))))
                 .toList();
 
         final var owner = area.getOwner()

@@ -23,7 +23,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
@@ -39,7 +39,7 @@ public final class EntityListener implements Listener {
         if (!(event.getEntity() instanceof final Player player)) return;
         final var area = plugin.areaProvider().getArea(player);
         if (event.getCause().equals(EntityDamageEvent.DamageCause.KILL)) return;
-        event.setCancelled(!area.getFlag(plugin.flags.damage));
+        event.setCancelled(!area.getFlagValue(plugin.flags.damage));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -52,13 +52,13 @@ public final class EntityListener implements Listener {
     public void onEntitySpawn(final EntitySpawnEvent event) {
         if (!event.getEntity().getEntitySpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)) return;
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.naturalEntitySpawn));
+        event.setCancelled(!area.getFlagValue(plugin.flags.naturalEntitySpawn));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onFoodLevelChange(final FoodLevelChangeEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(event.getItem() == null && !area.getFlag(plugin.flags.hunger));
+        event.setCancelled(event.getItem() == null && !area.getFlagValue(plugin.flags.hunger));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -83,7 +83,7 @@ public final class EntityListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onInteract(final PlayerInteractEntityEvent event) {
+    public void onInteract(final PlayerInteractAtEntityEvent event) {
         event.setCancelled(!plugin.protectionService().canInteract(event.getPlayer(), event.getRightClicked()));
         plugin.failed(event.getPlayer(), event, plugin.areaProvider().getArea(event.getRightClicked()), "area.failed.interact");
     }
@@ -124,40 +124,40 @@ public final class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDrop(final EntityDropItemEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.entityItemDrop));
+        event.setCancelled(!area.getFlag(plugin.flags.entityItemDrop).value());
         plugin.failed(event.getEntity(), event, area, "area.failed.drop");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDrop(final PlayerDropItemEvent event) {
         final var area = plugin.areaProvider().getArea(event.getPlayer());
-        event.setCancelled(!area.getFlag(plugin.flags.playerItemDrop));
+        event.setCancelled(!area.getFlag(plugin.flags.playerItemDrop).value());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPickup(final EntityPickupItemEvent event) {
         final var area = plugin.areaProvider().getArea(event.getItem());
-        event.setCancelled(!area.getFlag(plugin.flags.entityItemPickup));
+        event.setCancelled(!area.getFlagValue(plugin.flags.entityItemPickup));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onProjectileLaunch(final ProjectileLaunchEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.shoot));
+        event.setCancelled(!area.getFlagValue(plugin.flags.shoot));
         plugin.failed(event.getEntity(), event, area, "area.failed.shoot");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityBreakDoor(final EntityBreakDoorEvent event) {
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.entityBreakDoor));
+        event.setCancelled(!area.getFlagValue(plugin.flags.entityBreakDoor));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSheepEatGrass(final EntityChangeBlockEvent event) {
         if (!event.getEntityType().equals(EntityType.SHEEP)) return;
         final var area = plugin.areaProvider().getArea(event.getEntity());
-        event.setCancelled(!area.getFlag(plugin.flags.sheepEatGrass));
+        event.setCancelled(!area.getFlagValue(plugin.flags.sheepEatGrass));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
