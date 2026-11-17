@@ -11,7 +11,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +22,7 @@ public final class CraftGlobalArea extends CraftArea implements GlobalArea {
     private final Path file = dataFolder.resolve(getName() + ".dat");
 
     public CraftGlobalArea(final ProtectPlugin plugin, final World world) {
-        super(plugin, "@" + world.getName(), world, Set.of(), null, Map.of(), -1);
+        super(plugin, "@" + world.getName(), world, Set.of(), null, Set.of(), -1);
     }
 
     public CraftGlobalArea(final ProtectPlugin plugin, final World world, final CompoundTag tag) {
