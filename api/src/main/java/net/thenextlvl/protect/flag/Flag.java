@@ -1,38 +1,30 @@
 package net.thenextlvl.protect.flag;
 
-import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NonNull;
 
 /**
- * Represents a flag with a specific value type.
+ * A flag value, bound to the {@link FlagInstance} it belongs to.
  *
- * @param <T> The type of the flag value.
+ * @param <T> the type of the flag value
+ * @see FlagInstance#withValue(Object)
+ * @since 4.0.0
  */
-public interface Flag<T> extends Comparable<@NonNull Flag<?>> {
+public sealed interface Flag<T> permits SimpleFlag {
     /**
-     * Retrieves the {@link Key} associated with this flag.
+     * Retrieves the flag instance this value belongs to.
      *
-     * @return the Key of the flag
+     * @return the flag instance
+     * @since 4.0.0
      */
-    @NonNull
     @Contract(pure = true)
-    Key key();
+    FlagInstance<T> instance();
 
     /**
-     * Retrieves the type of the flag value.
+     * Retrieves the value of this flag.
      *
-     * @return the type of the flag value
-     */
-    @NonNull
-    @Contract(pure = true)
-    Class<? extends T> type();
-
-    /**
-     * Retrieves the default value for a flag.
-     *
-     * @return The default value for the flag.
+     * @return the flag value
+     * @since 4.0.0
      */
     @Contract(pure = true)
-    T defaultValue();
+    T value();
 }

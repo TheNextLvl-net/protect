@@ -2,9 +2,11 @@ package net.thenextlvl.protect.area;
 
 import net.thenextlvl.nbt.serialization.TagSerializable;
 import net.thenextlvl.nbt.tag.CompoundTag;
-import net.thenextlvl.protect.flag.FlagProvider;
+import net.thenextlvl.protect.flag.Flag;
+import net.thenextlvl.protect.flag.FlagInstance;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.Nullable;
@@ -15,11 +17,12 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * The Area interface represents an area inside a world.
  */
-public interface Area extends Container, FlagProvider, Comparable<Area>, TagSerializable<CompoundTag>, DataContainer {
+public interface Area extends Container, Comparable<Area>, TagSerializable<CompoundTag>, DataContainer {
     /**
      * Retrieves the set of parent areas associated with this area.
      *
@@ -224,4 +227,110 @@ public interface Area extends Container, FlagProvider, Comparable<Area>, TagSeri
      */
     @Contract(mutates = "this")
     void setMembers(Set<UUID> members);
+
+    /**
+     * Retrieves all flags that are explicitly set on this provider.
+     *
+     * @return a stream of the flags set on this provider
+     * @since 4.0.0
+     */
+    @CheckReturnValue
+    @Contract(mutates = "this")
+    // fixme: make this method pure
+    Stream<Flag<?>> getFlags();
+
+    /**
+     * Retrieves the flag for the specified definition. This method always returns a flag.
+     * If the flag is not set on this provider, the flag inherited from a parent will be returned.
+     * If there is no inherited flag, a flag holding the default value of the definition will be returned.
+     * To check the presence of a flag, use {@link #hasFlag(FlagInstance)}.
+     *
+     * @param instance the definition of the flag to retrieve
+     * @param <T>      the type of the flag value
+     * @return the flag for the specified definition
+     * @since 4.0.0
+     */
+    @CheckReturnValue
+    @Contract(mutates = "this")
+    // fixme: make this method pure
+    <T> Flag<T> getFlag(FlagInstance<T> instance);
+
+    /**
+     * Retrieves the value of the flag for the specified definition.
+     * Follows the same resolution rules as {@link #getFlag(FlagInstance)}.
+     *
+     * @param instance the definition of the flag to retrieve
+     * @param <T>      the type of the flag value
+     * @return the value of the flag for the specified definition
+     * @see #getFlag(FlagInstance)
+     * @since 4.0.0
+     */
+    @CheckReturnValue
+    @Contract(mutates = "this")
+    // fixme: make this method pure
+    <T> T getFlagValue(FlagInstance<T> instance);
+
+    // todo: we need some way to get a flag from the area without inheritance or defaults
+
+    /**
+     * Retrieves the flag for the specified definition if it is set on this provider or inherited from a parent.
+     * Unlike {@link #getFlag(FlagInstance)}, this method does not fall back to the default value.
+     *
+     * @param flag the definition of the flag to retrieve
+     * @param <T>  the type of the flag value
+     * @return an optional containing the flag, or empty if neither this provider nor a parent sets it
+     * @since 4.0.0
+     */
+    @CheckReturnValue
+    @Contract(mutates = "this")
+    // fixme: make this method pure
+    <T> Optional<Flag<T>> findFlag(FlagInstance<T> flag);
+
+    /**
+     * Retrieves the value of the flag for the specified definition if it is set on this provider
+     * or inherited from a parent.
+     * Follows the same resolution rules as {@link #findFlag(FlagInstance)}.
+     *
+     * @param flag the definition of the flag to retrieve
+     * @param <T>  the type of the flag value
+     * @return an optional containing the flag value, or empty if neither this provider nor a parent sets it
+     * @see #findFlag(FlagInstance)
+     * @since 4.0.0
+     */
+    @CheckReturnValue
+    @Contract(mutates = "this")
+    // fixme: make this method pure
+    <T> Optional<T> findFlagValue(FlagInstance<T> flag);
+
+    /**
+     * Sets the flag for the specified definition to the given value.
+     *
+     * @param flagInstance the definition of the flag to set
+     * @param value        the value to set
+     * @param <T>          the type of the flag value
+     * @return whether the flag was changed
+     * @since 4.0.0
+     */
+    @Contract(mutates = "this")
+    <T> boolean setFlag(final FlagInstance<T> flagInstance, final T value);
+
+    /**
+     * Checks if the flag is explicitly set on this provider.
+     *
+     * @param flag the definition of the flag to check
+     * @return true if the flag is set, false otherwise
+     * @since 4.0.0
+     */
+    @Contract(pure = true)
+    boolean hasFlag(FlagInstance<?> flag);
+
+    /**
+     * Removes a flag from this provider.
+     *
+     * @param flag the definition of the flag to remove
+     * @return true if the flag was removed, false otherwise
+     * @since 4.0.0
+     */
+    @Contract(mutates = "this")
+    boolean removeFlag(FlagInstance<?> flag);
 }
